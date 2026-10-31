@@ -1,4 +1,5 @@
 'use client';
+import {PUBLIC_API_URL} from '@/lib/public-api';
 import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 
@@ -34,7 +35,7 @@ function markShown(id: string) {
 
 async function track(popupId: string, event: string, sessionId: string) {
   try {
-    await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api') + '/popup-events', {
+    await fetch(PUBLIC_API_URL + '/popup-events', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({popupId, event, sessionId: sessionId || undefined}),

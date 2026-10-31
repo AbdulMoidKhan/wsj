@@ -11,7 +11,7 @@
 .wj-platform p{line-height:1.75}
 .wj-platform .container{width:calc(100% - var(--gutter)*2);max-width:1200px;margin-inline:auto}
 .wj-platform .section{padding-block:88px}
-.wj-platform .eyebrow{font-size:12px!important;line-height:1.5;font-weight:700;letter-spacing:.07em;text-transform:none;margin:0 0 16px}
+.wj-platform .eyebrow{font-size:12px;line-height:1.5;font-weight:700;letter-spacing:.07em;text-transform:none;margin:0 0 16px}
 .wj-platform .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:50px;padding:13px 21px;max-width:100%;border:1px solid transparent;border-radius:10px;font-size:15px;font-weight:600;line-height:1.4;text-align:center;text-decoration:none;white-space:normal;cursor:pointer;transform:none;transition:background-color .16s,color .16s,border-color .16s}
 .wj-platform .btn svg{flex-shrink:0;width:18px;height:18px}
 .wj-platform .btn:hover{transform:none}
@@ -91,7 +91,7 @@
 .wj-platform .journal-card{display:block;min-width:0;color:var(--ink)}
 .wj-platform .journal-image{border-radius:12px;overflow:hidden;aspect-ratio:1.5;position:relative;background:#e5ebe3}
 .wj-platform .journal-image img{object-fit:cover}
-.wj-platform .journal-card>.eyebrow{margin-top:20px;color:var(--muted);font-size:12px!important;letter-spacing:.025em}
+.wj-platform .journal-card>.eyebrow{margin-top:20px;color:var(--muted);font-size:12px;letter-spacing:.025em}
 .wj-platform .journal-card h3{font-family:Arial,Helvetica,sans-serif;font-size:23px;font-weight:600;line-height:1.3;letter-spacing:-.025em;margin-bottom:12px}
 .wj-platform .journal-card>p:not(.eyebrow){font-size:15px;color:var(--muted)}
 .wj-platform .journal-card .text-link{font-size:14px}

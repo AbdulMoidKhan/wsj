@@ -5,6 +5,12 @@
 .bk-overlay::backdrop{background:transparent}
 @keyframes bk-fade{from{opacity:0}to{opacity:1}}
 
+.bk-fallback-banner{margin:0 0 16px;padding:12px 14px;border:1px solid rgba(217,145,11,.3);border-radius:8px;background:#fefbf4;color:#8a5a06;font-size:13px;line-height:1.55}
+.bk-fallback-banner strong{color:#543803}
+.bk-plan-fallback{padding:24px 20px;background:#f7faf7;border:1.5px dashed #c5d8c5;border-radius:12px;text-align:center;color:#294a35;margin-bottom:16px}
+.bk-plan-fallback p{margin:0 0 8px;font-size:15px;line-height:1.6}
+.bk-plan-fallback-note{font-size:13px;color:#5a6e63;font-weight:550}
+
 .bk-modal{background:#fff;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,.22);width:100%;max-width:680px;max-height:90dvh;overflow:hidden;display:flex;flex-direction:column;animation:bk-up .25s ease}
 @keyframes bk-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 

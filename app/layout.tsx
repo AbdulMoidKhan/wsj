@@ -11,6 +11,7 @@ import './inner-pages.css';
 import './platform-components.css';
 import './inquiry-design.css';
 import './classic.css';
+import './design-system.css';
 
 // Classic editorial pairing: Playfair Display for display type, Inter for reading text.
 const display = Playfair_Display({subsets:['latin'], variable:'--font-display', display:'swap', style:['normal','italic']});

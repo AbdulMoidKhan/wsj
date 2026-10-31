@@ -18,9 +18,9 @@ type LinkGroup = {title:string; items:NavLink[]};
 
 function groupLinks(links:NavLink[]):LinkGroup[] {
   const groups:LinkGroup[] = [
-    {title:'Work & meet', items:[]},
-    {title:'Business services', items:[]},
-    {title:'Create & connect', items:[]},
+    {title:'Work & Meet', items:[]},
+    {title:'Business Services', items:[]},
+    {title:'Create & Connect', items:[]},
     {title:'Explore the Junction', items:[]},
   ];
   const unique = links.filter((link, index, all) => all.findIndex(item => item.href === link.href) === index);
@@ -118,8 +118,12 @@ function PublicSiteShell({children, links, logo, business, pathname}:SiteShellPr
     };
   }, [mobileOpen]);
 
-  const linkList = (items:NavLink[], close?:() => void) => items.map(link => <Link prefetch={false} href={link.href} key={link.href} onClick={close} aria-current={pathname.replace(/\/$/, '') === link.href.replace(/\/$/, '') ? 'page' : undefined}><span>{link.label}</span><ArrowUpRight size={15} aria-hidden="true"/></Link>);
-  const brand = <>{logo ? <Image src={logo} alt="Workspace Junction" width={220} height={64} className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
+  const linkList = (items:NavLink[], close?:() => void) => items.map(link => (
+    <Link prefetch={false} href={link.href} key={link.href} onClick={close} aria-current={pathname.replace(/\/$/, '') === link.href.replace(/\/$/, '') ? 'page' : undefined}>
+      <span>{link.label}</span>
+    </Link>
+  ));
+  const brand = <>{logo ? <Image src={logo} alt="Workspace Junction" width={220} height={64} priority className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
 
   return <div className="wj-platform">
     <a className="wj-skip" href="#main">Skip to content</a>
@@ -129,28 +133,32 @@ function PublicSiteShell({children, links, logo, business, pathname}:SiteShellPr
       <div className="container lv-head-row">
         <Link prefetch={false} href="/" className="wj-brand" aria-label="Workspace Junction home">{brand}</Link>
         <div className="lv-head-right">
-          <Link prefetch={false} href={pathname === '/' ? '#pricing' : '/#pricing'} className="lv-plans">Plans &amp; Pricing</Link>
-          <a href={'tel:'+b.phoneHref} className="lv-phone"><span className="lv-phone-icon"><Phone size={16} aria-hidden="true"/></span>{b.phone}</a>
+          <Link prefetch={false} href={pathname === '/' ? '#pricing' : '/#pricing'} className="lv-plans">
+            <span className="lv-plans-shine" aria-hidden="true"/>
+            <span className="lv-plans-text-full">Plans &amp; Pricing</span>
+            <span className="lv-plans-text-short">Plans</span>
+          </Link>
+          <a href={'tel:'+b.phoneHref} className="lv-phone"><span className="lv-phone-icon"><Phone size={15} aria-hidden="true"/></span><span>{b.phone}</span></a>
           <div className="lv-search">
-            <button type="button" className="lv-icon-btn" ref={searchTrigger} aria-label="Search" aria-expanded={searchOpen} aria-controls="lv-search-form" onClick={() => setSearchOpen(!searchOpen)}><Search size={20} aria-hidden="true"/></button>
-            {searchOpen && <form id="lv-search-form" action="/blogs/" method="get" role="search" className="lv-search-form" onKeyDown={event => {if (event.key === 'Escape') {event.preventDefault(); setSearchOpen(false); searchTrigger.current?.focus();}}}><label className="lv-sr" htmlFor="lv-q">Search Workspace Junction</label><input id="lv-q" name="q" type="search" placeholder="Search articles and guides" autoFocus/><button type="submit" className="lv-pill-mini">Search</button></form>}
+            <button type="button" className="lv-icon-btn" ref={searchTrigger} aria-label="Search" aria-expanded={searchOpen} aria-controls="lv-search-form" onClick={() => setSearchOpen(!searchOpen)}><Search size={18} aria-hidden="true"/></button>
+            {searchOpen && <form id="lv-search-form" action="/blogs/" method="get" role="search" className="lv-search-form" onKeyDown={event => {if (event.key === 'Escape') {event.preventDefault(); setSearchOpen(false); searchTrigger.current?.focus();}}}><label className="lv-sr" htmlFor="lv-q">Search Workspace Junction</label><input id="lv-q" name="q" type="search" placeholder="Search articles, rooms and services..." autoFocus/><button type="submit" className="lv-pill-mini">Search</button></form>}
           </div>
           <nav className="lv-primary" aria-label="Main navigation">
-            <Link prefetch={false} href="/" aria-current={pathname === '/' ? 'page' : undefined}>Home</Link>
-            {aboutHref && <Link prefetch={false} href={aboutHref} aria-current={pathname === aboutHref ? 'page' : undefined}>About Us</Link>}
-            <Link prefetch={false} href={contactHref} aria-current={pathname === contactHref ? 'page' : undefined}>Contact Us</Link>
+            <Link prefetch={false} href="/" aria-current={pathname === '/' ? 'page' : undefined}><span>Home</span></Link>
+            {aboutHref && <Link prefetch={false} href={aboutHref} aria-current={pathname === aboutHref ? 'page' : undefined}><span>About Us</span></Link>}
+            <Link prefetch={false} href={contactHref} aria-current={pathname === contactHref ? 'page' : undefined}><span>Contact</span></Link>
           </nav>
-          <button type="button" className="wj-menu-toggle lv-burger" ref={mobileTrigger} aria-label="Open menu" aria-expanded={mobileOpen} aria-controls="wj-mobile-menu" onClick={() => {setMobileOpen(true); setSearchOpen(false);}}><Menu size={26} aria-hidden="true"/></button>
+          <button type="button" className="wj-menu-toggle lv-burger" ref={mobileTrigger} aria-label="Open menu" aria-expanded={mobileOpen} aria-controls="wj-mobile-menu" onClick={() => {setMobileOpen(true); setSearchOpen(false);}}><Menu size={24} aria-hidden="true"/></button>
         </div>
       </div>
       <nav className="lv-strip" aria-label="Spaces and services">
-        <ul className="container">{strip.map(item => <li key={item.href}><Link prefetch={false} href={item.href} aria-current={pathname === item.href ? 'page' : undefined}><item.icon size={24} strokeWidth={1.4} aria-hidden="true"/><span>{item.label}</span></Link></li>)}</ul>
+        <ul className="container">{strip.map(item => <li key={item.href}><Link prefetch={false} href={item.href} aria-current={pathname === item.href ? 'page' : undefined}><item.icon size={18} strokeWidth={1.5} aria-hidden="true"/><span>{item.label}</span></Link></li>)}</ul>
       </nav>
     </header>
     {mobileOpen && <div className="wj-mobile-panel" id="wj-mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" ref={mobilePanel}>
       <div className="wj-mobile-top"><span>Explore the Junction</span><button type="button" className="wj-menu-toggle" aria-label="Close menu" onClick={closeMobile}><X size={24} aria-hidden="true"/></button></div>
       <nav aria-label="Mobile navigation" className="wj-mobile-nav">
-        <div className="wj-mobile-primary"><Link prefetch={false} href="/" onClick={closeMobile}>Home <ArrowUpRight size={17} aria-hidden="true"/></Link><Link prefetch={false} href={servicesHref} onClick={closeMobile}>All spaces & services <ArrowUpRight size={17} aria-hidden="true"/></Link></div>
+        <div className="wj-mobile-primary"><Link prefetch={false} href="/" onClick={closeMobile}><span>Home</span></Link><Link prefetch={false} href={servicesHref} onClick={closeMobile}><span>All spaces & services</span></Link></div>
         {groups.map(group => <div className="wj-nav-group" key={group.title}><h2>{group.title}</h2>{linkList(group.items, closeMobile)}</div>)}
       </nav>
       <div className="wj-mobile-actions"><button type="button" className="btn btn-primary" aria-haspopup="dialog" onClick={() => {flushSync(closeMobile); window.dispatchEvent(new CustomEvent('wj:book', {detail:{trigger:mobileTrigger.current}}));}}>Find your space <ArrowUpRight size={17} aria-hidden="true"/></button><a href={'tel:'+b.phoneHref}>{b.phone}</a></div>

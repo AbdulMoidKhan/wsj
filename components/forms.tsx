@@ -1,11 +1,12 @@
 "use client";
+import {PUBLIC_API_URL} from '@/lib/public-api';
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
 import "./interactions.css";
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+export const API_BASE = PUBLIC_API_URL;
 export const SERVICES = ["Coworking", "Podcast Studio", "Dedicated Desk", "Virtual Office", "Business Address", "Mailbox", "LLC Services", "Photo Studio", "Meeting Rooms", "Events Space", "Workshops", "Webinars", "Memberships"];
 const schema = z.object({name:z.string().trim().min(2,"Please enter your full name.").max(120),email:z.string().trim().email("Enter a valid email address.").max(254),phone:z.string().trim().max(40),service:z.string().trim().min(1,"Choose a service.").max(120),message:z.string().trim().min(10,"Tell us a little more (at least 10 characters).").max(5000),website:z.string().max(0,"Unable to process this request."),consent:z.boolean().refine(Boolean,"Please agree so we can respond to your inquiry.")});
 type Values=z.infer<typeof schema>;

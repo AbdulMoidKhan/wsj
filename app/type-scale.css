@@ -45,7 +45,7 @@ html .journal-card>.eyebrow{margin-bottom:8px}
 html .footer .eyebrow{margin-bottom:12px}
 
 /* ---------- Shared primitives ---------- */
-html .eyebrow{font-size:var(--fs-micro)!important;letter-spacing:1.6px}
+html .eyebrow{font-size:var(--fs-micro);letter-spacing:1.6px}
 html .section-index{font-size:var(--fs-micro)}
 html .btn{font-size:var(--fs-sm);gap:16px}
 html .text-link{font-size:var(--fs-sm)}
@@ -74,7 +74,7 @@ html .business-links>a{font-size:var(--fs-body)}
 html .image-stamp{font-size:16px}
 html .amenities span{font-size:15px}
 html .creative-image>span{font-size:11px}
-html .journal-card>.eyebrow{font-size:11px!important}
+html .journal-card>.eyebrow{font-size:11px}
 html .journal-card>p{font-size:15px;line-height:1.7}
 html .journal-excerpt{color:var(--muted)}
 html .journal-card .text-link{font-size:var(--fs-sm)}
@@ -114,7 +114,7 @@ html .contact-detail h3{font-size:var(--fs-micro)}
 html .contact-detail p,html .contact-detail a{font-size:var(--fs-body)}
 
 /* ---------- Footer ---------- */
-html .footer .eyebrow{font-size:var(--fs-micro)!important}
+html .footer .eyebrow{font-size:var(--fs-micro)}
 html .footer p,html .footer-top a:not(.footer-brand){font-size:var(--fs-sm);line-height:1.8}
 html .footer-brand>span{font-size:var(--fs-sm)}
 html .footer-links h3{font-size:var(--fs-sm)}
@@ -155,7 +155,7 @@ html .wj-review dl{font-size:15px}
 @media(max-width:650px){
   :root{--gutter:20px}
   html .utility{height:34px;font-size:var(--fs-micro)}
-  html .eyebrow{font-size:11px!important;letter-spacing:1.3px}
+  html .eyebrow{font-size:11px;letter-spacing:1.3px}
   html .breadcrumb{font-size:12px;margin-bottom:22px}
   html .hero-eyebrow{font-size:11px}
   html .hero-copy>p{font-size:16px;max-width:none}
@@ -173,10 +173,10 @@ html .wj-review dl{font-size:15px}
   html .image-stamp{font-size:14px}
   html .business-links>a{font-size:15px}
   html .amenities span{font-size:14px}
-  html .journal-card>.eyebrow{font-size:11px!important}
+  html .journal-card>.eyebrow{font-size:11px}
   html .faq-list summary{font-size:16px}
   html .closing-cta .btn{font-size:var(--fs-sm)}
-  html .footer .eyebrow{font-size:11px!important}
+  html .footer .eyebrow{font-size:11px}
   html .footer-links a{font-size:var(--fs-sm);margin:4px 0}
   html .footer-bottom{font-size:var(--fs-micro)}
   html .industry-links>div{font-size:13px}

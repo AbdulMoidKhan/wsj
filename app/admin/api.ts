@@ -1,4 +1,5 @@
-export const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+import {PUBLIC_API_URL} from '@/lib/public-api';
+export const API = PUBLIC_API_URL;
 let token: string | null = null;
 export function setToken(value: string | null) { token = value; }
 export class ApiError extends Error { constructor(message: string, public status: number) { super(message); } }

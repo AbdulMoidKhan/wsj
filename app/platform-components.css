@@ -11,7 +11,7 @@
 .wj-platform .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(255px,100%),1fr));gap:18px;align-items:stretch}
 .wj-platform .price-card{position:relative;display:flex;flex-direction:column;gap:0;padding:28px 25px;border:1px solid #dce3dd;border-radius:14px;background:#fff;min-width:0;color:#132e29}
 .wj-platform .price-card.featured{background:#132e29;border-color:#132e29;color:#fff}
-.wj-platform .price-card>.eyebrow{align-self:flex-start;background:#efd6a8;border-radius:5px;color:#25392d;font-size:10px!important;letter-spacing:.09em;margin:0 0 17px;padding:6px 9px}
+.wj-platform .price-card>.eyebrow{align-self:flex-start;background:#efd6a8;border-radius:5px;color:#25392d;font-size:10px;letter-spacing:.09em;margin:0 0 17px;padding:6px 9px}
 .wj-platform .price-card h3{font-size:23px;font-weight:600;line-height:1.25;letter-spacing:-.025em;margin:0 0 12px;color:inherit}
 .wj-platform .price-card>p{font-size:14px;line-height:1.7;color:#607067;min-height:92px;margin:0}
 .wj-platform .price-card.featured>p{color:#d0ded5}

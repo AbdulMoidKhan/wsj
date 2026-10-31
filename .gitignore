@@ -47,3 +47,5 @@ next-env.d.ts
 
 /.next-redesign/
 .next-classic/
+/.next-prod/
+/test-results/

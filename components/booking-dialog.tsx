@@ -1,5 +1,7 @@
 'use client';
+import {PUBLIC_API_URL} from '@/lib/public-api';
 import './booking-dialog.css';
+import {sendInquiry} from './forms';
 import {useEffect,useReducer,useState,useRef,useId} from 'react';
 import {ArrowLeft,Bot,Briefcase,Building2,CalendarDays,Car,Check,ChevronLeft,ChevronRight,Coffee,DoorOpen,Dumbbell,Globe2,Handshake,Lock,Mail,Mic,Monitor,Package,PartyPopper,Phone,Printer,Radio,Store,Ticket,Utensils,Wifi,Wrench,X} from 'lucide-react';
 
@@ -133,6 +135,7 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
   const [s,dispatch]=useReducer(reducer,service,init);
   const [catalog,setCatalog]=useState<Catalog|null>(null);
   const [catalogError,setCatalogError]=useState(false);
+  const [requestSent,setRequestSent]=useState(false);
   const dialogRef=useRef<HTMLDialogElement>(null);
   const formRef=useRef<HTMLFormElement>(null);
   const titleRef=useRef<HTMLHeadingElement>(null);
@@ -142,7 +145,7 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
   useEffect(()=>{closeRef.current=onClose;},[onClose]);
   useEffect(()=>{
     const controller=new AbortController();
-    fetch((process.env.NEXT_PUBLIC_API_URL||'http://localhost:4000/api')+'/public/booking-catalog',{signal:controller.signal})
+    fetch(PUBLIC_API_URL+'/public/booking-catalog',{signal:controller.signal})
       .then(r=>r.ok?r.json():Promise.reject())
       .then(data=>{setCatalog(data);setCatalogError(false);})
       // An aborted request (e.g. React dev-mode double-invoking this effect,
@@ -197,7 +200,7 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
 
   const canNext=()=>{
     if(s.step===0)return!!s.workspaceType;
-    if(s.step===1)return!!s.planId;
+    if(s.step===1)return!!s.planId || catalogError;
     if(s.step===3)return!!s.date&&!!s.time;
     return true;
   };
@@ -206,13 +209,23 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
     if(submittingRef.current)return;
     const customerName=(s.firstName.trim()+' '+s.lastName.trim()).trim();
     const today=new Date();today.setHours(0,0,0,0);
-    if(!WORKSPACE_TYPES.some(w=>w.id===s.workspaceType)||!plan){dispatch({t:'ERROR',v:'Please review your workspace and plan selections.'});return;}
+    const requestMode=!plan&&catalogError;
+    if(!WORKSPACE_TYPES.some(w=>w.id===s.workspaceType)||(!plan&&!requestMode)){dispatch({t:'ERROR',v:'Please review your workspace and plan selections.'});return;}
     if(!/^\d{4}-\d{2}-\d{2}$/.test(s.date)||new Date(s.date+'T00:00:00')<today||!TIME_SLOTS.includes(s.time)){dispatch({t:'ERROR',v:'Please go back and choose a current or future preferred date and time.'});return;}
     if(!s.firstName.trim()||!s.lastName.trim()||customerName.length>200||!s.email.trim()||!formRef.current?.reportValidity()){dispatch({t:'ERROR',v:'Enter your first name, last name, and a valid email address.'});return;}
     if(!s.terms){dispatch({t:'ERROR',v:'Please accept the Terms of Use to continue.'});return;}
     submittingRef.current=true;
     dispatch({t:'SUBMITTING'});
     const wt=WORKSPACE_TYPES.find(w=>w.id===s.workspaceType);
+    if(requestMode){
+      // Catalog (and therefore payment) is unavailable: send a reservation request, never a payment.
+      try{
+        await sendInquiry({name:customerName,email:s.email.trim(),phone:s.phone.trim(),service:wt?.name||s.workspaceType,message:'Booking request (live catalog unavailable). Workspace: '+(wt?.name||s.workspaceType)+'. Preferred date: '+s.date+' at '+s.time+'.'+(s.notes.trim()?' Notes: '+s.notes.trim():''),website:''});
+        setRequestSent(true);
+      }catch(e:unknown){dispatch({t:'ERROR',v:e instanceof Error?e.message:'We could not send your request. Please call (773) 986-1908.'});}
+      submittingRef.current=false;
+      return;
+    }
     const body={
       customerName,
       customerEmail:s.email.trim(),
@@ -228,7 +241,7 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
       couponCode:s.coupon.trim()||undefined,
     };
     try{
-      const res=await fetch((process.env.NEXT_PUBLIC_API_URL||'http://localhost:4000/api')+'/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const res=await fetch(PUBLIC_API_URL+'/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
       if(!res.ok){const d=await res.json().catch(()=>({}));throw new Error(typeof d?.message==='string'?d.message:'Booking could not be started. Please try again.');}
       const receipt=await res.json();
       if(!receipt?.checkoutUrl)throw new Error('Payment could not be started. Please try again or contact us.');
@@ -253,7 +266,11 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
           <div className="bk-progress-fill" style={{width:progress+'%'}}/>
         </div>
         <form ref={formRef} className="bk-body" data-lenis-prevent aria-busy={s.submitting} onSubmit={e=>{e.preventDefault();if(s.step===4)void submit();}}>
-          {catalogError&&<p className="bk-error-msg" role="alert">Pricing is temporarily unavailable. Please close this and try again shortly.</p>}
+          {catalogError&&(
+            <div className="bk-fallback-banner" role="status">
+              <p><strong>Note:</strong> Live booking catalog is refreshing. You can still choose your preferred workspace below to submit your reservation request, or call us at (773) 986-1908 for immediate booking.</p>
+            </div>
+          )}
           {s.step===0&&(
             <div className="bk-type-grid">
               {WORKSPACE_TYPES.map(wt=>(
@@ -266,17 +283,24 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
           )}
           {s.step===1&&(
             <>
-              <div className="bk-plan-grid">
-                {(catalog?.plans||[]).map(p=>(
-                  <button key={p.id} type="button" aria-pressed={s.planId===p.id} className={['bk-plan-card',p.featured?'featured':'',s.planId===p.id?'selected':''].join(' ').trim()} onClick={()=>dispatch({t:'SET_PLAN',v:p.id})}>
-                    {PLAN_BADGES[p.id]&&<span className="bk-plan-badge">{PLAN_BADGES[p.id]}</span>}
-                    <div className="bk-plan-name">{p.name}</div>
-                    <div className="bk-plan-price">{money(p.amountCents,catalog?.currency)}</div>
-                    <div className="bk-plan-period">{p.period}</div>
-                    <div className="bk-plan-desc">{p.description}</div>
-                  </button>
-                ))}
-              </div>
+              {catalogError && (!catalog?.plans || catalog.plans.length === 0) ? (
+                <div className="bk-plan-fallback">
+                  <p>Our team will confirm package options and availability for your selected workspace ({WORKSPACE_TYPES.find(w=>w.id===s.workspaceType)?.name || 'selected workspace'}).</p>
+                  <p className="bk-plan-fallback-note">Click Continue to select your preferred date and time.</p>
+                </div>
+              ) : (
+                <div className="bk-plan-grid">
+                  {(catalog?.plans||[]).map(p=>(
+                    <button key={p.id} type="button" aria-pressed={s.planId===p.id} className={['bk-plan-card',p.featured?'featured':'',s.planId===p.id?'selected':''].join(' ').trim()} onClick={()=>dispatch({t:'SET_PLAN',v:p.id})}>
+                      {PLAN_BADGES[p.id]&&<span className="bk-plan-badge">{PLAN_BADGES[p.id]}</span>}
+                      <div className="bk-plan-name">{p.name}</div>
+                      <div className="bk-plan-price">{money(p.amountCents,catalog?.currency)}</div>
+                      <div className="bk-plan-period">{p.period}</div>
+                      <div className="bk-plan-desc">{p.description}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
               {plan&&(
                 <div className="bk-plan-details-box">
                   <div className="bk-detail-header">
@@ -359,8 +383,11 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
                 <label className="bk-label" htmlFor="bk-phone">Phone (optional)</label>
                 <input id="bk-phone" className="bk-input" type="tel" placeholder="+1 (555) 000-0000" autoComplete="tel" maxLength={50} readOnly={s.submitting} value={s.phone} onChange={e=>dispatch({t:'SET_FIELD',k:'phone',v:e.target.value})}/>
               </div>
+              {requestSent?(
+                <div className="bk-plan-fallback" role="status"><p><strong>Request sent.</strong> Our team will contact you to confirm availability and pricing. No payment has been taken.</p></div>
+              ):null}
               <div className="bk-row-2">
-                <div className="bk-field">
+                <div className="bk-field" hidden={!plan}>
                   <label className="bk-label" htmlFor="bk-coupon">Coupon code (optional)</label>
                   <input id="bk-coupon" className="bk-input" type="text" placeholder="SAVE10" autoComplete="off" maxLength={100} readOnly={s.submitting} value={s.coupon} onChange={e=>dispatch({t:'SET_FIELD',k:'coupon',v:e.target.value})}/>
                 </div>
@@ -374,15 +401,15 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
                 <div className="bk-summary-row"><span>{plan?.name} Plan</span><span>{plan?money(plan.amountCents,currency):'—'}</span></div>
                 {selectedAddOns.map(a=><div key={a.id} className="bk-summary-row"><span>{a.name}</span><span>+{money(a.amountCents,currency)}</span></div>)}
                 {s.date&&<div className="bk-summary-row"><span>Preferred date</span><span>{s.date}{s.time?', '+s.time:''}</span></div>}
-                <div className="bk-summary-row total"><span>Total due now</span><span>{money(totalCents,currency)}</span></div>
+                {plan&&<div className="bk-summary-row total"><span>Total due now</span><span>{money(totalCents,currency)}</span></div>}
               </div>
               <label className="bk-terms">
                 <input type="checkbox" required disabled={s.submitting} checked={s.terms} onChange={e=>dispatch({t:'SET_FIELD',k:'terms',v:e.target.checked})}/>
-                I agree to the <a href="/terms-and-privacy" target="_blank" rel="noopener noreferrer">Terms of Use</a> and <a href="/terms-and-privacy" target="_blank" rel="noopener noreferrer">Privacy Notice</a>, and authorize payment of {plan?money(totalCents,currency):'the total'} shown above
+                I agree to the <a href="/terms-and-privacy" target="_blank" rel="noopener noreferrer">Terms of Use</a> and <a href="/terms-and-privacy" target="_blank" rel="noopener noreferrer">Privacy Notice</a>{plan?<>, and authorize payment of {money(totalCents,currency)} shown above</>:<>, and understand this is a reservation request, not a confirmed booking</>}
               </label>
               {s.error&&<p className="bk-error-msg" role="alert">{s.error}</p>}
-              <button type="submit" className="bk-submit-btn" disabled={s.submitting||!catalog}>
-                {s.submitting?'Redirecting to payment...':'Continue to payment'}
+              <button type="submit" className="bk-submit-btn" disabled={s.submitting||requestSent||(!catalog&&!catalogError)}>
+                {plan?(s.submitting?'Redirecting to payment...':'Continue to payment'):(requestSent?'Request sent':s.submitting?'Sending request...':'Send booking request')}
               </button>
             </>
           )}
@@ -391,7 +418,7 @@ export function BookingDialog({service,onClose}:{service?:string;onClose:()=>voi
           <div className="bk-footer">
             {s.step>0&&<button type="button" className="bk-btn bk-btn-ghost" onClick={()=>dispatch({t:'BACK'})}>Back</button>}
             <button type="button" className="bk-btn bk-btn-primary" disabled={!canNext()} onClick={()=>dispatch({t:'NEXT'})}>
-              {s.step===3?'Review & pay':'Continue'}
+              {s.step===3?(plan?'Review & pay':'Review request'):'Continue'}
             </button>
           </div>
         )}

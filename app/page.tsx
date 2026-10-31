@@ -2,7 +2,7 @@ import Image from 'next/image';
 import {ArrowUpRight, Plus} from 'lucide-react';
 import {PublicLayout} from '@/components/public-layout';
 import {BookingButton} from '@/components/booking';
-import {routeFor, jsonLd, publicItems} from '@/lib/site';
+import {routeFor, jsonLd, publicItems, publicSetting} from '@/lib/site';
 import {Pricing} from '@/components/pricing';
 import {HeroSlides, StudioTabs} from '@/components/home-live';
 import homeFaqs from '@/lib/home-faqs.json';
@@ -36,9 +36,9 @@ const defaultServices: Array<{title: string; img: string; href: string; text?: s
 const faqs = homeFaqs as Array<{q: string; a: string}>;
 
 export default async function Home() {
-  const [rawServices, rawSettings] = await Promise.all([
+  const [rawServices, statsItem] = await Promise.all([
     publicItems('services'),
-    publicItems('settings'),
+    publicSetting('homepage-stats'),
   ]);
 
   const services = rawServices && rawServices.length > 0
@@ -50,7 +50,6 @@ export default async function Home() {
       })).filter(s => s.img)
     : defaultServices;
 
-  const statsItem = rawSettings?.find(s => s.slug === 'homepage-stats');
   const stats: Array<{value: string; label: string}> = Array.isArray(statsItem?.metadata?.items)
     ? (statsItem.metadata.items as Array<{value: string; label: string}>)
     : defaultStats;

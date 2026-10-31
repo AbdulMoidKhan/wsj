@@ -1,4 +1,5 @@
 'use client';
+import {PUBLIC_API_URL} from '@/lib/public-api';
 import {useEffect, useRef, useState} from 'react';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
@@ -25,7 +26,7 @@ export function BookingStatus({id}:{id:string}) {
 
   async function poll() {
    try {
-    const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api') + '/public/bookings/' + encodeURIComponent(id) + '/confirmation');
+    const res = await fetch(PUBLIC_API_URL + '/public/bookings/' + encodeURIComponent(id) + '/confirmation');
     if (cancelled) return;
     if (res.status === 404) { setNotFound(true); return; }
     if (!res.ok) throw new Error('request failed');

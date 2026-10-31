@@ -71,7 +71,7 @@ html body .wj-platform :is(a,button,input,textarea,select,summary):focus-visible
 /* ---------- Typography ---------- */
 html body .wj-platform :is(.ip-page,.ip-archive,.hp-home,.wj-header,.wj-footer,.wj-closing,.wj-mobile-panel){font-family:var(--ff-text)}
 html body :is(.wj-platform,.wj-dialog) :is(input,textarea,select,button){font-family:var(--ff-text)}
-html body .wj-platform :is(h1,h2,h3,h4){font-family:var(--ff-display)!important;font-weight:500!important;letter-spacing:-.012em!important;color:inherit}
+html body .wj-platform :is(h1,h2,h3,h4){font-family:var(--ff-display);font-weight:500;letter-spacing:-.012em;color:inherit}
 html body .wj-platform :is(h1,.hp-title){line-height:1.06}
 html body .wj-platform .hp-title{font-size:clamp(42px,5.2vw,74px);letter-spacing:-.02em!important}
 html body .wj-platform :is(.hp-heading,.ip-page h2,.ip-archive h2,.wj-closing h2){line-height:1.12}
@@ -196,7 +196,8 @@ html body .wj-platform .hp-faq-list details[open] summary svg{transform:rotate(4
 /* FoundrSpace-style dot grid as the base texture, softly vignetted. */
 .amb-backdrop::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(122,92,36,.22) 1px,transparent 1.4px);background-size:24px 24px;-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 85%);mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 85%)}
 /* Once the 3D world is live it carries the objects; CSS keeps only light + grid. */
-html[data-scene=live] .amb-backdrop>:is(.amb-shape,.amb-lines){display:none}
+/* ambient shapes and lines remain active alongside 3D scene */
+html[data-scene=live] .amb-backdrop>:is(.amb-shape,.amb-lines){display:block}
 
 /* Section-level ambient for dark bands: champagne contours + one floating ring.
    Clipped by the section; paused offscreen via data-inview (MotionController). */
@@ -284,7 +285,8 @@ html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
 .lenis.lenis-stopped{overflow:hidden}
 /* When the WebGL world is live, the CSS light pools stop drifting: one animated layer, not two. */
-html[data-scene=live] .amb-glow{animation:none}
+/* glow continues moving smoothly in live scene */
+html[data-scene=live] .amb-glow{animation-play-state:running}
 .amb-backdrop>*{will-change:auto}
 /* GSAP owns transforms on these while animating; keep the CSS hover lift from fighting it */
 html body .wj-platform :is(.hp-button,.btn-primary,.wj-header-book,.ip-button-primary):hover{transform:none}
@@ -604,7 +606,7 @@ html body .wj-platform .lx-card-col>.lx-stack{height:100%}
 html body .wj-platform .lx-card-col .lx-actions{margin-top:auto}
 html body .wj-platform .lx-h{color:#132e29;margin:0;text-wrap:balance}
 html body .wj-platform h1.lx-h{font-size:clamp(40px,5.2vw,72px);line-height:1.05;letter-spacing:-.02em!important;max-width:16ch}
-html body .wj-platform .lx-first h1.lx-h+.lx-h{font-family:var(--ff-text)!important;font-size:clamp(18px,1.7vw,22px)!important;font-weight:500!important;color:#3f4a45;letter-spacing:0!important}
+html body .wj-platform .lx-first h1.lx-h+.lx-h{font-family:var(--ff-text);font-size:clamp(18px,1.7vw,22px);font-weight:500;color:#3f4a45;letter-spacing:0}
 html body .wj-platform h2.lx-h{font-size:clamp(28px,3.4vw,46px);line-height:1.12}
 html body .wj-platform h3.lx-h{font-size:clamp(22px,2.2vw,30px);line-height:1.2}
 html body .wj-platform h4.lx-h{font-size:clamp(19px,1.6vw,23px);line-height:1.3}
@@ -687,8 +689,8 @@ html body .wj-platform .lx-card-col .lx-rich h2{font-size:clamp(26px,2.4vw,34px)
 html body .wj-platform .lx-card-col .lx-rich :is(h5,h6){font-size:16px;font-family:var(--ff-text);color:#3f4a45;margin:.2em 0}
 html body .wj-platform .lx-col,html body .wj-platform .lx-card-col{overflow-wrap:anywhere}
 html body .wj-platform .lx-main{overflow-x:clip}
-html body .wj-platform .lx-bg-copy :is(.lx-rich p,.lx-rich li,.lx-rich span,.lx-text){color:#e9efe9!important}
-html body .wj-platform .lx-bg-copy .lx-h{color:#fff!important}
+html body .wj-platform .lx-bg-copy :is(.lx-rich p,.lx-rich li,.lx-rich span,.lx-text){color:#e9efe9}
+html body .wj-platform .lx-bg-copy .lx-h{color:#fff}
 html body .wj-platform .lx-card-col h2.lx-h{font-size:clamp(22px,2vw,28px)}
 html body .wj-platform .lx-card-col h3.lx-h{font-size:clamp(20px,1.8vw,24px)}
 
