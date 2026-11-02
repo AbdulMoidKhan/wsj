@@ -165,30 +165,6 @@
       "aliases": []
     },
     {
-      "id": 18206,
-      "slug": "face-linkup",
-      "path": "/face-linkup/",
-      "title": "Face LinkUp",
-      "content": "\n\n",
-      "excerpt": "",
-      "date": "2026-03-27T18:35:26",
-      "modified": "2026-09-24T08:24:32",
-      "featuredImage": null,
-      "images": [],
-      "seo": {
-        "title": "Face LinkUp – WorkSpace Junction",
-        "description": ""
-      },
-      "type": "page",
-      "sourceUrl": "https://workspacejunction.com/face-linkup/",
-      "categories": [],
-      "contentSource": "public-rest",
-      "originalSlug": "face-linkup",
-      "sourceId": 18206,
-      "canonicalUrl": "https://workspacejunction.com/face-linkup/",
-      "aliases": []
-    },
-    {
       "id": 17815,
       "slug": "community-network",
       "path": "/community-network/",
@@ -479,30 +455,6 @@
       "originalSlug": "partners",
       "sourceId": 11319,
       "canonicalUrl": "https://workspacejunction.com/partners/",
-      "aliases": []
-    },
-    {
-      "id": 11177,
-      "slug": "scrolling-cards",
-      "path": "/scrolling-cards/",
-      "title": "Scrolling Cards",
-      "content": "\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<section>\r\n  \r\n    <p>Coworking</p>-<br>-<br>-<br>\r\n    <p>Podcast Studio</p>-<br>-<br>-<br>\r\n    <p>Dedicated Desk</p>-<br>-<br>-<br>\r\n    <p>Virtual Office</p>-<br>-<br>-<br>\r\n    <p>Business Address</p>\r\n  \r\n</section>\r\n\r\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t",
-      "excerpt": "Coworking Rent a private desk for focused work. Enjoy high-speed wifi and professional support—ideal for freelancers and businesses. Read More Podcast studio Create, record, and produce in a professional studio with soundproof walls and automated camera technology. Read More Dedicated desk Secure a personal desk in a shared yet quiet environment. Optimize your daily workflow […]",
-      "date": "2026-01-30T09:52:20",
-      "modified": "2026-01-30T09:54:39",
-      "featuredImage": "/media/591e8047ab-New-Project.jpg",
-      "images": [],
-      "seo": {
-        "title": "Scrolling Cards – WorkSpace Junction",
-        "description": "Coworking Rent a private desk for focused work. Enjoy high-speed wifi and professional support—ideal for freelancers and businesses. Read More"
-      },
-      "type": "page",
-      "sourceUrl": "https://workspacejunction.com/scrolling-cards/",
-      "categories": [],
-      "contentSource": "public-rest",
-      "originalSlug": "scrolling-cards",
-      "sourceId": 11177,
-      "canonicalUrl": "https://workspacejunction.com/scrolling-cards/",
       "aliases": []
     },
     {
@@ -1067,29 +1019,6 @@
       "aliases": []
     },
     {
-      "id": 5662,
-      "slug": "shop",
-      "path": "/shop/",
-      "title": "Shop",
-      "content": "\n\n\t\t\t\n\t\t\t<h1>Shop</h1>\t\t\n\t\n\t\n\t\t\n\t\t\n\t\t\t\n\n\t\n",
-      "excerpt": "",
-      "date": "2025-10-31T18:45:26",
-      "modified": "2025-10-31T18:45:26",
-      "featuredImage": null,
-      "images": [],
-      "seo": {
-        "title": "Shop – WorkSpace Junction",
-        "description": ""
-      },
-      "type": "page",
-      "sourceUrl": "https://workspacejunction.com/shop/",
-      "categories": [],
-      "contentSource": "public-html",
-      "sourceId": 5662,
-      "canonicalUrl": "https://workspacejunction.com/shop/",
-      "aliases": []
-    },
-    {
       "id": 5430,
       "slug": "services",
       "path": "/services/",
@@ -1202,40 +1131,6 @@
       ]
     },
     {
-      "id": 1684,
-      "slug": "menu-page",
-      "path": "/menu-page/",
-      "title": "menu page",
-      "content": "\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<h2>Coworking\n</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Dedicated desks</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Virtual Office</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Business Address</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Services</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Events</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Partners</h2>\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<h2>Lectures </h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tView All\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<h2>Courses</h2>\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<h2>Certifications</h2>\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<figure><img loading=\"lazy\" width=\"31\" height=\"29\" src=\"/media/3c9a7c3ee9-image-117.png\" alt=\"\"></figure><h3>Masjid Uthman</h3>\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<figure><img loading=\"lazy\" width=\"27\" height=\"27\" src=\"/media/08ae0cf145-WhatsApp-Image-2024-10-31-at-23.09.40_f6662fb7-1.png\" alt=\"\"></figure><h3>Masjid Uthman</h3>\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<figure><img loading=\"lazy\" width=\"21\" height=\"21\" src=\"/media/795ab0dea2-WhatsApp-Image-2024-10-31-at-23.08.36_7ee85594-2.png\" alt=\"\"></figure><h3>Zaytoona</h3>\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t<figure><img loading=\"lazy\" width=\"21\" height=\"21\" src=\"/media/795ab0dea2-WhatsApp-Image-2024-10-31-at-23.08.36_7ee85594-2.png\" alt=\"\"></figure><h3>Zaytoona</h3>\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tView All\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Coworking</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Lorem Ipsum&#160;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s.</p>\t\t\t\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"288\" height=\"260\" src=\"/media/65c25bdafe-image-1.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"288\" height=\"260\" src=\"/media/65c25bdafe-image-1.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"288\" height=\"260\" src=\"/media/65c25bdafe-image-1.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Dedicated desks</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Lorem Ipsum&#160;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s.</p>\t\t\t\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"289\" height=\"260\" src=\"/media/e04dccdd8f-dedicated-desks1.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"592\" height=\"260\" src=\"/media/482b2f4699-dedicated-desks2.png\" alt=\"\" srcset=\"/media/482b2f4699-dedicated-desks2.png 592w, /media/f34b3a8b1c-dedicated-desks2-300x132.png 300w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Virtual Office</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Lorem Ipsum&#160;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s.</p>\t\t\t\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"289\" height=\"260\" src=\"/media/dc81d763c7-virtual1.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"289\" height=\"260\" src=\"/media/ae9deb84d4-virtual2.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"287\" height=\"260\" src=\"/media/d4092e6140-virtual3.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Business Address</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Lorem Ipsum&#160;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s.</p>\t\t\t\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h5>Pick a plan</h5>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tLorem Ipsum&#160;is simply dummy\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tSign Up\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"287\" height=\"260\" src=\"/media/d4092e6140-virtual3.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t",
-      "excerpt": "Menu Item New Muslims a(Basics) New Personal Development (Basics) Purification of Hearts Rules and Fiqh Hadith Studies Islamic History Islamic History Quran Studies Learn Arabic Life of the Prophets Belief Marriage Essentials Financial Dealings For Kids Funeral and Death Lectures View All Courses Certifications Masjid Uthman Masjid Uthman Zaytoona Zaytoona View All Popular Course Islam […]",
-      "date": "2025-08-15T03:08:24",
-      "modified": "2025-08-18T00:14:35",
-      "featuredImage": "/media/65c25bdafe-image-1.png",
-      "images": [
-        "/media/3c9a7c3ee9-image-117.png",
-        "/media/08ae0cf145-WhatsApp-Image-2024-10-31-at-23.09.40_f6662fb7-1.png",
-        "/media/795ab0dea2-WhatsApp-Image-2024-10-31-at-23.08.36_7ee85594-2.png",
-        "/media/65c25bdafe-image-1.png",
-        "/media/e04dccdd8f-dedicated-desks1.png",
-        "/media/482b2f4699-dedicated-desks2.png",
-        "/media/dc81d763c7-virtual1.png",
-        "/media/ae9deb84d4-virtual2.png",
-        "/media/d4092e6140-virtual3.png"
-      ],
-      "seo": {
-        "title": "Menu Page – WorkSpace Junction",
-        "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when"
-      },
-      "type": "page",
-      "sourceUrl": "https://workspacejunction.com/menu-page/",
-      "categories": [],
-      "contentSource": "public-rest",
-      "originalSlug": "menu-page",
-      "sourceId": 1684,
-      "canonicalUrl": "https://workspacejunction.com/menu-page/",
-      "aliases": []
-    },
-    {
       "id": 1330,
       "slug": "blogs",
       "path": "/blogs/",
@@ -1341,36 +1236,6 @@
       "originalSlug": "business-address",
       "sourceId": 1241,
       "canonicalUrl": "https://workspacejunction.com/business-address/",
-      "aliases": []
-    },
-    {
-      "id": 1127,
-      "slug": "monthly_memberships",
-      "path": "/monthly_memberships/",
-      "title": "Monthly Memberships",
-      "content": "\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2><b>Monthly Memberships </b> <br> <i>flexible commitment terms</i></h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>How it works</h2>\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>01.</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Pick a room for a session or a membership</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>02.</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Get email confirmation.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>03.</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Use your phone for access.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>04.</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Enjoy your session.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Coworking made easy: pick your plan, make your reservation, and get to work without any problems. Our procedure is fast, adaptable, and made to get you working right away.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Dedicated</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"579\" height=\"415\" src=\"/media/bf9b5fbdee-imageeraa.png\" alt=\"\" srcset=\"/media/bf9b5fbdee-imageeraa.png 579w, /media/529094311f-imageeraa-300x215.png 300w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Features</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<ul><li>Ergonomic chairs</li><li>WIFI, Coffee, <a href=\"/\">View All Amenities</a></li><li>Onsite support</li><li>24/7 keycard access to your own desk</li></ul>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"346\" height=\"226\" src=\"/media/5da5b4dc39-image-2.png\" alt=\"\" srcset=\"/media/5da5b4dc39-image-2.png 346w, /media/7642d05797-image-2-300x196.png 300w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Desk</h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>The People have spoken</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"197\" height=\"136\" src=\"/media/210e6c49d2-Quote-Decoration.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tView all testimonials\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<img loading=\"lazy\" src=\"/media/abbfc2e9a0-Image-26.png\" alt=\"— Jasie, Software Engineer\"><h4>— Jasie, Software Engineer</h4><p>“Workspace Junction is perfect for focused work. It is a modern, professional, and ideal hub for freelancers.”</p><img loading=\"lazy\" src=\"/media/abbfc2e9a0-Image-26.png\" alt=\"— Podcast User\"><h4>— Podcast User</h4><p>“I needed a soundproof studio for my podcast. Recording at Workspace Junction has never been easier.”</p><img loading=\"lazy\" src=\"/media/abbfc2e9a0-Image-26.png\" alt=\" – Sarah, Graphic Designer & Design Studio Owner\"><h4> – Sarah, Graphic Designer &amp; Design Studio Owner</h4><p>\"WorkSpace Junction transformed how I run my design business. The professional environment, reliable WiFi, and collaborative community helped me land major clients. I went from coffee shop freelancer to established designer.\"</p><img loading=\"lazy\" src=\"/media/abbfc2e9a0-Image-26.png\" alt=\"– Andrew, Software Engineer & Tech Consultant\"><h4>– Andrew, Software Engineer &amp; Tech Consultant</h4><p>\"As a software engineer, I need distraction-free focus time. WorkSpace Junction delivers exactly that. The quiet zones are perfect for deep coding, and the professional atmosphere keeps me productive. Best investment in my career.\"</p><img loading=\"lazy\" src=\"/media/abbfc2e9a0-Image-26.png\" alt=\"– Jamie, Podcast Producer & Content Creator\"><h4>– Jamie, Podcast Producer &amp; Content Creator</h4><p>\"Finding the perfect space to record my podcast was challenging until I discovered WorkSpace Junction. Their soundproof podcast studio and professional environment made launching my show effortless. Highly recommended!\"</p>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tView all testimonials\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>Start for upgrade&#160;<br>\nto unlock more features.</h3>\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h5>Mini</h5>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t$25/1 Day\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tAccess to hot desk for 1 day\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tHigh-speed WiFi\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tFree coffee &amp; tea\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tAccess to lounge area\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tPrinting &amp; scanning (limited)\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tBuy\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h5>Basic</h5>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>$100/5 Day</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t5-day hot desk access (flexible use)\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tHigh-speed WiFi\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tFree coffee &amp; tea\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tPrinting &amp; scanning (standard)\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tAccess to lounge &amp; meeting pods\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tCommunity networking events\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tBuy\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h5>Pro</h5>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t$150/10 Day\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t10-day hot desk access (flexible use)\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tHigh-speed WiFi\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tFree coffee, tea &amp; snacks\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tPrinting &amp; scanning (extended)\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tAccess to lounge, meeting pods &amp; phone booths\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t2 hours meeting room credits included\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tCommunity events &amp; workshops\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tBuy\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"126\" height=\"126\" src=\"/media/2d63bdce17-Background.png\" alt=\"\" srcset=\"/media/2d63bdce17-Background.png 126w, /media/d11600fa43-Background-100x100.png 100w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h5>Unlimited</h5>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t$210/unlimited\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tUnlimited hot desk access\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tHigh-speed WiFi\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tFree coffee, tea, snacks &amp; refreshments\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t Unlimited printing &amp; scanning\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tFull access to lounge, meeting rooms &amp; phone booths\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t5 hours meeting room credits per month\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\tPriority booking for events &amp; workshops\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t 24/7 workspace access\n\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tBuy\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t",
-      "excerpt": "Monthly Memberships flexible commitment terms How it works 01. Pick a room for a session or a membership 02. Get email confirmation. 03. Use your phone for access. 04. Enjoy your session. Coworking made easy: pick your plan, make your reservation, and get to work without any problems. Our procedure is fast, adaptable, and made […]",
-      "date": "2025-07-19T21:18:34",
-      "modified": "2026-02-06T14:16:50",
-      "featuredImage": "/media/bf9b5fbdee-imageeraa.png",
-      "images": [
-        "/media/bf9b5fbdee-imageeraa.png",
-        "/media/5da5b4dc39-image-2.png",
-        "/media/210e6c49d2-Quote-Decoration.png",
-        "/media/abbfc2e9a0-Image-26.png",
-        "/media/2d63bdce17-Background.png"
-      ],
-      "seo": {
-        "title": "Monthly Memberships – WorkSpace Junction",
-        "description": "Pick a room for a session or a membership"
-      },
-      "type": "page",
-      "sourceUrl": "https://workspacejunction.com/monthly_memberships/",
-      "categories": [],
-      "contentSource": "public-rest",
-      "originalSlug": "monthly_memberships",
-      "sourceId": 1127,
-      "canonicalUrl": "https://workspacejunction.com/monthly_memberships/",
       "aliases": []
     },
     {
@@ -1698,46 +1563,6 @@
       "contentSource": "public-html",
       "sourceId": 8846,
       "canonicalUrl": "https://workspacejunction.com/csb_virtual_office/virtual-office/",
-      "aliases": []
-    },
-    {
-      "id": 613,
-      "slug": "home-new",
-      "path": "/home-new/",
-      "title": "Home new",
-      "content": "\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>A Workspace Build for How You Grow - </h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t<h3>\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\tVirtual&#160;Office\t\t\t\n\t\t\t\t\t\n\t\t\t\tPodcast&#160;Studio\t\t\t\n\t\t\t\t\t\n\t\t\t\tCoworking&#160;Space\t\t\t\n\t\t\t\t\t\n\t\t\t\tDedicated&#160;Desk\t\t\t\n\t\t\t\t\t\n\t\t\t\tBusiness&#160;Address\t\t\t\n\t\t\t\t\t\n\t\t\t\tPhoto&#160;Studio\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t</h3>\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\r\n  \r\n    <p>Office Space</p>\r\n    <p>Podcast Studio</p>\r\n    <p>Coworking</p>\r\n  \r\n\r\n\r\n\r\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Experience a modern workspace designed for individuals. Reserve your own private office, record in a soundproof podcast studio, or work in a flexible coworking environment, everything to boost your productivity in Oakbrook Terrace</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"104\" height=\"104\" src=\"/media/6565607bb1-playbtn.png\" alt=\"\" srcset=\"/media/6565607bb1-playbtn.png 104w, /media/519ef1c6a3-playbtn-100x100.png 100w\">\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Open Space</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"104\" height=\"104\" src=\"/media/6565607bb1-playbtn.png\" alt=\"\" srcset=\"/media/6565607bb1-playbtn.png 104w, /media/519ef1c6a3-playbtn-100x100.png 100w\">\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Open Space</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\r\n  \r\n    1 Hour<p> - From 5USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1day<p> - From 10USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1month<p> - From 143USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> \r\n   \r\n    \r\n     1 Hour<p> - From 5USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1day<p> - From 10USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1month<p> - From 143USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> \r\n\r\n      1 Hour<p> - From 5USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1day<p> - From 10USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1month<p> - From 143USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> \r\n\r\n       1 Hour<p> - From 5USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1day<p> - From 10USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1month<p> - From 143USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> \r\n\r\n        1 Hour<p> - From 5USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1day<p> - From 10USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1month<p> - From 143USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> \r\n\r\n         1 Hour<p> - From 5USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1day<p> - From 10USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> 1month<p> - From 143USD/hour</p><img loading=\"lazy\" src=\"/media/ef87e4e445-Asterisk-2.png\" alt=\"\"> \r\n  \r\n\r\n\r\n\r\n\r\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\r\n\r\n\r\n\r\n\r\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"302\" height=\"313\" src=\"/media/8acf93fa71-workspace-logo.png\" alt=\"\" srcset=\"/media/8acf93fa71-workspace-logo.png 302w, /media/a99adc1912-workspace-logo-289x300.png 289w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Everything You Need, All in One Place</h2>\t\t\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tFrom blazing-fast internet and flexible desks to fully equipped meeting rooms, our workspace empowers you to work seamlessly and efficiently.\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<section>\r\n  \r\n    <p>Coworking</p>-<br>-<br>-<br>\r\n    <p>Podcast Studio</p>-<br>-<br>-<br>\r\n    <p>Dedicated Desk</p>-<br>-<br>-<br>\r\n    <p>Virtual Office</p>-<br>-<br>-<br>\r\n    <p>Business Address</p>\r\n  \r\n</section>\r\n\r\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t<section>\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\n\t\t\t\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t</section>\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Trusted by Chicagoans</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"197\" height=\"136\" src=\"/media/210e6c49d2-Quote-Decoration.png\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tView all testimonials\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<img loading=\"lazy\" src=\"https://via.placeholder.com/50\" alt=\"— Jasie, Software Engineer\"><h4>— Jasie, Software Engineer</h4><p>“Workspace Junction is perfect for focused work. It is a modern, professional, and ideal hub for freelancers.”</p><img loading=\"lazy\" src=\"https://via.placeholder.com/50\" alt=\"— Podcast User\"><h4>— Podcast User</h4><p>“I needed a soundproof studio for my podcast. Recording at Workspace Junction has never been easier.”</p><img loading=\"lazy\" src=\"https://via.placeholder.com/50\" alt=\" – Sarah, Graphic Designer & Design Studio Owner\"><h4> – Sarah, Graphic Designer &amp; Design Studio Owner</h4><p>\"WorkSpace Junction transformed how I run my design business. The professional environment, reliable WiFi, and collaborative community helped me land major clients. I went from coffee shop freelancer to established designer.\"</p><img loading=\"lazy\" src=\"https://via.placeholder.com/50\" alt=\"– Andrew, Software Engineer & Tech Consultant\"><h4>– Andrew, Software Engineer &amp; Tech Consultant</h4><p>\"As a software engineer, I need distraction-free focus time. WorkSpace Junction delivers exactly that. The quiet zones are perfect for deep coding, and the professional atmosphere keeps me productive. Best investment in my career.\"</p><img loading=\"lazy\" src=\"https://via.placeholder.com/50\" alt=\"– Jamie, Podcast Producer & Content Creator\"><h4>– Jamie, Podcast Producer &amp; Content Creator</h4><p>\"Finding the perfect space to record my podcast was challenging until I discovered WorkSpace Junction. Their soundproof podcast studio and professional environment made launching my show effortless. Highly recommended!\"</p><img loading=\"lazy\" src=\"https://via.placeholder.com/50\" alt=\"\"><h4></h4><p></p>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t<a href=\"/\">\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\tView all testimonials\n\t\t\t\t\t\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>Space, tools, and support \n— all in one.</h3>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Let us handle cleaning, IT solutions, supplies, and security so you can focus on your business. coworking solution</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"74\" height=\"74\" src=\"/media/4f600827cb-highspeed-icon.svg\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>high-speed <br>Internet </h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Work without disruptions, thanks to reliable, High speed wifi throughout the workspace</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"74\" height=\"74\" src=\"/media/40c6d9e64a-meetingroom.svg\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Meeting  <br>Room </h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tChoose private, soundproof pods for calls or full-size meeting rooms for collaboration\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"74\" height=\"74\" src=\"/media/0d07e136c7-coffee.svg\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Coffee<br>Station  </h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tFreshly brewed coffee is available at your desk all day, keeping you energized and alert.\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"74\" height=\"74\" src=\"/media/b96700c3ea-cashless.svg\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Cashless <br>Payments</h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Easy payments by personal card account seamless booking and management.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"74\" height=\"74\" src=\"/media/bd4f92cb9e-regularcleaning.svg\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Hygiene\n</h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tDaily cleaning ensures a safe, healthy workspace for all members.\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"74\" height=\"74\" src=\"/media/0c40476bbc-printer.svg\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Printers &amp; <br>Office Supplies </h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>All essential supplies, always stocked for your productivity.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"74\" height=\"74\" src=\"/media/8fe87ab638-loungearea.svg\" alt=\"\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Common spaces and Private Rooms\n</h2>\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tTake a break and refresh in our thoughtfully designed common rooms\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"572\" height=\"1052\" src=\"/media/cda298b8e3-image-10.png\" alt=\"\" srcset=\"/media/cda298b8e3-image-10.png 572w, /media/e2814a4be5-image-10-163x300.png 163w, /media/3eb86aa64d-image-10-557x1024.png 557w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>Space, tools, and support \n<br>— all in one.</h3>\t\t\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tFocus on your core business – we’ll manage the rest. From IT solutions and security to seamless cleaning services, consider it done.\t\t\t\t\t\t\t\t</p>\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"572\" height=\"1052\" src=\"/media/cda298b8e3-image-10.png\" alt=\"\" srcset=\"/media/cda298b8e3-image-10.png 572w, /media/e2814a4be5-image-10-163x300.png 163w, /media/3eb86aa64d-image-10-557x1024.png 557w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"150\" height=\"150\" src=\"/media/70f5789da3-image-10-150x150.png\" alt=\"\" srcset=\"/media/70f5789da3-image-10-150x150.png 150w, /media/0afe88fab7-image-10-300x300.png 300w, /media/7ae52b83ed-image-10-100x100.png 100w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Where refined design meets purposeful productivity. An elevated workspace crafted for exceptional minds.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Workspace Junction\n</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>Real Voices. Real Experiences.</h3>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>This space gave us the freedom to focus, collaborate, and grow — without distractions.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Where refined design meets purposeful productivity. An elevated workspace crafted for exceptional minds.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h2>Workspace Junction\n</h2>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>Flexible Workspace Designed Around Your Needs</h3>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t<a href=\"/media/712483ec96-image-70.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/8c6ec3c185-image-78.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/b39382c93b-image-81.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/f57cc3f4a4-image-82.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/849c143a70-image-83.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t<a href=\"/media/7f2664fead-image-84.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/ef6d7dfbe6-image-85.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/4fb1336062-image-86.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/25ad29c169-image-88.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/780df37f59-image-87.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t<a href=\"/media/4c530c20b7-image-89.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/503fc37389-image-90.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/f592b15787-image-91.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/c4d696592f-image-92.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/359bc589f7-image-93.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t<a href=\"/media/5ddb7a45ef-image-94.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/8a8f8a2135-image-95.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/c21e4b5c22-image-96.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/112b7b6d86-image-97.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/816c702270-image-98.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t<a href=\"/media/9f8dc6449d-image-99.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/b9a2fef39e-image-100.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/81611fe0f6-image-2025-11-20T130548.564.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/656943f369-image-2025-11-20T130554.131.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t<a href=\"/media/e98122f72a-image-2025-11-20T130557.812.png\">\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>Got questions?</h3>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>We’ve got you covered!</h3>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t<h3>Got questions? We’ve got you covered!</h3>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>From memberships to meeting rooms — find quick answers to all your coworking queries right here. No confusion, just clarity.</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img loading=\"lazy\" width=\"506\" height=\"619\" src=\"/media/dfcf491571-image.png\" alt=\"\" srcset=\"/media/dfcf491571-image.png 506w, /media/c24f035e3f-image-245x300.png 245w\">\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\t<h4>FAQ &amp; Contact</h4>\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Find answers to common questions or get in touch with us for more information!</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t<details open>\n\t\t\t\t<summary>\n\t\t\t\t\t<p> What types of break areas are available at WorkSpace Junction? </p>\n\t\t\t\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\n\n\t\t\t\t\t\t</summary>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p>Workspace Junction provides well-furnished common rooms where you can take short breaks, have coffee, or relax in a professional setting. For additional privacy, there are two private rooms available for phone calls, focused work, or quiet moments</p>\t\t\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t</details>\n\t\t\t\t\t\t<details>\n\t\t\t\t<summary>\n\t\t\t\t\t<p> Can I reserve a private room for calls or meetings? </p>\n\t\t\t\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\n\n\t\t\t\t\t\t</summary>\n\t\t\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tYes, our private rooms can be booked for specific times. They are ideal for confidential calls, online meetings, or uninterrupted work.\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\t</details>\n\t\t\t\t\t\t<details>\n\t\t\t\t<summary>\n\t\t\t\t\t<p> Are refreshments allowed in common and private rooms? </p>\n\t\t\t\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\n\n\t\t\t\t\t\t</summary>\n\t\t\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tYes, you are welcome to bring coffee and light refreshments into the common rooms and private rooms while respecting the comfort and cleanliness of the workspace.\n\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\t</details>\n\t\t\t\t\t\t<details>\n\t\t\t\t<summary>\n\t\t\t\t\t<p> How do I book a private room? </p>\n\t\t\t\t\t\t\t\n\t\t\t\n\t\t\t\n\t\t\n\n\t\t\t\t\t\t</summary>\n\t\t\t\t\n\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\tYou can reserve a private room through our online booking system, or by contacting our staff for available time slots.\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\n\t\t\t\t\t</details>\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t",
-      "excerpt": "A Workspace Build for How You Grow – Virtual Office Podcast Studio Coworking Space Dedicated Desk Business Address Photo Studio Office Space Podcast Studio Coworking Experience a modern workspace designed for individuals. Reserve your own private office, record in a soundproof podcast studio, or work in a flexible coworking environment, everything to boost your productivity in Oakbrook Terrace Open Space Desk […]",
-      "date": "2025-07-02T00:51:15",
-      "modified": "2026-01-30T14:40:35",
-      "featuredImage": "/media/8acf93fa71-workspace-logo.png",
-      "images": [
-        "/media/6565607bb1-playbtn.png",
-        "/media/ef87e4e445-Asterisk-2.png",
-        "/media/8acf93fa71-workspace-logo.png",
-        "/media/210e6c49d2-Quote-Decoration.png",
-        "https://via.placeholder.com/50",
-        "/media/4f600827cb-highspeed-icon.svg",
-        "/media/40c6d9e64a-meetingroom.svg",
-        "/media/0d07e136c7-coffee.svg",
-        "/media/b96700c3ea-cashless.svg",
-        "/media/bd4f92cb9e-regularcleaning.svg",
-        "/media/0c40476bbc-printer.svg",
-        "/media/8fe87ab638-loungearea.svg",
-        "/media/cda298b8e3-image-10.png",
-        "/media/70f5789da3-image-10-150x150.png",
-        "/media/dfcf491571-image.png"
-      ],
-      "seo": {
-        "title": "Home New – WorkSpace Junction",
-        "description": "Experience a modern workspace designed for individuals. Reserve your own private office, record in a soundproof podcast studio, or work in a flexible"
-      },
-      "type": "page",
-      "sourceUrl": "https://workspacejunction.com/home-new/",
-      "categories": [],
-      "contentSource": "public-rest",
-      "originalSlug": "home-new",
-      "sourceId": 613,
-      "canonicalUrl": "https://workspacejunction.com/home-new/",
       "aliases": []
     },
     {
@@ -4777,58 +4602,6 @@
       "originalSlug": "a-small-business-is-only-as-good-as-its-tools-and-it-is-totally-true",
       "sourceId": 1309,
       "canonicalUrl": "https://workspacejunction.com/a-small-business-is-only-as-good-as-its-tools-and-it-is-totally-true/",
-      "aliases": []
-    },
-    {
-      "id": 1141,
-      "slug": "what-is-lorem-ipsum",
-      "path": "/what-is-lorem-ipsum/",
-      "title": "Networking Night for AI and Startups",
-      "content": "\n<p>Discover how AI is changing small business strategies by joining leaders in the field. includes a networking session.</p>\n\n\n\n<p></p>\n",
-      "excerpt": "Discover how AI is changing small business strategies by joining leaders in the field. includes a networking session.",
-      "date": "2025-07-22T12:11:14",
-      "modified": "2025-09-07T01:11:27",
-      "featuredImage": "/media/d0e1669ce8-blg-image.png",
-      "images": [],
-      "seo": {
-        "title": "Networking Night For AI And Startups – WorkSpace Junction",
-        "description": "Discover how AI is changing small business strategies by joining leaders in the field. includes a networking session."
-      },
-      "type": "post",
-      "sourceUrl": "https://workspacejunction.com/what-is-lorem-ipsum/",
-      "categories": [
-        1
-      ],
-      "contentSource": "public-rest",
-      "originalSlug": "what-is-lorem-ipsum",
-      "sourceId": 1141,
-      "canonicalUrl": "https://workspacejunction.com/what-is-lorem-ipsum/",
-      "aliases": []
-    },
-    {
-      "id": 1140,
-      "slug": "what-is-lorem-ipsum-2",
-      "path": "/what-is-lorem-ipsum-2/",
-      "title": "Freelancer Growth Summit",
-      "content": "\n<p>This summit, which is intended for independent professionals, covers productivity tips, client acquisition, and branding. Leave with practical tips for growing your freelance business.</p>\n",
-      "excerpt": "This summit, which is intended for independent professionals, covers productivity tips, client acquisition, and branding. Leave with practical tips for growing your freelance business.",
-      "date": "2025-07-22T12:11:23",
-      "modified": "2025-09-07T01:11:22",
-      "featuredImage": "/media/d0e1669ce8-blg-image.png",
-      "images": [],
-      "seo": {
-        "title": "Freelancer Growth Summit – WorkSpace Junction",
-        "description": "This summit, which is intended for independent professionals, covers productivity tips, client acquisition, and branding. Leave with practical tips for growing your freelance business."
-      },
-      "type": "post",
-      "sourceUrl": "https://workspacejunction.com/what-is-lorem-ipsum-2/",
-      "categories": [
-        1
-      ],
-      "contentSource": "public-rest",
-      "originalSlug": "what-is-lorem-ipsum-2",
-      "sourceId": 1140,
-      "canonicalUrl": "https://workspacejunction.com/what-is-lorem-ipsum-2/",
       "aliases": []
     }
   ],

@@ -9,7 +9,7 @@ import {usePathname} from 'next/navigation';
 import {ArrowUpRight, Building2, CalendarDays, Handshake, Landmark, Laptop, Mailbox, Menu, Mic, Monitor, Phone, Search, Users, X} from 'lucide-react';
 import {BookingButton, BookingLauncher} from './booking';
 import {CampaignLoader} from './campaign-loader';
-import {AmbientBackdrop, MotionController, MotionToggle} from './ambient';
+import {AmbientBackdrop} from './ambient';
 import {SceneBackdrop} from './scene-backdrop';
 import {GsapMotion} from './gsap-motion';
 
@@ -156,12 +156,32 @@ function PublicSiteShell({children, links, logo, business, pathname}:SiteShellPr
       </nav>
     </header>
     {mobileOpen && <div className="wj-mobile-panel" id="wj-mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" ref={mobilePanel}>
-      <div className="wj-mobile-top"><span>Explore the Junction</span><button type="button" className="wj-menu-toggle" aria-label="Close menu" onClick={closeMobile}><X size={24} aria-hidden="true"/></button></div>
-      <nav aria-label="Mobile navigation" className="wj-mobile-nav">
-        <div className="wj-mobile-primary"><Link prefetch={false} href="/" onClick={closeMobile}><span>Home</span></Link><Link prefetch={false} href={servicesHref} onClick={closeMobile}><span>All spaces & services</span></Link></div>
+      <div className="wj-mega-bar">
+        <span className="wj-mega-brand">Workspace Junction</span>
+        <button type="button" className="wj-mega-close" aria-label="Close menu" onClick={closeMobile}><X size={18} aria-hidden="true"/><span>Close</span></button>
+      </div>
+      <div className="wj-mega-spaces">
+        {[
+          {label:'Coworking',href:'/coworking/',img:'/media/5a32e442c2-coworking-space.jpg'},
+          {label:'Meeting Rooms',href:'/meeting-rooms/',img:'/media/0c15617f3a-meeting-rooms.jpg'},
+          {label:'Event Space',href:'/events/',img:'/media/5f8e75abc6-events.png'},
+          {label:'Podcast Studio',href:'/podcast-studio/',img:'/media/6e6e0920a9-podcast-image-1.png'},
+          {label:'Dedicated Desks',href:'/dedicated/',img:'/media/6d247f9676-dedicated-desk.png'},
+          {label:'Virtual Offices',href:'/virtual-office/',img:'/media/24aa74cdc6-virtual-office.png'},
+        ].map(s => (
+          <Link key={s.href} prefetch={false} href={s.href} onClick={closeMobile} className="wj-mega-card">
+            <span className="wj-mega-card-img" style={{backgroundImage:`url(${s.img})`}} aria-hidden="true"/>
+            <span className="wj-mega-card-label">{s.label}</span>
+          </Link>
+        ))}
+      </div>
+      <nav aria-label="Navigation" className="wj-mega-nav">
         {groups.map(group => <div className="wj-nav-group" key={group.title}><h2>{group.title}</h2>{linkList(group.items, closeMobile)}</div>)}
       </nav>
-      <div className="wj-mobile-actions"><button type="button" className="btn btn-primary" aria-haspopup="dialog" onClick={() => {flushSync(closeMobile); window.dispatchEvent(new CustomEvent('wj:book', {detail:{trigger:mobileTrigger.current}}));}}>Find your space <ArrowUpRight size={17} aria-hidden="true"/></button><a href={'tel:'+b.phoneHref}>{b.phone}</a></div>
+      <div className="wj-mobile-actions">
+        <button type="button" className="btn btn-primary" aria-haspopup="dialog" onClick={() => {flushSync(closeMobile); window.dispatchEvent(new CustomEvent('wj:book', {detail:{trigger:mobileTrigger.current}}));}}>Find your space <ArrowUpRight size={17} aria-hidden="true"/></button>
+        <a href={'tel:'+b.phoneHref}>{b.phone}</a>
+      </div>
     </div>}
     {children}
     {pathname !== '/' && <section className="wj-closing amb-local" aria-labelledby="wj-closing-title"><div className="container wj-closing-inner"><div><p className="eyebrow">Your next chapter starts here</p><h2 id="wj-closing-title" aria-label="Good things happen at the Junction.">Good things happen<br/>at the Junction.</h2><p>Work. Connect. Grow.</p></div><div className="wj-closing-actions"><BookingButton className="btn btn-cream">Come see for yourself <ArrowUpRight size={19} aria-hidden="true"/></BookingButton><Link prefetch={false} href={contactHref} className="text-link">Talk to our team <ArrowUpRight size={17} aria-hidden="true"/></Link></div></div></section>}
@@ -170,6 +190,6 @@ function PublicSiteShell({children, links, logo, business, pathname}:SiteShellPr
       <div className="wj-footer-links">{groups.map(group => <div key={group.title}><h2>{group.title}</h2>{linkList(group.items)}</div>)}</div>
       <div className="wj-footer-bottom"><span>© {new Date().getFullYear()} Workspace Junction</span><span>Work with purpose. Grow together.</span><Link prefetch={false} href={find(/terms|privacy/i, '/terms-and-privacy/')}>Terms & Privacy</Link></div>
     </div></footer>
-    <BookingLauncher/><CampaignLoader/><MotionToggle/><MotionController/><GsapMotion/>
+    <BookingLauncher/><CampaignLoader/><GsapMotion/>
   </div>;
 }

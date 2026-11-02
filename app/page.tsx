@@ -100,9 +100,9 @@ export default async function Home() {
 
       <section className="hp-section lv-podcast amb-local" aria-labelledby="lv-podcast-title"><div className="hp-shell">
         <div className="lv-podcast-head">
-          <Image src="/media/203991b33c-chicago-01-new-1.svg" alt="Chicagoland Podcast Studio" width={130} height={140} className="lv-podcast-logo"/>
+          <Image src="https://chicagolandpodcaststudio.com/images/logo-chicagoland.png" alt="Chicagoland Podcast Studio" width={180} height={60} className="lv-podcast-logo"/>
           <div><p className="eyebrow hp-eyebrow">CREATE &amp; BROADCAST</p><h2 id="lv-podcast-title" className="hp-heading">Chicagoland Podcast Studio</h2></div>
-          <a href={routeFor('podcast-studio', '/podcast-studio/')} className="text-link hp-link">View Details <ArrowUpRight size={18}/></a>
+          <a href="https://chicagolandpodcaststudio.com" target="_blank" rel="noreferrer" className="text-link hp-link">Visit Site <ArrowUpRight size={18}/></a>
         </div>
         <div className="lv-podcast-photos">
           <figure className="lv-photo"><Image src="/media/d978fc3d1e-abd1.jpg" alt="Three people recording a podcast at the studio desk" fill sizes="(max-width: 900px) calc(100vw - 40px), 760px" className="hp-photo"/></figure>

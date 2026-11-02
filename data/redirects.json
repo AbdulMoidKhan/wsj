@@ -38,5 +38,37 @@
   {
     "source": "/product/established-fact-that-a-reader-will-be-distracted/",
     "destination": "/"
+  },
+  {
+    "source": "/home-new/",
+    "destination": "/"
+  },
+  {
+    "source": "/menu-page/",
+    "destination": "/services/"
+  },
+  {
+    "source": "/scrolling-cards/",
+    "destination": "/services/"
+  },
+  {
+    "source": "/face-linkup/",
+    "destination": "/community-network/"
+  },
+  {
+    "source": "/shop/",
+    "destination": "/membership-plans/"
+  },
+  {
+    "source": "/monthly_memberships/",
+    "destination": "/memberships/"
+  },
+  {
+    "source": "/what-is-lorem-ipsum/",
+    "destination": "/blogs/"
+  },
+  {
+    "source": "/what-is-lorem-ipsum-2/",
+    "destination": "/blogs/"
   }
 ]

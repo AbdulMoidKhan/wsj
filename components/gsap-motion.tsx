@@ -101,7 +101,7 @@ export function GsapMotion() {
         if (heroAside && desktop) gsap.to(heroAside, {y: -60, ease: 'none', scrollTrigger: {trigger: heroAside, start: 'top 60%', end: 'bottom top', scrub: true}});
 
         /* masked line-rise headings */
-        $('.hp-heading, .lx-sec h2.lx-h, .ip-page h2, .ip-archive h2, .wj-closing h2, .hp-pricing h2, .hp-journal-head h3').filter(el => below(el) && !el.closest('.prose, .migrated-content, .ip-article-body')).forEach(el => {
+        $('.hp-heading, .lx-sec .lx-h.lx-h2:not(.lx-subtitle), .ip-page h2, .ip-archive h2, .wj-closing h2, .hp-pricing h2, .hp-journal-head h3').filter(el => below(el) && !el.closest('.prose, .migrated-content, .ip-article-body')).forEach(el => {
           const accessibleLabel = el.getAttribute('aria-label');
           const split = SplitText.create(el, {type: 'lines', mask: 'lines', linesClass: 'gx-line', autoSplit: true,
             onSplit: self => gsap.from(self.lines, {yPercent: 115, rotate: 2.5, duration: 1.15, ease: 'expo.out', stagger: 0.09, scrollTrigger: {trigger: el, start: 'top 88%', once: true}})});
@@ -131,7 +131,7 @@ export function GsapMotion() {
         }
 
         /* 3D batch reveals */
-        const batchSel = ['.hp-service-card', '.price-card', '.hp-journal-card', '.journal-card', '.ip-service-card', '.ip-feature-card', '.ip-topic', '.directory-card', '.hp-benefits>div', '.hp-faq-list details', '.hp-creative-links>a', '.wj-footer-links>div', '.wj-footer-top>div', '.contact-detail', '.hp-section-head>p', '.hp-place-copy>p', '.hp-creative-copy>p', '.hp-community-top>p', '.hp-faq-grid>div>p', '.hp-actions', '.hp-all-services', '.pricing-filters', '.ip-lead', '.wj-closing-actions', '.hp-ending-actions', '.lv-service', '.lv-stats>div', '.lv-copy>p:not(.eyebrow)', '.lv-copy .hp-actions', '.lv-faq-side>p:not(.eyebrow)', '.lv-tabs', '.lv-think', '.lv-lead', '.lx-card-col', '.lx-stat', '.lx-quote', '.lx-table-wrap', '.lx-faq details']
+        const batchSel = ['.hp-service-card', '.price-card', '.hp-journal-card', '.journal-card', '.ip-service-card', '.ip-feature-card', '.ip-topic', '.directory-card', '.hp-benefits>div', '.hp-faq-list details', '.hp-creative-links>a', '.wj-footer-links>div', '.wj-footer-top>div', '.contact-detail', '.hp-section-head>p', '.hp-place-copy>p', '.hp-creative-copy>p', '.hp-community-top>p', '.hp-faq-grid>div>p', '.hp-actions', '.hp-all-services', '.pricing-filters', '.ip-lead', '.wj-closing-actions', '.hp-ending-actions', '.lv-service', '.lv-stats>div', '.lv-copy>p:not(.eyebrow)', '.lv-copy .hp-actions', '.lv-faq-side>p:not(.eyebrow)', '.lv-tabs', '.lv-think', '.lv-lead', '.lx-card-col', '.lx-testimonial-card', '.lx-stat', '.lx-quote', '.lx-table-wrap', '.lx-faq details']
           .join(',');
         const batchEls = $(batchSel).filter(el => below(el) && !(canPin && el.classList.contains('hp-service-card')));
         if (batchEls.length) {

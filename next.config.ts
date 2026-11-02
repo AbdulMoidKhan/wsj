@@ -25,6 +25,10 @@ const config: NextConfig = {
             port: publicApi.port,
             pathname: '/uploads/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'chicagolandpodcaststudio.com',
+          },
         ],
       },
   turbopack: { rules: { '*.css': { loaders: ['@tailwindcss/turbopack'], as: '*.css' } } },

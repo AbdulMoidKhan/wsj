@@ -6,6 +6,12 @@ import {InquiryForm} from './forms';
 import {LiveTabs} from './live-tabs';
 import {safeContent} from '@/lib/site';
 import livePages from '@/data/live-pages.json';
+// Photos exported from Elementor with a transparent "tab notch" cut into a corner (measured by alpha scan).
+import imageNotches from '@/data/image-notches.json';
+// Transparent cut-out photos (round avatars, isolated objects): show whole, never cover-crop.
+import imageCutouts from '@/data/image-cutouts.json';
+const CUTOUTS = new Set(imageCutouts as string[]);
+const NOTCHES = imageNotches as Record<string, {x: number; y: number; w: number; h: number}>;
 
 /*
   Renders the section structure captured from the live WordPress/Elementor pages
@@ -16,7 +22,7 @@ import livePages from '@/data/live-pages.json';
 
 export type LNode =
   | {t: 'box'; bg?: string; id?: string; children: LNode[]}
-  | {t: 'h'; lv: number; text: string}
+  | {t: 'h'; lv: number; text: string; vis?: number}
   | {t: 'html'; html: string}
   | {t: 'text'; text: string}
   | {t: 'img'; src: string; alt: string; w?: number; h?: number; href?: string}
@@ -45,7 +51,7 @@ const textish = (n: LNode) => ['h', 'html', 'text', 'list', 'btn', 'card', 'stat
 const imgOnly = (n: LNode): boolean => n.t === 'img' || (isBox(n) && !n.bg && n.children.length > 0 && n.children.every(c => c.t === 'img'));
 
 /* Split a long run of leaves into repeating groups (e.g. img,h,html  img,h,html ...). */
-function chunkRepeating(nodes: LNode[], maxP = 5): LNode[][] | null {
+function chunkRepeating(nodes: LNode[], maxP = 14): LNode[][] | null {
   if (nodes.length < 6 || nodes.some(isBox)) return null;
   const sig = nodes.map(n => n.t);
   for (let p = 2; p <= maxP; p++) {
@@ -66,7 +72,7 @@ function chunkRepeating(nodes: LNode[], maxP = 5): LNode[][] | null {
 function chunkWithPrefix(nodes: LNode[]): {prefix: LNode[]; groups: LNode[][]} | null {
   if (nodes.some(isBox)) return null;
   for (let start = 1; start <= Math.min(6, nodes.length - 6); start++) {
-    const groups = chunkRepeating(nodes.slice(start), 8);
+    const groups = chunkRepeating(nodes.slice(start));
     if (groups && groups[0].length >= 3) return {prefix: nodes.slice(0, start), groups};
   }
   return null;
@@ -91,8 +97,12 @@ function normalizeHeadings(nodes: LNode[]): LNode[] {
 
   let assignedH1 = false;
   let assignedEyebrow = false;
+  let last = 1;
+  let walkedH1: LNode | null = null;
 
-  const walk = (list: LNode[]): LNode[] => list.map(n => {
+  /* Document outline: one h1, a tagline directly under it becomes a subtitle paragraph (lv -1),
+     and no level is skipped (h2 -> h4 becomes h2 -> h3). `vis` keeps the source size class. */
+  const walk = (list: LNode[]): LNode[] => list.map((n, i) => {
     if (n.t === 'h') {
       const clean = n.text.replace(/^#\s*/, '').trim();
       if (isEyebrow && !assignedEyebrow && /^(welcome to|workspace|unlock growth|everything you need to stand out)/i.test(clean)) {
@@ -101,9 +111,16 @@ function normalizeHeadings(nodes: LNode[]): LNode[] {
       }
       if (!assignedH1) {
         assignedH1 = true;
-        return {...n, text: clean, lv: 1};
+        walkedH1 = n;
+        last = 1;
+        return {...n, text: clean, lv: 1, vis: 1};
       }
-      return {...n, text: clean, lv: Math.max(n.lv, 2)};
+      const prev = list[i - 1];
+      if (prev && prev.t === 'h' && last === 1 && i > 0 && prev.text.replace(/^#\s*/, '').trim() !== clean && walkedH1 === prev) return {...n, text: clean, lv: -1, vis: n.lv};
+      const lv = Math.min(Math.max(n.lv, 2), last + 1);
+      last = lv;
+      // promoted by 2+ levels (h4 -> h2) means it is really a section title: size it as one
+      return {...n, text: clean, lv, vis: Math.max(n.lv, 2) - lv >= 2 ? lv : Math.max(n.lv, 2)};
     }
     if (n.t === 'box') return {...n, children: walk(n.children)};
     if (n.t === 'tabs') return {...n, tabs: n.tabs.map(t => ({...t, children: walk(t.children)}))};
@@ -141,7 +158,8 @@ function Leaf({n, ctx}: {n: LNode; ctx: Ctx}): ReactNode {
     case 'h': {
       const clean = n.text.replace(/^#\s*/, '').trim();
       if (n.lv === 0) return <p className="eyebrow lx-eyebrow">{clean}</p>;
-      const cls = 'lx-h lx-h' + Math.min(Math.max(n.lv, 1), 6);
+      const cls = 'lx-h lx-h' + Math.min(Math.max(n.vis ?? n.lv, 1), 6);
+      if (n.lv === -1) return <p className={cls + ' lx-subtitle'}>{clean}</p>;
       if (n.lv === 1) return <h1 className={cls}>{clean}</h1>;
       if (n.lv === 2) return <h2 className={cls}>{clean}</h2>;
       if (n.lv === 3) return <h3 className={cls}>{clean}</h3>;
@@ -159,8 +177,10 @@ function Leaf({n, ctx}: {n: LNode; ctx: Ctx}): ReactNode {
       const w = n.w && n.w > 0 ? n.w : 1200, h = n.h && n.h > 0 ? n.h : 800;
       const small = !!n.w && n.w <= 240;
       const altText = cleanAlt(n.alt, `${ctx.service || 'Workspace'} space photo`);
-      const img = <Image src={n.src} alt={altText} width={w} height={h} sizes={small ? `${w}px` : '(max-width: 760px) calc(100vw - 40px), (max-width: 1200px) 50vw, 640px'} className={small ? 'lx-img lx-img-sm' : 'lx-img'} style={{['--lx-img-max' as string]: (small ? Math.min(w, 140) : n.w && n.w > 0 ? n.w : null) ? `${small ? Math.min(w, 140) : n.w}px` : undefined}}/>;
-      return n.href ? <a href={n.href} className="lx-img-link">{img}</a> : img;
+      const img = <Image src={n.src} unoptimized={/\.gif$/i.test(n.src)} alt={altText} width={w} height={h} sizes={small ? `${w}px` : '(max-width: 760px) calc(100vw - 40px), (max-width: 1200px) 50vw, 640px'} className={(small ? 'lx-img lx-img-sm' : 'lx-img') + (CUTOUTS.has(n.src) ? ' lx-img-cutout' : '')} style={{['--lx-img-max' as string]: (small ? Math.min(w, 140) : n.w && n.w > 0 ? n.w : null) ? `${small ? Math.min(w, 140) : n.w}px` : undefined}}/>;
+      const crop = small ? undefined : NOTCHES[n.src];
+      const framed = crop ? <span className="lx-crop" style={{aspectRatio: `${(w * crop.w).toFixed(0)} / ${(h * crop.h).toFixed(0)}`, maxWidth: n.w && n.w > 0 && n.w < 800 ? `${Math.round(n.w * crop.w)}px` : undefined, ['--cx' as string]: crop.x, ['--cy' as string]: crop.y, ['--cw' as string]: crop.w, ['--ch' as string]: crop.h}}>{img}</span> : img;
+      return n.href ? <a href={n.href} className="lx-img-link">{framed}</a> : framed;
     }
     case 'btn': {
       const isPeriodTab = /^(monthly|yearly save|yearly|annual)/i.test(n.label.trim()) && !n.href;
@@ -192,8 +212,73 @@ function Leaf({n, ctx}: {n: LNode; ctx: Ctx}): ReactNode {
   }
 }
 
+/* A box holding only heading(s)/eyebrow is a title for its siblings, not a column. */
+const headingOnly = (b: LNode) => isBox(b) && !b.bg && b.children.length > 0 && b.children.every(x => x.t === 'h');
+
+/* Testimonials detection: group has avatar image, author heading with dash, and quote text */
+function isTestimonialGroup(nodes: LNode[]): boolean {
+  if (nodes.length < 2 || nodes.length > 4) return false;
+  const hasImg = nodes.some(n => n.t === 'img');
+  const hasAuthor = nodes.some(n => n.t === 'h' && /^[\s\u2013\u2014-]/.test(n.text));
+  const hasQuote = nodes.some(n => (n.t === 'html' || n.t === 'text') && /[“"']/.test(n.t === 'html' ? n.html : n.text));
+  return hasImg && hasAuthor && hasQuote;
+}
+
+function TestimonialCard({nodes}: {nodes: LNode[]}) {
+  const imgNode = nodes.find(n => n.t === 'img') as Extract<LNode, {t: 'img'}> | undefined;
+  const hNode = nodes.find(n => n.t === 'h') as Extract<LNode, {t: 'h'}> | undefined;
+  const textNode = nodes.find(n => n.t === 'html' || n.t === 'text') as Extract<LNode, {t: 'html' | 'text'}> | undefined;
+
+  const rawTitle = hNode?.text || imgNode?.alt || '';
+  const cleanTitle = rawTitle.replace(/^[\s\u2013\u2014-]+/, '').trim();
+  const commaIdx = cleanTitle.indexOf(',');
+  let name = cleanTitle;
+  let role = '';
+  if (commaIdx !== -1) {
+    name = cleanTitle.slice(0, commaIdx).trim();
+    role = cleanTitle.slice(commaIdx + 1).trim();
+  }
+
+  const rawHtml = textNode ? (textNode.t === 'html' ? textNode.html : textNode.text) : '';
+  const textContent = rawHtml.replace(/<[^>]*>/g, '').trim();
+  const cleanQuote = textContent.replace(/^[“"']+|[”"']+$/g, '').trim();
+
+  return (
+    <figure className="lx-col lx-testimonial-card">
+      <div className="lx-testimonial-quote-wrap">
+        <span className="lx-testimonial-mark" aria-hidden="true">&ldquo;</span>
+        <blockquote className="lx-testimonial-quote">
+          <p>{cleanQuote}</p>
+        </blockquote>
+      </div>
+      <figcaption className="lx-testimonial-footer">
+        {imgNode && (
+          <Image
+            src={imgNode.src}
+            alt={name}
+            width={52}
+            height={52}
+            className="lx-testimonial-avatar"
+          />
+        )}
+        <div className="lx-testimonial-meta">
+          <cite className="lx-testimonial-name">{name}</cite>
+          {role && <span className="lx-testimonial-role">{role}</span>}
+        </div>
+      </figcaption>
+    </figure>
+  );
+}
+
 function Box({n, ctx}: {n: Extract<LNode, {t: 'box'}>; ctx: Ctx}) {
-  const kids = n.children;
+  const kids = n.children.length > 1 ? n.children.flatMap(k => headingOnly(k) ? (k as Extract<LNode, {t: 'box'}>).children : [k]) : n.children;
+  // three or more image-only children: an even photo grid instead of a ragged column
+  const photoKids = kids.filter(k => k.t === 'img' || (isBox(k) && !k.bg && k.children.length === 1 && k.children[0].t === 'img'));
+  if (!n.bg && kids.length >= 3 && photoKids.length === kids.length && !photoKids.some(k => (k.t === 'img' ? k : (k as Extract<LNode, {t: 'box'}>).children[0] as Extract<LNode, {t: 'img'}>).w! > 0 && ((k.t === 'img' ? k : (k as Extract<LNode, {t: 'box'}>).children[0]) as Extract<LNode, {t: 'img'}>).w! <= 160)) {
+    return <div id={n.id} className="lx-photo-grid" style={{['--cols' as string]: kids.length === 4 ? 2 : Math.min(kids.length, 3)}}>
+      {photoKids.map((k, i) => <div key={i} className="lx-photo-cell"><Leaf n={k.t === 'img' ? k : (k as Extract<LNode, {t: 'box'}>).children[0]} ctx={{...ctx, narrow: true}}/></div>)}
+    </div>;
+  }
   const inner = {...ctx, depth: ctx.depth + 1};
   // background image boxes: cover panel (with copy on a shade if it has text)
   if (n.bg) {
@@ -223,6 +308,13 @@ function Box({n, ctx}: {n: Extract<LNode, {t: 'box'}>; ctx: Ctx}) {
     return <div id={n.id} className="lx-stack lx-stack-lg">{first && actions}<Box n={rest} ctx={ctx}/>{!first && actions}</div>;
   }
   // inside a card or a 3+ column grid there is no room for further columns: stack
+  // inside a card: sibling item groups (image + heading, e.g. service tiles) form a small grid instead of one long column
+  const itemLike = (b: Extract<LNode, {t: 'box'}>) => b.children.some(x => x.t === 'h') && b.children.some(x => x.t === 'img');
+  if (ctx.narrow && boxes.length >= 2 && boxes.length === kids.length && boxes.every(itemLike)) {
+    return <div id={n.id} className="lx-cols lx-cards lx-mini-grid" style={{['--cols' as string]: Math.min(boxes.length, 3)}}>
+      {boxes.map((b, i) => <div key={i} className="lx-col lx-mini-item"><Box n={b} ctx={inner}/></div>)}
+    </div>;
+  }
   if (ctx.narrow && boxes.length && !boxes.every(imgOnly)) {
     return <div id={n.id} className="lx-stack"><Nodes nodes={kids} ctx={inner}/></div>;
   }
@@ -236,26 +328,67 @@ function Box({n, ctx}: {n: Extract<LNode, {t: 'box'}>; ctx: Ctx}) {
   const filteredBoxes = boxes.filter(b => !(b.children && b.children.length === 1 && b.children[0].t === 'img' && (b.children[0].w || 0) <= 240 && !b.bg && boxes.length > 2));
   const activeBoxes = filteredBoxes.length >= 2 ? filteredBoxes : boxes;
   if (activeBoxes.length >= 2 && (activeBoxes.length === kids.length || activeBoxes.length === filteredBoxes.length)) {
+    const leaves = kids.filter(k => !isBox(k));
     const split = activeBoxes.length === 2 && (imgOnly(activeBoxes[0]) || imgOnly(activeBoxes[1]));
     const deepText = (b: LNode) => /"t":"(h|html|list|text)"/.test(JSON.stringify(b));
     const cards = !ctx.hero && !split && activeBoxes.length >= 2 && activeBoxes.every(deepText);
-    return <div id={n.id} className={'lx-cols' + (split ? ' lx-split' : '') + (cards ? ' lx-cards' : '')} style={{['--cols' as string]: Math.min(activeBoxes.length, 4)}}>
+    // Two very unequal columns (e.g. three packages beside a short CTA) read badly as equal-height cards:
+    // give each full width so the long one can lay its repeated items out as a grid.
+    const weight = (b: LNode) => JSON.stringify(b).replace(/"(src|alt|bg|href|t|lv|w|h)":("[^"]*"|\d+)/g, '').length;
+    if (cards && activeBoxes.length === 2) {
+      const [wa, wb] = activeBoxes.map(weight);
+      if (Math.max(wa, wb) > 2.5 * Math.min(wa, wb)) return <div id={n.id} className="lx-stack lx-stack-lg lx-uneven">
+        {leaves.length > 0 && <div className="lx-stack"><Nodes nodes={leaves.filter(k => kids.indexOf(k) < kids.findIndex(isBox))} ctx={inner}/></div>}
+        {activeBoxes.map((b, i) => <div key={i} className={'lx-uneven-part' + ((i === 0 ? wa : wb) < (i === 0 ? wb : wa) ? ' lx-callout' : '')}><Box n={b} ctx={inner}/></div>)}
+        {leaves.length > 0 && <div className="lx-stack"><Nodes nodes={leaves.filter(k => kids.indexOf(k) > kids.findIndex(isBox))} ctx={inner}/></div>}
+      </div>;
+    }
+    const grid = <div id={leaves.length ? undefined : n.id} className={'lx-cols' + (split ? ' lx-split' : '') + (cards ? ' lx-cards' : '')} style={{['--cols' as string]: Math.min(activeBoxes.length, 4)}}>
       {activeBoxes.map((b, i) => <div key={i} className={cards ? 'lx-col lx-card-col' : 'lx-col'}><Box n={b} ctx={{...inner, narrow: cards || activeBoxes.length >= 3}}/></div>)}
+    </div>;
+    if (!leaves.length) return grid;
+    // Loose headings/copy beside the columns used to be dropped; keep them in source order around the grid.
+    const firstBox = kids.findIndex(isBox);
+    const before = kids.filter((k, i) => !isBox(k) && i < firstBox);
+    const after = kids.filter((k, i) => !isBox(k) && i > firstBox);
+    return <div id={n.id} className="lx-stack lx-stack-lg">
+      {before.length > 0 && <div className="lx-stack"><Nodes nodes={before} ctx={inner}/></div>}
+      {grid}
+      {after.length > 0 && <div className="lx-stack"><Nodes nodes={after} ctx={inner}/></div>}
     </div>;
   }
   // repeating leaf patterns -> card grid
   const groups = chunkRepeating(kids);
-  if (groups) return <div id={n.id} className="lx-cols lx-cards" style={{['--cols' as string]: groups.length <= 5 ? groups.length : groups.length % 4 === 0 ? 4 : 3}}>
-    {groups.map((g, i) => <div key={i} className="lx-col lx-card-col"><Nodes nodes={g} ctx={{...inner, narrow: true}}/></div>)}
-  </div>;
+  if (groups) {
+    const isTestimonial = isTestimonialGroup(groups[0]);
+    if (isTestimonial) {
+      return <div id={n.id} className="lx-cols lx-testimonials-showcase" style={{['--cols' as string]: 3}}>
+        {groups.map((g, i) => <TestimonialCard key={i} nodes={g}/>)}
+      </div>;
+    }
+    return <div id={n.id} className={'lx-cols lx-cards'} style={{['--cols' as string]: groups.length <= 5 ? groups.length : groups.length % 4 === 0 ? 4 : 3}}>
+      {groups.map((g, i) => <div key={i} className="lx-col lx-card-col"><Nodes nodes={g} ctx={{...inner, narrow: true}}/></div>)}
+    </div>;
+  }
   // intro copy followed by repeating groups -> intro stack + card grid
   const prefixed = !ctx.narrow ? chunkWithPrefix(kids) : null;
-  if (prefixed) return <div id={n.id} className="lx-stack lx-stack-lg">
-    <div className="lx-stack"><Nodes nodes={prefixed.prefix} ctx={inner}/></div>
-    <div className="lx-cols lx-cards" style={{['--cols' as string]: prefixed.groups.length <= 4 ? prefixed.groups.length : 3}}>
-      {prefixed.groups.map((g, i) => <div key={i} className="lx-col lx-card-col"><Nodes nodes={g} ctx={{...inner, narrow: true}}/></div>)}
-    </div>
-  </div>;
+  if (prefixed) {
+    const isPrefixedTestimonial = isTestimonialGroup(prefixed.groups[0]);
+    if (isPrefixedTestimonial) {
+      return <div id={n.id} className="lx-stack lx-stack-lg">
+        <div className="lx-stack"><Nodes nodes={prefixed.prefix} ctx={inner}/></div>
+        <div className="lx-cols lx-testimonials-showcase" style={{['--cols' as string]: 3}}>
+          {prefixed.groups.map((g, i) => <TestimonialCard key={i} nodes={g}/>)}
+        </div>
+      </div>;
+    }
+    return <div id={n.id} className="lx-stack lx-stack-lg">
+      <div className="lx-stack"><Nodes nodes={prefixed.prefix} ctx={inner}/></div>
+      <div className="lx-cols lx-cards" style={{['--cols' as string]: prefixed.groups.length <= 4 ? prefixed.groups.length : 3}}>
+        {prefixed.groups.map((g, i) => <div key={i} className="lx-col lx-card-col"><Nodes nodes={g} ctx={{...inner, narrow: true}}/></div>)}
+      </div>
+    </div>;
+  }
   // lone image beside copy -> split
   if (!ctx.narrow && kids.length >= 2 && imgOnly(kids[0]) && kids.slice(1).some(textish) && !kids.slice(1).some(imgOnly)) {
     return <div id={n.id} className="lx-cols lx-split" style={{['--cols' as string]: 2}}><div className="lx-col"><Nodes nodes={[kids[0]]} ctx={inner}/></div><div className="lx-col lx-stack"><Nodes nodes={kids.slice(1)} ctx={inner}/></div></div>;
@@ -288,7 +421,20 @@ function Nodes({nodes, ctx}: {nodes: LNode[]; ctx: Ctx}) {
 export function LiveSections({sections, title, service}: {sections: LNode[]; title: string; service: string}) {
   const ctx: Ctx = {service, depth: 0};
   const firstHasHeading = JSON.stringify(sections[0] || {}).includes('"t":"h"');
-  const tree = firstHasHeading ? normalizeHeadings(sections) : normalizeHeadings([{t: 'h', lv: 1, text: title}, ...sections]).slice(1);
+  const normalized = firstHasHeading ? normalizeHeadings(sections) : normalizeHeadings([{t: 'h', lv: 1, text: title}, ...sections]).slice(1);
+  // a section that is only a heading ("Membership Overview") introduces the next section; render them together
+  const tree: LNode[] = [];
+  for (let i = 0; i < normalized.length; i++) {
+    const s = normalized[i], next = normalized[i + 1];
+    const leaves = (x: LNode): LNode[] => isBox(x) && !x.bg ? x.children.flatMap(leaves) : [x];
+    const only = leaves(s);
+    if (i > 0 && next && only.length && only.every(x => x.t === 'h')) {
+      const nb = isBox(next) && !next.bg ? next : {t: 'box' as const, children: [next]};
+      normalized[i + 1] = {...nb, children: [...only, ...nb.children]};
+      continue;
+    }
+    tree.push(s);
+  }
   return <div className="lx-page">
     {!firstHasHeading && <h1 className="lx-sr">{title}</h1>}
     {tree.map((s, i) => {
