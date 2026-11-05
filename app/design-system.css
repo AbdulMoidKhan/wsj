@@ -676,14 +676,14 @@ html body .wj-platform .lv-copy p:not(.eyebrow){max-width:56ch}
 html body .wj-platform .lv-photo:not(.lv-photo-free){border-radius:var(--ds-r-xl);overflow:hidden;box-shadow:var(--ds-shadow-2)}
 
 /* podcast (dark band) */
-html body .wj-platform .lv-podcast{background:#174cff;color:var(--ds-on-dark)}
+html body .wj-platform .lv-podcast{background:#000000;color:var(--ds-on-dark)}
 html body .wj-platform .lv-podcast :is(.hp-heading,h3,h4){color:#fff}
 html body .wj-platform .lv-podcast .hp-eyebrow{color:rgba(255,255,255,.8)}
 html body .wj-platform .lv-podcast :is(p,li){color:rgba(255,255,255,.88)}
 html body .wj-platform .lv-podcast .lv-studio-head strong{color:#fff}
 html body .wj-platform .lv-podcast .lv-tabs button{border-color:rgba(255,255,255,.45);color:#fff}
 html body .wj-platform .lv-podcast .lv-tabs button:hover{border-color:#fff;background:rgba(255,255,255,.12)}
-html body .wj-platform .lv-podcast .lv-tabs button[aria-selected=true]{background:#fff;border-color:#fff;color:#174cff}
+html body .wj-platform .lv-podcast .lv-tabs button[aria-selected=true]{background:#fff;border-color:#fff;color:#000000}
 html body .wj-platform .lv-podcast-logo{background:none;border-radius:0;padding:0;height:56px;width:auto;max-width:220px;filter:brightness(0) invert(1);opacity:.95}
 html body .wj-platform .ip-cps-logo{display:block;height:48px;width:auto;max-width:180px;margin-bottom:8px;object-fit:contain}
 html body .wj-platform .lv-tier{display:flex;flex-direction:column;border-radius:var(--ds-r-lg);border:1px solid var(--ds-line-dark);background:rgba(255,255,255,.05);padding:28px}

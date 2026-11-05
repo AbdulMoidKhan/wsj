@@ -325,7 +325,7 @@ export class BillingService {
       /* Embedded Checkout renders Stripe's own payment UI in an iframe we host, and
          redirects the top window to return_url once the payment completes. */
       ...(dto.embedded
-        ? {ui_mode: 'embedded' as const, return_url: origin + '/booking-confirmation/?order=' + order.id + '&session_id={CHECKOUT_SESSION_ID}'}
+        ? {ui_mode: 'embedded_page' as const, return_url: origin + '/booking-confirmation/?order=' + order.id + '&session_id={CHECKOUT_SESSION_ID}'}
         : {success_url: origin + '/booking-confirmation/?order=' + order.id, cancel_url: origin + '/?checkout_cancelled=' + order.id}),
     };
 
