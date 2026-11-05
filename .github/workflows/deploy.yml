@@ -9,70 +9,33 @@ jobs:
   deploy:
     name: Deploy wsj
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 25
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            backend/package-lock.json
-
-      # ── Build check (catches compile errors before touching the server) ──
-      - name: Install frontend deps
-        run: npm ci
-
-      - name: Build frontend
-        run: npm run build
-        env:
-          API_URL: http://localhost:4000/api
-          NEXT_PUBLIC_API_URL: https://wp.workspacejunction.com/api
-
-      - name: Install backend deps
-        run: npm ci
-        working-directory: backend
-
-      - name: Build backend
-        run: npm run build
-        working-directory: backend
-
-      # ── Deploy ──
-      - name: Copy code to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: root
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: "."
-          target: /root/wsj-deploy-staging
-          overwrite: true
-          exclude: |
-            .git
-            node_modules
-            .next
-            backend/node_modules
-            backend/dist
-
-      - name: Run deploy script on VPS
+      - name: Run deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
-          script: /root/deploy.sh
-          command_timeout: 25m
-
-      - name: Verify deployment
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: root
-          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 20m
           script: |
-            curl -sf https://wp.workspacejunction.com/api/health | grep -q ok && echo "API healthy" || exit 1
+            set -e
+            echo "=== Pulling latest changes on VPS ==="
+            cd /root/wsj-next
+            GIT_SSH_COMMAND="ssh -i /root/.ssh/id_ed25519_wsj -o IdentitiesOnly=yes" git pull origin main
+
+            echo "=== Building Next.js production bundle ==="
+            npm run build
+            pm2 restart wsj-web
+
+            echo "=== Building NestJS backend ==="
+            cd /root/wsj-next/backend
+            npm run build
+            pm2 restart wsj-backend
+
+            echo "=== Verifying health checks ==="
+            sleep 4
+            curl -sf http://127.0.0.1:4000/api/health | grep -q ok && echo "API healthy"
+            curl -sf http://127.0.0.1:3600/ | grep -qi html && echo "Web healthy"
+            echo "=== Deployment to wp.workspacejunction.com complete! ==="
