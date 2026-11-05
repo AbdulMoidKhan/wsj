@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import Image from '@/components/consistent-image';
 import {useState} from 'react';
 import {Camera} from 'lucide-react';
 
@@ -148,19 +148,19 @@ export function VenueGallery({images}: {images?: string[]}) {
     <section className="ip-wrap ip-gallery vg-showcase" aria-labelledby="ip-gallery-title">
       <div className="ip-section-heading vg-head">
         <div>
-          <p className="ip-eyebrow">
+          <p className="ip-eyebrow" data-anim="fade-up">
             <Camera size={13} aria-hidden="true" />
             <span>ARCHITECTURAL PHOTOGRAPHY &amp; SPACES</span>
           </p>
-          <h2 id="ip-gallery-title">Take an Inside Look at The Junction.</h2>
+          <h2 id="ip-gallery-title" data-anim="split-lines">Take an Inside Look at The Junction.</h2>
         </div>
-        <p className="vg-intro">
+        <p className="vg-intro" data-anim="fade-up" data-anim-delay="0.1">
           Tour our executive boardrooms, dedicated creator podcast studios, ergonomic sit-stand workstations, and dynamic gathering spaces in Oakbrook Terrace, IL.
         </p>
       </div>
 
       {/* Filter Tabs */}
-      <div className="vg-filters" role="tablist" aria-label="Filter gallery by space type">
+      <div className="vg-filters" role="tablist" aria-label="Filter gallery by space type" data-anim="fade-up" data-anim-delay="0.15">
         {CATEGORIES.map(cat => (
           <button
             key={cat.id}
@@ -176,14 +176,15 @@ export function VenueGallery({images}: {images?: string[]}) {
       </div>
 
       {/* Asymmetric Gallery Grid */}
-      <div className="ip-gallery-grid vg-grid">
+      <div className="ip-gallery-grid vg-grid" data-anim-stagger-group="true" data-anim-stagger="0.05">
         {filtered.map((photo, i) => (
           <figure
             key={photo.src}
             className={'vg-card' + (photo.featured ? ' is-featured' : '')}
             style={{animationDelay: `${i * 0.08}s`}}
+            data-tilt="4"
           >
-            <div className="vg-photo-frame">
+            <div className="vg-photo-frame" data-anim="mask-reveal">
               <Image
                 src={photo.src}
                 alt={photo.alt}

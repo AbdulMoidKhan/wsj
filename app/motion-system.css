@@ -1,0 +1,250 @@
+/* Workspace Junction motion system. Content is visible by default; JS only adds
+   temporary pending states to below-fold elements after hydration. */
+:root{
+  --mo-fast:160ms;
+  --mo-base:280ms;
+  --mo-slow:520ms;
+  --mo-reveal:700ms;
+  --mo-ease-enter:cubic-bezier(.16,1,.3,1);
+  --mo-ease-state:cubic-bezier(.4,0,.2,1);
+  --mo-rise:16px;
+  --mo-lift:3px;
+  --mo-stagger:70ms;
+}
+
+/* Route content enters after first paint. Header, sticky navigation, mega menu
+   and portal/dialog roots are outside this animated main-content boundary. */
+.wj-route-stage>main{
+  animation:mo-route-in var(--mo-base) var(--mo-ease-enter) both;
+}
+@keyframes mo-route-in{
+  from{opacity:.01;translate:0 10px}
+  to{opacity:1;translate:0 0}
+}
+
+/* Shared reveal contract. No selector is hidden unless JS has explicitly marked
+   it pending, so no-JS, hydration failures and crawlers always get real content. */
+[data-mo-reveal]{opacity:1;translate:0 0}
+[data-mo-reveal][data-mo-pending]{
+  opacity:0;
+  translate:0 var(--mo-rise);
+  transition:opacity var(--mo-reveal) var(--mo-ease-enter) var(--mo-delay,0ms),translate var(--mo-reveal) var(--mo-ease-enter) var(--mo-delay,0ms);
+}
+[data-mo-reveal].is-revealed{opacity:1;translate:0 0}
+
+[data-mo-image]{opacity:.01;transition:opacity var(--mo-slow) var(--mo-ease-state)}
+[data-mo-image].is-mo-loaded{opacity:1}
+
+.gx-progress{
+  position:fixed;inset:0 0 auto;height:2px;z-index:9998;pointer-events:none;
+  transform:scaleX(0);transform-origin:left center;background:#d9910b;
+  transition:transform 80ms linear;
+}
+
+.wj-curtain-wipe{
+  position:fixed;inset:0;z-index:99999;pointer-events:none;
+  background:#073629;transform:scaleY(0);transform-origin:top center;
+}
+
+/* Elevated header styling */
+.wj-header.is-elevated{
+  background:rgba(255,255,255,0.96)!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  box-shadow:0 8px 24px rgba(7,54,41,0.08)!important;
+  border-bottom:1px solid rgba(217,145,11,0.18)!important;
+  transition:background-color var(--mo-base) var(--mo-ease-state),box-shadow var(--mo-base) var(--mo-ease-state),border-color var(--mo-base) var(--mo-ease-state)!important;
+}
+
+/* Split text typography and masks */
+.wj-split-line-mask{
+  display:block;
+  overflow:hidden;
+}
+.wj-split-line{
+  display:block;
+  will-change:transform,opacity;
+}
+.wj-split-word{
+  display:inline-block;
+  white-space:nowrap;
+}
+.wj-split-char{
+  display:inline-block;
+  will-change:transform,opacity;
+}
+
+/* Declarative Motion Directives */
+[data-anim]{
+  will-change:transform,opacity;
+}
+[data-parallax], [data-lag]{
+  will-change:transform;
+}
+[data-tilt]{
+  transform-style:preserve-3d;
+  perspective:1000px;
+}
+[data-magnetic]{
+  display:inline-block;
+  will-change:transform;
+}
+
+/* Loading feedback stays low contrast and never shifts layout. */
+:is(.lx-vskel,.uc-skeleton,.bk-skeleton,.adm-skeleton){
+  position:relative;overflow:hidden;background:#eeeadd;
+}
+:is(.lx-vskel,.uc-skeleton,.bk-skeleton,.adm-skeleton)::after{
+  content:"";position:absolute;inset:0;translate:-110% 0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.68),transparent);
+  animation:mo-shimmer 1.4s linear infinite;
+}
+@keyframes mo-shimmer{to{translate:110% 0}}
+
+/* State-change helpers used by sliders, tabs, notices and live regions. */
+:is([aria-live],.bk-status,.bk-error,.bk-fallback-banner,.ap-notice,.ap-error,.adm-alert,.adm-notice){
+  transition:opacity var(--mo-fast) var(--mo-ease-state),translate var(--mo-fast) var(--mo-ease-state);
+}
+
+@layer wj-button-contract{
+  body:has(.wj-platform) :where(button:not(:disabled),input[type="submit"]:not(:disabled),input[type="button"]:not(:disabled),.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn){
+    transition:background-color var(--mo-fast) var(--mo-ease-state),border-color var(--mo-fast) var(--mo-ease-state),color var(--mo-fast) var(--mo-ease-state),box-shadow var(--mo-fast) var(--mo-ease-state),transform var(--mo-fast) var(--mo-ease-state)!important;
+    transform-origin:center!important;
+  }
+  @media (hover:hover) and (prefers-reduced-motion:no-preference){
+    body:has(.wj-platform) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-plan-btn,.visit-button,.bk-btn,.bk-submit-btn):not(:disabled):hover{
+      transform:translateY(-2px)!important;
+      box-shadow:0 8px 18px rgba(25,60,50,.14)!important;
+    }
+  }
+  body:has(.wj-platform) :where(button,.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.bk-btn,.bk-submit-btn):not(:disabled):active{
+    transform:scale(.98)!important;transition-duration:var(--mo-fast)!important;
+  }
+  body:has(.wj-platform) :where(button,a,input,select,textarea,summary):focus-visible{
+    outline:3px solid rgba(217,145,11,.9)!important;outline-offset:3px!important;
+  }
+}
+
+@layer wj-consistency{
+  /* Cards share one restrained lift and inner-image scale. */
+  :where(.wj-platform,.adm-root) :where(.hp-service-card,.price-card,.journal-card,.ip-journal-card,.ip-service-card,.ip-feature-card,.directory-card,.lv-service,.lx-card-col,.cn-circle-card,.cn-membership-card,.sv-card,.mem-plan-card,.uc-card,.ap-card){
+    transition:transform var(--mo-base) var(--mo-ease-enter),border-color var(--mo-fast) var(--mo-ease-state),box-shadow var(--mo-base) var(--mo-ease-enter)!important;
+  }
+  :where(.wj-platform,.adm-root) :where(.hp-service-card,.journal-card,.ip-journal-card,.ip-service-card,.directory-card,.lv-service,.cn-circle-card,.sv-card,.mem-plan-card,.uc-card) img{
+    transition:transform var(--mo-slow) var(--mo-ease-enter),opacity var(--mo-slow) var(--mo-ease-state)!important;
+    transform-origin:center!important;
+  }
+  @media (hover:hover) and (prefers-reduced-motion:no-preference){
+    :where(.wj-platform,.adm-root) :where(.hp-service-card,.price-card,.journal-card,.ip-journal-card,.ip-service-card,.ip-feature-card,.directory-card,.lv-service,.lx-card-col,.cn-circle-card,.cn-membership-card,.sv-card,.mem-plan-card,.uc-card,.ap-card):hover{
+      transform:translateY(calc(-1 * var(--mo-lift)))!important;
+      border-color:rgba(217,145,11,.65)!important;
+      box-shadow:0 12px 28px rgba(25,60,50,.11)!important;
+    }
+    :where(.wj-platform,.adm-root) :where(.hp-service-card,.journal-card,.ip-journal-card,.ip-service-card,.directory-card,.lv-service,.cn-circle-card,.sv-card,.mem-plan-card,.uc-card):hover img{
+      transform:scale(1.03)!important;
+    }
+  }
+  :where(.wj-platform,.adm-root) :where(.hp-service-card,.price-card,.journal-card,.ip-journal-card,.ip-service-card,.directory-card,.lv-service,.cn-circle-card,.cn-membership-card,.sv-card,.mem-plan-card,.uc-card,.ap-card):focus-within{
+    border-color:#d9910b!important;box-shadow:0 0 0 3px rgba(217,145,11,.18)!important;
+  }
+
+  /* Link underline and directional-icon nudge have matching keyboard states. */
+  .wj-platform :where(.text-link,.hp-link,.ip-text-link,a[data-mo-link]) svg{
+    transition:transform var(--mo-fast) var(--mo-ease-enter)!important;
+  }
+  @media (hover:hover) and (prefers-reduced-motion:no-preference){
+    .wj-platform :where(.text-link,.hp-link,.ip-text-link,a[data-mo-link]):hover svg{transform:translate(3px,-3px)!important}
+  }
+  .wj-platform :where(.text-link,.hp-link,.ip-text-link,a[data-mo-link]):focus-visible svg{transform:translate(3px,-3px)!important}
+
+  /* Restrained admin and portal motion, always <= 200ms. */
+  .adm-root :where(.adm-table tbody tr,.adm-card,.adm-badge,.adm-alert,.adm-notice,.adm-dialog),
+  :where(.ap-card,.ap-badge,.ap-notice,.ap-error,.ap-dialog){
+    transition:background-color var(--mo-fast) var(--mo-ease-state),border-color var(--mo-fast) var(--mo-ease-state),color var(--mo-fast) var(--mo-ease-state),opacity var(--mo-fast) var(--mo-ease-state),transform var(--mo-fast) var(--mo-ease-state)!important;
+  }
+  @media (hover:hover){.adm-root .adm-table tbody tr:hover{background-color:#f7f5ef!important}}
+  .adm-root :where(button,[aria-busy="true"]) svg.lucide-loader-circle,.ap-wrap svg.lucide-loader-circle{animation:mo-spin .8s linear infinite}
+  @keyframes mo-spin{to{rotate:1turn}}
+}
+
+/* Existing CSS marquees stop for reduced motion and keyboard interaction. */
+.lx-marquee-container:focus-within .lx-marquee-track{animation-play-state:paused!important}
+
+@media (prefers-reduced-motion:reduce){
+  :root{--mo-fast:120ms;--mo-base:160ms;--mo-slow:160ms;--mo-reveal:160ms;--mo-rise:0px}
+  html{scroll-behavior:auto!important}
+  .wj-route-stage>main{animation:mo-fade-only var(--mo-base) ease both}
+  @keyframes mo-fade-only{from{opacity:.01}to{opacity:1}}
+  [data-mo-reveal][data-mo-pending]{opacity:1!important;translate:none!important;transition:opacity var(--mo-base) ease!important}
+  [data-mo-image]{opacity:1!important;transition:none!important}
+  :is(.lx-vskel,.uc-skeleton,.bk-skeleton,.adm-skeleton)::after{animation:none!important;display:none!important}
+  .lx-marquee-track{animation:none!important;transform:none!important}
+  :where(.wj-platform,.adm-root) *{scroll-behavior:auto!important}
+}
+
+
+/* Existing stateful components aligned to the shared timing scale. */
+html body .wj-platform .lv-slide{transition:opacity var(--mo-slow) var(--mo-ease-state)!important}
+html body .wj-platform .lv-slide-img{transition:transform 7s linear!important}
+html body .wj-platform .lv-hero-title{transition:opacity var(--mo-base) var(--mo-ease-state),transform var(--mo-base) var(--mo-ease-enter),visibility 0s var(--mo-base)!important}
+html body .wj-platform .lv-hero-title.is-active{transition:opacity var(--mo-slow) var(--mo-ease-state),transform var(--mo-slow) var(--mo-ease-enter),visibility 0s!important}
+html body .wj-platform .lv-studio-panel{animation:mo-panel-in var(--mo-base) var(--mo-ease-enter) both!important}
+@keyframes mo-panel-in{from{opacity:.01;transform:translateY(10px)}to{opacity:1;transform:none}}
+html body .wj-platform .lx-vitem{transition:transform var(--mo-slow) var(--mo-ease-enter),opacity var(--mo-base) var(--mo-ease-state),filter var(--mo-slow) var(--mo-ease-state),box-shadow var(--mo-base) var(--mo-ease-state),background-color var(--mo-base) var(--mo-ease-state),border-color var(--mo-fast) var(--mo-ease-state)!important}
+html body .wj-platform .wj-mobile-backdrop{animation-duration:var(--mo-base)!important;animation-timing-function:var(--mo-ease-state)!important}
+html body .wj-platform .wj-mobile-panel{animation-duration:var(--mo-base)!important;animation-timing-function:var(--mo-ease-enter)!important}
+html body .wj-platform .wj-mobile-panel.is-closing{animation-duration:var(--mo-base)!important;animation-timing-function:var(--mo-ease-state)!important}
+
+@media(prefers-reduced-motion:reduce){
+  html body .wj-platform :is(.lv-slide,.lv-hero-title,.lv-studio-panel,.lx-vitem,.wj-mobile-panel,.wj-mobile-backdrop){
+    transition:opacity var(--mo-base) ease!important;animation:mo-fade-only var(--mo-base) ease both!important;transform:none!important;filter:none!important;
+  }
+  html body .wj-platform .lv-slide-img{transition:none!important;transform:none!important}
+}
+
+
+/* Feedback and portal surfaces: brief entrances only, no decorative looping. */
+:is(.booking-loading,[data-suspense-fallback],.lx-vskel,.uc-skeleton){animation:mo-feedback-in var(--mo-base) var(--mo-ease-state) both}
+:is(.ap-notice,.ap-error,.adm-alert,.adm-notice,[role="status"],[role="alert"]):not(.bk-status){animation:mo-feedback-in var(--mo-fast) var(--mo-ease-enter) both}
+:where(.adm-root,.ap-wrap) dialog[open],:where(.adm-root,.ap-wrap) [role="dialog"]{animation:mo-dialog-in var(--mo-fast) var(--mo-ease-enter) both}
+@keyframes mo-feedback-in{from{opacity:.01;translate:0 6px}to{opacity:1;translate:0 0}}
+@keyframes mo-dialog-in{from{opacity:.01;transform:scale(.99)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  :is(.booking-loading,[data-suspense-fallback],.lx-vskel,.uc-skeleton,.ap-notice,.ap-error,.adm-alert,.adm-notice,[role="status"],[role="alert"]),
+  :where(.adm-root,.ap-wrap) dialog[open],:where(.adm-root,.ap-wrap) [role="dialog"]{animation:mo-fade-only 120ms ease both!important;translate:none!important;transform:none!important}
+}
+
+
+@layer wj-consistency{
+  .adm-root .adm-overlay,.ap-overlay{animation:mo-admin-backdrop var(--mo-fast) var(--mo-ease-state) both}
+  .adm-root :where(.adm-dialog,.adm-confirm),.ap-confirm{animation:mo-admin-dialog var(--mo-fast) var(--mo-ease-enter) both}
+  .adm-root :where(.adm-alert,.adm-success),:where(.ap-notice,.ap-error){animation:mo-feedback-in var(--mo-fast) var(--mo-ease-enter) both}
+  .adm-root :where(.adm-badge),.ap-badge{transition:background-color var(--mo-fast) var(--mo-ease-state),border-color var(--mo-fast) var(--mo-ease-state),color var(--mo-fast) var(--mo-ease-state),transform var(--mo-fast) var(--mo-ease-enter)!important}
+  .adm-root button:disabled,.ap-wrap button:disabled{transition:opacity var(--mo-fast) var(--mo-ease-state)!important}
+  @keyframes mo-admin-backdrop{from{opacity:.01}to{opacity:1}}
+  @keyframes mo-admin-dialog{from{opacity:.01;transform:translateY(6px) scale(.995)}to{opacity:1;transform:none}}
+}
+@media(prefers-reduced-motion:reduce){.adm-root .adm-overlay,.ap-overlay,.adm-root :where(.adm-dialog,.adm-confirm),.ap-confirm{animation:mo-fade-only 120ms ease both!important;transform:none!important}}
+
+
+@media(prefers-reduced-motion:reduce){
+  body:has(.wj-platform) :where(button,.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.bk-btn,.bk-submit-btn):not(:disabled),
+  :where(.wj-platform,.adm-root) :where(.hp-service-card,.price-card,.journal-card,.ip-journal-card,.ip-service-card,.ip-feature-card,.directory-card,.lv-service,.lx-card-col,.cn-circle-card,.cn-membership-card,.sv-card,.mem-plan-card,.uc-card,.ap-card),
+  :where(.wj-platform,.adm-root) img{
+    transform:none!important;translate:none!important;transition-property:opacity,background-color,border-color,color,box-shadow!important;transition-duration:120ms!important;
+  }
+  .gx-progress{transition:none!important}
+}
+
+
+@layer wj-button-contract{
+  .bk-overlay :where(.bk-type-card,.bk-plan-card,.bk-addon,.bk-time-slot,.bk-cal-day,.bk-cal-nav-btn){
+    transition:background-color var(--mo-fast) var(--mo-ease-state),border-color var(--mo-fast) var(--mo-ease-state),box-shadow var(--mo-fast) var(--mo-ease-state),transform var(--mo-fast) var(--mo-ease-state)!important;
+  }
+  @media(hover:hover) and (prefers-reduced-motion:no-preference){
+    .bk-overlay :where(.bk-type-card,.bk-plan-card,.bk-addon,.bk-time-slot,.bk-cal-day,.bk-cal-nav-btn):not(:disabled):hover{transform:translateY(-2px)!important}
+  }
+  .bk-overlay :where(.bk-type-card,.bk-plan-card,.bk-addon,.bk-time-slot,.bk-cal-day,.bk-cal-nav-btn):not(:disabled):active{transform:scale(.98)!important}
+  @media(prefers-reduced-motion:reduce){.bk-overlay :where(.bk-type-card,.bk-plan-card,.bk-addon,.bk-time-slot,.bk-cal-day,.bk-cal-nav-btn){transform:none!important}}
+}
