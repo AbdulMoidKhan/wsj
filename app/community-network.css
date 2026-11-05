@@ -1,0 +1,1197 @@
+/* ==========================================================================
+   Workspace Junction - Community Network Page Styles
+   Matches the design in Workspace Junction Community Network.png
+   ========================================================================== */
+
+html body .wj-platform .cn-page {
+  --cn-forest-dark: #0f3d32;
+  --cn-forest-darker: #0a2921;
+  --cn-forest-surface: #14493c;
+  --cn-amber-gold: #dda036;
+  --cn-amber-gold-hover: #c48b29;
+  --cn-amber-light: #f5d78e;
+  --cn-amber-ink: #8a5a06;
+  --cn-ink: #11302a;
+  --cn-text: #41514b;
+  --cn-text-soft: #5e7069;
+  --cn-canvas: #fbf9f5;
+  --cn-surface: #ffffff;
+  --cn-sage: #e8eee8;
+  --cn-line: rgba(17, 48, 42, 0.08);
+  --cn-line-strong: rgba(17, 48, 42, 0.16);
+  --cn-radius-md: 16px;
+  --cn-radius-lg: 24px;
+  --cn-radius-xl: 36px;
+  --cn-max: 1200px;
+
+  background-color: var(--cn-canvas) !important;
+  color: var(--cn-text) !important;
+  font-family: var(--font-sans, Inter, system-ui, sans-serif) !important;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+html body .wj-platform .cn-container {
+  width: min(var(--cn-max), 90vw);
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+/* Typography Helpers */
+html body .wj-platform .cn-page .cn-eyebrow {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+  display: inline-block;
+  color: var(--cn-amber-ink) !important;
+}
+
+html body .wj-platform .cn-page .cn-eyebrow-dark {
+  color: var(--cn-amber-light) !important;
+}
+
+html body .wj-platform .cn-page .cn-title-serif {
+  font-family: var(--font-display, 'Playfair Display', Georgia, serif) !important;
+  font-weight: 700 !important;
+  color: var(--cn-ink) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+}
+
+/* Buttons */
+html body .wj-platform .cn-page .cn-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--cn-amber-gold) !important;
+  color: #112822 !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+  border-radius: 9999px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(221, 160, 54, 0.25);
+  transition: all 0.2s ease;
+}
+
+html body .wj-platform .cn-page .cn-btn-gold:hover {
+  background-color: var(--cn-amber-gold-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(221, 160, 54, 0.35);
+  color: #112822 !important;
+}
+
+html body .wj-platform .cn-page .cn-btn-outline-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  padding: 11px 24px !important;
+  border-radius: 9999px !important;
+  text-decoration: none !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html body .wj-platform .cn-page .cn-btn-outline-dark:hover {
+  border-color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  transform: translateY(-1px);
+  color: #ffffff !important;
+}
+
+html body .wj-platform .cn-page .cn-btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--cn-forest-dark) !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  padding: 11px 22px !important;
+  border-radius: 9999px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html body .wj-platform .cn-page .cn-btn-dark:hover {
+  background-color: var(--cn-forest-darker) !important;
+  transform: translateY(-1px);
+  color: #ffffff !important;
+}
+
+html body .wj-platform .cn-page .cn-btn-text-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent !important;
+  color: var(--cn-ink) !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  padding: 10px 16px !important;
+  border-radius: 9999px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+html body .wj-platform .cn-page .cn-btn-text-play:hover {
+  opacity: 0.8;
+}
+
+html body .wj-platform .cn-page .cn-play-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cn-ink);
+  padding-left: 2px;
+}
+
+/* ==========================================================================
+   Section 1: Hero
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-hero {
+  padding-top: clamp(48px, 6vw, 76px);
+  padding-bottom: clamp(60px, 7vw, 92px);
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(36px, 5vw, 68px);
+  align-items: center;
+}
+
+html body .wj-platform .cn-page .cn-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+html body .wj-platform .cn-page .cn-hero-title {
+  font-size: clamp(36px, 4.2vw, 54px) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 20px !important;
+  color: var(--cn-ink) !important;
+}
+
+html body .wj-platform .cn-page .cn-hero-desc {
+  font-size: clamp(16px, 1.25vw, 18px) !important;
+  line-height: 1.68 !important;
+  color: var(--cn-text) !important;
+  max-width: 520px;
+  margin-bottom: 32px !important;
+}
+
+html body .wj-platform .cn-page .cn-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+html body .wj-platform .cn-page .cn-hero-media {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+html body .wj-platform .cn-page .cn-hero-img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 32px rgba(17, 48, 42, 0.08));
+}
+
+/* ==========================================================================
+   Section 2: What is the Community Network
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-about {
+  padding-block: clamp(72px, 8vw, 104px);
+  background-color: var(--cn-surface) !important;
+  border-top: 1px solid var(--cn-line);
+}
+
+html body .wj-platform .cn-page .cn-about-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: center;
+}
+
+html body .wj-platform .cn-page .cn-about-media {
+  display: flex;
+  justify-content: center;
+}
+
+html body .wj-platform .cn-page .cn-about-img {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border-radius: var(--cn-radius-lg);
+  box-shadow: 0 10px 30px rgba(17, 48, 42, 0.06);
+}
+
+html body .wj-platform .cn-page .cn-about-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+html body .wj-platform .cn-page .cn-about-title {
+  font-size: clamp(28px, 3.2vw, 40px) !important;
+  margin-bottom: 18px !important;
+  color: var(--cn-ink) !important;
+}
+
+html body .wj-platform .cn-page .cn-about-desc {
+  font-size: 16.5px !important;
+  line-height: 1.72 !important;
+  color: var(--cn-text) !important;
+  margin-bottom: 36px !important;
+}
+
+html body .wj-platform .cn-page .cn-values-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  border-top: 1px solid var(--cn-line);
+  padding-top: 28px;
+}
+
+html body .wj-platform .cn-page .cn-value-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+html body .wj-platform .cn-page .cn-value-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--cn-amber-gold);
+  margin-bottom: 4px;
+}
+
+html body .wj-platform .cn-page .cn-value-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cn-ink);
+}
+
+html body .wj-platform .cn-page .cn-value-sub {
+  font-size: 13.5px;
+  color: var(--cn-text-soft);
+  line-height: 1.45;
+}
+
+/* ==========================================================================
+   Section 3: How the Community Works (Dark Green)
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-works {
+  background-color: var(--cn-forest-dark) !important;
+  color: #ffffff !important;
+  padding-block: clamp(80px, 9vw, 120px);
+  border-radius: clamp(36px, 4.5vw, 64px) clamp(36px, 4.5vw, 64px) 0 0;
+  margin-top: -24px;
+  position: relative;
+  z-index: 2;
+}
+
+html body .wj-platform .cn-page .cn-works-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: center;
+  margin-bottom: clamp(56px, 7vw, 92px);
+}
+
+html body .wj-platform .cn-page .cn-works-title {
+  color: #ffffff !important;
+  font-size: clamp(30px, 3.4vw, 44px) !important;
+  margin-bottom: 18px !important;
+}
+
+html body .wj-platform .cn-page .cn-works-desc {
+  font-size: 16.5px !important;
+  line-height: 1.72 !important;
+  color: #d8e5e0 !important;
+  max-width: 480px;
+  margin-bottom: 32px !important;
+}
+
+html body .wj-platform .cn-page .cn-works-top-img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--cn-radius-lg);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+
+html body .wj-platform .cn-page .cn-works-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: center;
+}
+
+html body .wj-platform .cn-page .cn-works-bottom-img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--cn-radius-lg);
+}
+
+html body .wj-platform .cn-page .cn-works-features {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+html body .wj-platform .cn-page .cn-works-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+html body .wj-platform .cn-page .cn-feature-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(221, 160, 54, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cn-amber-light);
+  flex-shrink: 0;
+}
+
+html body .wj-platform .cn-page .cn-feature-title {
+  font-size: 18.5px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin-bottom: 5px !important;
+}
+
+html body .wj-platform .cn-page .cn-feature-desc {
+  font-size: 15px !important;
+  color: #c4d7cf !important;
+  line-height: 1.55 !important;
+}
+
+/* ==========================================================================
+   Section 4: Community Circles
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-circles {
+  padding-block: clamp(80px, 9vw, 120px);
+  background-color: var(--cn-canvas) !important;
+}
+
+html body .wj-platform .cn-page .cn-section-header-center {
+  text-align: center;
+  max-width: 660px;
+  margin-inline: auto;
+  margin-bottom: clamp(44px, 5.5vw, 64px);
+}
+
+html body .wj-platform .cn-page .cn-section-header-center .cn-title-serif {
+  font-size: clamp(32px, 3.6vw, 46px) !important;
+  margin-bottom: 16px !important;
+  color: var(--cn-ink) !important;
+}
+
+html body .wj-platform .cn-page .cn-section-header-center .cn-section-sub {
+  font-size: 16.5px !important;
+  color: var(--cn-text-soft) !important;
+  line-height: 1.62 !important;
+}
+
+html body .wj-platform .cn-page .cn-circles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+html body .wj-platform .cn-page .cn-circle-card {
+  background: var(--cn-surface) !important;
+  border: 1px solid var(--cn-line) !important;
+  border-radius: 20px !important;
+  padding: 30px 26px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: 0 4px 14px rgba(17, 48, 42, 0.03);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+html body .wj-platform .cn-page .cn-circle-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(17, 48, 42, 0.08);
+  border-color: rgba(17, 48, 42, 0.2) !important;
+}
+
+html body .wj-platform .cn-page .cn-circle-card-sage {
+  background-color: var(--cn-sage) !important;
+  border-color: rgba(17, 48, 42, 0.14) !important;
+}
+
+html body .wj-platform .cn-page .cn-circle-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--cn-ink);
+  margin-bottom: 4px;
+}
+
+html body .wj-platform .cn-page .cn-circle-title {
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: var(--cn-ink) !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+}
+
+html body .wj-platform .cn-page .cn-circle-desc {
+  font-size: 14px !important;
+  color: var(--cn-text-soft) !important;
+  line-height: 1.52 !important;
+  margin: 0 !important;
+}
+
+/* ==========================================================================
+   Section 5: Member Benefits (Dark Green Banner)
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-benefits-wrap {
+  padding-block: clamp(36px, 4.5vw, 68px);
+}
+
+html body .wj-platform .cn-page .cn-benefits {
+  background-color: var(--cn-forest-dark) !important;
+  color: #ffffff !important;
+  border-radius: var(--cn-radius-xl) !important;
+  padding: clamp(52px, 6.5vw, 76px) clamp(36px, 5.5vw, 68px) !important;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(40px, 5.5vw, 68px);
+  align-items: center;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
+}
+
+html body .wj-platform .cn-page .cn-benefits-title {
+  color: #ffffff !important;
+  font-size: clamp(30px, 3.4vw, 44px) !important;
+  margin-bottom: 16px !important;
+}
+
+html body .wj-platform .cn-page .cn-benefits-desc {
+  font-size: 16.5px !important;
+  color: #d8e5e0 !important;
+  margin-bottom: 30px !important;
+}
+
+html body .wj-platform .cn-page .cn-checklist {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+html body .wj-platform .cn-page .cn-check-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #f7faf9 !important;
+}
+
+html body .wj-platform .cn-page .cn-check-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--cn-amber-gold);
+  color: #112822;
+  flex-shrink: 0;
+}
+
+html body .wj-platform .cn-page .cn-benefits-img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--cn-radius-lg);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+/* ==========================================================================
+   Section 6: Dynamic Membership Options with Toggle & Buttons
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-memberships {
+  padding-block: clamp(80px, 9vw, 120px);
+  background-color: var(--cn-canvas) !important;
+}
+
+/* Billing Toggle */
+html body .wj-platform .cn-page .cn-billing-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  background: #ede9e0;
+  padding: 4px;
+  border-radius: 9999px;
+  margin-top: 24px;
+  border: 1px solid rgba(17, 48, 42, 0.08);
+}
+
+html body .wj-platform .cn-page .cn-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cn-text);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+html body .wj-platform .cn-page .cn-toggle-btn.is-active {
+  background: var(--cn-forest-dark);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+html body .wj-platform .cn-page .cn-discount-pill {
+  background: var(--cn-amber-gold);
+  color: #112822;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+/* Membership Grid */
+html body .wj-platform .cn-page .cn-memberships-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+html body .wj-platform .cn-page .cn-membership-card {
+  background: var(--cn-surface) !important;
+  border: 1px solid var(--cn-line-strong) !important;
+  border-radius: 22px !important;
+  padding: 38px 32px !important;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 18px rgba(17, 48, 42, 0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+html body .wj-platform .cn-page .cn-membership-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(17, 48, 42, 0.09);
+}
+
+html body .wj-platform .cn-page .cn-membership-card-popular {
+  background: #fffefb !important;
+  border: 2px solid var(--cn-amber-gold) !important;
+  box-shadow: 0 10px 30px rgba(221, 160, 54, 0.14) !important;
+}
+
+html body .wj-platform .cn-page .cn-popular-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--cn-amber-gold);
+  color: #112822;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 5px 16px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  box-shadow: 0 3px 8px rgba(221, 160, 54, 0.3);
+}
+
+html body .wj-platform .cn-page .cn-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+html body .wj-platform .cn-page .cn-card-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f0ebe1;
+  color: var(--cn-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+html body .wj-platform .cn-page .cn-card-icon-box-gold {
+  background: #fcf1db;
+  color: var(--cn-amber-gold-hover);
+}
+
+html body .wj-platform .cn-page .cn-membership-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--cn-ink) !important;
+  margin-bottom: 14px !important;
+  line-height: 1.25 !important;
+}
+
+html body .wj-platform .cn-page .cn-membership-sublabel {
+  display: block;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--cn-text-soft);
+  margin-top: 3px;
+}
+
+/* Price block */
+html body .wj-platform .cn-page .cn-price-display {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+html body .wj-platform .cn-page .cn-price-currency {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cn-ink);
+}
+
+html body .wj-platform .cn-page .cn-price-number {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--cn-ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+html body .wj-platform .cn-page .cn-price-period {
+  font-size: 16px;
+  color: var(--cn-text-soft);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+html body .wj-platform .cn-page .cn-price-subtext {
+  font-size: 13px;
+  color: var(--cn-text-soft);
+  margin-bottom: 8px;
+}
+
+html body .wj-platform .cn-page .cn-card-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--cn-line);
+  margin-block: 22px;
+}
+
+html body .wj-platform .cn-page .cn-membership-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  flex-grow: 1;
+}
+
+html body .wj-platform .cn-page .cn-card-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14.5px !important;
+  color: var(--cn-text) !important;
+  line-height: 1.45 !important;
+}
+
+html body .wj-platform .cn-page .cn-card-check-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #fcf1db;
+  color: var(--cn-amber-gold-hover);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Card CTA button */
+html body .wj-platform .cn-page .cn-card-footer {
+  margin-top: 28px;
+  width: 100%;
+}
+
+html body .wj-platform .cn-page .cn-plan-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border-radius: 9999px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+html body .wj-platform .cn-page .cn-plan-btn-gold {
+  background-color: var(--cn-amber-gold) !important;
+  color: #112822 !important;
+  box-shadow: 0 2px 8px rgba(221, 160, 54, 0.25);
+}
+
+html body .wj-platform .cn-page .cn-plan-btn-gold:hover {
+  background-color: var(--cn-amber-gold-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(221, 160, 54, 0.35);
+}
+
+html body .wj-platform .cn-page .cn-plan-btn-dark {
+  background-color: var(--cn-forest-dark) !important;
+  color: #ffffff !important;
+}
+
+html body .wj-platform .cn-page .cn-plan-btn-dark:hover {
+  background-color: var(--cn-forest-darker) !important;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Section 7: Upcoming Events & Callout Boxes
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-events {
+  padding-block: clamp(72px, 8vw, 104px);
+  background-color: var(--cn-surface) !important;
+  border-top: 1px solid var(--cn-line);
+}
+
+html body .wj-platform .cn-page .cn-events-top {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(40px, 6vw, 72px);
+  align-items: center;
+  margin-bottom: clamp(52px, 6.5vw, 76px);
+}
+
+html body .wj-platform .cn-page .cn-events-title {
+  font-size: clamp(28px, 3.2vw, 40px) !important;
+  margin-bottom: 18px !important;
+  color: var(--cn-ink) !important;
+}
+
+html body .wj-platform .cn-page .cn-events-desc {
+  font-size: 16.5px !important;
+  color: var(--cn-text) !important;
+  line-height: 1.72 !important;
+  max-width: 480px;
+  margin-bottom: 30px !important;
+}
+
+html body .wj-platform .cn-page .cn-events-img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--cn-radius-lg);
+  box-shadow: 0 12px 30px rgba(17, 48, 42, 0.08);
+}
+
+html body .wj-platform .cn-page .cn-callout-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  border-top: 1px solid var(--cn-line);
+  padding-top: clamp(40px, 5vw, 60px);
+}
+
+html body .wj-platform .cn-page .cn-callout-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  background: var(--cn-canvas) !important;
+  border: 1px solid var(--cn-line) !important;
+  border-radius: 22px !important;
+  padding: 30px 26px !important;
+  box-shadow: 0 4px 14px rgba(17, 48, 42, 0.03);
+}
+
+html body .wj-platform .cn-page .cn-callout-icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(17, 48, 42, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cn-ink);
+  flex-shrink: 0;
+}
+
+html body .wj-platform .cn-page .cn-callout-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--cn-ink) !important;
+  margin-bottom: 7px !important;
+}
+
+html body .wj-platform .cn-page .cn-callout-desc {
+  font-size: 14.5px !important;
+  color: var(--cn-text-soft) !important;
+  line-height: 1.58 !important;
+  margin: 0 !important;
+}
+
+/* ==========================================================================
+   Section 8: Become Part Banner
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-banner-wrap {
+  padding-block: clamp(44px, 5.5vw, 72px);
+}
+
+html body .wj-platform .cn-page .cn-banner {
+  background-color: var(--cn-forest-dark) !important;
+  color: #ffffff !important;
+  border-radius: var(--cn-radius-xl) !important;
+  padding: clamp(52px, 6.5vw, 72px) clamp(36px, 5.5vw, 68px) !important;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(40px, 5.5vw, 68px);
+  align-items: center;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+html body .wj-platform .cn-page .cn-banner-title {
+  color: #ffffff !important;
+  font-size: clamp(30px, 3.4vw, 44px) !important;
+  margin-bottom: 18px !important;
+}
+
+html body .wj-platform .cn-page .cn-banner-desc {
+  font-size: 16.5px !important;
+  color: #d8e5e0 !important;
+  line-height: 1.68 !important;
+  margin-bottom: 30px !important;
+}
+
+html body .wj-platform .cn-page .cn-banner-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+html body .wj-platform .cn-page .cn-banner-img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--cn-radius-lg);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+/* ==========================================================================
+   Section 9: More Ways to Move Forward
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-more-ways {
+  padding-block: clamp(72px, 8vw, 104px);
+  background-color: var(--cn-canvas) !important;
+  border-top: 1px solid var(--cn-line);
+}
+
+html body .wj-platform .cn-page .cn-more-header {
+  margin-bottom: clamp(40px, 4.5vw, 56px);
+}
+
+html body .wj-platform .cn-page .cn-more-header .cn-title-serif {
+  font-size: clamp(28px, 3vw, 38px) !important;
+  color: var(--cn-ink) !important;
+}
+
+html body .wj-platform .cn-page .cn-more-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+}
+
+html body .wj-platform .cn-page .cn-more-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: transform 0.2s ease;
+}
+
+html body .wj-platform .cn-page .cn-more-card:hover {
+  transform: translateY(-2px);
+}
+
+html body .wj-platform .cn-page .cn-more-card:hover .cn-more-arrow {
+  transform: translateX(4px);
+}
+
+html body .wj-platform .cn-page .cn-more-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--cn-amber-gold);
+  margin-bottom: 4px;
+}
+
+html body .wj-platform .cn-page .cn-more-title {
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: var(--cn-ink) !important;
+  margin: 0 !important;
+}
+
+html body .wj-platform .cn-page .cn-more-desc {
+  font-size: 14.5px !important;
+  color: var(--cn-text-soft) !important;
+  line-height: 1.52 !important;
+  margin: 0 !important;
+}
+
+html body .wj-platform .cn-page .cn-more-arrow {
+  color: var(--cn-ink) !important;
+  font-size: 17px;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   Closing Banner Match for Community Network
+   ========================================================================== */
+html body .wj-platform:has(.cn-page) .wj-closing {
+  background-color: #0f3d32 !important;
+  color: #ffffff !important;
+  padding-block: clamp(72px, 8vw, 104px) !important;
+  border-top: none !important;
+}
+
+html body .wj-platform:has(.cn-page) .wj-closing .eyebrow {
+  display: none !important;
+}
+
+html body .wj-platform:has(.cn-page) .wj-closing h2 {
+  color: #ffffff !important;
+  font-family: var(--font-display, 'Playfair Display', serif) !important;
+  font-size: clamp(34px, 4vw, 50px) !important;
+  line-height: 1.15 !important;
+}
+
+html body .wj-platform:has(.cn-page) .wj-closing p {
+  color: #d8e5e0 !important;
+  font-size: 17px !important;
+}
+
+html body .wj-platform:has(.cn-page) .wj-closing .btn-cream {
+  background-color: #dda036 !important;
+  color: #112822 !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(221, 160, 54, 0.25) !important;
+}
+
+html body .wj-platform:has(.cn-page) .wj-closing .btn-cream:hover {
+  background-color: #c48b29 !important;
+  transform: translateY(-1px);
+}
+
+html body .wj-platform:has(.cn-page) .wj-closing .text-link {
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+  padding: 10px 22px !important;
+  border-radius: 9999px !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+html body .wj-platform:has(.cn-page) .wj-closing .text-link:hover {
+  border-color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 1024px) {
+  html body .wj-platform .cn-page .cn-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  html body .wj-platform .cn-page .cn-hero-content {
+    align-items: center;
+  }
+  html body .wj-platform .cn-page .cn-hero-actions {
+    justify-content: center;
+  }
+  html body .wj-platform .cn-page .cn-about-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  html body .wj-platform .cn-page .cn-about-content {
+    align-items: center;
+  }
+  html body .wj-platform .cn-page .cn-values-row {
+    justify-items: center;
+  }
+  html body .wj-platform .cn-page .cn-value-item {
+    align-items: center;
+    text-align: center;
+  }
+  html body .wj-platform .cn-page .cn-works-top,
+  html body .wj-platform .cn-page .cn-works-bottom {
+    grid-template-columns: 1fr;
+  }
+  html body .wj-platform .cn-page .cn-circles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  html body .wj-platform .cn-page .cn-benefits {
+    grid-template-columns: 1fr;
+  }
+  html body .wj-platform .cn-page .cn-memberships-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+  html body .wj-platform .cn-page .cn-events-top {
+    grid-template-columns: 1fr;
+  }
+  html body .wj-platform .cn-page .cn-callout-row {
+    grid-template-columns: 1fr;
+  }
+  html body .wj-platform .cn-page .cn-banner {
+    grid-template-columns: 1fr;
+  }
+  html body .wj-platform .cn-page .cn-more-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  html body .wj-platform .cn-page .cn-values-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  html body .wj-platform .cn-page .cn-circles-grid {
+    grid-template-columns: 1fr;
+  }
+  html body .wj-platform .cn-page .cn-more-grid {
+    grid-template-columns: 1fr;
+  }
+  html body .wj-platform .cn-page .cn-works-feature {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  html body .wj-platform .cn-page .cn-banner-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  html body .wj-platform .cn-page .cn-banner-actions .cn-btn-gold,
+  html body .wj-platform .cn-page .cn-banner-actions .cn-btn-outline-dark {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Coworking page: 4-up membership grid (Bronze/Silver/Gold/Platinum)
+   ========================================================================== */
+html body .wj-platform .cn-page.cw-page .cw-pricing-wrap .cn-memberships-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 1024px) {
+  html body .wj-platform .cn-page.cw-page .cw-pricing-wrap .cn-memberships-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  html body .wj-platform .cn-page.cw-page .cw-pricing-wrap .cn-memberships-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Section: Dynamic Page FAQ Accordion
+   ========================================================================== */
+html body .wj-platform .cn-page .cn-faq-sec {
+  padding-block: clamp(72px, 8vw, 104px);
+  background-color: var(--cn-canvas) !important;
+  border-top: 1px solid var(--cn-line);
+}
+
+html body .wj-platform .cn-page .cn-faq-sec .hp-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: clamp(40px, 6vw, 80px);
+}
+
+html body .wj-platform .cn-page .cn-faq-sec .hp-faq-list summary {
+  color: var(--cn-forest-dark);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+html body .wj-platform .cn-page .cn-faq-sec .hp-faq-list summary:hover,
+html body .wj-platform .cn-page .cn-faq-sec .hp-faq-list details[open] summary {
+  color: var(--cn-forest-deep);
+}
+
+html body .wj-platform .cn-page .cn-faq-sec .hp-faq-list details > p {
+  color: #3b5049;
+  font-size: 15.5px;
+  line-height: 1.72;
+}
+
+@media (max-width: 900px) {
+  html body .wj-platform .cn-page .cn-faq-sec .hp-faq-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}

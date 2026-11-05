@@ -1,0 +1,431 @@
+/* ========================================================================== 
+   PREMIUM MEGA MENU REDESIGN
+   Desktop showcase + mobile accordion, based on the approved visual direction.
+   ========================================================================== */
+html body .wj-platform .wj-mobile-backdrop{
+  background:rgba(4,18,14,.78);
+  backdrop-filter:blur(16px) saturate(.8);
+  -webkit-backdrop-filter:blur(16px) saturate(.8);
+}
+html body .wj-platform .wj-mobile-panel{
+  --mega-amber:#f5a11a;
+  --mega-cream:#f7f0df;
+  --mega-line:rgba(218,229,214,.3);
+  background:
+    radial-gradient(circle at 12% 0%,rgba(33,92,69,.32),transparent 32%),
+    radial-gradient(circle at 92% 100%,rgba(17,73,54,.24),transparent 34%),
+    linear-gradient(135deg,#073629 0%,#003f30 48%,#003126 100%) !important;
+  border:1px solid rgba(207,224,202,.34) !important;
+  color:var(--mega-cream);
+  box-shadow:0 28px 90px rgba(0,15,11,.65),inset 0 1px rgba(255,255,255,.04) !important;
+  scrollbar-color:rgba(245,161,26,.48) transparent;
+}
+html body .wj-platform .wj-mega-bar{
+  position:relative;
+  top:auto;
+  padding:28px 42px 16px;
+  border:0;
+  background:transparent;
+}
+html body .wj-platform .wj-mega-brand{
+  position:relative;
+  padding-bottom:14px;
+  font-family:var(--ff-display);
+  font-size:clamp(28px,2.25vw,42px);
+  font-weight:600;
+  line-height:1;
+  letter-spacing:-.045em;
+  color:var(--mega-cream);
+}
+html body .wj-platform .wj-mega-brand::after{
+  content:"";
+  position:absolute;
+  left:2px;
+  bottom:0;
+  width:44px;
+  height:4px;
+  border-radius:99px;
+  background:var(--mega-amber);
+}
+html body .wj-platform .wj-mega-close{
+  display:grid !important;
+  place-items:center;
+  width:52px !important;
+  height:52px !important;
+  min-width:52px;
+  padding:0 !important;
+  border:1.5px solid var(--mega-amber) !important;
+  border-radius:50% !important;
+  background:rgba(0,37,28,.32) !important;
+  color:var(--mega-cream) !important;
+}
+html body .wj-platform .wj-mega-close:hover{
+  background:var(--mega-amber) !important;
+  border-color:var(--mega-amber) !important;
+  color:#073629 !important;
+  transform:rotate(5deg) scale(1.04);
+}
+html body .wj-platform .wj-mega-feature-heading{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  padding:12px 42px 18px;
+  color:var(--mega-cream);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+}
+html body .wj-platform .wj-mega-feature-heading i{
+  height:1px;
+  flex:1;
+  background:var(--mega-line);
+}
+html body .wj-platform .wj-mega-spaces{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:14px;
+  padding:0 42px 24px;
+  border:0;
+  background:transparent;
+}
+html body .wj-platform .wj-mega-card{
+  position:relative;
+  display:block;
+  min-width:0;
+  aspect-ratio:1.42/1;
+  overflow:hidden;
+  border:1px solid rgba(218,229,214,.34);
+  border-radius:15px;
+  background:#123d31;
+  box-shadow:0 10px 26px rgba(0,22,16,.16);
+}
+html body .wj-platform .wj-mega-card[aria-current=page]{border-color:var(--mega-amber)}
+html body .wj-platform .wj-mega-card:hover{
+  border-color:var(--mega-amber);
+  transform:translateY(-4px);
+  box-shadow:0 16px 30px rgba(0,19,14,.38);
+}
+html body .wj-platform .wj-mega-card-img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  aspect-ratio:auto;
+  background-position:center;
+  transition:transform .45s cubic-bezier(.16,1,.3,1);
+}
+html body .wj-platform .wj-mega-card:hover .wj-mega-card-img{transform:scale(1.045)}
+html body .wj-platform .wj-mega-card-label{
+  position:absolute;
+  inset:auto 0 0;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:16px 16px 14px;
+  font-family:var(--ff-display);
+  font-size:clamp(16px,1.25vw,22px);
+  font-weight:600;
+  line-height:1.08;
+  color:var(--mega-cream);
+}
+html body .wj-platform .wj-mega-card-label svg{flex:0 0 auto;color:var(--mega-amber)}
+html body .wj-platform .wj-mega-divider{
+  height:1px;
+  margin:0 42px;
+  background:var(--mega-line);
+}
+html body .wj-platform .wj-mega-lower{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 290px;
+  gap:32px;
+  padding:28px 42px 38px;
+}
+html body .wj-platform .wj-mega-nav{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  align-content:start;
+  gap:0 !important;
+  padding:0 !important;
+  background:transparent;
+}
+html body .wj-platform .wj-mega-nav .wj-nav-group{
+  min-width:0;
+  padding:0 22px;
+  border-left:1px solid var(--mega-line);
+}
+html body .wj-platform .wj-mega-nav .wj-nav-group:first-child{padding-left:0;border-left:0}
+html body .wj-platform .wj-nav-group-toggle{
+  width:100%;
+  min-height:30px;
+  padding:0 0 12px;
+  border:0;
+  background:transparent;
+  color:var(--mega-amber);
+  text-align:left;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.25;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  cursor:default;
+}
+html body .wj-platform .wj-nav-group-toggle svg{display:none}
+html body .wj-platform .wj-nav-group-links{display:block}
+html body .wj-platform .wj-mobile-panel .wj-nav-group a{
+  position:relative;
+  justify-content:space-between;
+  min-height:38px;
+  padding:8px 22px 8px 0 !important;
+  border-bottom:1px solid rgba(218,229,214,.22) !important;
+  color:rgba(247,240,223,.94) !important;
+  font-size:13.5px !important;
+  font-weight:500;
+  line-height:1.25;
+}
+html body .wj-platform .wj-mobile-panel .wj-nav-group a::after{
+  content:"→";
+  position:absolute;
+  right:0;
+  color:var(--mega-amber);
+  font-size:19px;
+  line-height:1;
+  transition:transform .2s ease;
+}
+html body .wj-platform .wj-mobile-panel .wj-nav-group a:hover{
+  padding-left:3px !important;
+  color:var(--mega-amber) !important;
+}
+html body .wj-platform .wj-mobile-panel .wj-nav-group a:hover::after{transform:translateX(3px)}
+html body .wj-platform .wj-mega-location{
+  overflow:hidden;
+  align-self:start;
+  border:1px solid rgba(245,161,26,.58);
+  border-radius:17px;
+  background:rgba(0,35,27,.74);
+  box-shadow:0 14px 32px rgba(0,19,14,.25);
+}
+html body .wj-platform .wj-mega-location-image{
+  height:150px;
+  background:
+    linear-gradient(180deg,transparent 50%,rgba(1,43,32,.98) 100%),
+    url('/media/428f3737eb-cta-office.jpg') center/cover no-repeat;
+}
+html body .wj-platform .wj-mega-location-copy{padding:0 18px 18px}
+html body .wj-platform .wj-mega-location h2{
+  margin:-4px 0 12px;
+  color:var(--mega-cream);
+  font-family:var(--ff-display);
+  font-size:27px;
+  line-height:1.05;
+}
+html body .wj-platform .wj-mega-address{display:flex;align-items:flex-start;gap:10px;margin-bottom:17px}
+html body .wj-platform .wj-mega-address>svg{flex:0 0 auto;color:var(--mega-amber);fill:var(--mega-amber);stroke:#073629}
+html body .wj-platform .wj-mega-address p{display:grid;gap:2px;margin:0;color:var(--mega-cream);font-size:12.5px;line-height:1.35}
+html body .wj-platform .wj-mega-address strong{font-size:13.5px}
+html body .wj-platform .wj-mega-address span{color:rgba(247,240,223,.74)}
+html body .wj-platform .wj-mega-explore{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  width:100%;
+  min-height:48px;
+  padding:0 18px;
+  border:0;
+  border-radius:999px;
+  background:var(--mega-amber);
+  color:#073629;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .2s ease,background .2s ease;
+}
+html body .wj-platform .wj-mega-explore:hover{background:#ffb536;transform:translateY(-2px)}
+html body .wj-platform .wj-mobile-actions{display:none !important}
+
+@media (min-width:900px){
+  html body .wj-platform .wj-mobile-panel{
+    inset:26px 32px auto !important;
+    top:26px !important;
+    left:50% !important;
+    width:min(1540px,calc(100vw - 64px)) !important;
+    max-height:calc(100dvh - 52px) !important;
+    border-radius:34px !important;
+  }
+}
+
+@media (max-width:1199px) and (min-width:900px){
+  html body .wj-platform .wj-mega-bar{padding-inline:30px}
+  html body .wj-platform .wj-mega-feature-heading{padding-inline:30px}
+  html body .wj-platform .wj-mega-spaces{grid-template-columns:repeat(3,1fr);padding-inline:30px}
+  html body .wj-platform .wj-mega-card{aspect-ratio:1.8/1}
+  html body .wj-platform .wj-mega-divider{margin-inline:30px}
+  html body .wj-platform .wj-mega-lower{grid-template-columns:1fr;padding-inline:30px}
+  html body .wj-platform .wj-mega-location{display:none}
+}
+
+@media (max-width:899px){
+  html body .wj-platform .wj-mobile-panel{
+    inset:0 !important;
+    width:100% !important;
+    max-height:100dvh !important;
+    border:0 !important;
+    border-radius:0 !important;
+  }
+  html body .wj-platform .wj-mega-bar{padding:28px 22px 14px}
+  html body .wj-platform .wj-mega-brand{font-size:clamp(29px,9vw,40px)}
+  html body .wj-platform .wj-mega-close{width:48px !important;height:48px !important;min-width:48px}
+  html body .wj-platform .wj-mega-feature-heading{gap:18px;padding:16px 22px 20px;font-size:12px}
+  html body .wj-platform .wj-mega-spaces{
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    padding:0 22px 18px;
+  }
+  html body .wj-platform .wj-mega-spaces::-webkit-scrollbar{display:none}
+  html body .wj-platform .wj-mega-card{
+    flex:0 0 min(76vw,292px);
+    aspect-ratio:1.34/1;
+    scroll-snap-align:start;
+    border-radius:17px;
+  }
+  html body .wj-platform .wj-mega-card-label{padding:18px 18px 16px;font-size:24px}
+  html body .wj-platform .wj-mega-divider{margin:8px 22px 0}
+  html body .wj-platform .wj-mega-lower{display:block;padding:0 22px 34px}
+  html body .wj-platform .wj-mega-nav{display:block !important;padding:0 !important}
+  html body .wj-platform .wj-mega-nav .wj-nav-group,
+  html body .wj-platform .wj-mega-nav .wj-nav-group:first-child{
+    padding:0;
+    border:0;
+    border-bottom:1px solid var(--mega-line);
+  }
+  html body .wj-platform .wj-nav-group-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:66px;
+    padding:0 2px;
+    cursor:pointer;
+    font-size:14px;
+    letter-spacing:.15em;
+  }
+  html body .wj-platform .wj-nav-group-toggle svg{display:block;transition:transform .28s ease}
+  html body .wj-platform .wj-nav-group.is-open .wj-nav-group-toggle svg{transform:rotate(180deg)}
+  html body .wj-platform .wj-nav-group-links{
+    display:block;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-height .38s cubic-bezier(.16,1,.3,1),opacity .24s ease,padding .3s ease;
+  }
+  html body .wj-platform .wj-nav-group.is-open .wj-nav-group-links{max-height:720px;opacity:1;padding:0 22px 18px}
+  html body .wj-platform .wj-mobile-panel .wj-nav-group a{min-height:50px;font-size:16px !important}
+  html body .wj-platform .wj-mega-location{margin-top:28px;border-radius:18px}
+  html body .wj-platform .wj-mega-location-image{height:210px}
+  html body .wj-platform .wj-mega-location-copy{padding:0 20px 20px}
+  html body .wj-platform .wj-mega-location h2{font-size:clamp(30px,9vw,40px);margin:-8px 0 15px}
+  html body .wj-platform .wj-mega-address p{font-size:14px}
+  html body .wj-platform .wj-mega-address strong{font-size:16px}
+  html body .wj-platform .wj-mega-explore{min-height:58px;font-size:17px}
+}
+
+@media (max-width:380px){
+  html body .wj-platform .wj-mega-bar,
+  html body .wj-platform .wj-mega-feature-heading{padding-inline:18px}
+  html body .wj-platform .wj-mega-spaces{padding-inline:18px}
+  html body .wj-platform .wj-mega-divider{margin-inline:18px}
+  html body .wj-platform .wj-mega-lower{padding-inline:18px}
+  html body .wj-platform .wj-mega-card{flex-basis:82vw}
+}
+
+/* Keep the menu's dark art direction isolated from the global white-surface system. */
+html body #wj-mobile-menu{
+  background-color:#003f30 !important;
+  background-image:
+    radial-gradient(circle at 12% 0%,rgba(33,92,69,.32),transparent 32%),
+    radial-gradient(circle at 92% 100%,rgba(17,73,54,.24),transparent 34%),
+    linear-gradient(135deg,#073629 0%,#003f30 48%,#003126 100%) !important;
+}
+
+
+/* Imported after the global consistency layer so the dark menu remains self-contained. */
+html body #wj-mobile-menu{border-radius:34px!important;color:var(--mega-cream)!important}
+html body #wj-mobile-menu .wj-mega-bar{background:transparent!important;border-radius:0!important}
+html body #wj-mobile-menu .wj-mega-brand{color:var(--mega-cream)!important}
+html body #wj-mobile-menu .wj-mega-close{border-radius:50%!important}
+html body #wj-mobile-menu .wj-mega-card{border-radius:15px!important;background-color:#123d31!important}
+html body #wj-mobile-menu .wj-mega-card-label{color:var(--mega-cream)!important}
+html body #wj-mobile-menu .wj-nav-group-toggle{border-radius:0!important;color:var(--mega-amber)!important;font-size:12px!important;font-weight:800!important;line-height:1.25!important;letter-spacing:.16em!important}
+html body #wj-mobile-menu .wj-mega-location{border-radius:17px!important;background-color:rgba(0,35,27,.74)!important}
+html body #wj-mobile-menu .wj-mega-location h2{color:var(--mega-cream)!important;font-size:27px!important;line-height:1.05!important;letter-spacing:-.03em!important}
+html body #wj-mobile-menu .wj-mega-address p{color:var(--mega-cream)!important;font-size:12.5px!important;line-height:1.35!important}
+html body #wj-mobile-menu .wj-mega-address span{color:rgba(247,240,223,.74)!important}
+html body #wj-mobile-menu .wj-mega-explore{border-radius:999px!important;color:#073629!important;background-color:var(--mega-amber)!important}
+@media(max-width:899px){html body #wj-mobile-menu{border-radius:0!important}html body #wj-mobile-menu .wj-mega-card{border-radius:17px!important}html body #wj-mobile-menu .wj-mega-location{border-radius:18px!important}html body #wj-mobile-menu .wj-mega-location h2{font-size:clamp(30px,9vw,40px)!important}html body #wj-mobile-menu .wj-mega-address p{font-size:14px!important}html body #wj-mobile-menu .wj-nav-group-toggle{font-size:14px!important}}
+
+
+/* Compact desktop mode: keep the entire menu visible on laptop-height screens. */
+@media (min-width:900px) and (max-height:820px){
+  html body .wj-platform .wj-mobile-panel{
+    top:12px !important;
+    width:min(1540px,calc(100vw - 32px)) !important;
+    max-height:calc(100dvh - 24px) !important;
+    border-radius:24px !important;
+  }
+  html body .wj-platform .wj-mega-bar{padding:16px 30px 8px}
+  html body .wj-platform .wj-mega-brand{font-size:30px;padding-bottom:10px;line-height:1.1}
+  html body .wj-platform .wj-mega-brand::after{width:38px;height:3px}
+  html body .wj-platform .wj-mega-close{width:44px !important;height:44px !important;min-width:44px}
+  html body .wj-platform .wj-mega-feature-heading{padding:8px 30px 12px;font-size:11px}
+  html body .wj-platform .wj-mega-spaces{gap:12px;padding:0 30px 15px}
+  html body .wj-platform .wj-mega-card{aspect-ratio:1.62/1}
+  html body .wj-platform .wj-mega-card-label{padding:12px 13px 11px;font-size:17px}
+  html body .wj-platform .wj-mega-divider{margin-inline:30px}
+  html body .wj-platform .wj-mega-lower{grid-template-columns:minmax(0,1fr) 260px;gap:22px;padding:17px 30px 22px}
+  html body .wj-platform .wj-mega-nav .wj-nav-group{padding-inline:17px}
+  html body .wj-platform .wj-nav-group-toggle{min-height:24px;padding-bottom:7px;font-size:10.5px !important}
+  html body .wj-platform .wj-mobile-panel .wj-nav-group a{
+    min-height:29px;
+    padding:4px 20px 4px 0 !important;
+    font-size:12px !important;
+    line-height:1.2;
+  }
+  html body .wj-platform .wj-mobile-panel .wj-nav-group a::after{font-size:16px}
+  html body .wj-platform .wj-mega-location-image{height:104px}
+  html body .wj-platform .wj-mega-location-copy{padding:0 14px 14px}
+  html body .wj-platform .wj-mega-location h2{margin:-2px 0 8px;font-size:24px !important}
+  html body .wj-platform .wj-mega-address{gap:8px;margin-bottom:10px}
+  html body .wj-platform .wj-mega-address>svg{width:20px;height:20px}
+  html body .wj-platform .wj-mega-address p{font-size:11px !important;line-height:1.3 !important}
+  html body .wj-platform .wj-mega-address strong{font-size:12px}
+  html body .wj-platform .wj-mega-explore{min-height:40px;font-size:12.5px}
+}
+
+@media (min-width:900px) and (max-height:680px){
+  html body .wj-platform .wj-mega-spaces{grid-template-columns:repeat(6,minmax(0,1fr));padding-bottom:11px}
+  html body .wj-platform .wj-mega-card{aspect-ratio:1.9/1}
+  html body .wj-platform .wj-mega-location-image{display:none}
+  html body .wj-platform .wj-mega-location-copy{padding:15px}
+  html body .wj-platform .wj-mega-location h2{margin:0 0 8px;font-size:22px !important}
+  html body .wj-platform .wj-mega-lower{padding-top:13px;padding-bottom:16px}
+}
+
+
+/* The page uses Lenis; keep wheel and touch gestures native inside the dialog. */
+html body #wj-mobile-menu{
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-gutter:stable;
+}
+html body #wj-mobile-menu::-webkit-scrollbar{width:8px}
+html body #wj-mobile-menu::-webkit-scrollbar-track{background:rgba(255,255,255,.035);border-radius:99px}
+html body #wj-mobile-menu::-webkit-scrollbar-thumb{background:rgba(245,161,26,.58);border-radius:99px;border:2px solid transparent;background-clip:padding-box}
+html body #wj-mobile-menu::-webkit-scrollbar-thumb:hover{background:rgba(245,161,26,.85);background-clip:padding-box}

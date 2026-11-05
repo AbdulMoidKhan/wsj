@@ -1,0 +1,630 @@
+/* Scoped styles for Memberships Page View */
+.mem-page {
+  background: var(--ui-canvas);
+  color: var(--ui-forest);
+  font-family: var(--ui-body-font);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.mem-page * {
+  box-sizing: border-box;
+}
+
+.mem-wrap {
+  width: min(1200px, calc(100% - 96px));
+  margin-inline: auto;
+}
+
+.mem-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 28px;
+  font-size: 13px;
+  color: var(--ui-muted);
+}
+
+.mem-crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mem-crumbs a:hover {
+  text-decoration: underline;
+}
+
+/* Hero Section */
+.mem-hero {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 60px;
+  align-items: end;
+  padding: 56px 0 44px;
+}
+
+.mem-eyebrow {
+  font-family: var(--ui-body-font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ui-green);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.mem-hero h1 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(48px, 5.4vw, 76px);
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: var(--ui-forest) !important;
+  margin: 0;
+}
+
+.mem-hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: #657b60;
+}
+
+.mem-hero-copy p {
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--ui-muted);
+  margin: 0 0 24px;
+}
+
+.mem-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.mem-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 5px !important;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.mem-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ui-forest);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1.5px solid #a5b1a0;
+  padding: 4px 0;
+  line-height: 1.4;
+}
+
+.mem-text-link:hover {
+  border-color: var(--ui-forest);
+}
+
+/* Hero Media Banner */
+.mem-hero-image {
+  margin: 0 0 80px;
+}
+
+.mem-hero-image img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1170 / 406;
+  object-fit: cover;
+  border-radius: 5px !important;
+  display: block;
+}
+
+.mem-hero-image figcaption {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 14px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ui-muted);
+}
+
+/* Shared Sections */
+.mem-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.mem-section-head {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 70px;
+  align-items: end;
+  margin-bottom: 50px;
+}
+
+.mem-section-head h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(34px, 3.8vw, 50px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: var(--ui-forest) !important;
+  margin: 0;
+}
+
+.mem-section-head p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ui-muted);
+  margin: 0;
+}
+
+/* ── 4-CARD PASSES GRID ── */
+.mem-passes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.mem-pass-card {
+  background: #ffffff;
+  border: 1px solid var(--ui-line);
+  border-radius: 5px !important;
+  padding: 34px 26px 26px;
+  box-shadow: 0 4px 18px rgba(17, 48, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.mem-pass-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(17, 48, 42, 0.3);
+  box-shadow: 0 10px 28px rgba(17, 48, 42, 0.08);
+}
+
+.mem-pass-card.is-popular {
+  border: 1.5px solid #d9910b !important;
+  background-color: #fffefb !important;
+}
+
+.mem-pass-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background-color: #d9910b;
+  color: #0b1d19;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 5px;
+}
+
+.mem-number {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #a87b39;
+  margin-bottom: 14px;
+}
+
+.mem-card-title {
+  font-family: var(--ui-heading-font);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ui-forest) !important;
+  margin: 0 0 10px;
+}
+
+.mem-price-display {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 8px;
+}
+
+.mem-price-number {
+  font-family: var(--ui-body-font);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ui-forest);
+  line-height: 1.1;
+}
+
+.mem-price-period {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ui-muted);
+}
+
+.mem-card-tagline {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ui-green);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.mem-card-divider {
+  height: 1px;
+  width: 100%;
+  background-color: #edf0ea;
+  margin: 20px 0;
+}
+
+.mem-card-desc {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ui-muted);
+  margin: 0 0 20px;
+}
+
+.mem-features-block {
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.mem-features-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ui-muted);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mem-card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mem-card-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--ui-forest);
+  line-height: 1.45;
+}
+
+.mem-check-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #f0f4ec;
+  color: #214d3e;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mem-card-footer {
+  margin-top: auto;
+  width: 100%;
+}
+
+.mem-plan-btn {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* ── SIDE-BY-SIDE MATRIX COMPARISON TABLE ── */
+.mem-table-container {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid var(--ui-line);
+  border-radius: 5px;
+  box-shadow: 0 4px 18px rgba(17, 48, 42, 0.04);
+}
+
+.mem-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+  text-align: left;
+}
+
+.mem-table th,
+.mem-table td {
+  padding: 16px 20px;
+  font-size: 14.5px;
+  border-bottom: 1px solid #edf0ea;
+}
+
+.mem-table thead tr {
+  background: var(--ui-sand);
+}
+
+.mem-th-feature {
+  width: 32%;
+  font-family: var(--ui-heading-font);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ui-forest);
+}
+
+.mem-th-col {
+  width: 17%;
+  font-family: var(--ui-heading-font);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ui-forest);
+}
+
+.mem-th-col span {
+  display: block;
+  font-family: var(--ui-body-font);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ui-muted);
+  margin-top: 2px;
+}
+
+.mem-th-col.is-popular,
+.mem-td-val.is-popular {
+  background-color: rgba(217, 145, 11, 0.05);
+}
+
+.mem-td-feature {
+  font-weight: 600;
+  color: var(--ui-forest);
+}
+
+.mem-td-val {
+  color: var(--ui-forest);
+}
+
+.mem-table tr.even {
+  background-color: #fafbf9;
+}
+
+.mem-table-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f0f4ec;
+  color: #214d3e;
+}
+
+.mem-table-dash {
+  color: #a8b3aa;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.mem-table-text {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ui-forest);
+}
+
+/* ── COMMUNITY MEMBERSHIPS SECTION ── */
+.mem-community-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.mem-community-pricing-box {
+  background: var(--ui-sand);
+  border-radius: 5px;
+  padding: 40px 0 60px;
+}
+
+.mem-community-pricing-box .cn-memberships {
+  background: transparent !important;
+  padding-block: 0 !important;
+}
+
+/* Upgrade to Dedicated / Private Office Banner */
+.mem-upgrade-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.mem-upgrade-box {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 60px;
+  align-items: center;
+  background: var(--ui-sand);
+  border-radius: 5px;
+  padding: 50px 44px;
+}
+
+.mem-upgrade-copy h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(30px, 3.2vw, 42px);
+  line-height: 1.15;
+  font-weight: 500;
+  color: var(--ui-forest) !important;
+  margin: 0 0 16px;
+}
+
+.mem-upgrade-copy p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ui-muted);
+  margin: 0 0 28px;
+}
+
+.mem-upgrade-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px !important;
+  display: block;
+}
+
+/* FAQ Section */
+.mem-faq-section {
+  display: grid;
+  grid-template-columns: 0.85fr 1.3fr;
+  gap: 80px;
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.mem-faq-header h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(32px, 3.5vw, 44px);
+  line-height: 1.15;
+  font-weight: 500;
+  color: var(--ui-forest) !important;
+  margin: 0 0 16px;
+}
+
+.mem-faq-header p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ui-muted);
+  margin: 0 0 24px;
+}
+
+.mem-faq-list {
+  border-top: 1px solid var(--ui-line);
+}
+
+.mem-faq-list details {
+  border-bottom: 1px solid var(--ui-line);
+}
+
+.mem-faq-list summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ui-forest);
+  line-height: 1.45;
+}
+
+.mem-faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.mem-faq-list summary svg {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.mem-faq-list details[open] summary svg {
+  transform: rotate(45deg);
+}
+
+.mem-faq-list details > div {
+  padding: 0 20px 20px 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ui-muted);
+}
+
+.mem-faq-list details > div p {
+  margin: 0;
+}
+
+/* Closing CTA */
+.mem-closing {
+  text-align: center;
+  padding: 90px 20px;
+  border-top: 1px solid var(--ui-line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mem-closing h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(36px, 4vw, 52px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: var(--ui-forest) !important;
+  margin: 0 0 32px;
+  max-width: 680px;
+}
+
+.mem-closing .mem-actions {
+  justify-content: center;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1100px) {
+  .mem-wrap {
+    width: calc(100% - 56px);
+  }
+  .mem-hero,
+  .mem-section-head,
+  .mem-upgrade-box,
+  .mem-faq-section {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .mem-passes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mem-wrap {
+    width: calc(100% - 36px);
+  }
+  .mem-hero {
+    padding: 36px 0 28px;
+    gap: 24px;
+  }
+  .mem-hero h1 {
+    font-size: clamp(38px, 10vw, 48px);
+  }
+  .mem-hero-copy p {
+    font-size: 16px;
+  }
+  .mem-passes-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .mem-section,
+  .mem-community-section,
+  .mem-upgrade-section,
+  .mem-faq-section,
+  .mem-closing {
+    padding-block: 52px;
+  }
+  .mem-upgrade-box {
+    padding: 30px 20px;
+  }
+}

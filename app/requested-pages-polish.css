@@ -1,0 +1,99 @@
+/* Focused editorial alignment for the five requested routes. */
+html body .wj-platform .uc-page .uc-eyebrow{font-family:var(--font-sans),Inter,sans-serif;font-size:12px!important;font-weight:600!important;line-height:18px!important;letter-spacing:.96px!important;text-transform:uppercase;color:#526d5d}
+html body .wj-platform .ip-archive{background:#f7f5ef;color:#193c32;width:min(1200px,calc(100% - 80px));max-width:none;margin-inline:auto;padding-bottom:90px}
+html body .wj-platform .ip-archive .archive-intro{max-width:920px;padding:65px 0 52px}
+html body .wj-platform .ip-archive .archive-intro h1{font-family:var(--font-display),Georgia,serif;font-size:clamp(48px,5.5vw,76px);line-height:1.1;letter-spacing:-.04em;margin:12px 0 18px}
+html body .wj-platform .ip-archive .archive-intro>p:last-child{max-width:650px;font:18px/1.7 var(--font-sans),Inter,sans-serif;color:#56655a}
+html body .wj-platform .ip-archive .archive-tools{align-items:center;gap:20px;padding:22px 0;margin-bottom:38px}
+html body .wj-platform .ip-archive .category-tabs{display:flex;flex-wrap:wrap;gap:8px}
+html body .wj-platform .ip-archive .category-tabs a{border-radius:5px;padding:9px 14px;min-height:42px;display:inline-flex;align-items:center;font-size:14px}
+html body .wj-platform .ip-archive .search-input{border-radius:5px;min-width:min(100%,300px)}
+html body .wj-platform .ip-archive :is(.archive-grid,.journal-grid){grid-template-columns:repeat(3,minmax(0,1fr));gap:30px}
+html body .wj-platform .ip-archive .ip-journal-card{background:#fff;border:1px solid #d9ded3;border-radius:5px;overflow:hidden}
+html body .wj-platform .ip-archive .ip-journal-card img{border-radius:5px 5px 0 0}
+html body .wj-platform .visit-page .visit-hero{padding-top:58px;padding-bottom:56px}
+html body .wj-platform .visit-page .visit-contact{gap:64px;padding-top:56px}
+html body .wj-platform .visit-page .visit-form{background:#fff;border:1px solid #d9ded3;border-radius:5px;padding:32px 38px;min-width:0}
+html body .wj-platform .visit-page .visit-form .wj-form :is(input:not([type=checkbox]),select,textarea){border-radius:5px;background:#fff}
+html body .wj-platform .visit-page .visit-form .wj-btn{border-radius:5px;background:#214d3e;color:#fff;font-size:15px;font-weight:700}
+html body .wj-platform .visit-page .visit-button{border-radius:5px}
+html body .wj-platform .cn-page .cn-hero-media img,html body .wj-platform .cn-page .cn-circle-card{border-radius:5px}
+html body .wj-platform .cn-page .cn-circle-card{border:1px solid #193c32}
+html body .wj-platform .cn-page .cn-hero-media{border:7px solid #fff;border-radius:5px;box-shadow:12px 12px 0 #193c32}
+html body .wj-platform .sv-page .sv-card{background:#fff;border:1px solid #d3dacd}
+html body .wj-platform .sv-page .sv-card-top{margin-bottom:14px}
+html body .wj-platform .sv-page .sv-card-footer{justify-content:flex-start}
+@media(max-width:1000px){html body .wj-platform .ip-archive :is(.archive-grid,.journal-grid){grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){html body .wj-platform .ip-archive{width:calc(100% - 40px);padding-bottom:55px}html body .wj-platform .ip-archive .archive-intro{padding:38px 0 30px}html body .wj-platform .ip-archive .archive-intro h1{font-size:clamp(42px,11vw,58px)}html body .wj-platform .ip-archive .archive-tools{align-items:stretch}html body .wj-platform .ip-archive :is(.archive-grid,.journal-grid){grid-template-columns:1fr}html body .wj-platform .visit-page .visit-contact{gap:30px}html body .wj-platform .visit-page .visit-form{padding:25px 20px}html body .wj-platform .cn-page .cn-hero-media{box-shadow:7px 7px 0 #193c32}}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TESTIMONIALS BAND — theme-aligned palette
+   Forest band (same tone contract as the closing/footer bands) with amber
+   accents, readable light text and neighbour cards that stay legible.
+   ────────────────────────────────────────────────────────────────────────── */
+html body .wj-platform .wj-testimonials-sec{background:var(--ui-forest)!important;color:var(--ui-on-dark)!important}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-container{margin-top:0}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-layout{align-items:center}
+
+/* Sidebar */
+html body .wj-platform .wj-testimonials-sec .lx-vslider-badge{background:rgba(217,145,11,.16)!important;border:1px solid rgba(217,145,11,.55)!important;color:#f3c87a!important;letter-spacing:.12em}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-dot{background:var(--ui-yellow);box-shadow:0 0 8px rgba(217,145,11,.7)}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-heading{color:var(--ui-white)!important}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-score{color:#eef1ea!important;font-weight:600!important}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-star{color:var(--ui-yellow)}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-desc{color:rgba(238,241,234,.82)!important}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-arrow{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.28)!important;color:var(--ui-white)!important}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-arrow:hover,
+html body .wj-platform .wj-testimonials-sec .lx-vslider-arrow:focus-visible{background:var(--ui-yellow)!important;border-color:var(--ui-yellow)!important;color:var(--ui-forest)!important}
+/* The button contract flattens .lx-vdot backgrounds, so paint the indicator on a pseudo element. */
+html body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot{position:relative;width:9px;height:9px;overflow:visible}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot::after{content:"";position:absolute;inset:0;border-radius:999px!important;background:rgba(255,255,255,.38);transition:background .25s ease}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot:hover::after{background:rgba(255,255,255,.7)}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot.is-active{width:24px}
+html body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot.is-active::after{background:var(--ui-yellow);border-radius:5px!important}
+
+/* Cards */
+html body .wj-platform .wj-testimonials-sec .lx-vitem{border-radius:5px!important}
+html body .wj-platform .wj-testimonials-sec .lx-vitem.is-active{background:#15362c!important;border:1px solid rgba(217,145,11,.7)!important;box-shadow:0 18px 44px rgba(0,0,0,.38)!important}
+html body .wj-platform .wj-testimonials-sec .lx-vitem.is-prev,
+html body .wj-platform .wj-testimonials-sec .lx-vitem.is-next{background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.14)!important;opacity:.5;filter:blur(2px)}
+html body .wj-platform .wj-testimonials-sec .lx-vitem-quote-icon{color:var(--ui-yellow)!important;opacity:1}
+html body .wj-platform .wj-testimonials-sec .lx-vitem-quote p{color:var(--ui-white)!important}
+html body .wj-platform .wj-testimonials-sec .lx-vitem.is-prev .lx-vitem-quote p,
+html body .wj-platform .wj-testimonials-sec .lx-vitem.is-next .lx-vitem-quote p{color:rgba(255,255,255,.72)!important}
+html body .wj-platform .wj-testimonials-sec .lx-vitem-footer{border-top:1px solid rgba(255,255,255,.16)}
+html body .wj-platform .wj-testimonials-sec .lx-vitem-avatar{border:2px solid var(--ui-yellow)!important;border-radius:50%!important}
+html body .wj-platform .wj-testimonials-sec .lx-vitem-name{color:var(--ui-white)!important;font-size:15px!important;font-weight:700!important}
+html body .wj-platform .wj-testimonials-sec .lx-vitem-role{color:#f3c87a!important;font-size:13px!important}
+html body .wj-platform .wj-testimonials-sec .lx-vitem-company{font-family:var(--ui-body-font);font-size:13px;line-height:1.25;color:rgba(238,241,234,.78)}
+
+/* Loading skeleton */
+html body .wj-platform .wj-testimonials-sec .lx-vskel{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:clamp(36px,5vw,64px);align-items:center}
+html body .wj-platform .wj-testimonials-sec .lx-vskel-side{display:flex;flex-direction:column;gap:16px}
+html body .wj-platform .wj-testimonials-sec .lx-vskel-line{display:block;height:14px;border-radius:5px;background:linear-gradient(90deg,rgba(255,255,255,.07) 25%,rgba(255,255,255,.16) 37%,rgba(255,255,255,.07) 63%);background-size:400% 100%;animation:lx-vskel-shimmer 1.4s ease-in-out infinite}
+html body .wj-platform .wj-testimonials-sec .lx-vskel-badge{width:130px;height:28px}
+html body .wj-platform .wj-testimonials-sec .lx-vskel-title{width:78%;height:40px}
+html body .wj-platform .wj-testimonials-sec .lx-vskel-short{width:55%}
+html body .wj-platform .wj-testimonials-sec .lx-vskel-card{display:block;width:100%;height:190px;border-radius:5px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(90deg,rgba(255,255,255,.05) 25%,rgba(255,255,255,.12) 37%,rgba(255,255,255,.05) 63%);background-size:400% 100%;animation:lx-vskel-shimmer 1.4s ease-in-out infinite}
+@keyframes lx-vskel-shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+@media (prefers-reduced-motion:reduce){html body .wj-platform .wj-testimonials-sec :is(.lx-vskel-line,.lx-vskel-card){animation:none}}
+@media (max-width:900px){html body .wj-platform .wj-testimonials-sec .lx-vskel{grid-template-columns:1fr;gap:24px}}
+
+/* Published use case without artwork: neutral tile instead of a broken/blank image frame. */
+html body .wj-platform .lv-usecases .lv-service-img-empty{background:linear-gradient(135deg,#1e4a3c,#2b6650)}
+
+
+/* Homepage podcast studio: deliberate solid-black brand band. */
+@layer wj-consistency{
+  html body .wj-platform section.lv-podcast{
+    background-color:#000 !important;
+    background-image:none !important;
+    color:#fff !important;
+  }
+  html body .wj-platform section.lv-podcast::before,
+  html body .wj-platform section.lv-podcast::after{background:none !important}
+  html body .wj-platform section.lv-podcast :is(h1,h2,h3,h4,h5,h6){color:#fff !important}
+  html body .wj-platform section.lv-podcast :is(p,li,dt,dd){color:rgba(255,255,255,.88) !important}
+  html body .wj-platform section.lv-podcast .hp-eyebrow{color:rgba(255,255,255,.72) !important}
+  html body .wj-platform section.lv-podcast .hp-link{color:#fff !important}
+}

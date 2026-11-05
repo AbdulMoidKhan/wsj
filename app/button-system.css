@@ -1,0 +1,188 @@
+/* Public button contract. Important declarations in this named layer deliberately
+   outrank legacy unlayered !important page styles without specificity escalation.
+   Two visual variants only: header-matched yellow pill and forest green / 10px.
+   Image triggers remain images; links in navigation and running text remain links. */
+@layer wj-button-contract {
+  body:has(.wj-platform) {
+    --wj-button-yellow:#d9910b;
+    --wj-button-yellow-hover:#c27f06;
+    --wj-button-yellow-ink:#0b1d19;
+    --wj-button-green:#214d3e;
+    --wj-button-green-hover:#173d30;
+    --wj-button-font:var(--font-sans),Inter,"Helvetica Neue",Arial,sans-serif;
+    --wj-button-shadow:0 1px 2px rgba(11,29,25,.12),0 8px 18px -10px rgba(194,127,6,.7);
+  }
+  /* All text and icon controls share the same palette, radius and focus states.
+     Choice cards keep their layout; selected choices use the yellow variant. */
+  body:has(.wj-platform) :where(button:not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button):not(.bk-type-card):not(.bk-plan-card):not(.bk-addon):not(.lv-slide-dot):not(.lx-vdot),input[type="submit"],input[type="button"],.wj-button) {
+    background-color:var(--wj-button-green)!important;
+    background-image:none!important;
+    color:#fff!important;
+    border:1px solid var(--wj-button-green)!important;
+    border-radius:5px!important;
+    box-shadow:none!important;
+    font-family:var(--wj-button-font)!important;
+    font-weight:700!important;
+    letter-spacing:.005em!important;
+    text-decoration:none!important;
+    text-transform:none!important;
+    cursor:pointer!important;
+    transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+  }
+  /* Legacy CTA aliases are intentional: every existing template is covered while
+     newly authored actions can just use wj-button + wj-button-{yellow,green}. */
+  body:has(.wj-platform) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn,.popup-cta,.ecom-button,.cd-button,.sv-button,.sv-card-book-btn,.ws-button,.ts-button,.ts-plan-btn,.mem-button,.mem-plan-btn,.uc-button) {
+    --wj-button-bg:var(--wj-button-green);
+    --wj-button-ink:#fff;
+    --wj-button-radius:5px;
+    --wj-button-rest-shadow:none;
+    appearance:none!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:10px!important;
+    min-height:44px!important;
+    height:auto!important;
+    min-width:0!important;
+    max-width:100%!important;
+    padding:12px 22px!important;
+    margin-inline:0!important;
+    background-color:var(--wj-button-bg)!important;
+    background-image:none!important;
+    color:var(--wj-button-ink)!important;
+    border:1px solid var(--wj-button-bg)!important;
+    border-radius:var(--wj-button-radius)!important;
+    box-shadow:var(--wj-button-rest-shadow)!important;
+    font-family:var(--wj-button-font)!important;
+    font-size:15px!important;
+    font-weight:700!important;
+    line-height:18px!important;
+    letter-spacing:.005em!important;
+    text-decoration:none!important;
+    text-transform:none!important;
+    text-align:center!important;
+    white-space:normal!important;
+    vertical-align:middle!important;
+    overflow:hidden!important;
+    position:relative;
+    cursor:pointer!important;
+    flex-shrink:0;
+    transform:none!important;
+    filter:none!important;
+    transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+  }
+  body:has(.wj-platform) :where(.lv-plans,.btn-primary,.btn-cream,.wj-btn-primary,.cn-btn-gold,.cn-plan-btn-gold,.bk-btn-primary,.bk-submit-btn,.wj-button-yellow) {
+    --wj-button-bg:var(--wj-button-yellow)!important;
+    --wj-button-ink:var(--wj-button-yellow-ink)!important;
+    --wj-button-radius:5px!important;
+    --wj-button-rest-shadow:var(--wj-button-shadow)!important;
+  }
+  /* An explicit variant wins over any old class retained for layout hooks. */
+  body:has(.wj-platform) .wj-button-green {
+    --wj-button-bg:var(--wj-button-green)!important;
+    --wj-button-ink:#fff!important;
+    --wj-button-radius:5px!important;
+    --wj-button-rest-shadow:none!important;
+  }
+  body:has(.wj-platform) .lv-plans {
+    height:44px!important;
+    padding:0 22px!important;
+    white-space:nowrap!important;
+    border-radius:5px!important;
+  }
+  body:has(.wj-platform) :where(button:not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button),.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn,.ecom-button,.cd-button,.sv-button,.sv-card-book-btn,.ws-button,.ts-button,.ts-plan-btn,.mem-button,.mem-plan-btn,.uc-button):hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color:var(--wj-button-green-hover)!important;
+    border-color:var(--wj-button-green-hover)!important;
+    color:#fff!important;
+    text-decoration:none!important;
+    transform:none!important;
+  }
+  body:has(.wj-platform) :where(.lv-plans,.btn-primary,.btn-cream,.wj-btn-primary,.cn-btn-gold,.cn-plan-btn-gold,.bk-btn-primary,.bk-submit-btn,.wj-button-yellow,.ecom-button.wj-button-yellow,.cd-button.wj-button-yellow,.sv-button.wj-button-yellow,.ws-button.wj-button-yellow,.ts-button.wj-button-yellow,.ts-plan-btn.wj-button-yellow,.mem-button.wj-button-yellow,.mem-plan-btn.wj-button-yellow,.uc-button.wj-button-yellow):hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color:var(--wj-button-yellow-hover)!important;
+    border-color:var(--wj-button-yellow-hover)!important;
+    color:var(--wj-button-yellow-ink)!important;
+    box-shadow:0 12px 24px -14px rgba(194,127,6,.8)!important;
+  }
+  body:has(.wj-platform) .wj-button-green:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color:var(--wj-button-green-hover)!important;
+    border-color:var(--wj-button-green-hover)!important;
+    color:#fff!important;
+    box-shadow:none!important;
+  }
+  /* Utility selection states use the same yellow, never a third outline theme. */
+  body:has(.wj-platform) button:is([aria-pressed="true"],[aria-selected="true"],[aria-checked="true"],.selected,.is-active):not(.visit-photo-button):not(.lv-slide-dot):not(.lx-vdot) {
+    background-color:var(--wj-button-yellow)!important;
+    color:var(--wj-button-yellow-ink)!important;
+    border-color:var(--wj-button-yellow)!important;
+    border-radius:999px!important;
+    box-shadow:var(--wj-button-shadow)!important;
+  }
+  body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon) {border-radius:10px!important}
+  body:has(.wj-platform) :where(button:not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button),.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn):focus-visible {
+    outline:3px solid #d9910b!important;
+    outline-offset:4px!important;
+  }
+  body:has(.wj-platform) :where(button:disabled,button[aria-disabled="true"],.wj-button[aria-disabled="true"]){opacity:.5!important;cursor:not-allowed!important;box-shadow:none!important;transform:none!important}
+  body:has(.wj-platform) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn) :where(span,svg){color:inherit!important}
+  body:has(.wj-platform) :where(.bk-type-card,.bk-plan-card,.bk-addon,.bk-time-slot) :where(span,div,svg){color:inherit!important}
+  body:has(.wj-platform) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn)>svg{width:18px!important;height:18px!important;flex-shrink:0!important}
+  body:has(.wj-platform) .cn-btn-text-play .cn-play-icon{border:0!important;background:none!important;width:auto!important;height:auto!important;padding:0!important;box-shadow:none!important}
+  /* Icon controls remain compact, with the same green 10px treatment. */
+  body:has(.wj-platform) :where(.lv-burger,.wj-mega-close,.bk-close,.bk-back,.bk-cal-nav-btn,.lv-nav-arrow,.lx-vslider-arrow,.visit-lightbox-button,.icon-btn){min-width:44px!important;min-height:44px!important;padding:10px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;line-height:1.4!important}
+  body:has(.wj-platform) :where(.pricing-filters,.visit-filters,.vg-filters,.category-tabs){flex-wrap:wrap}
+  body:has(.wj-platform) :where(.pricing-filters button,.visit-filters button,.vg-filter-btn,.cn-toggle-btn,.lv-studio-tab-btn){min-height:44px!important;padding:10px 16px!important;font-size:14px!important;line-height:20px!important}
+  body:has(.wj-platform) .lx-vslider-nav{flex-wrap:wrap;gap:16px}
+  body:has(.wj-platform) .lx-vslider-dots{flex-wrap:wrap}
+  @media(max-width:700px){
+    body:has(.wj-platform) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn){font-size:14px!important;padding:12px 18px!important}
+    body:has(.wj-platform) .lv-plans{padding:0 16px!important;font-size:14px!important;height:44px!important}
+    body:has(.wj-platform) :where(.cn-hero-actions,.lv-hero-actions,.ip-actions,.wj-closing-actions,.library-actions,.creative-actions,.info-actions){flex-wrap:wrap;gap:12px}
+  }
+  @media(prefers-reduced-motion:reduce){body:has(.wj-platform) :where(button,.wj-button,.btn,.lv-plans){transition:none!important;animation:none!important}}
+}
+
+/* Preserve readable booking choice card styling against broad button rules. */
+body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon) {
+  background-color:#ffffff!important;
+  background-image:none!important;
+  color:#193c32!important;
+  border:1.5px solid #cbd2c5!important;
+  box-shadow:none!important;
+  transform:none!important;
+  text-align:left!important;
+}
+body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon) * {
+  color:inherit!important;
+}
+body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon).featured {
+  background-color:#193c32!important;
+  color:#ffffff!important;
+  border-color:#193c32!important;
+}
+body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon):is(.selected,[aria-pressed="true"],[aria-checked="true"]) {
+  background-color:#eef5ee!important;
+  color:#193c32!important;
+  border-color:#193c32!important;
+  box-shadow:inset 0 0 0 1px #193c32!important;
+}
+body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon).featured:is(.selected,[aria-pressed="true"]) {
+  background-color:#173d30!important;
+  color:#ffffff!important;
+  border-color:#d9910b!important;
+  box-shadow:inset 0 0 0 1px #d9910b!important;
+}
+body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon) .bk-plan-badge {
+  background-color:#d9910b!important;
+  color:#0b1d19!important;
+}
+
+/* Hero slider pagination lines & dots: transparent hit targets with elegant indicator bars */
+body:has(.wj-platform) :where(.lv-dots .lv-slide-dot, .lx-vslider-dots .lx-vdot) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  padding: 0 !important;
+}

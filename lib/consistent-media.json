@@ -1,0 +1,324 @@
+{
+  "/media/dc007bcb8b-image-2-1.png": {
+    "src": "/media/consistent/dc007bcb8b-image-2-1.webp",
+    "width": 1071,
+    "height": 277,
+    "originalWidth": 1169,
+    "originalHeight": 380,
+    "crop": {
+      "left": 50,
+      "top": 95,
+      "width": 1071,
+      "height": 277
+    },
+    "sourceSha256": "1b327c32965b5de31cdcf0c3993786dd9c8b050eb48778fc1acfda3be5e49093"
+  },
+  "/media/442865ba18-image-23.png": {
+    "src": "/media/consistent/442865ba18-image-23.webp",
+    "width": 1072,
+    "height": 312,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 85,
+      "width": 1072,
+      "height": 312
+    },
+    "sourceSha256": "f5f29ed078f4537783981dc6692bc6ea914c2ca85442f4e01479b8a2253fa005"
+  },
+  "/media/0918e0cd26-image-24.png": {
+    "src": "/media/consistent/0918e0cd26-image-24.webp",
+    "width": 432,
+    "height": 308,
+    "originalWidth": 472,
+    "originalHeight": 362,
+    "crop": {
+      "left": 20,
+      "top": 38,
+      "width": 432,
+      "height": 308
+    },
+    "sourceSha256": "9af808cdc54597b5a9de4897c255983fdda72126fcaf454ce4bbf20750d5d69c"
+  },
+  "/media/f9ab2e39c3-printingservices-banner.png": {
+    "src": "/media/consistent/f9ab2e39c3-printingservices-banner.webp",
+    "width": 1072,
+    "height": 346,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 51,
+      "width": 1072,
+      "height": 346
+    },
+    "sourceSha256": "c00578bdb17da1cf87bbbc38cd3d28e9398b904c0417db20cfcc0e629ffb7847"
+  },
+  "/media/3b4cd7c54a-bpo-banner.png": {
+    "src": "/media/consistent/3b4cd7c54a-bpo-banner.webp",
+    "width": 1072,
+    "height": 346,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 51,
+      "width": 1072,
+      "height": 346
+    },
+    "sourceSha256": "f9a10eb7c5043535f940d5f36139c87950b4999851ed9726045a7ed6291b3c80"
+  },
+  "/media/af55bc8a2b-image-17-1.png": {
+    "src": "/media/consistent/af55bc8a2b-image-17-1.webp",
+    "width": 1072,
+    "height": 320,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 77,
+      "width": 1072,
+      "height": 320
+    },
+    "sourceSha256": "8a13df50b706adf3e026b0a539c0e0bc32ea9af3e70d9f1ea1f97958a52795c7"
+  },
+  "/media/7828bb3525-image-18-1.png": {
+    "src": "/media/consistent/7828bb3525-image-18-1.webp",
+    "width": 1072,
+    "height": 337,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 60,
+      "width": 1072,
+      "height": 337
+    },
+    "sourceSha256": "5649483260c06e0bacd6531a59e338e1b60156f07c7dcff42be4642258e87892"
+  },
+  "/media/5668e4a90b-library-image.png": {
+    "src": "/media/consistent/5668e4a90b-library-image.webp",
+    "width": 1072,
+    "height": 346,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 51,
+      "width": 1072,
+      "height": 346
+    },
+    "sourceSha256": "7268046502f855f788cba19529ff8af29ab945cdcec84b61702f810cf8442abd"
+  },
+  "/media/0ea0417178-image-1-2.png": {
+    "src": "/media/consistent/0ea0417178-image-1-2.webp",
+    "width": 1072,
+    "height": 346,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 51,
+      "width": 1072,
+      "height": 346
+    },
+    "sourceSha256": "b7848dfa29a11f2131d4796edb3eaae30ae00fa78f2c725fc23f3c99bb2bbd1f"
+  },
+  "/media/bb076fc55d-image-15.png": {
+    "src": "/media/consistent/bb076fc55d-image-15.webp",
+    "width": 1072,
+    "height": 337,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 60,
+      "width": 1072,
+      "height": 337
+    },
+    "sourceSha256": "62cf6f935a2f7e57c6b0afcb13f29f1ad79532d325d60d1d1f3d3223098cc2f2"
+  },
+  "/media/b66de37a00-image-14.png": {
+    "src": "/media/consistent/b66de37a00-image-14.webp",
+    "width": 1072,
+    "height": 337,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 60,
+      "width": 1072,
+      "height": 337
+    },
+    "sourceSha256": "12b09dafbc6d36a39da4e636c51b3351c773f5d89d1917dc406013c8c2a15717"
+  },
+  "/media/581d1f0575-Rectangle-5673.png": {
+    "src": "/media/consistent/581d1f0575-Rectangle-5673.webp",
+    "width": 523,
+    "height": 249,
+    "originalWidth": 572,
+    "originalHeight": 285,
+    "crop": {
+      "left": 25,
+      "top": 18,
+      "width": 523,
+      "height": 249
+    },
+    "sourceSha256": "cc0a128f4baab2ea2692f478a59911f520c6c59ed12d87707e15a614eb3a4dfb"
+  },
+  "/media/8a92839374-image-13.png": {
+    "src": "/media/consistent/8a92839374-image-13.webp",
+    "width": 1072,
+    "height": 346,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 51,
+      "width": 1072,
+      "height": 346
+    },
+    "sourceSha256": "2a4ee22345288e577dd94dfd7b56bf1a8bc88c4ac548d99a77d2e7b4511ed40b"
+  },
+  "/media/d31681f188-webinars-1.png": {
+    "src": "/media/consistent/d31681f188-webinars-1.webp",
+    "width": 1072,
+    "height": 346,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 51,
+      "width": 1072,
+      "height": 346
+    },
+    "sourceSha256": "9aa0722f13d09d18c70387a0b25ac09ed2448f2450c44bee9a457f9e79c73389"
+  },
+  "/media/3b4e3ba243-image-10.png": {
+    "src": "/media/consistent/3b4e3ba243-image-10.webp",
+    "width": 1072,
+    "height": 354,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 43,
+      "width": 1072,
+      "height": 354
+    },
+    "sourceSha256": "1bf5e0f5829cb0cf1ffc911651e358a0f6c69dfcd42954d0b79e9d11a8a9fd56"
+  },
+  "/media/aaf9642c42-Group-1597885737.png": {
+    "src": "/media/consistent/aaf9642c42-Group-1597885737.webp",
+    "width": 249,
+    "height": 379,
+    "originalWidth": 569,
+    "originalHeight": 414,
+    "crop": {
+      "left": 12,
+      "top": 18,
+      "width": 249,
+      "height": 379
+    },
+    "sourceSha256": "c50dba7dc34c14c8997545d1178e059560c8639b8df54997a204d517a7fe896f"
+  },
+  "/media/e0ac81f337-image-7.png": {
+    "src": "/media/consistent/e0ac81f337-image-7.webp",
+    "width": 1071,
+    "height": 300,
+    "originalWidth": 1169,
+    "originalHeight": 391,
+    "crop": {
+      "left": 50,
+      "top": 82,
+      "width": 1071,
+      "height": 300
+    },
+    "sourceSha256": "e1d462202be53a95686c96a162324e32fa7196f424151f9ee1dbf5e9e18df41d"
+  },
+  "/media/82f2f62fb8-photo-studio-2.png": {
+    "src": "/media/consistent/82f2f62fb8-photo-studio-2.webp",
+    "width": 1072,
+    "height": 320,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 77,
+      "width": 1072,
+      "height": 320
+    },
+    "sourceSha256": "36c9780cfc988d0454719bed1cc5ced4491b3e0b07627297664846354bea0a45"
+  },
+  "/media/f07eac33ef-EWDSXDES-1024x487.png": {
+    "src": "/media/consistent/f07eac33ef-EWDSXDES-1024x487.webp",
+    "width": 960,
+    "height": 222,
+    "originalWidth": 1024,
+    "originalHeight": 487,
+    "crop": {
+      "left": 22,
+      "top": 163,
+      "width": 960,
+      "height": 222
+    },
+    "sourceSha256": "0b16a37e28c44fce3e628305292dedcf21b10af2d930259f61168e47774d7dd1"
+  },
+  "/media/d9f48dd4d0-Group-1597885834-1.png": {
+    "src": "/media/consistent/d9f48dd4d0-Group-1597885834-1.webp",
+    "width": 529,
+    "height": 376,
+    "originalWidth": 591,
+    "originalHeight": 565,
+    "crop": {
+      "left": 25,
+      "top": 95,
+      "width": 529,
+      "height": 376
+    },
+    "sourceSha256": "6814f60f2d82d326f4d104faf331044ae25787e2fdfd60ad14be99b8f74111cb"
+  },
+  "/media/10aa7de5b3-image-1-4.png": {
+    "src": "/media/consistent/10aa7de5b3-image-1-4.webp",
+    "width": 1072,
+    "height": 346,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 51,
+      "width": 1072,
+      "height": 346
+    },
+    "sourceSha256": "311bb1e4b565522f50281475a8ff77f3f6e5808ec9905a9033517e1a316f5f89"
+  },
+  "/media/a9e5ecda0b-Group-1597885834.png": {
+    "src": "/media/consistent/a9e5ecda0b-Group-1597885834.webp",
+    "width": 529,
+    "height": 376,
+    "originalWidth": 591,
+    "originalHeight": 565,
+    "crop": {
+      "left": 25,
+      "top": 95,
+      "width": 529,
+      "height": 376
+    },
+    "sourceSha256": "6814f60f2d82d326f4d104faf331044ae25787e2fdfd60ad14be99b8f74111cb"
+  },
+  "/media/2e1a27fcb6-image-11.png": {
+    "src": "/media/consistent/2e1a27fcb6-image-11.webp",
+    "width": 1072,
+    "height": 354,
+    "originalWidth": 1170,
+    "originalHeight": 406,
+    "crop": {
+      "left": 50,
+      "top": 43,
+      "width": 1072,
+      "height": 354
+    },
+    "sourceSha256": "7f237bb002ae27ebc688bd237d202346de011426ce554999c22f7dba383ffb52"
+  }
+}

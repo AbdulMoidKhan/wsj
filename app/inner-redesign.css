@@ -1,0 +1,1028 @@
+/* ==========================================================================
+   Workspace Junction - Inner page design (final layer, imported last)
+   Editorial, box-free system for the generic live-section renderer (lx-*).
+   No white cards or drop shadows: hairline dividers, inline icons, strong type.
+   ========================================================================== */
+:root{
+  /* share the site container so inner-page content lines up with the header logo and footer */
+  --ed-max:var(--ds-max,1240px);
+  --ed-gutter:var(--ds-gutter,clamp(20px,4vw,48px));
+  --ed-section:clamp(64px,7vw,104px);
+  --ed-line:rgba(17,48,42,.12);
+  --ed-line-soft:rgba(17,48,42,.08);
+  --ed-ink:#11302a;
+  --ed-text:#4c5a54;
+  --ed-amber:#d9910b;
+  --ed-amber-ink:#8a5a06;
+  --ed-radius:16px;
+}
+
+/* ---------- 1. Rhythm & container ---------------------------------------- */
+html body .wj-platform .lx-page .lx-sec{padding-block:var(--ed-section)!important;position:relative;background:var(--ds-canvas,#f4f2ec)!important}
+html body .wj-platform .lx-page .lx-sec.lx-band{background:#efebe2!important}
+html body .wj-platform .lx-page .lx-sec.lx-first{padding-top:clamp(40px,5vw,72px)!important;padding-bottom:clamp(56px,6vw,88px)!important}
+html body .wj-platform .lx-page .lx-sec + .lx-sec{border-top:1px solid var(--ed-line-soft)}
+html body .wj-platform .lx-page .lx-sec > .ip-wrap{width:min(var(--ed-max),calc(100% - 2*var(--ed-gutter)))!important;max-width:none!important;margin-inline:auto!important;padding-inline:0!important}
+html body .wj-platform .lx-page .lx-stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+html body .wj-platform .lx-page .lx-stack.lx-stack-lg{gap:clamp(36px,4vw,56px)}
+
+/* ---------- 2. Typography ------------------------------------------------- */
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-h.lx-h2{
+  font-size:clamp(28px,2.8vw,40px)!important;line-height:1.14!important;letter-spacing:-.012em!important;
+  max-width:20ch;margin:0!important;color:var(--ed-ink)!important;text-wrap:balance
+}
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-h.lx-h2::after{content:none!important}
+html body .wj-platform .lx-page .lx-h2 + .lx-rich,html body .wj-platform .lx-page .lx-h2 + .lx-text{max-width:620px}
+html body .wj-platform .lx-page .lx-h2 + .lx-rich p,html body .wj-platform .lx-page .lx-h2 + .lx-text{font-size:16.5px!important;line-height:1.7!important;color:var(--ed-text)!important}
+html body .wj-platform .lx-page .lx-h2 + .lx-rich p + p{margin-top:.6em}
+html body .wj-platform .lx-page .lx-split .lx-col .lx-h.lx-h2,html body .wj-platform .lx-page .lx-sec .lx-col .lx-stack > .lx-h.lx-h2:not(:first-child){font-size:clamp(24px,2.2vw,32px)!important;max-width:none}
+
+/* ---------- 3. Hero ------------------------------------------------------- */
+html body .wj-platform .lx-page .lx-hero-split{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)!important;gap:clamp(36px,5vw,80px)!important;align-items:center!important}
+html body .wj-platform .lx-page .lx-hero-split-copy{display:flex;flex-direction:column;gap:20px;min-width:0}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-cols.lx-split{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:18px!important}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-cols.lx-split > .lx-col{width:auto;align-self:flex-start!important;margin:0!important}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-cols.lx-split > .lx-col > .lx-stack{align-items:flex-start!important}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-img-sm,html body .wj-platform .lx-page .lx-hero-split-copy .lx-cols.lx-split > .lx-col:first-child .lx-img{
+  width:56px!important;height:56px!important;max-width:56px!important;object-fit:contain!important;border-radius:50%!important;box-shadow:none!important;border:0!important}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-h1{font-size:clamp(40px,4.4vw,60px)!important;line-height:1.05!important;letter-spacing:-.02em!important;margin:0!important}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-h2{font-size:clamp(20px,1.8vw,26px)!important;line-height:1.3!important;color:var(--ed-amber-ink)!important;font-style:italic;margin:0!important;max-width:none}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-rich{max-width:560px}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-rich p{font-size:16.5px;line-height:1.75;color:var(--ed-text)}
+html body .wj-platform .lx-page .lx-hero-split-media{position:relative;min-width:0}
+html body .wj-platform .lx-page .lx-hero-split-media::before{content:none!important}
+html body .wj-platform .lx-page .lx-hero-split-frame{position:relative;border-radius:var(--ed-radius);overflow:hidden;box-shadow:none!important;border:0!important;aspect-ratio:4/3.3;background:var(--ed-ink)}
+html body .wj-platform .lx-page .lx-hero-split-frame .lx-img,html body .wj-platform .lx-page .lx-hero-split-frame .lx-crop{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;object-fit:cover!important;border-radius:0!important;box-shadow:none!important;border:0!important}
+
+
+/* ---------- 4. Images: flat, rounded, no shadow --------------------------- */
+html body .wj-platform .lx-page .lx-img:not(.lx-img-sm):not(.lx-bg-img){box-shadow:none!important;border:0!important;border-radius:var(--ed-radius)!important}
+
+/* ---------- 5. Card grids -> open columns (no boxes) ---------------------- */
+html body .wj-platform .lx-page .lx-cols.lx-cards{display:grid!important;gap:clamp(28px,3vw,44px) clamp(24px,3vw,40px)!important;align-items:start!important}
+html body .wj-platform .lx-page .lx-card-col,html body .wj-platform .lx-page .lx-card-col:hover{
+  background:transparent!important;border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;
+  box-shadow:none!important;padding:24px 0 0!important;transform:none!important;transition:none!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack{gap:12px!important}
+html body .wj-platform .lx-page .lx-card-col .lx-img-sm{width:40px!important;height:40px!important;padding:0!important;background:none!important;border-radius:0!important;object-fit:contain!important;box-shadow:none!important;border:0!important}
+html body .wj-platform .lx-page .lx-card-col :is(.lx-h3,.lx-h4){font-size:clamp(17px,1.3vw,19px)!important;line-height:1.35!important;margin:0!important;color:var(--ed-ink)!important}
+html body .wj-platform .lx-page .lx-card-col :is(.lx-rich p,.lx-text){font-size:15px!important;line-height:1.65!important;color:var(--ed-text)!important}
+html body .wj-platform .lx-page .lx-card-col .lx-actions{margin-top:auto!important;padding-top:6px}
+
+/* photo columns: image + caption, no frame around them */
+html body .wj-platform .lx-page .lx-card-col:has(> .lx-stack > .lx-bg){border-top:0!important;padding-top:0!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack:has(> .lx-bg + :is(.lx-rich,.lx-text)){gap:16px!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg{border-radius:var(--ed-radius)!important;border:0!important;box-shadow:none!important;min-height:0!important;height:auto!important;aspect-ratio:4/3;display:flex!important;align-items:flex-end!important;overflow:hidden}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg::after{background:linear-gradient(180deg,rgba(9,24,20,0) 35%,rgba(9,24,20,.82) 100%)!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg .lx-bg-copy{padding:18px 20px!important;gap:10px!important;position:relative;z-index:2}
+html body .wj-platform .lx-page .lx-card-col .lx-bg-copy :is(.lx-img,.lx-img-sm,img:not(.lx-bg-img)){display:none!important}
+html body .wj-platform .lx-page .lx-card-col .lx-bg-copy :is(.lx-h.lx-h4,h4){font-size:clamp(17px,1.3vw,19px)!important;line-height:1.3!important;color:#fff!important;margin:0!important;font-family:var(--ff-text)!important;font-weight:600!important}
+html body .wj-platform .lx-page .lx-card-col .lx-bg-copy :is(.lx-h.lx-h3,h3){font-size:clamp(20px,1.8vw,26px)!important;line-height:1.25!important;color:#fff!important;margin:0!important;font-family:var(--ff-display)!important;font-weight:500!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg + :is(.lx-rich,.lx-text){padding:0!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg + .lx-rich p{font-size:15px!important;line-height:1.65!important;color:var(--ed-text)!important;opacity:1!important}
+html body .wj-platform .lx-page .lx-bg-img{transition:none!important}html body .wj-platform .lx-page .lx-bg:hover .lx-bg-img{transform:none!important}
+
+/* ---------- 6. Every lx-card -> divider row (icon | title + text) --------- */
+html body .wj-platform .lx-page .lx-card,html body .wj-platform .lx-page .lx-card:hover,html body .wj-platform .lx-page .lx-split .lx-card,html body .wj-platform .lx-page .lx-split .lx-card:hover{
+  display:grid!important;grid-template-columns:40px minmax(0,1fr)!important;grid-template-areas:"icon title" "icon text"!important;
+  column-gap:18px!important;row-gap:4px!important;align-items:start!important;
+  background:transparent!important;border:0!important;border-bottom:1px solid var(--ed-line)!important;border-radius:0!important;
+  box-shadow:none!important;padding:18px 0!important;transform:none!important;transition:none!important;height:auto!important}
+html body .wj-platform .lx-page .lx-card .lx-card-img,html body .wj-platform .lx-page .lx-split .lx-card .lx-card-img{grid-area:icon;width:40px!important;height:40px!important;min-width:40px!important;margin:0!important;border-radius:10px!important;object-fit:cover!important;box-shadow:none!important}
+html body .wj-platform .lx-page .lx-card :is(.lx-h.lx-h3,h3),html body .wj-platform .lx-page .lx-split .lx-card :is(.lx-h.lx-h3,h3){grid-area:title;font-family:var(--ff-display)!important;font-size:18px!important;font-weight:500!important;line-height:1.35!important;margin:0!important;color:var(--ed-ink)!important;align-self:center}
+html body .wj-platform .lx-page .lx-card :is(.lx-h.lx-h4,h4),html body .wj-platform .lx-page .lx-split .lx-card :is(.lx-h.lx-h4,h4){grid-area:title;font-family:var(--ff-text)!important;font-size:16px!important;font-weight:600!important;line-height:1.4!important;margin:0!important;color:var(--ed-ink)!important;align-self:center}
+html body .wj-platform .lx-page .lx-card .lx-text,html body .wj-platform .lx-page .lx-split .lx-card .lx-text{grid-area:text;font-size:14.5px!important;line-height:1.6!important;color:var(--ed-text)!important;margin:0!important}
+html body .wj-platform .lx-page .lx-card:has(> .lx-text) .lx-h{align-self:end}
+html body .wj-platform .lx-page .lx-card:not(:has(> .lx-text)){grid-template-areas:"icon title"!important;align-items:center!important;padding:14px 0!important}
+html body .wj-platform .lx-page .lx-col > .lx-stack:has(> .lx-card){gap:0!important}
+html body .wj-platform .lx-page .lx-col > .lx-stack > .lx-card:first-of-type{border-top:1px solid var(--ed-line)!important}
+/* standalone single cards in plain columns ("Who this is for"): stacked icon/title/text with top rule */
+html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > .lx-card:only-child{
+  grid-template-columns:1fr!important;grid-template-areas:"icon" "title" "text"!important;row-gap:10px!important;
+  border-bottom:0!important;border-top:1px solid var(--ed-line)!important;padding:24px 0 0!important}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > .lx-card:only-child .lx-h{align-self:start}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards){gap:clamp(24px,3vw,40px)!important;align-items:start!important}
+html body .wj-platform .lx-page .lx-col > .lx-stack:has(> .lx-card + .lx-card) > .lx-card ~ .lx-img-sm{display:none!important}
+
+/* ---------- 7. Splits ----------------------------------------------------- */
+html body .wj-platform .lx-page .lx-cols.lx-split{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(36px,5vw,80px)!important;align-items:center!important}
+html body .wj-platform .lx-page .lx-split > .lx-col > .lx-stack > .lx-img:only-child,html body .wj-platform .lx-page .lx-split > .lx-col > .lx-stack > .lx-crop:only-child{
+  width:100%!important;max-width:none!important;height:auto!important;aspect-ratio:4/3.2!important;max-height:none!important;object-fit:cover!important}
+html body .wj-platform .lx-page .lx-split > .lx-col:has(> .lx-stack > .lx-img:only-child){position:sticky;top:150px;align-self:center}
+/* how-it-works: heading + image left, steps right */
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card){grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)!important;gap:clamp(36px,5vw,80px)!important}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack:has(> .lx-h2 + .lx-img){position:sticky;top:150px;gap:28px}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack > .lx-h2 + .lx-img{width:100%!important;aspect-ratio:4/3.2!important;height:auto!important;object-fit:cover!important}
+
+/* ---------- 8. Galleries -------------------------------------------------- */
+html body .wj-platform .lx-page .lx-gallery{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))!important;gap:16px!important;margin-top:0!important}
+html body .wj-platform .lx-page .lx-gallery .lx-img,html body .wj-platform .lx-page .lx-gallery .lx-img:hover{aspect-ratio:4/3!important;border-radius:12px!important;border:0!important;box-shadow:none!important;transform:none!important}
+html body .wj-platform .lx-page .lx-photo-grid{gap:16px!important}
+html body .wj-platform .lx-page .lx-photo-grid .lx-img{width:100%!important;aspect-ratio:4/3!important;height:auto!important;object-fit:cover!important;border-radius:12px!important}
+
+/* ---------- 9. Dark CTA panels: flat --------------------------------------- */
+html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-bg.has-copy,html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-stack > .lx-bg.has-copy{border-radius:var(--ed-radius)!important;border:0!important;min-height:0!important;box-shadow:none!important}
+html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-bg.has-copy::after,html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-stack > .lx-bg.has-copy::after{background:linear-gradient(100deg,rgba(9,24,20,.97) 0%,rgba(9,24,20,.9) 55%,rgba(9,24,20,.7) 100%)!important}
+html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-bg.has-copy > .lx-bg-copy{padding:clamp(36px,5vw,72px)!important;gap:16px!important}
+html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-bg.has-copy > .lx-bg-copy:not(:has(.lx-vslider-wrap,.lx-cols,.lx-card,.lx-gallery,.lx-marquee-wrap,.lx-blueprint-section,.lx-gallery-marquee)){max-width:760px!important}
+html body .wj-platform .lx-page .lx-bg-copy .lx-h{color:#fff!important}
+html body .wj-platform .lx-page .lx-bg-copy .lx-h2{font-size:clamp(26px,2.6vw,38px)!important;line-height:1.15!important}
+html body .wj-platform .lx-page .lx-bg-copy .lx-card{border-color:var(--ds-line-dark,rgba(245,241,232,.14))!important}
+html body .wj-platform .lx-page .lx-bg-copy .lx-card .lx-h{color:#fff!important}
+html body .wj-platform .lx-page .lx-bg-copy .lx-card .lx-text{color:var(--ds-on-dark-soft,#c9d4ce)!important}
+
+/* ---------- 10. Buttons ---------------------------------------------------- */
+html body .wj-platform .lx-page .lx-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+html body .wj-platform .lx-page .lx-btn{min-height:48px;padding:0 22px!important;border-radius:999px!important;font-weight:600!important;gap:10px!important;box-shadow:none!important}
+
+/* ---------- 11. FAQ: plain list ------------------------------------------- */
+html body .wj-platform .lx-page .lx-faq{background:transparent!important;border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;padding:0!important;box-shadow:none!important}
+
+/* ---------- 12. Responsive ------------------------------------------------- */
+@media (max-width:1024px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards:where([style*="--cols:4"],[style*="--cols: 4"]){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col:nth-child(4)){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (max-width:860px){
+  html body .wj-platform .lx-page .lx-hero-split{grid-template-columns:1fr!important}
+  html body .wj-platform .lx-page .lx-hero-split-media{order:-1}
+  html body .wj-platform .lx-page .lx-cols.lx-split,
+  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card){grid-template-columns:1fr!important}
+  html body .wj-platform .lx-page .lx-split > .lx-col,html body .wj-platform .lx-page .lx-col > .lx-stack{position:static!important}
+  html body .wj-platform .lx-page .lx-cols.lx-cards:where([style*="--cols:3"],[style*="--cols: 3"]){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (max-width:600px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards,html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards){grid-template-columns:1fr!important}
+  html body .wj-platform .lx-page .lx-gallery{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+/* ---------- 13. Heading-to-content spacing ------------------------------- */
+html body .wj-platform .lx-page .lx-stack > .lx-h.lx-h2 + :is(.lx-cols,.lx-gallery,.lx-photo-grid){margin-top:clamp(20px,2.5vw,32px)}
+html body .wj-platform .lx-page .lx-col .lx-stack > .lx-h.lx-h2:has(+ .lx-card){margin-bottom:12px!important}
+
+/* headings on dark panels stay light (beats the section heading colour rule) */
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-bg-copy .lx-h,
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-bg-copy .lx-h.lx-h2{color:#fff!important}
+/* Force article/guide card titles inside cards to 19px rather than section-level 40px */
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards .lx-card-col .lx-h.lx-h2,
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2 {
+  font-family: var(--ff-display) !important;
+  font-size: 19px !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ed-ink, #0c1f1b) !important;
+  max-width: none !important;
+  text-wrap: balance !important;
+  margin: 0 !important;
+}
+
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col {
+  border-top: 1px solid var(--ed-line, rgba(17, 48, 42, 0.12)) !important;
+  padding-top: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  gap: 14px !important;
+}
+
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack > .lx-img:first-child {
+  width: 100% !important;
+  aspect-ratio: 16 / 10 !important;
+  height: auto !important;
+  object-fit: cover !important;
+  border-radius: var(--ed-radius, 14px) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col .lx-actions {
+  margin-top: auto !important;
+  padding-top: 10px !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col .lx-btn-ghost{min-height:44px;padding:0 18px!important;font-size:14px}
+
+/* ==========================================================================
+   PIPELINE PASS: hero, intro heads, card grids, posts, galleries
+   ========================================================================== */
+/* STEP 1 - hero: solid ivory canvas, framed photo, badge, CTAs */
+html body .wj-platform .lx-crumbs{background:#faf8f5!important;position:relative;z-index:1;padding-block:14px!important;margin:0!important;width:100%!important;max-width:none!important;padding-inline:max(var(--ed-gutter),calc((100% - var(--ed-max))/2))!important}
+html body .wj-platform .lx-crumbs::before,html body .wj-platform .lx-crumbs::after{content:none!important}
+html body .wj-platform .lx-page .lx-sec.lx-first{background:#faf8f5!important;position:relative;z-index:1;border-top:0!important}
+html body .wj-platform .lx-page .lx-sec.lx-first::before,html body .wj-platform .lx-page .lx-sec.lx-first::after{content:none!important}
+html body .wj-platform .lx-page .lx-hero-split-badge{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 14px;border-radius:999px;background:rgba(217,145,11,.1);border:1px solid rgba(217,145,11,.28);color:var(--ed-amber-ink);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;line-height:1.4}
+html body .wj-platform .lx-page .lx-hero-split-badge .lx-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--ed-amber);flex:none}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-h1,html body .wj-platform .lx-page .lx-hero-split-copy:not(:has(.lx-h1)) .lx-stack > .lx-h2:first-child{font-size:clamp(38px,4.2vw,58px)!important;line-height:1.06!important;letter-spacing:-.02em!important;color:var(--ed-ink)!important;font-style:normal!important;margin:0!important}
+html body .wj-platform .lx-page .lx-hero-split-frame{border-radius:18px!important;aspect-ratio:4/3.2;box-shadow:none!important;background:#ece8de}
+html body .wj-platform .lx-page .lx-hero-split-frame .lx-hero-img{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:0!important}
+html body .wj-platform .lx-page .lx-hero-split-copy > .lx-actions,html body .wj-platform .lx-page .lx-hero-split-copy .lx-hero-actions{margin-top:8px}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-stack:empty{display:none}
+html body .wj-platform .lx-page .lx-btn-ghost{display:inline-flex;align-items:center;min-height:48px;padding:0 22px!important;border-radius:999px!important;border:1px solid rgba(17,48,42,.22)!important;background:transparent!important;color:var(--ed-ink)!important;font-weight:600;font-size:15px;gap:10px;text-decoration:none!important;transition:border-color .2s ease,background .2s ease}
+html body .wj-platform .lx-page .lx-btn-ghost:hover{border-color:var(--ed-amber)!important;background:rgba(217,145,11,.06)!important}
+html body .wj-platform .lx-page .lx-bg-copy .lx-btn-ghost{color:#fff!important;border-color:rgba(255,255,255,.35)!important}
+
+/* STEP 2 - section intro heads: balanced 2-column banner */
+html body .wj-platform .lx-page .lx-sec.lx-sec-intro{padding-block:clamp(56px,6vw,88px)!important}
+html body .wj-platform .lx-page .lx-section-intro-head{display:grid!important;grid-template-columns:1.25fr 1fr!important;gap:clamp(28px,5vw,80px)!important;align-items:end!important}
+html body .wj-platform .lx-page .lx-intro-left{display:flex;flex-direction:column;gap:16px;min-width:0}
+html body .wj-platform .lx-page .lx-intro-left .hp-eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0!important;font-size:11.5px!important;font-weight:600;letter-spacing:.14em;color:var(--ed-amber-ink)!important;text-transform:uppercase}
+html body .wj-platform .lx-page .lx-intro-left .hp-eyebrow .lx-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--ed-amber)}
+html body .wj-platform .lx-page .lx-intro-left .lx-h{font-size:clamp(28px,3vw,42px)!important;line-height:1.12!important;max-width:18ch;margin:0!important}
+html body .wj-platform .lx-page .lx-intro-right{max-width:540px;gap:16px!important}
+html body .wj-platform .lx-page .lx-intro-lead,html body .wj-platform .lx-page .lx-intro-lead p{font-size:16px!important;line-height:1.7!important;color:var(--ed-text)!important}
+html body .wj-platform .lx-page .lx-intro-badges{display:flex;flex-wrap:wrap;gap:8px}
+html body .wj-platform .lx-page .lv-service-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;border:1px solid var(--ed-line);background:transparent!important;font-size:12.5px;font-weight:500;color:var(--ed-ink);box-shadow:none!important}
+html body .wj-platform .lx-page .lv-service-pill .lv-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--ed-amber)}
+
+/* STEP 3 - card grids: uniform hairline cards, responsive columns */
+html body .wj-platform .lx-page .lx-cols.lx-cards{display:grid!important;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr))!important;gap:20px!important;align-items:stretch!important}
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-col{height:100%;min-width:0}
+html body .wj-platform .lx-page .lx-card-col:not(:has(> .lx-stack > .lx-bg)){
+  height:100%;background:transparent!important;border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;
+  padding:24px 0 0!important;box-shadow:none!important;transform:none!important;transition:border-color .25s ease!important}
+html body .wj-platform .lx-page .lx-card-col:not(:has(> .lx-stack > .lx-bg)):hover{border-top-color:var(--ed-amber)!important;box-shadow:none!important;transform:none!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack{height:100%}
+html body .wj-platform .lx-page .lx-card-col .lx-actions{margin-top:auto!important}
+/* single card per column ("who this is for"): same open column with a top hairline */
+html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > .lx-card:only-child{border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;padding:24px 0 0!important;height:100%;background:transparent!important;box-shadow:none!important}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > .lx-card:only-child:hover{border-top-color:var(--ed-amber)!important}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){display:grid!important;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr))!important;gap:20px!important;align-items:stretch!important}
+
+/* STEP 4 - guide / blog cards */
+html body .wj-platform .lx-page .lx-post-card{padding:0!important;overflow:visible}
+html body .wj-platform .lx-page .lx-post-card > .lx-stack{gap:0!important}
+html body .wj-platform .lx-page .lx-post-card .lx-img:not(.lx-img-sm),html body .wj-platform .lx-page .lx-post-card .lx-crop{width:100%!important;max-width:none!important;aspect-ratio:16/10!important;height:auto!important;object-fit:cover!important;border-radius:14px!important;margin:0!important;overflow:hidden}
+html body .wj-platform .lx-page .lx-post-card .lx-h{font-family:var(--ff-display)!important;font-size:19px!important;line-height:1.35!important;font-weight:500!important;padding:18px 0 0!important;margin:0!important;color:var(--ed-ink)!important}
+html body .wj-platform .lx-page .lx-post-card .lx-actions{padding:16px 0 0!important;margin-top:auto!important}
+html body .wj-platform .lx-page .lx-post-card .lx-btn-ghost{min-height:44px;padding:0 18px!important;font-size:14px}
+html body .wj-platform .lx-page .lx-posts{gap:24px!important}
+
+/* STEP 4 - marquee galleries */
+html body .wj-platform .lx-page .lx-gallery-marquee{width:100%;min-width:0}
+html body .wj-platform .lx-page .lx-marquee-container{position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+html body .wj-platform .lx-page .lx-marquee-frame{border-radius:14px!important;overflow:hidden;box-shadow:none!important}
+
+/* responsive collapse */
+@media (max-width:1024px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols:4"],[style*="--cols: 4"]),
+  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (max-width:860px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols:3"],[style*="--cols: 3"]){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .wj-platform .lx-page .lx-section-intro-head{grid-template-columns:1fr!important;align-items:start!important}
+  html body .wj-platform .lx-page .lx-hero-split-frame{aspect-ratio:16/11}
+}
+@media (max-width:600px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards,
+  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:1fr!important}
+  html body .wj-platform .lx-page .lx-card-col:not(:has(> .lx-stack > .lx-bg)){padding:20px 0 0!important}
+}
+
+/* hero crop: cover the frame with only the opaque region of notched banner exports */
+html body .wj-platform .lx-page .lx-hero-split-frame{container-type:size;position:relative}
+html body .wj-platform .lx-page .lx-hero-crop{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);aspect-ratio:var(--r);width:max(100cqw,calc(100cqh * var(--r)));overflow:hidden;display:block}
+html body .wj-platform .lx-page .lx-hero-crop .lx-hero-img{position:absolute!important;inset:auto!important;width:calc(100% / var(--cw))!important;height:calc(100% / var(--ch))!important;max-width:none!important;max-height:none!important;left:calc(-100% * var(--cx) / var(--cw))!important;top:calc(-100% * var(--cy) / var(--ch))!important;object-fit:fill!important;transform:none!important}
+html body .wj-platform .lx-page .lx-hero-split-frame .lx-hero-img.is-logo{object-fit:contain!important;padding:28px;background:#f1ede4}
+
+/* hero sub-headings: short = amber tagline, long = display subheading */
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-h2:not(.lx-tagline){font-size:clamp(22px,2vw,28px)!important;line-height:1.25!important;color:var(--ed-ink)!important;font-style:normal!important;font-family:var(--ff-display)!important;max-width:24ch}
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-h2.lx-tagline,html body .wj-platform .lx-page .lx-hero-split-copy .lx-subtitle{font-size:clamp(19px,1.6vw,23px)!important;line-height:1.35!important;color:var(--ed-amber-ink)!important;font-style:italic!important}
+html body .wj-platform .lx-page .lx-hero-split-frame.is-banner{aspect-ratio:16/10.5}
+
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-h.lx-subtitle,html body .wj-platform .lx-page .lx-hero-split-copy .lx-h.lx-h2.lx-tagline{font-size:clamp(19px,1.6vw,23px)!important;line-height:1.35!important;color:var(--ed-amber-ink)!important;font-style:italic!important;font-family:var(--ff-display)!important;max-width:none}
+/* uncatalogued exports with transparent top-corner notches: anchor to the bottom and zoom just past them */
+html body .wj-platform .lx-page .lx-hero-split-frame .lx-hero-img.is-zoom{transform:scale(1.2);transform-origin:50% 100%}
+
+/* intro photo as the first cell of a grid */
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{height:100%}
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell .lx-img{width:100%!important;max-width:none!important;height:100%!important;min-height:240px;object-fit:cover!important;border-radius:14px!important}
+/* heading/copy feature pairs */
+html body .wj-platform .lx-page .lx-feature-pairs .lx-card-col .lx-h{font-size:18px!important;font-family:var(--ff-display)!important;font-weight:500!important;margin:0!important}
+html body .wj-platform .lx-page .lx-intro-block{max-width:720px}
+
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{position:relative;overflow:hidden;border-radius:14px;min-height:260px}
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell > :is(.lx-img,.lx-crop,.lx-img-link){position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;margin:0!important}
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell .lx-crop .lx-img{position:absolute!important}
+html body .wj-platform .lx-page .lx-feature-pairs .lx-card-col :is(.lx-text,.lx-rich p),
+html body .wj-platform .lx-page .lx-card-col > .lx-h + .lx-text:not(.lx-price){font-family:var(--ff-text)!important;font-size:15px!important;line-height:1.65!important;color:var(--ed-text)!important;font-weight:400!important}
+/* numbered item labels ("01") */
+html body .wj-platform .lx-page .lx-col .lx-stack > .lx-h:is(.lx-h4,.lx-h5,.lx-h6):not(:has(*)){letter-spacing:.02em}
+
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{aspect-ratio:auto!important;width:auto!important;max-width:none!important;grid-column:auto!important;flex:none!important;padding:0!important;border:0!important;background:none!important}
+
+/* post cards: edge-to-edge image (beats the generic card padding) */
+html body .wj-platform .lx-page .lx-card-col.lx-post-card:not(:has(> .lx-stack > .lx-bg)){padding:0!important;overflow:visible;border-top:0!important}
+html body .wj-platform .lx-page .lx-card-col.lx-post-card > .lx-stack > :is(.lx-img,.lx-crop,.lx-img-link){width:100%!important;max-width:none!important;aspect-ratio:16/10!important;height:auto!important;object-fit:cover!important;border-radius:14px!important;overflow:hidden}
+html body .wj-platform .lx-page .lx-card-col.lx-post-card .lx-h{padding:18px 0 0!important}
+/* BlueprintSlider: self-contained dark panel unless it already sits on one */
+html body .wj-platform .lx-page .lx-blueprint-section{background:var(--ds-forest-950,#0b1d19);border-radius:20px;padding:clamp(28px,4vw,56px);color:#fff}
+html body .wj-platform .lx-page .lx-bg-copy .lx-blueprint-section{background:transparent;padding:0;border-radius:0}
+html body .wj-platform .lx-page .lx-blueprint-title{color:#fff!important}
+html body .wj-platform .lx-page .lx-blueprint-lead,html body .wj-platform .lx-page .lx-blueprint-lead p{color:var(--ds-on-dark-soft,#c9d4ce)!important}
+html body .wj-platform .lx-page .lx-blueprint-sub{color:var(--ds-amber-300,#efc36d)!important}
+html body .wj-platform .lx-page .lx-blueprint-main-frame{aspect-ratio:16/10;max-height:none;position:relative;overflow:hidden;border-radius:16px}
+html body .wj-platform .lx-page .lx-blueprint-main-img{width:100%!important;height:100%!important;object-fit:cover!important}
+html body .wj-platform .lx-page .lx-blueprint-thumb-frame{aspect-ratio:16/10;overflow:hidden;border-radius:12px}
+html body .wj-platform .lx-page .lx-blueprint-thumb-img{width:100%!important;height:100%!important;object-fit:cover!important}
+/* marquee inside dark panels uses the full panel width */
+html body .wj-platform .lx-page .lx-bg-copy:has(.lx-marquee-wrap,.lx-gallery-marquee){max-width:none!important;width:100%!important}
+html body .wj-platform .lx-page .lx-marquee-wrap,html body .wj-platform .lx-page .lx-marquee-container{width:100%;max-width:none}
+
+html body .wj-platform .lx-page .lx-blueprint-section .lx-blueprint-lead :is(p,span,strong,li,a),html body .wj-platform .lx-page .lx-blueprint-section .lx-blueprint-lead{color:var(--ds-on-dark-soft,#c9d4ce)!important}
+html body .wj-platform .lx-page .lx-blueprint-section .lx-blueprint-lead strong{color:#fff!important}
+
+/* phones: every card grid is a single column (beats the tablet attribute selectors) */
+@media (max-width:600px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols"],:not([style])),
+  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:minmax(0,1fr)!important}
+  html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{min-height:220px}
+}
+
+/* ==========================================================================
+   AUDIT PASS (2026-11-03): box-free consistency, alignment, touch targets
+   ========================================================================== */
+/* dark copy panels anywhere on an inner page share one flat treatment */
+html body .wj-platform .lx-page .lx-bg.has-copy{border-radius:var(--ed-radius)!important;box-shadow:none!important;border:0!important}
+
+/* forms: open layout, hairline on top, no card */
+html body .wj-platform .lx-page .lx-form{background:transparent!important;border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;box-shadow:none!important;padding:28px 0 0!important;max-width:none}
+html body .wj-platform .lx-page .lx-form :is(.wj-btn-primary,button[type=submit]){box-shadow:none!important}
+/* contact/details beside a form: top-aligned, details follow the reader */
+html body .wj-platform .lx-page .lx-cols.lx-split.lx-form-split,
+html body .wj-platform .lx-page .lx-cols.lx-split:has(> .lx-col .lx-form){align-items:start!important}
+html body .wj-platform .lx-page .lx-cols.lx-split:has(> .lx-col .lx-form) > .lx-col:not(:has(.lx-form)){position:sticky;top:150px}
+
+/* "Explore Workspace Junction" + package cards: open columns */
+html body .wj-platform .ip-service-card,html body .wj-platform .ip-service-card:hover{background:transparent!important;border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;box-shadow:none!important;transform:none!important;padding:22px 0 0!important}
+html body .wj-platform .ip-service-card:hover{border-top-color:var(--ed-amber)!important}
+html body .wj-platform .ip-service-card :is(.ip-eyebrow,.eyebrow){min-height:2.9em;display:flex;align-items:flex-end}
+
+/* icon-less divider cards: no empty 40px gutter */
+html body .wj-platform .lx-page .lx-card:not(:has(.lx-card-img)),
+html body .wj-platform .lx-page .lx-split .lx-card:not(:has(.lx-card-img)){grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"title" "text"!important}
+html body .wj-platform .lx-page .lx-card:not(:has(.lx-card-img)):not(:has(> .lx-text)){grid-template-areas:"title"!important}
+
+/* logos inside columns are never cover-cropped */
+html body .wj-platform .lx-page .lx-col .lx-img-sm{object-fit:contain!important}
+
+/* blueprint slider: every heading in the lead stays legible on the dark panel */
+html body .wj-platform .lx-page .lx-blueprint-section .lx-blueprint-lead :is(h1,h2,h3,h4,h5,h6){color:#fff!important;font-size:clamp(19px,1.6vw,23px)!important;line-height:1.35!important;font-family:var(--ff-display)!important;font-weight:500!important;margin:0 0 .5em!important}
+
+/* comfortable measure for running copy on full-width rows */
+html body .wj-platform .lx-page .ip-wrap > .lx-stack > :is(.lx-rich,.lx-text,.lx-list),
+html body .wj-platform .lx-page .lx-sec-intro :is(.lx-rich,.lx-text){max-width:68ch}
+html body .wj-platform .lx-page .lx-stack > .lx-list{max-width:68ch}
+
+/* an intro band and the band it introduces read as one section */
+html body .wj-platform .lx-page .lx-sec.lx-sec-intro{padding-bottom:clamp(28px,3vw,44px)!important}
+html body .wj-platform .lx-page .lx-sec.lx-sec-intro + .lx-sec{padding-top:clamp(28px,3vw,44px)!important;border-top:0!important}
+
+/* tablet: a lone last card in a 2-up grid spans the row instead of leaving a hole */
+@media (min-width:601px) and (max-width:1024px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-col:last-child:nth-child(odd),
+  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:last-child:nth-child(odd):not(:first-child){grid-column:1/-1}
+}
+
+/* touch targets: 44px hit areas, visuals unchanged */
+html body .wj-platform :is(.lx-vdot,.lx-blueprint-dot){position:relative}
+html body .wj-platform :is(.lx-vdot,.lx-blueprint-dot)::before{content:"";position:absolute;inset:-18px -6px}
+html body .wj-platform .lx-vslider-arrow{width:44px!important;height:44px!important}
+html body .wj-platform .lx-crumbs a{display:inline-flex;align-items:center;min-height:44px}
+html body .wj-platform .lx-crumbs{padding-block:4px!important}
+
+/* archive: empty state, chips, pagination, grid */
+html body .wj-platform .ip-archive .archive-empty,html body .wj-platform .archive-empty{border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;background:none!important;padding:40px 0 0!important}
+html body .wj-platform .category-tabs a{min-height:44px}
+html body .wj-platform :is(.pagination,.ip-archive .pagination){flex-wrap:nowrap}
+html body .wj-platform :is(.pagination,.ip-archive .pagination) a{min-width:44px;min-height:44px}
+@media (max-width:760px){
+  html body .wj-platform .category-tabs{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;margin-inline:calc(-1 * var(--ds-gutter));padding-inline:var(--ds-gutter);-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  html body .wj-platform .category-tabs::-webkit-scrollbar{display:none}
+  html body .wj-platform .category-tabs a{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap}
+  html body .wj-platform :is(.pagination,.ip-archive .pagination){gap:6px}
+}
+@media (min-width:601px) and (max-width:1000px){
+  html body .wj-platform .archive-grid > :last-child:nth-child(odd){grid-column:1/-1}
+}
+
+/* package pages: information intro rule spans the container */
+html body .wj-platform .ip-information-intro{max-width:none!important}
+html body .wj-platform .ip-information-intro p{max-width:68ch}
+
+/* article images: never wider than the column, keep their ratio */
+html body .wj-platform .prose img{max-width:100%;height:auto}
+
+/* card copy is always left-aligned with its icon */
+html body .wj-platform .lx-page .lx-card,html body .wj-platform .lx-page .lx-card :is(.lx-h,.lx-text){text-align:left!important}
+
+/* plan grids on live pages: cards share row tracks so titles, prices, lists and CTAs line up */
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(.lx-price-value){grid-auto-rows:auto;row-gap:clamp(36px,4vw,56px)!important}
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(.lx-price-value) > .lx-card-col{display:grid!important;grid-row:span 6;grid-template-rows:subgrid;row-gap:14px;height:auto!important;align-content:start}
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(.lx-price-value) > .lx-card-col > .lx-stack{display:contents}
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(.lx-price-value) > .lx-card-col > .lx-stack > .lx-actions{align-self:end}
+
+/* archive pagination: prev / windowed pages / next on one row */
+html body .wj-platform .archive-pagination{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
+html body .wj-platform .archive-pagination .pagination-pages{display:flex;align-items:center;gap:6px}
+html body .wj-platform .archive-pagination .pagination-item{display:flex}
+html body .wj-platform .archive-pagination .pagination-gap{display:grid;place-items:center;min-width:28px;height:44px;color:var(--ds-text-soft)}
+html body .wj-platform .archive-pagination .pagination-step{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--ds-line-strong);font-weight:600;color:var(--ds-ink);white-space:nowrap}
+html body .wj-platform .archive-pagination .pagination-step:hover{border-color:var(--ds-forest-900)}
+html body .wj-platform .archive-pagination .pagination-step.is-disabled{opacity:.4;pointer-events:none}
+@media (max-width:480px){
+  html body .wj-platform .archive-pagination{gap:6px}
+  html body .wj-platform .archive-pagination .pagination-step{padding:0 12px;font-size:0;gap:0}
+  html body .wj-platform .archive-pagination .pagination-step svg{width:18px;height:18px}
+  html body .wj-platform .archive-pagination .pagination-step::before{font-size:15px}
+  html body .wj-platform .archive-pagination .pagination-prev::before{content:"\2039"}
+  html body .wj-platform .archive-pagination .pagination-next::before{content:"\203A"}
+  html body .wj-platform .archive-pagination .pagination-pages a{min-width:40px}
+}
+
+/* package hero price */
+html body .wj-platform .ip-hero-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;margin-top:8px;padding-top:16px;border-top:1px solid var(--ed-line)}
+html body .wj-platform .ip-hero-price-value{font-family:var(--ff-display);font-size:clamp(34px,3.4vw,46px);line-height:1;color:var(--ds-ink)}
+html body .wj-platform .ip-hero-price-term{font-size:15px;font-weight:600;color:var(--ds-text)}
+html body .wj-platform .ip-hero-price-alt{flex-basis:100%;font-size:14px;color:var(--ds-text-soft)}
+
+/* motion toggle: full 44px target on every screen */
+html body .wj-platform .amb-toggle{min-width:44px!important;min-height:44px!important}
+
+/* testimonial slider: intro copy follows the heading instead of floating mid-panel */
+@media (min-width:861px){html body .wj-platform .lx-page .lx-vslider-sidebar{align-self:start}}
+/* dark panels share one inner padding so their copy lines up section to section */
+html body .wj-platform .lx-page .lx-blueprint-section{padding:clamp(36px,5vw,72px)!important;border-radius:var(--ed-radius)!important}
+html body .wj-platform .lx-page .lx-bg-copy .lx-blueprint-section{padding:0!important}
+
+/* uneven callouts (heading + photo): heading beside the photo instead of a half-empty row */
+@media (min-width:861px){
+  html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)){display:grid!important;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(36px,5vw,80px)!important;align-items:center}
+  html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)) > :is(.lx-img,.lx-crop,.lx-img-link){grid-column:2;grid-row:1;width:100%!important;max-width:none!important;aspect-ratio:4/3;height:auto!important;object-fit:cover}
+  html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)) > :not(.lx-img,.lx-crop,.lx-img-link){grid-column:1}
+}
+
+@media (max-width:480px){
+  html body .wj-platform .archive-pagination,html body .wj-platform .archive-pagination .pagination-pages{gap:4px}
+  html body .wj-platform .archive-pagination .pagination-step{min-width:40px;padding:0!important;justify-content:center}
+  html body .wj-platform .archive-pagination .pagination-pages a{min-width:38px;height:40px}
+}
+@media (max-width:400px){
+  html body .wj-platform .archive-pagination .pagination-item:is(:first-child,:last-child):not(:has(.active)),
+  html body .wj-platform .archive-pagination .pagination-item:has(.pagination-gap){display:none}
+}
+
+/* avatar clusters (columns holding only a small round image): one centred, wrapping row at every width */
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(> .lx-col > .lx-stack > :not(.lx-img-sm))){display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:16px!important;grid-template-columns:none!important}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))){display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:16px!important;grid-template-columns:none!important}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))) > .lx-col{display:contents}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(> .lx-col > .lx-stack > :not(.lx-img-sm))) > .lx-col{grid-column:auto!important;flex:0 0 auto;width:auto}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))) > .lx-col > .lx-cols{display:contents!important}
+
+/* card grids whose columns are themselves mini-grids (e.g. "Member Benefits"): flatten into one even grid */
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(> .lx-col > .lx-mini-grid){grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))!important;gap:32px clamp(24px,3vw,40px)!important}
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(> .lx-col > .lx-mini-grid) > .lx-col,
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(> .lx-col > .lx-mini-grid) > .lx-col > .lx-mini-grid{display:contents!important}
+html body .wj-platform .lx-page .lx-mini-item{border-top:1px solid var(--ed-line);padding-top:22px;min-width:0}
+html body .wj-platform .lx-page .lx-mini-item > .lx-stack{width:100%;gap:12px}
+html body .wj-platform .lx-page .lx-mini-item .lx-img{width:100%!important;max-width:none!important;aspect-ratio:16/10;height:auto!important;object-fit:cover!important;border-radius:12px!important}
+html body .wj-platform .lx-page .lx-mini-item :is(.lx-h){font-size:18px!important;line-height:1.3!important;hyphens:none;overflow-wrap:normal}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(> .lx-col > .lx-mini-grid) > .lx-col.lx-card-col > .lx-cols.lx-cards.lx-mini-grid{display:contents!important}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards.lx-cards.lx-cards:has(> .lx-col > .lx-mini-grid){grid-template-columns:repeat(3,minmax(0,1fr))!important}
+@media (max-width:1024px){html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards.lx-cards.lx-cards:has(> .lx-col > .lx-mini-grid){grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:600px){html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards.lx-cards.lx-cards:has(> .lx-col > .lx-mini-grid){grid-template-columns:minmax(0,1fr)!important}}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(> .lx-col > .lx-mini-grid) > .lx-col{grid-column:auto!important}
+html body .wj-platform .lx-page .lx-mini-item .lx-stack > :empty:not(img){display:none}
+html body .wj-platform .lx-page .lx-mini-item .lx-h br{display:none}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(> .lx-col > .lx-mini-grid) .lx-mini-item{grid-column:auto!important}
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-mini-item .lx-h.lx-h2{max-width:none!important;margin:0!important}
+html body .wj-platform .lx-page .lx-mini-item .lx-h{align-self:stretch!important;text-align:left!important}
+html body .wj-platform .lx-page .lx-mini-item .lx-h::before,html body .wj-platform .lx-page .lx-mini-item .lx-h::after{content:none!important;display:none!important}
+html body .wj-platform .lx-page .lx-mini-item .lx-stack > *{flex:0 0 auto!important}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards .lx-col.lx-mini-item > .lx-stack > :is(.lx-h,.lx-h.lx-h2,.lx-rich,.lx-text,.lx-img){flex:0 0 auto!important}
+
+/* content cards: photo always leads, full column width, one ratio */
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-stack:has(> :is(.lx-img,.lx-crop):only-child){order:-1}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-stack > :is(.lx-img,.lx-crop):only-child,
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-img:first-child{width:100%!important;max-width:none!important;aspect-ratio:16/10!important;height:auto!important;object-fit:cover!important;border-radius:14px!important;border:0!important;box-shadow:none!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack{gap:16px!important}
+html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-stack{gap:14px}
+html body .wj-platform .lx-page .lx-card-col .lx-h.lx-h2{font-size:clamp(20px,1.6vw,24px)!important;line-height:1.25!important;max-width:none!important}
+html body .wj-platform .lx-page .lx-card-col .lx-stack:empty{display:none}
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-col > .lx-stack > .lx-stack:has(> :is(.lx-img,.lx-crop):only-child){order:-1}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack > .lx-stack > :is(.lx-img,.lx-crop):only-child,
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack > .lx-img:first-child{width:100%!important;max-width:none!important;aspect-ratio:16/10!important;height:auto!important;max-height:none!important;object-fit:cover!important;border-radius:14px!important}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack,html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack > .lx-stack{justify-content:flex-start!important}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack > *,html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack > .lx-stack > *{flex:0 0 auto!important}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack > .lx-stack > .lx-h.lx-h2,html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col .lx-h.lx-h2{font-size:clamp(20px,1.6vw,24px)!important;line-height:1.25!important;max-width:none!important;margin:0!important}
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{align-self:start;aspect-ratio:16/10!important;min-height:0!important;height:auto!important}
+/* intro photo + two content cards: photo becomes a wide banner over a balanced 2-up row */
+@media (min-width:861px){
+  html body .wj-platform .lx-page .lx-cols.lx-cards.lx-cards:has(> .lx-photo-cell:first-child):has(> .lx-col:nth-child(3):last-child){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .wj-platform .lx-page .lx-cols.lx-cards:has(> .lx-photo-cell:first-child):has(> .lx-col:nth-child(3):last-child) > .lx-photo-cell{grid-column:1/-1!important;aspect-ratio:21/8!important}
+}
+/* inside cards, only the first heading is a title; following headings (prices, "OR", "Includes:") are compact */
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col .lx-stack > .lx-h ~ .lx-h{font-size:19px!important;line-height:1.35!important;margin:0!important;letter-spacing:0!important}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col .lx-stack > .lx-img-sm + .lx-h + .lx-h,
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col .lx-stack > .lx-h:first-of-type + .lx-h{font-size:clamp(24px,2vw,30px)!important;color:var(--ed-amber-ink)!important}
+/* consecutive section headings: the second reads as a subheading */
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-stack > .lx-h.lx-h2 + .lx-h.lx-h2{font-size:clamp(20px,1.8vw,26px)!important;color:var(--ed-amber-ink)!important;margin-top:-4px!important}
+/* a lone full-width photo stays a calm banner, not a screen-filling block */
+html body .wj-platform .lx-page .ip-wrap > .lx-stack > :is(.lx-img,.lx-crop):not(.lx-img-sm){width:100%!important;max-width:none!important;aspect-ratio:21/9!important;height:auto!important;object-fit:cover!important}
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-h.lx-h2 + .lx-stack > .lx-intro-block > .lx-h.lx-h2:first-child{font-size:clamp(20px,1.8vw,26px)!important;color:var(--ed-amber-ink)!important;font-style:italic}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack:has(> .lx-h) > .lx-stack .lx-h{font-size:19px!important;line-height:1.35!important;margin:0!important}
+
+/* ==========================================================================
+   COMMUNITY NETWORK - editorial "collage" layout (reference design)
+   Alternating cream / sand / sage bands, framed photos with hard offset
+   shadows, paper cards, centred section heads, dark closing band.
+   ========================================================================== */
+html body .wj-platform .lx-page[data-page="community-network"]{--cn-cream:#f6f1e6;--cn-sand:#e8d9bd;--cn-sage:#dde3d6;--cn-ink:#11302a;--cn-amber:#d9910b;--cn-paper:#fffdf8;--cn-shadow:8px 8px 0 var(--cn-ink)}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec{background:var(--cn-cream)!important;border-top:0!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(4),html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(8){background:var(--cn-sand)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(6),html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(10){background:var(--cn-sage)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec + .lx-sec{border-top:1px solid rgba(17,48,42,.10)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) :is(.lx-img,.lx-crop):not(.lx-img-sm):not(.lx-bg-img),
+html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-frame{border:8px solid var(--cn-paper)!important;border-radius:4px!important;box-shadow:var(--cn-shadow)!important;background:var(--cn-paper)}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell{border-radius:4px!important;overflow:visible!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell > :is(.lx-img,.lx-crop){position:relative!important;inset:auto!important;height:100%!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec.lx-first{background:var(--cn-cream)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-copy .lx-h1{font-size:clamp(42px,5vw,72px)!important;line-height:1.02!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-media{padding:0 18px 18px 0;isolation:isolate}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-media::after{content:""!important;position:absolute;right:0;bottom:0;width:46%;aspect-ratio:1;background:var(--cn-amber);border-radius:4px;z-index:-1}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-frame{transform:rotate(-1.2deg)}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-h.lx-h2:first-child,
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .lx-intro-block{text-align:center;margin-inline:auto!important;max-width:26ch}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .lx-intro-block{max-width:720px}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .lx-intro-block .lx-rich{margin-inline:auto}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-h.lx-h2:first-child{font-size:clamp(34px,3.6vw,52px)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:not(.lx-photo-cell){background:var(--cn-paper)!important;border:1px solid var(--cn-ink)!important;border-radius:4px!important;box-shadow:6px 6px 0 var(--cn-ink)!important;padding:20px!important;transition:transform .25s ease,box-shadow .25s ease!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:not(.lx-photo-cell):hover{transform:translate(-2px,-2px)!important;box-shadow:8px 8px 0 var(--cn-amber)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col :is(.lx-img,.lx-crop):not(.lx-img-sm){border:0!important;box-shadow:none!important;border-radius:2px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards{gap:32px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-mini-item{background:var(--cn-paper);border:1px solid var(--cn-ink)!important;border-radius:4px;box-shadow:6px 6px 0 var(--cn-ink);padding:16px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-mini-item .lx-img{border:0!important;box-shadow:none!important;border-radius:2px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col{padding:28px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col:nth-child(2){background:var(--cn-ink)!important;box-shadow:8px 8px 0 var(--cn-amber)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col:nth-child(2) :is(.lx-h,.lx-rich,.lx-rich p,li,.lx-text){color:#fff!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col:nth-child(2) .lx-h ~ .lx-h{color:#efc36d!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col:nth-child(2) .lx-img-sm{filter:invert(1) brightness(1.6)}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-split > .lx-col:not(:has(> .lx-stack > :is(.lx-img,.lx-crop):only-child)){padding:clamp(24px,3vw,40px);background:var(--cn-paper);border:1px solid var(--cn-ink);border-radius:4px;box-shadow:6px 6px 0 var(--cn-ink)}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:last-of-type{background:var(--cn-ink)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:last-of-type :is(.lx-h,.lx-text){color:#fff!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:last-of-type .lx-rich p{color:#c9d4ce!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:last-of-type .lx-cols.lx-split > .lx-col{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:last-of-type :is(.lx-img,.lx-crop):not(.lx-img-sm){box-shadow:8px 8px 0 var(--cn-amber)!important}
+@media (max-width:860px){
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-frame{transform:none}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) :is(.lx-img,.lx-crop):not(.lx-img-sm),html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-frame{border-width:6px!important;box-shadow:5px 5px 0 var(--cn-ink)!important}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:not(.lx-photo-cell),html body .wj-platform .lx-page[data-page="community-network"] .lx-mini-item{box-shadow:5px 5px 0 var(--cn-ink)!important}
+}
+
+/* community-network refinements */
+html body .wj-platform .lx-page[data-page="community-network"] :is(.lx-img,.lx-crop img){border-radius:2px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell{border:8px solid var(--cn-paper)!important;box-shadow:var(--cn-shadow)!important;background:var(--cn-paper)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell :is(.lx-img,.lx-crop){border:0!important;box-shadow:none!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-stack:first-child:has(> .lx-h.lx-h2:only-child){text-align:center;align-items:center}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-stack:first-child > .lx-h.lx-h2:only-child{font-size:clamp(34px,3.6vw,52px)!important;max-width:none!important}
+@media (min-width:861px){
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(2) .ip-wrap > .lx-stack{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,5vw,80px)!important;align-items:center}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(2) .ip-wrap > .lx-stack > .lx-stack:first-child{padding:clamp(28px,3vw,44px);background:var(--cn-paper);border:1px solid var(--cn-ink);border-radius:4px;box-shadow:6px 6px 0 var(--cn-ink)}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(2) .ip-wrap > .lx-stack > .lx-stack:last-child .lx-img{transform:rotate(1.5deg);width:100%!important;aspect-ratio:4/3.2!important;height:auto!important;object-fit:cover!important}
+}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .lx-intro-block{align-items:center}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .lx-intro-block > .lx-h{text-align:center!important;max-width:none!important;margin-inline:auto!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col :is(.lx-img,.lx-crop):not(.lx-img-sm){border-radius:2px!important}
+
+/* community-network: compact rhythm */
+html body .wj-platform .lx-page[data-page="community-network"]{--cn-shadow:5px 5px 0 var(--cn-ink)}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first){padding-block:clamp(44px,5vw,72px)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec.lx-first{padding-block:clamp(32px,4vw,56px)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-copy .lx-h1{font-size:clamp(36px,3.6vw,52px)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-hero-split-frame{aspect-ratio:4/3!important;max-height:420px}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-h.lx-h2:first-child,
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-stack:first-child > .lx-h.lx-h2:only-child,
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .lx-intro-block > .lx-h{font-size:clamp(28px,2.6vw,38px)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-stack.lx-stack-lg{gap:clamp(24px,3vw,36px)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards{gap:24px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:not(.lx-photo-cell),html body .wj-platform .lx-page[data-page="community-network"] .lx-mini-item{padding:16px!important;box-shadow:5px 5px 0 var(--cn-ink)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col .lx-stack{gap:10px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col :is(.lx-img,.lx-crop):not(.lx-img-sm){aspect-ratio:16/9!important;max-height:240px}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col .lx-h{font-size:19px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col :is(.lx-rich p,.lx-text,li){font-size:14.5px!important;line-height:1.55!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col .lx-list li{padding-block:2px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell{aspect-ratio:21/7!important;max-height:340px;border-width:6px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(2) .ip-wrap > .lx-stack > .lx-stack:first-child{padding:28px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(2) .ip-wrap > .lx-stack > .lx-stack:last-child .lx-img{max-height:380px}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > :is(.lx-img,.lx-crop):not(.lx-img-sm){max-height:360px}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col{padding:22px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col .lx-h ~ .lx-h{font-size:17px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(9) .lx-cols.lx-cards > .lx-col .lx-h:first-of-type + .lx-h{font-size:24px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-split > .lx-col:not(:has(> .lx-stack > :is(.lx-img,.lx-crop):only-child)){padding:24px!important;box-shadow:5px 5px 0 var(--cn-ink)!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-split :is(.lx-img,.lx-crop):not(.lx-img-sm){max-height:380px}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) :is(.lx-img,.lx-crop):not(.lx-img-sm):not(.lx-bg-img){border-width:6px!important}
+
+
+html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell{width:100%!important;max-height:none!important;aspect-ratio:21/6!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell :is(.lx-img,.lx-crop){width:100%!important;height:100%!important;max-height:none!important;aspect-ratio:auto!important}
+@media (min-width:1025px){
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack{display:grid!important;grid-template-columns:40% minmax(0,1fr);column-gap:18px;align-items:start}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > *{grid-column:2}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > :is(.lx-img,.lx-crop),html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > .lx-stack:has(> :is(.lx-img,.lx-crop):only-child){grid-column:1!important;grid-row:1 / span 8;align-self:stretch}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack .lx-img:not(.lx-img-sm){aspect-ratio:auto!important;height:100%!important;max-height:none!important;min-height:260px;object-fit:cover!important}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > .lx-stack:has(> .lx-img:only-child){height:100%}
+}
+
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-col.lx-card-col:not(.lx-photo-cell){background:var(--cn-paper)!important;border:1px solid var(--cn-ink)!important;border-radius:4px!important;box-shadow:5px 5px 0 var(--cn-ink)!important;padding:16px!important;height:auto!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-photo-cell{aspect-ratio:21/6!important;height:auto!important;min-height:0!important}
+@media (min-width:1025px){
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack{display:grid!important;grid-template-columns:40% minmax(0,1fr)!important;column-gap:18px!important;align-items:start}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > *{grid-column:2}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > :is(.lx-img,.lx-crop):first-child,html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > .lx-stack:has(> :is(.lx-img,.lx-crop):only-child){grid-column:1!important;grid-row:1 / span 8!important;align-self:stretch}
+  html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack .lx-img:not(.lx-img-sm){aspect-ratio:auto!important;height:100%!important;max-height:none!important;min-height:260px;object-fit:cover!important}
+}
+
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-photo-cell{height:clamp(200px,24vw,320px)!important;aspect-ratio:auto!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-mini-item .lx-img{aspect-ratio:16/9!important;max-height:200px!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-mini-item{padding:14px!important}
+
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-photo-cell{grid-column:1/-1!important;width:100%!important;max-width:none!important}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-mini-item .lx-img{height:auto!important;min-height:0!important;aspect-ratio:16/9!important;max-height:200px!important;width:100%!important}
+
+/* ==========================================================================
+   HERO REDESIGN: text-only and split hero polish for all live-section pages
+   ========================================================================== */
+
+/* --- Text-only hero: centered, impactful typography --- */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)){text-align:center}
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) > .ip-wrap > .lx-stack{align-items:center;max-width:820px;margin-inline:auto}
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)){padding-top:clamp(56px,7vw,96px)!important;padding-bottom:clamp(64px,7vw,104px)!important}
+
+/* h1: display-size, balanced */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-h.lx-h1{font-size:clamp(44px,5vw,68px)!important;line-height:1.04!important;letter-spacing:-.025em!important;color:var(--ed-ink)!important;text-wrap:balance;margin:0!important}
+
+/* subtitle: amber italic tagline */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-h.lx-h2,
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-h.lx-subtitle{font-size:clamp(20px,2vw,26px)!important;line-height:1.35!important;color:var(--ed-amber-ink)!important;font-style:italic!important;font-family:var(--ff-display)!important;max-width:none!important;margin:4px 0 0!important}
+
+/* eyebrow badge */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-eyebrow{display:inline-flex!important;align-items:center;gap:8px;font-size:11.5px!important;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ed-amber-ink)!important;padding:6px 14px;border-radius:999px;background:rgba(217,145,11,.1);border:1px solid rgba(217,145,11,.28);margin-bottom:8px}
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ed-amber);flex:none}
+
+/* body text: readable column */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-rich{max-width:620px;margin-inline:auto;text-align:center}
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-rich p{font-size:17px!important;line-height:1.75!important;color:var(--ed-text)!important}
+
+/* hero actions: centred */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-actions{justify-content:center;margin-top:8px}
+
+/* decorative amber line below hero */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split))::after{content:"";display:block;width:48px;height:3px;background:var(--ed-amber);border-radius:2px;margin:clamp(28px,3vw,44px) auto 0}
+
+/* inner stacks inherit centring */
+html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) > .ip-wrap > .lx-stack .lx-stack{align-items:center}
+
+/* --- Split hero: polished frame for the image column --- */
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split{gap:clamp(40px,6vw,88px)!important;align-items:center!important}
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split > .lx-col > .lx-stack > .lx-img:only-child,
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split > .lx-col > .lx-stack > .lx-crop:only-child{border-radius:18px!important;aspect-ratio:4/3.2!important;box-shadow:none!important;border:0!important}
+
+/* split hero text column */
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split .lx-h.lx-h1{font-size:clamp(38px,4.2vw,58px)!important;line-height:1.06!important;letter-spacing:-.02em!important;color:var(--ed-ink)!important;margin:0!important}
+
+/* split hero eyebrow */
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split .lx-eyebrow{display:inline-flex!important;align-items:center;gap:8px;font-size:11.5px!important;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ed-amber-ink)!important;padding:6px 14px;border-radius:999px;background:rgba(217,145,11,.1);border:1px solid rgba(217,145,11,.28);margin-bottom:4px;align-self:flex-start}
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split .lx-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ed-amber);flex:none}
+
+/* split hero body text */
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split .lx-rich{max-width:560px}
+html body .wj-platform .lx-page .lx-sec.lx-first .lx-cols.lx-split .lx-rich p{font-size:16.5px!important;line-height:1.75!important;color:var(--ed-text)!important}
+
+/* --- Section intro: amber dot before body section headings --- */
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) > .ip-wrap > .lx-stack > .lx-h.lx-h2:first-child::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ed-amber);margin-right:12px;vertical-align:.15em}
+
+/* --- Responsive: text-only hero on mobile --- */
+@media (max-width:600px){
+  html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)){padding-top:clamp(40px,6vw,56px)!important;padding-bottom:clamp(48px,6vw,64px)!important}
+  html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split)) .lx-h.lx-h1{font-size:clamp(34px,8vw,44px)!important}
+  html body .wj-platform .lx-page .lx-sec.lx-first:not(:has(.lx-split))::after{width:36px;margin-top:20px}
+}
+
+/* --- Legal / terms page polish --- */
+html body .wj-platform .wj-policy-header{background:#faf8f5;padding:clamp(40px,5vw,72px) 0 clamp(32px,4vw,56px);text-align:center}
+html body .wj-platform .wj-policy-header .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ed-amber-ink);padding:6px 14px;border-radius:999px;background:rgba(217,145,11,.1);border:1px solid rgba(217,145,11,.28)}
+html body .wj-platform .wj-policy-header .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ed-amber);flex:none}
+html body .wj-platform .wj-policy-header h1{font-size:clamp(36px,4vw,52px)!important;line-height:1.08;letter-spacing:-.02em;margin:16px 0 12px;color:var(--ed-ink)}
+html body .wj-platform .wj-policy-header p:not(.eyebrow){font-size:17px;line-height:1.7;color:var(--ed-text);max-width:560px;margin-inline:auto}
+html body .wj-platform .wj-policy-header nav{margin-bottom:20px}
+html body .wj-platform .wj-policy-body{max-width:720px;margin-inline:auto;padding-block:clamp(40px,5vw,72px)}
+html body .wj-platform .wj-policy-body h2{font-size:clamp(22px,2vw,28px);line-height:1.2;color:var(--ed-ink);margin:2em 0 .6em;padding-top:1.2em;border-top:1px solid var(--ed-line)}
+html body .wj-platform .wj-policy-body h2:first-child{border-top:0;padding-top:0;margin-top:0}
+html body .wj-platform .wj-policy-body p{font-size:16px;line-height:1.75;color:var(--ed-text);margin:.6em 0}
+html body .wj-platform .wj-policy-body a{color:var(--ed-amber-ink);text-decoration:underline;text-underline-offset:3px}
+
+/* --- Form input polish --- */
+html body .wj-platform .lx-page .lx-sec .lx-form input,
+html body .wj-platform .lx-page .lx-sec .lx-form textarea,
+html body .wj-platform .lx-page .lx-sec .lx-form select{border-radius:10px!important;border:1px solid var(--ed-line)!important;padding:12px 16px!important;font-size:15px!important;background:#fff!important;transition:border-color .2s ease}
+html body .wj-platform .lx-page .lx-sec .lx-form input:focus,
+html body .wj-platform .lx-page .lx-sec .lx-form textarea:focus,
+html body .wj-platform .lx-page .lx-sec .lx-form select:focus{border-color:var(--ed-amber)!important;outline:none!important;box-shadow:0 0 0 3px rgba(217,145,11,.12)!important}
+
+/* ===================================================================
+   DUPLICATE TESTIMONIALS — hide old WordPress-embedded testimonials
+   when the new unified slider component is present
+   =================================================================== */
+html body .wj-platform .lx-main:has(.wj-testimonials-sec) .lx-testimonials-showcase,
+html body .wj-platform .lx-main:has(.wj-testimonials-sec) .lx-cols.lx-testimonials-showcase,
+html body .wj-platform .lx-main:has(.wj-testimonials-sec) div.lx-testimonials-showcase{display:none!important;height:0!important;overflow:hidden!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;pointer-events:none!important;position:absolute!important;visibility:hidden!important}
+
+/* ===================================================================
+   COMPREHENSIVE PAGE BODY REDESIGN
+   =================================================================== */
+
+/* --- Section spacing & rhythm --- */
+html body .wj-platform .lx-page .lx-sec{padding-block:clamp(48px,6vw,88px)}
+html body .wj-platform .lx-page .lx-sec + .lx-sec{border-top:1px solid color-mix(in srgb,var(--ed-line) 40%,transparent)}
+html body .wj-platform .lx-page .lx-first + .lx-sec{border-top:0}
+
+/* --- Section headings --- */
+html body .wj-platform .lx-page .lx-sec h2{
+  font-size:clamp(28px,3.2vw,44px)!important;line-height:1.12!important;
+  letter-spacing:-.025em;color:var(--ed-ink);
+  margin-bottom:clamp(16px,2vw,28px)
+}
+html body .wj-platform .lx-page .lx-sec h3{
+  font-size:clamp(20px,2vw,28px)!important;line-height:1.2!important;
+  letter-spacing:-.015em;color:var(--ed-ink);
+  margin-bottom:12px
+}
+html body .wj-platform .lx-page .lx-sec h4{
+  font-size:clamp(17px,1.4vw,22px)!important;line-height:1.3!important;
+  color:var(--ed-ink);margin-bottom:8px
+}
+
+/* --- Body text polish --- */
+html body .wj-platform .lx-page .lx-sec p{
+  font-size:clamp(15px,1.1vw,17px);line-height:1.75;
+  color:var(--ed-text);max-width:680px
+}
+html body .wj-platform .lx-page .lx-sec .ip-wrap > p{margin-inline:auto;text-align:center}
+html body .wj-platform .lx-page .lx-sec ul,
+html body .wj-platform .lx-page .lx-sec ol{
+  font-size:clamp(15px,1.1vw,17px);line-height:1.75;
+  color:var(--ed-text);padding-left:1.5em;margin:.8em 0
+}
+html body .wj-platform .lx-page .lx-sec li{margin-bottom:.4em}
+html body .wj-platform .lx-page .lx-sec li::marker{color:var(--ed-amber)}
+
+/* --- Links inside body sections --- */
+html body .wj-platform .lx-page .lx-sec a:not(.lx-btn):not([class*="nav"]){
+  color:var(--ed-amber-ink);text-decoration:underline;
+  text-underline-offset:3px;text-decoration-thickness:1px;
+  transition:color .2s ease
+}
+html body .wj-platform .lx-page .lx-sec a:not(.lx-btn):not([class*="nav"]):hover{
+  color:var(--ed-ink)
+}
+
+/* --- Card grids — unified card style --- */
+html body .wj-platform .lx-page .lx-card-grid,
+html body .wj-platform .lx-page .lx-grid{
+  display:grid;gap:clamp(20px,2vw,32px);
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))
+}
+html body .wj-platform .lx-page .lx-card,
+html body .wj-platform .lx-page [class*="card"]:not(.lx-testimonial-card){
+  background:#fff;border:1px solid var(--ed-line);
+  border-radius:16px;padding:clamp(24px,2.5vw,36px);
+  transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease
+}
+html body .wj-platform .lx-page .lx-card:hover,
+html body .wj-platform .lx-page [class*="card"]:not(.lx-testimonial-card):hover{
+  box-shadow:0 8px 32px rgba(0,0,0,.06);
+  border-color:color-mix(in srgb,var(--ed-amber) 30%,var(--ed-line));
+  transform:translateY(-2px)
+}
+
+/* --- Image containers --- */
+html body .wj-platform .lx-page .lx-sec img:not([class*="logo"]):not([class*="icon"]){
+  border-radius:14px;object-fit:cover;width:100%
+}
+html body .wj-platform .lx-page .lx-sec figure{margin:0;border-radius:14px;overflow:hidden}
+
+/* --- Buttons polish --- */
+html body .wj-platform .lx-page .lx-btn,
+html body .wj-platform .lx-page a[class*="btn"],
+html body .wj-platform .lx-page button[class*="btn"]{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;border-radius:12px;
+  font-size:15px;font-weight:600;letter-spacing:-.01em;
+  transition:all .25s ease;cursor:pointer;
+  text-decoration:none!important
+}
+html body .wj-platform .lx-page .lx-btn-primary,
+html body .wj-platform .lx-page [class*="btn-primary"]{
+  background:var(--ed-amber);color:#fff;border:0
+}
+html body .wj-platform .lx-page .lx-btn-primary:hover,
+html body .wj-platform .lx-page [class*="btn-primary"]:hover{
+  background:color-mix(in srgb,var(--ed-amber) 85%,#000);
+  box-shadow:0 4px 16px rgba(217,145,11,.25)
+}
+
+/* --- Elementor widget overrides — columns & sections --- */
+html body .wj-platform .lx-page .elementor-section{
+  padding-block:clamp(40px,5vw,72px)!important
+}
+html body .wj-platform .lx-page .elementor-column-gap-default>.elementor-column>.elementor-element-populated{
+  padding:clamp(16px,2vw,28px)!important
+}
+
+/* --- WordPress content blocks --- */
+html body .wj-platform .lx-page .lx-sec .wp-block-columns{
+  display:grid!important;gap:clamp(20px,2.5vw,40px)!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))!important
+}
+html body .wj-platform .lx-page .lx-sec .wp-block-column{width:100%!important;flex:none!important}
+
+/* --- Service / feature icon blocks --- */
+html body .wj-platform .lx-page .lx-sec [class*="icon-box"],
+html body .wj-platform .lx-page .lx-sec [class*="feature-box"]{
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap:12px;padding:clamp(20px,2vw,32px);
+  background:#fff;border:1px solid var(--ed-line);
+  border-radius:14px;transition:box-shadow .25s ease,transform .25s ease
+}
+html body .wj-platform .lx-page .lx-sec [class*="icon-box"]:hover,
+html body .wj-platform .lx-page .lx-sec [class*="feature-box"]:hover{
+  box-shadow:0 8px 28px rgba(0,0,0,.06);transform:translateY(-2px)
+}
+html body .wj-platform .lx-page .lx-sec [class*="icon-box"] img,
+html body .wj-platform .lx-page .lx-sec [class*="feature-box"] img{
+  width:48px;height:48px;object-fit:contain;border-radius:0
+}
+
+/* --- Pricing / membership tables --- */
+html body .wj-platform .lx-page .lx-sec table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  border:1px solid var(--ed-line);border-radius:14px;overflow:hidden
+}
+html body .wj-platform .lx-page .lx-sec thead{background:var(--ed-ink);color:#fff}
+html body .wj-platform .lx-page .lx-sec th{
+  padding:14px 20px;font-size:14px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;text-align:left
+}
+html body .wj-platform .lx-page .lx-sec td{
+  padding:14px 20px;font-size:15px;border-top:1px solid var(--ed-line);
+  color:var(--ed-text)
+}
+html body .wj-platform .lx-page .lx-sec tr:nth-child(even) td{
+  background:color-mix(in srgb,var(--ed-line) 20%,#fff)
+}
+
+/* --- Gallery grid --- */
+html body .wj-platform .lx-page [class*="gallery"]{
+  display:grid!important;gap:clamp(8px,1vw,16px);
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))
+}
+html body .wj-platform .lx-page [class*="gallery"] img{
+  aspect-ratio:4/3;object-fit:cover;border-radius:12px;
+  transition:transform .3s ease
+}
+html body .wj-platform .lx-page [class*="gallery"] img:hover{
+  transform:scale(1.03)
+}
+
+/* --- Contact form sections --- */
+html body .wj-platform .lx-page .lx-sec .lx-form{
+  max-width:640px;margin-inline:auto;
+  display:flex;flex-direction:column;gap:16px
+}
+html body .wj-platform .lx-page .lx-sec .lx-form label{
+  font-size:14px;font-weight:600;color:var(--ed-ink);
+  margin-bottom:4px
+}
+html body .wj-platform .lx-page .lx-sec .lx-form button[type="submit"]{
+  align-self:flex-start;padding:14px 40px;
+  background:var(--ed-amber);color:#fff;border:0;border-radius:12px;
+  font-size:15px;font-weight:600;cursor:pointer;
+  transition:all .25s ease
+}
+html body .wj-platform .lx-page .lx-sec .lx-form button[type="submit"]:hover{
+  background:color-mix(in srgb,var(--ed-amber) 85%,#000);
+  box-shadow:0 4px 16px rgba(217,145,11,.25)
+}
+
+/* --- Accordion / FAQ sections --- */
+html body .wj-platform .lx-page .lx-sec details{
+  border:1px solid var(--ed-line);border-radius:12px;
+  padding:0;margin-bottom:12px;overflow:hidden;
+  transition:border-color .2s ease
+}
+html body .wj-platform .lx-page .lx-sec details[open]{
+  border-color:color-mix(in srgb,var(--ed-amber) 30%,var(--ed-line))
+}
+html body .wj-platform .lx-page .lx-sec summary{
+  padding:16px 20px;font-size:16px;font-weight:600;
+  color:var(--ed-ink);cursor:pointer;list-style:none;
+  display:flex;align-items:center;justify-content:space-between
+}
+html body .wj-platform .lx-page .lx-sec summary::after{
+  content:"＋";font-size:18px;color:var(--ed-amber);transition:transform .25s ease
+}
+html body .wj-platform .lx-page .lx-sec details[open] summary::after{
+  transform:rotate(45deg)
+}
+html body .wj-platform .lx-page .lx-sec details > div,
+html body .wj-platform .lx-page .lx-sec details > p{
+  padding:0 20px 16px;font-size:15px;line-height:1.75;color:var(--ed-text)
+}
+
+/* --- Split content sections (text + image side by side) --- */
+html body .wj-platform .lx-page .lx-split,
+html body .wj-platform .lx-page .lx-sec:has(> .ip-wrap > .elementor-section .elementor-column:nth-child(2)){
+  container-type:inline-size
+}
+html body .wj-platform .lx-page .lx-split .ip-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,4vw,64px);align-items:center
+}
+@container (max-width: 680px){
+  html body .wj-platform .lx-page .lx-split .ip-wrap{grid-template-columns:1fr}
+}
+
+/* --- Stat / metric blocks --- */
+html body .wj-platform .lx-page .lx-sec [class*="stat"],
+html body .wj-platform .lx-page .lx-sec [class*="counter"]{
+  text-align:center;padding:clamp(20px,2vw,36px)
+}
+html body .wj-platform .lx-page .lx-sec [class*="stat"] strong,
+html body .wj-platform .lx-page .lx-sec [class*="counter"] strong{
+  display:block;font-size:clamp(36px,4vw,56px);
+  font-weight:700;color:var(--ed-amber);line-height:1
+}
+
+/* --- Video embeds --- */
+html body .wj-platform .lx-page .lx-sec iframe[src*="youtube"],
+html body .wj-platform .lx-page .lx-sec iframe[src*="vimeo"]{
+  border-radius:14px;overflow:hidden;
+  aspect-ratio:16/9;width:100%;height:auto
+}
+
+/* --- Blockquotes --- */
+html body .wj-platform .lx-page .lx-sec blockquote{
+  border-left:4px solid var(--ed-amber);
+  padding:16px 24px;margin:24px 0;
+  background:color-mix(in srgb,var(--ed-amber) 5%,#fff);
+  border-radius:0 12px 12px 0;
+  font-size:clamp(16px,1.2vw,18px);font-style:italic;
+  line-height:1.7;color:var(--ed-ink)
+}
+
+/* --- Dividers & horizontal rules --- */
+html body .wj-platform .lx-page .lx-sec hr{
+  border:0;height:1px;background:var(--ed-line);
+  margin:clamp(32px,4vw,56px) 0
+}
+
+/* --- Badge / tag pills --- */
+html body .wj-platform .lx-page .lx-sec [class*="badge"],
+html body .wj-platform .lx-page .lx-sec [class*="tag"]:not(html):not(body){
+  display:inline-flex;align-items:center;
+  padding:4px 14px;border-radius:100px;
+  font-size:12px;font-weight:600;letter-spacing:.03em;
+  text-transform:uppercase;
+  background:color-mix(in srgb,var(--ed-amber) 12%,#fff);
+  color:var(--ed-amber-ink)
+}
+
+/* --- Testimonials section spacing --- */
+html body .wj-platform .wj-testimonials-sec{
+  padding-block:clamp(56px,7vw,96px);
+  background:color-mix(in srgb,var(--ed-line) 15%,#fff)
+}
+html body .wj-platform .wj-testimonials-sec .ip-wrap{max-width:var(--ed-max);margin-inline:auto;padding-inline:var(--ed-gutter)}
+
+/* --- Mobile responsive --- */
+@media(max-width:768px){
+  html body .wj-platform .lx-page .lx-sec{padding-block:clamp(32px,8vw,56px)}
+  html body .wj-platform .lx-page .lx-sec h2{font-size:clamp(24px,6vw,32px)!important}
+  html body .wj-platform .lx-page .lx-card-grid,
+  html body .wj-platform .lx-page .lx-grid{grid-template-columns:1fr}
+  html body .wj-platform .lx-page [class*="gallery"]{grid-template-columns:repeat(2,1fr)}
+  html body .wj-platform .lx-page .lx-split .ip-wrap{grid-template-columns:1fr}
+  html body .wj-platform .lx-page .lx-sec .lx-form{max-width:100%}
+}
+
+@media(max-width:480px){
+  html body .wj-platform .lx-page [class*="gallery"]{grid-template-columns:1fr}
+  html body .wj-platform .lx-page .lx-sec table{font-size:13px}
+  html body .wj-platform .lx-page .lx-sec th,
+  html body .wj-platform .lx-page .lx-sec td{padding:10px 12px}
+}

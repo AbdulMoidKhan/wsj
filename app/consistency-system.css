@@ -1,0 +1,266 @@
+/* Authoritative project-wide visual contract. Important rules are intentionally
+   layered before the legacy button layer: old unlayered page overrides cannot
+   create a second typography scale or reintroduce pointed/image/pill corners. */
+@layer wj-consistency, wj-button-contract;
+@layer wj-consistency {
+  :root {
+    --ui-canvas:#f7f5ef;--ui-sand:#eeeadd;--ui-sage:#e7eadf;
+    --ui-forest:#193c32;--ui-green:#214d3e;--ui-yellow:#d9910b;
+    --ui-ink:#0b1d19;--ui-muted:#59665f;--ui-line:#cbd2c5;
+    --ui-white:#fff;--ui-on-dark:#d1dcd3;--ui-radius:5px;
+    --ui-heading-font:var(--font-display),Georgia,serif;
+    --ui-body-font:var(--font-sans),Inter,"Helvetica Neue",Arial,sans-serif;
+    --ui-h1:64px;--ui-h2:44px;--ui-h3:28px;--ui-h4:22px;
+    --ui-body:16px;--ui-secondary:14px;--ui-eyebrow:12px;
+    --ff-display:var(--ui-heading-font)!important;--font-heading:var(--ui-heading-font)!important;
+    --ff-text:var(--ui-body-font)!important;--font-body:var(--ui-body-font)!important;--font-nav:var(--ui-body-font)!important;
+    --ds-forest-950:var(--ui-ink)!important;--ds-forest-900:var(--ui-forest)!important;--ds-forest-800:var(--ui-forest)!important;--ds-forest-700:var(--ui-green)!important;
+    --ds-amber-500:var(--ui-yellow)!important;--ds-amber-600:#c27f06!important;--ds-amber-300:var(--ui-yellow)!important;--ds-amber-ink:var(--ui-green)!important;
+    --ds-canvas:var(--ui-canvas)!important;--ds-band:var(--ui-sand)!important;--ds-surface:var(--ui-white)!important;--ds-surface-muted:var(--ui-canvas)!important;
+    --ds-ink:var(--ui-forest)!important;--ds-text:var(--ui-muted)!important;--ds-text-soft:var(--ui-muted)!important;--ds-text-meta:var(--ui-muted)!important;
+    --ds-on-dark:var(--ui-white)!important;--ds-on-dark-soft:var(--ui-on-dark)!important;--ds-line:var(--ui-line)!important;--ds-line-strong:var(--ui-line)!important;
+    --ds-fs-h1:var(--ui-h1)!important;--ds-fs-h2:var(--ui-h2)!important;--ds-fs-h3:var(--ui-h3)!important;--ds-fs-h4:var(--ui-h4)!important;
+    --ds-fs-body:16px!important;--ds-fs-lead:16px!important;--ds-fs-sm:14px!important;--ds-fs-xs:14px!important;--ds-fs-eyebrow:12px!important;
+    --ds-r-sm:5px!important;--ds-r-md:5px!important;--ds-r-lg:5px!important;--ds-r-xl:5px!important;
+    --bg-page:var(--ui-canvas)!important;--bg-band:var(--ui-sand)!important;--bg-surface:var(--ui-white)!important;--bg-surface-solid:var(--ui-white)!important;
+    --text-strong:var(--ui-forest)!important;--text-body:var(--ui-muted)!important;--text-soft:var(--ui-muted)!important;--line-soft:var(--ui-line)!important;--line-strong:var(--ui-line)!important;
+    --c-amber:var(--ui-yellow)!important;--c-amber-hover:#c27f06!important;--fs-body:16px!important;--fs-lead:16px!important;--fs-sm:14px!important;--fs-micro:12px!important;
+  }
+  html,body {background:var(--ui-canvas)!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) {
+    font-family:var(--ui-body-font)!important;font-size:16px!important;line-height:1.75!important;color:var(--ui-muted)!important;
+    --cn-forest-dark:var(--ui-forest)!important;--cn-forest-darker:var(--ui-forest)!important;--cn-forest-surface:var(--ui-forest)!important;
+    --cn-amber-gold:var(--ui-yellow)!important;--cn-amber-gold-hover:#c27f06!important;--cn-amber-light:var(--ui-yellow)!important;--cn-amber-ink:var(--ui-green)!important;
+    --cn-ink:var(--ui-forest)!important;--cn-text:var(--ui-muted)!important;--cn-text-soft:var(--ui-muted)!important;--cn-canvas:var(--ui-canvas)!important;--cn-surface:var(--ui-white)!important;--cn-sage:var(--ui-sage)!important;
+    --cn-line:var(--ui-line)!important;--cn-line-strong:var(--ui-line)!important;--cn-radius-md:5px!important;--cn-radius-lg:5px!important;--cn-radius-xl:5px!important;
+    --adm-navy:var(--ui-forest)!important;--adm-orange:var(--ui-yellow)!important;--adm-muted:var(--ui-muted)!important;--adm-border:var(--ui-line)!important;--adm-surface:var(--ui-canvas)!important;--adm-ink:var(--ui-forest)!important;
+  }
+  /* One corner treatment for every painted surface, including imagery, controls,
+     portals and admin panels. Text-only elements are unaffected visually. */
+  body :where(.wj-platform,.wj-platform *,.adm-root,.adm-root *,.bk-overlay,.bk-overlay *,.service-inquiry-dialog,.service-inquiry-dialog *,.visit-lightbox,.visit-lightbox *,.visit-lightbox-overlay,.wj-dialog,.wj-dialog *) {
+    border-radius:5px!important;
+  }
+  body :where(.wj-platform,.adm-root,.library-page,.creative-page,.info-page,.visit-page,.cn-page,.ip-page,.bk-modal,.service-inquiry-content,.wj-mobile-panel) {background-color:var(--ui-canvas)!important}
+  body :where(.wj-platform h1,.adm-root h1,.lv-hero-title .lv-h1,[data-ui-type="h1"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h1)!important;font-weight:500!important;line-height:1.12!important;letter-spacing:-.04em!important;color:var(--ui-forest)!important;
+  }
+  body :where(.wj-platform h2,.adm-root h2,[data-ui-type="h2"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h2)!important;font-weight:500!important;line-height:1.2!important;letter-spacing:-.035em!important;color:var(--ui-forest)!important;
+  }
+  body :where(.wj-platform h3,.adm-root h3,[data-ui-type="h3"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h3)!important;font-weight:500!important;line-height:1.3!important;letter-spacing:-.025em!important;color:var(--ui-forest)!important;
+  }
+  body :where(.wj-platform h4,.wj-platform h5,.wj-platform h6,.adm-root h4,.adm-root h5,.adm-root h6,[data-ui-type="h4"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h4)!important;font-weight:600!important;line-height:1.35!important;letter-spacing:-.02em!important;color:var(--ui-forest)!important;
+  }
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(h1,h2,h3,h4,h5,h6) :where(span,em,strong,a) {
+    font-family:inherit!important;font-size:inherit!important;font-weight:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;color:inherit!important;
+  }
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(p:not(.lv-h1):not([data-ui-type]),li,dt,dd,blockquote,address,td,[data-ui-type="body"]) {
+    font-family:var(--ui-body-font)!important;font-size:16px!important;font-weight:400!important;line-height:1.75!important;letter-spacing:normal!important;color:var(--ui-muted)!important;
+  }
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(p,li,dd,blockquote,address) :where(span,em,a) {font-family:inherit!important;font-size:inherit!important;line-height:inherit!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.wj-dialog) :where(input,select,textarea) {font-family:var(--ui-body-font)!important;font-size:16px!important;font-weight:400!important;line-height:1.5!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.wj-dialog) :where(label,th,[data-ui-type="label"]) {font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:600!important;line-height:1.5!important}
+  /* Explicit secondary and navigation roles, independent of page/template. */
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(small,figcaption,.breadcrumb,.inner-meta,.post-taxonomy,.share-row,.wj-small,.wj-consent,.bk-step-label,.bk-plan-period,.bk-plan-desc,.cn-price-period,.cn-price-subtext,.cn-membership-sublabel,.cn-value-sub,.lx-vitem-role,.lx-vslider-score,.visit-index,.visit-policy-note,.visit-policy-final,[class$="-crumbs"],[class$="-caption"],[class$="-subtext"],[class$="-sublabel"],[data-ui-type="secondary"]) {
+    font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:400!important;line-height:1.6!important;letter-spacing:normal!important;
+  }
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(figcaption,.wj-consent,[class$="-crumbs"],[data-ui-type="secondary"]) :where(p,a,span) {font-family:inherit!important;font-size:14px!important;font-weight:400!important;line-height:1.6!important}
+  body :where(.eyebrow,.hp-eyebrow,.ip-eyebrow,.lx-eyebrow,.wj-eyebrow,.cn-eyebrow,.library-eyebrow,.creative-eyebrow,.info-eyebrow,.visit-eyebrow,.ecom-eyebrow,.cd-eyebrow,.sv-eyebrow,.ws-eyebrow,.ts-eyebrow,.mem-eyebrow,.uc-eyebrow,[data-ui-type="eyebrow"]) {
+    font-family:var(--ui-body-font)!important;font-size:12px!important;font-weight:600!important;line-height:1.5!important;letter-spacing:.08em!important;color:var(--ui-green)!important;
+  }
+  body :where(.wj-header,.wj-footer,.wj-mega-nav,.wj-mobile-panel,.adm-sidebar) :where(nav a,.wj-footer-links a,.wj-nav-group h2,.wj-footer-top h2,.wj-footer-links h2,.lv-primary a,.lv-strip a,.adm-nav-item) {
+    font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:600!important;line-height:1.5!important;letter-spacing:normal!important;
+  }
+  body :where(.wj-footer) :where(p,a,address,.wj-footer-bottom span,.wj-footer-brand>span) {font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:400!important;line-height:1.6!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) summary {font-family:var(--ui-body-font)!important;font-size:16px!important;font-weight:600!important;line-height:1.5!important}
+  body :where(.bk-title,.service-inquiry-content h2,.wj-dialog h2,.visit-lightbox h2,[data-ui-type="dialog-title"]) {font-family:var(--ui-heading-font)!important;font-size:var(--ui-h3)!important;font-weight:500!important;line-height:1.3!important;color:var(--ui-forest)!important}
+  body :where(.price-value,.info-price,.creative-price,.cn-price-number,.bk-plan-price,.bk-detail-price,.lx-amount,[data-ui-type="price"]) {font-family:var(--ui-body-font)!important;font-size:40px!important;font-weight:500!important;line-height:1.2!important;letter-spacing:-.035em!important;color:var(--ui-forest)!important}
+  body :where([data-ui-tone="dark"],.creative-band,.library-works,.cn-works,.info-band,.wj-closing,.wj-footer,.bk-plan-card.featured) :where(.price-value,.info-price,.creative-price,.cn-price-number,.bk-plan-price,.bk-detail-price,.lx-amount,[data-ui-type="price"]) {color:var(--ui-white)!important}
+  body :where(.bk-plan-card.featured) :where(.bk-plan-period,.bk-plan-desc) {color:var(--ui-on-dark)!important}
+  body :where(.price-value,.creative-price,.bk-detail-price) :where(small,span:not(.lx-amount)) {font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:400!important;line-height:1.6!important;letter-spacing:normal!important}
+  /* Palette roles. The same sections use the same tone on every route. */
+  body :where(.wj-header,.cn-circles,.cn-memberships,.cn-more-ways,.cn-faq-sec,.creative-pricing,.info-community-pricing,.visit-policy,.hp-section,.ip-reading-section,.lx-sec.lx-first) {background-color:var(--ui-canvas)!important;background-image:none!important}
+  body :where(.cn-about,.cn-events,.info-band-light,.lx-sec.lx-band,[data-ui-tone="sand"]) {background-color:var(--ui-sand)!important;background-image:none!important}
+  body :where(.cn-circle-card-sage,.cn-benefits-wrap,.info-community-pricing,.creative-pricing,.visit-location,[data-ui-tone="sage"]) {background-color:var(--ui-sage)!important;background-image:none!important}
+  body :where(.cn-circle-card,.cn-membership-card,.price-card,.ip-service-card,.visit-form,.bk-cal-card,.bk-plan-details-box,.bk-summary,.bk-checkout-summary,.wj-mobile-panel,.wj-dialog,.service-inquiry-dialog,.visit-lightbox,[data-ui-tone="white"]) {background-color:var(--ui-white)!important;background-image:none!important}
+  body :where(.cn-works,.cn-benefits,.cn-banner,.creative-band,.library-works,.info-band,.wj-closing,.wj-footer,.wj-testimonials-sec,.adm-sidebar,[data-ui-tone="dark"],.ecom-band,.cd-band,.sv-highlight-band,.ws-band,.ts-band) {background-color:var(--ui-forest)!important;background-image:none!important;color:var(--ui-white)!important}
+  body :where(.cn-works,.cn-benefits,.cn-banner,.creative-band,.library-works,.info-band,.wj-closing,.wj-footer,.wj-testimonials-sec,.adm-sidebar,[data-ui-tone="dark"],.ecom-band,.cd-band,.sv-highlight-band,.ws-band,.ts-band) :where(h1,h2,h3,h4,h5,h6) {color:var(--ui-white)!important}
+  body :where(.cn-works,.cn-benefits,.cn-banner,.creative-band,.library-works,.info-band,.wj-closing,.wj-footer,.wj-testimonials-sec,.adm-sidebar,[data-ui-tone="dark"],.ecom-band,.cd-band,.sv-highlight-band,.ws-band,.ts-band) :where(p,li,dt,dd,blockquote,address,small,figcaption,.lx-vslider-score,.lx-vitem-role,.cn-section-sub,.sv-stat-lbl,.ts-stat-lbl) {color:var(--ui-on-dark)!important}
+  body :where(.cn-works,.cn-benefits,.cn-banner,.creative-band,.library-works,.info-band,.wj-closing,.wj-footer,.wj-testimonials-sec,.adm-sidebar,[data-ui-tone="dark"],.ecom-band,.cd-band,.sv-highlight-band,.ws-band,.ts-band) :where(.eyebrow,.cn-eyebrow,.library-eyebrow,.creative-eyebrow,.info-eyebrow,.visit-eyebrow,.ecom-eyebrow,.cd-eyebrow,.sv-eyebrow,.ws-eyebrow,.ts-eyebrow) {color:var(--ui-on-dark)!important}
+  body :where(.cn-works,.cn-benefits,.cn-banner,.creative-band,.library-works,.info-band,.wj-closing,.wj-footer,.wj-testimonials-sec,.adm-sidebar,[data-ui-tone="dark"]) :where(a:not([class*="button"]):not([class*="btn"]):not(.text-link):not(.info-text-link):not(.creative-textLink):not(.library-textLink)) {color:var(--ui-on-dark)!important}
+  body :where(.cn-benefits-wrap):not(:has(.cn-benefits)) :where(h1,h2,h3,h4) {color:var(--ui-forest)!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(img,video,iframe,canvas,.lx-crop,[class$="-media"],[class$="-image"],[class$="-photo"]) {clip-path:none!important;border-radius:5px!important}
+  body :where(.wj-platform,.adm-root) :where([class*="notch"],[class*="cut-corner"]) {clip-path:none!important;transform:none!important}
+  body :where(.wj-platform,.adm-root) :where([class*="notch"],[class*="cut-corner"])::before,body :where(.wj-platform,.adm-root) :where([class*="notch"],[class*="cut-corner"])::after {display:none!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn) {font-family:var(--ui-body-font)!important;font-size:15px!important;font-weight:700!important;line-height:18px!important;border-radius:5px!important;--wj-button-radius:5px!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(button) {border-radius:5px!important;font-family:var(--ui-body-font)!important}
+  @media(max-width:1000px){:root{--ui-h1:48px;--ui-h2:36px;--ui-h3:26px;--ui-h4:22px}}
+  @media(max-width:700px){
+    :root{--ui-h1:40px;--ui-h2:32px;--ui-h3:24px;--ui-h4:20px}
+    body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn){font-size:14px!important}
+  }
+}
+
+@layer wj-consistency {
+body .lv-hero{background-color:transparent!important}
+body .lv-hero-title .lv-h1{color:var(--ui-white)!important}
+body .lv-hero-copy :where(.lv-hero-sub,.lv-hero-tag,.lv-meta-item,.lv-hero-meta-strip){color:var(--ui-on-dark)!important}
+body :where(.wj-platform,.adm-root) :where(.cn-value-title,.lx-vitem-name,.lv-meta-item,.lv-hero-tag,.lv-hero-badge,.info-number,.creative-number,.library-number){font-family:var(--ui-body-font)!important;font-size:14px!important;line-height:1.6!important;font-weight:600!important;color:var(--ui-muted)!important}
+body :where(.creative-band,.library-works,.cn-works,.info-band,.wj-testimonials-sec,.lv-hero) :where(.creative-number,.library-number,.info-number,.lx-vitem-name,.lv-meta-item,.lv-hero-tag,.lv-hero-badge){color:var(--ui-on-dark)!important}
+body :where(.wj-platform,.adm-root) :where(.info-comparison caption,.ip-meta,.lx-price-period,.cn-price-currency,.bk-plan-period,.bk-step-label){font-family:var(--ui-body-font)!important;font-size:14px!important;line-height:1.6!important;font-weight:400!important}
+body :where(.visit-lightbox-overlay,.wj-mobile-backdrop,.wj-dialog-overlay){background-color:rgba(25,60,50,.78)!important}
+body :where(.bk-overlay,.service-inquiry-dialog)::backdrop{background-color:rgba(25,60,50,.78)!important}
+}
+
+/* Authoritative card styling for service pricing and memberships across all pages */
+@layer wj-consistency {
+  body:has(.wj-platform) .cn-memberships-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    gap: 24px !important;
+    align-items: stretch !important;
+  }
+
+  body:has(.wj-platform) .cn-membership-card {
+    background-color: var(--ui-white) !important;
+    border: 1px solid var(--ui-line) !important;
+    border-radius: 5px !important;
+    padding: 32px 26px 26px !important;
+    box-shadow: 0 4px 18px rgba(17, 48, 42, 0.04) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+  }
+
+  body:has(.wj-platform) .cn-membership-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: rgba(17, 48, 42, 0.3) !important;
+    box-shadow: 0 10px 28px rgba(17, 48, 42, 0.08) !important;
+  }
+
+  body:has(.wj-platform) .cn-membership-card.cn-membership-card-popular {
+    border: 1.5px solid #d9910b !important;
+    background-color: #fffefb !important;
+  }
+
+  body:has(.wj-platform) .cn-popular-badge {
+    position: absolute !important;
+    top: -12px !important;
+    right: 20px !important;
+    left: auto !important;
+    transform: none !important;
+    background-color: #d9910b !important;
+    color: #0b1d19 !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    padding: 3px 10px !important;
+    border-radius: 5px !important;
+  }
+
+  body:has(.wj-platform) .cn-card-header {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-bottom: 0 !important;
+  }
+
+  body:has(.wj-platform) .cn-card-icon-box {
+    display: none !important;
+  }
+
+  body:has(.wj-platform) .cn-membership-name {
+    font-family: var(--ui-heading-font) !important;
+    font-size: var(--ui-h3) !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.025em !important;
+    color: var(--ui-forest) !important;
+    min-height: 72px !important;
+    margin: 0 0 10px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+  }
+
+  body:has(.wj-platform) .cn-price-display {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 4px !important;
+    margin: 0 !important;
+  }
+
+  body:has(.wj-platform) .cn-price-number {
+    font-family: var(--ui-body-font) !important;
+    font-size: 38px !important;
+    font-weight: 700 !important;
+    color: var(--ui-forest) !important;
+    line-height: 1 !important;
+  }
+
+  body:has(.wj-platform) .cn-price-period {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: var(--ui-muted) !important;
+  }
+
+  body:has(.wj-platform) .cn-card-divider {
+    height: 1px !important;
+    width: 100% !important;
+    background-color: #edf0ea !important;
+    margin: 20px 0 !important;
+  }
+
+  body:has(.wj-platform) .cn-membership-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    flex-grow: 1 !important;
+  }
+
+  body:has(.wj-platform) .cn-card-check-item {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    font-size: 14.5px !important;
+    color: var(--ui-forest) !important;
+    line-height: 1.45 !important;
+  }
+
+  body:has(.wj-platform) .cn-card-check-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background-color: #f0f4ec !important;
+    color: #214d3e !important;
+    flex-shrink: 0 !important;
+    margin-top: 2px !important;
+  }
+
+  body:has(.wj-platform) .cn-card-footer {
+    margin-top: auto !important;
+    padding-top: 0 !important;
+    width: 100% !important;
+  }
+
+  body:has(.wj-platform) .cn-card-footer button,
+  body:has(.wj-platform) .cn-card-footer a {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+}
+
+/* Hide any residual ambient pause toggle button */
+.amb-toggle {
+  display: none !important;
+}

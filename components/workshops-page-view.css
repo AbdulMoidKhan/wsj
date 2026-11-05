@@ -1,0 +1,641 @@
+/* Scoped styles for Workshops Page View */
+.ws-page {
+  background: var(--ui-canvas);
+  color: var(--ui-forest);
+  font-family: var(--ui-body-font);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.ws-page * {
+  box-sizing: border-box;
+}
+
+.ws-wrap {
+  width: min(1200px, calc(100% - 96px));
+  margin-inline: auto;
+}
+
+.ws-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 28px;
+  font-size: 13px;
+  color: var(--ui-muted);
+}
+
+.ws-crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ws-crumbs a:hover {
+  text-decoration: underline;
+}
+
+/* Hero Section */
+.ws-hero {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 60px;
+  align-items: end;
+  padding: 56px 0 44px;
+}
+
+.ws-eyebrow {
+  font-family: var(--ui-body-font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ui-green);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.ws-hero h1 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(48px, 5.4vw, 76px);
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: var(--ui-forest) !important;
+  margin: 0;
+}
+
+.ws-hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: #657b60;
+}
+
+.ws-hero-copy p {
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--ui-muted);
+  margin: 0 0 24px;
+}
+
+.ws-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.ws-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 5px !important;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.ws-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ui-forest);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1.5px solid #a5b1a0;
+  padding: 4px 0;
+  line-height: 1.4;
+}
+
+.ws-text-link:hover {
+  border-color: var(--ui-forest);
+}
+
+/* Hero Media Banner */
+.ws-hero-image {
+  margin: 0 0 80px;
+}
+
+.ws-hero-image img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1170 / 406;
+  object-fit: cover;
+  border-radius: 5px !important;
+  display: block;
+}
+
+.ws-hero-image figcaption {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 14px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ui-muted);
+}
+
+/* Shared Sections */
+.ws-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.ws-section-head {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 70px;
+  align-items: end;
+  margin-bottom: 50px;
+}
+
+.ws-section-head h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(34px, 3.8vw, 50px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: var(--ui-forest) !important;
+  margin: 0;
+}
+
+.ws-section-head p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ui-muted);
+  margin: 0;
+}
+
+/* 2x2 Expectation Grid */
+.ws-grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px 44px;
+}
+
+.ws-card {
+  border-top: 1px solid var(--ui-line);
+  padding-top: 24px;
+}
+
+.ws-number {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #a87b39;
+  margin-bottom: 16px;
+}
+
+.ws-card h3 {
+  font-family: var(--ui-heading-font);
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--ui-forest) !important;
+  margin: 0 0 12px;
+}
+
+.ws-card p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ui-muted);
+  margin: 0;
+}
+
+/* Two Formats Cards Grid */
+.ws-formats-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.ws-formats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.ws-format-card {
+  background: #ffffff;
+  border: 1px solid var(--ui-line);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ws-format-media {
+  position: relative;
+}
+
+.ws-format-media img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.ws-format-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #d9910b;
+  color: #0b1d19;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.ws-format-body {
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.ws-format-body h3 {
+  font-family: var(--ui-heading-font);
+  font-size: 26px;
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--ui-forest) !important;
+  margin: 0 0 12px;
+}
+
+.ws-format-body p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ui-muted);
+  margin: 0 0 24px;
+  flex-grow: 1;
+}
+
+.ws-format-body .ws-button {
+  align-self: flex-start;
+}
+
+/* Dark Green Topics Band */
+.ws-band {
+  background: var(--ui-forest) !important;
+  color: #ffffff !important;
+  padding: 88px 0;
+  margin-block: 40px;
+}
+
+.ws-band .ws-eyebrow {
+  color: #b7c6a5 !important;
+}
+
+.ws-band h2 {
+  color: #ffffff !important;
+}
+
+.ws-band .ws-section-head p {
+  color: var(--ui-on-dark) !important;
+}
+
+.ws-topics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px 40px;
+  margin-top: 40px;
+}
+
+.ws-topic-card {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 24px;
+}
+
+.ws-topic-card h3 {
+  font-family: var(--ui-heading-font);
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 500;
+  color: #ffffff !important;
+  margin: 0 0 12px;
+}
+
+.ws-topic-card p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ui-on-dark);
+  margin: 0;
+}
+
+/* Pricing Wrapper */
+.ws-pricing-wrap {
+  background: var(--ui-sand);
+  padding-block: 70px;
+  margin-bottom: 40px;
+}
+
+.ws-pricing-wrap .wj-service-pricing-sec {
+  background: transparent !important;
+  padding-block: 0 30px !important;
+}
+
+.ws-member-perk {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  background: #ffffff;
+  border: 1px solid var(--ui-line);
+  border-radius: 5px;
+  padding: 32px 36px;
+  margin-top: 40px;
+}
+
+.ws-perk-copy h3 {
+  font-family: var(--ui-heading-font);
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--ui-forest) !important;
+  margin: 0 0 8px;
+}
+
+.ws-perk-copy p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ui-muted);
+  margin: 0;
+}
+
+/* Split Section (Host a Workshop) */
+.ws-split-section {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 70px;
+  align-items: center;
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.ws-split-media img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px !important;
+  display: block;
+}
+
+.ws-split-content h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(32px, 3.6vw, 44px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ui-forest) !important;
+  margin: 0 0 18px;
+}
+
+.ws-split-content p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ui-muted);
+  margin: 0 0 20px;
+}
+
+.ws-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px;
+}
+
+.ws-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ui-forest);
+  margin-bottom: 8px;
+}
+
+.ws-check {
+  color: var(--ui-green);
+  flex-shrink: 0;
+}
+
+/* Audience Section */
+.ws-audience-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.ws-audience-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  background: var(--ui-sand);
+  border-radius: 5px;
+  padding: 50px;
+}
+
+.ws-audience-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px !important;
+  display: block;
+}
+
+.ws-audience-content h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(30px, 3.2vw, 40px);
+  line-height: 1.15;
+  font-weight: 500;
+  color: var(--ui-forest) !important;
+  margin: 0 0 14px;
+}
+
+.ws-audience-content p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ui-muted);
+  margin: 0 0 24px;
+}
+
+.ws-audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ws-audience-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 550;
+  color: var(--ui-forest);
+}
+
+.ws-check-gold {
+  color: #a87b39;
+  flex-shrink: 0;
+}
+
+/* FAQ Section */
+.ws-faq-section {
+  display: grid;
+  grid-template-columns: 0.85fr 1.3fr;
+  gap: 80px;
+  padding: 80px 0;
+  border-top: 1px solid var(--ui-line);
+}
+
+.ws-faq-header h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(32px, 3.5vw, 44px);
+  line-height: 1.15;
+  font-weight: 500;
+  color: var(--ui-forest) !important;
+  margin: 0 0 16px;
+}
+
+.ws-faq-header p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ui-muted);
+  margin: 0 0 24px;
+}
+
+.ws-faq-list {
+  border-top: 1px solid var(--ui-line);
+}
+
+.ws-faq-list details {
+  border-bottom: 1px solid var(--ui-line);
+}
+
+.ws-faq-list summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ui-forest);
+  line-height: 1.45;
+}
+
+.ws-faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.ws-faq-list summary svg {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.ws-faq-list details[open] summary svg {
+  transform: rotate(45deg);
+}
+
+.ws-faq-list details > div {
+  padding: 0 20px 20px 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ui-muted);
+}
+
+.ws-faq-list details > div p {
+  margin: 0;
+}
+
+/* Closing CTA */
+.ws-closing {
+  text-align: center;
+  padding: 90px 20px;
+  border-top: 1px solid var(--ui-line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ws-closing h2 {
+  font-family: var(--ui-heading-font);
+  font-size: clamp(36px, 4vw, 52px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: var(--ui-forest) !important;
+  margin: 0 0 32px;
+  max-width: 680px;
+}
+
+.ws-closing .ws-actions {
+  justify-content: center;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .ws-wrap {
+    width: calc(100% - 56px);
+  }
+  .ws-hero,
+  .ws-section-head,
+  .ws-formats-grid,
+  .ws-split-section,
+  .ws-audience-box,
+  .ws-faq-section,
+  .ws-member-perk {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .ws-member-perk {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ws-topics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ws-wrap {
+    width: calc(100% - 36px);
+  }
+  .ws-hero {
+    padding: 36px 0 28px;
+    gap: 24px;
+  }
+  .ws-hero h1 {
+    font-size: clamp(38px, 10vw, 48px);
+  }
+  .ws-hero-copy p {
+    font-size: 16px;
+  }
+  .ws-grid-2x2,
+  .ws-topics-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .ws-section,
+  .ws-formats-section,
+  .ws-band,
+  .ws-pricing-wrap,
+  .ws-split-section,
+  .ws-audience-section,
+  .ws-faq-section,
+  .ws-closing {
+    padding-block: 52px;
+  }
+  .ws-audience-box {
+    padding: 30px 20px;
+  }
+}

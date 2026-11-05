@@ -1,0 +1,553 @@
+/* ==========================================================================
+   Workspace Junction - Services Pages Unified Redesign
+   Applies the cohesive luxury visual system from Community Network
+   to all service pages (coworking, events, dedicated, business-address,
+   podcast-studio, virtual-office, mail-box, meeting-rooms, etc.)
+   "Similar design, not same" — keeps each service's own content & layout
+   while elevating typography, colors, cards, badges, and interactive CTAs.
+   ========================================================================== */
+
+/* 1. Global Tokens for Service Pages */
+html body .wj-platform .lx-page {
+  --cn-forest-dark: #0f3d32;
+  --cn-forest-darker: #0a2921;
+  --cn-forest-surface: #14493c;
+  --cn-amber-gold: #dda036;
+  --cn-amber-gold-hover: #c48b29;
+  --cn-amber-light: #f5d78e;
+  --cn-amber-ink: #8a5a06;
+  --cn-ink: #11302a;
+  --cn-text: #41514b;
+  --cn-text-soft: #5e7069;
+  --cn-canvas: #fbf9f5;
+  --cn-surface: #ffffff;
+  --cn-sage: #e8eee8;
+  --cn-line: rgba(17, 48, 42, 0.08);
+  --cn-line-strong: rgba(17, 48, 42, 0.12);
+  --cn-radius-md: 16px;
+  --cn-radius-lg: 24px;
+  --cn-radius-xl: 36px;
+  --cn-max: 1200px;
+
+  background-color: var(--cn-canvas) !important;
+  color: var(--cn-text) !important;
+  font-family: var(--font-sans, Inter, system-ui, sans-serif) !important;
+}
+
+/* 2. Container & Section Rhythm */
+html body .wj-platform .lx-page .lx-sec {
+  padding-block: clamp(68px, 7.5vw, 108px) !important;
+  background-color: transparent !important;
+  position: relative;
+}
+
+html body .wj-platform .lx-page .lx-sec.lx-band {
+  background-color: #f4efe4 !important;
+}
+
+html body .wj-platform .lx-page .lx-sec.lx-first {
+  padding-top: clamp(48px, 6vw, 76px) !important;
+  padding-bottom: clamp(60px, 7vw, 92px) !important;
+}
+
+html body .wj-platform .lx-page .lx-sec > .ip-wrap {
+  width: min(var(--cn-max), 90vw) !important;
+  margin-inline: auto !important;
+  padding-inline: 0 !important;
+}
+
+/* 3. Typography & Section Headings */
+html body .wj-platform .lx-page .lx-eyebrow,
+html body .wj-platform .lx-page .eyebrow {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: var(--cn-amber-ink) !important;
+  margin-bottom: 12px !important;
+  display: inline-block !important;
+}
+
+html body .wj-platform .lx-page .lx-sec .lx-h.lx-h2,
+html body .wj-platform .lx-page .lx-sec h2:not(.lx-card-col h2) {
+  font-family: var(--font-display, 'Playfair Display', Georgia, serif) !important;
+  font-size: clamp(30px, 3.4vw, 44px) !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--cn-ink) !important;
+  text-wrap: balance !important;
+  margin: 0 0 16px !important;
+}
+
+html body .wj-platform .lx-page .lx-sec .lx-h.lx-h2::after {
+  content: none !important;
+}
+
+html body .wj-platform .lx-page .lx-h2 + .lx-rich,
+html body .wj-platform .lx-page .lx-h2 + .lx-text {
+  max-width: 640px !important;
+}
+
+html body .wj-platform .lx-page .lx-h2 + .lx-rich p,
+html body .wj-platform .lx-page .lx-h2 + .lx-text {
+  font-size: 16.5px !important;
+  line-height: 1.72 !important;
+  color: var(--cn-text) !important;
+}
+
+/* 4. Hero Split Section */
+html body .wj-platform .lx-page .lx-hero-split {
+  display: grid !important;
+  grid-template-columns: 1.1fr 0.9fr !important;
+  gap: clamp(36px, 5vw, 68px) !important;
+  align-items: center !important;
+}
+
+html body .wj-platform .lx-page .lx-hero-split-copy {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 18px !important;
+}
+
+html body .wj-platform .lx-page .lx-hero-split-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: #fdf5e6 !important;
+  color: var(--cn-amber-ink) !important;
+  border: 1px solid rgba(221, 160, 54, 0.35) !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  padding: 6px 16px !important;
+  border-radius: 9999px !important;
+}
+
+html body .wj-platform .lx-page .lx-badge-dot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background-color: var(--cn-amber-gold) !important;
+}
+
+html body .wj-platform .lx-page .lx-hero-split-copy :is(h1, .lx-h1) {
+  font-family: var(--font-display, 'Playfair Display', Georgia, serif) !important;
+  font-size: clamp(38px, 4.2vw, 56px) !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--cn-ink) !important;
+  margin: 0 !important;
+}
+
+html body .wj-platform .lx-page .lx-hero-split-copy :is(.lx-tagline, .lx-subtitle, h2) {
+  font-size: clamp(18px, 1.6vw, 22px) !important;
+  font-style: italic !important;
+  color: var(--cn-amber-ink) !important;
+  line-height: 1.35 !important;
+  margin: 0 !important;
+}
+
+html body .wj-platform .lx-page .lx-hero-split-copy .lx-rich p {
+  font-size: clamp(16px, 1.25vw, 17.5px) !important;
+  line-height: 1.7 !important;
+  color: var(--cn-text) !important;
+  max-width: 520px !important;
+}
+
+html body .wj-platform .lx-page .lx-hero-split-frame {
+  border-radius: var(--cn-radius-lg) !important;
+  overflow: hidden !important;
+  box-shadow: 0 16px 40px rgba(17, 48, 42, 0.1) !important;
+  border: 1px solid rgba(17, 48, 42, 0.06) !important;
+  background-color: var(--cn-forest-dark) !important;
+}
+
+html body .wj-platform .lx-page .lx-hero-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  margin-top: 10px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Primary Button in Hero & Sections */
+html body .wj-platform .lx-page .lx-actions .btn-primary,
+html body .wj-platform .lx-page .lx-hero-actions button:first-child,
+html body .wj-platform .lx-page .btn-primary {
+  background-color: var(--cn-amber-gold) !important;
+  color: #112822 !important;
+  font-weight: 600 !important;
+  font-size: 14.5px !important;
+  padding: 12px 24px !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(221, 160, 54, 0.25) !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html body .wj-platform .lx-page .lx-actions .btn-primary:hover,
+html body .wj-platform .lx-page .lx-hero-actions button:first-child:hover,
+html body .wj-platform .lx-page .btn-primary:hover {
+  background-color: var(--cn-amber-gold-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(221, 160, 54, 0.35) !important;
+}
+
+/* Secondary Button */
+html body .wj-platform .lx-page .lx-actions .lx-btn-ghost,
+html body .wj-platform .lx-page .lx-actions .btn-outline {
+  background-color: transparent !important;
+  color: var(--cn-ink) !important;
+  border: 1.5px solid rgba(17, 48, 42, 0.22) !important;
+  font-weight: 600 !important;
+  font-size: 14.5px !important;
+  padding: 11px 22px !important;
+  border-radius: 9999px !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html body .wj-platform .lx-page .lx-actions .lx-btn-ghost:hover,
+html body .wj-platform .lx-page .lx-actions .btn-outline:hover {
+  border-color: var(--cn-ink) !important;
+  background-color: rgba(17, 48, 42, 0.05) !important;
+}
+
+/* 5. Card Grids & Plan / Pricing Cards */
+html body .wj-platform .lx-page .lx-cols.lx-cards {
+  display: grid !important;
+  gap: clamp(24px, 2.5vw, 32px) !important;
+  align-items: stretch !important;
+}
+
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-card-col,
+html body .wj-platform .lx-page .lx-card-col:not(:has(> .lx-stack > .lx-bg)) {
+  background: var(--cn-surface) !important;
+  border: 1px solid var(--cn-line-strong) !important;
+  border-radius: 22px !important;
+  padding: clamp(32px, 3.2vw, 40px) clamp(26px, 2.6vw, 32px) !important;
+  box-shadow: 0 4px 18px rgba(17, 48, 42, 0.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+}
+
+html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-card-col:hover,
+html body .wj-platform .lx-page .lx-card-col:not(:has(> .lx-stack > .lx-bg)):hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 14px 36px rgba(17, 48, 42, 0.09) !important;
+  border-color: rgba(17, 48, 42, 0.24) !important;
+}
+
+/* Card typography inside card grids */
+html body .wj-platform .lx-page .lx-card-col .lx-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
+  min-height: 0 !important;
+  gap: 10px !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col h2:first-child,
+html body .wj-platform .lx-page .lx-card-col .lx-rich:first-child h2 {
+  font-family: var(--font-sans, Inter, sans-serif) !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--cn-ink) !important;
+  line-height: 1.25 !important;
+  margin: 0 0 4px !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col h3,
+html body .wj-platform .lx-page .lx-card-col h4,
+html body .wj-platform .lx-page .lx-card-col h6 {
+  font-family: var(--font-sans, Inter, sans-serif) !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
+  color: var(--cn-text-soft) !important;
+  line-height: 1.4 !important;
+  margin: 2px 0 !important;
+}
+
+/* Price display inside card columns */
+html body .wj-platform .lx-page .lx-card-col :is(h2, h4):has(sup),
+html body .wj-platform .lx-page .lx-card-col [aria-label*="$"],
+html body .wj-platform .lx-page .lx-card-col .lx-price-value,
+html body .wj-platform .lx-page .lx-card-col .price-value {
+  font-family: var(--font-sans, Inter, sans-serif) !important;
+  font-size: clamp(34px, 3.2vw, 42px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--cn-ink) !important;
+  line-height: 1.1 !important;
+  margin: 14px 0 12px !important;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 2px !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col sup,
+html body .wj-platform .lx-page .lx-period,
+html body .wj-platform .lx-page .lx-card-col .price-value small {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--cn-text-soft) !important;
+  text-transform: lowercase !important;
+}
+
+/* Feature Checklists inside cards */
+html body .wj-platform .lx-page .lx-card-col .lx-list,
+html body .wj-platform .lx-page .lx-card-col ul:not(.lx-list) {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 18px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  flex-grow: 1 !important;
+  border-top: 1px solid var(--cn-line) !important;
+  padding-top: 18px !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col .lx-list li,
+html body .wj-platform .lx-page .lx-card-col ul:not(.lx-list) li {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  font-size: 14.5px !important;
+  color: var(--cn-text) !important;
+  line-height: 1.45 !important;
+  position: relative !important;
+  padding-left: 26px !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col .lx-list li::before,
+html body .wj-platform .lx-page .lx-card-col ul:not(.lx-list) li::before {
+  content: "✓" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 1px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  background-color: #fcf1db !important;
+  color: var(--cn-amber-gold-hover) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+/* Featured / Most Popular Plan Card */
+html body .wj-platform .lx-page .lx-card-col:has([aria-label*="Popular"]),
+html body .wj-platform .lx-page .lx-card-col:has(h2:is([aria-label*="Platinum"], [aria-label*="Professional Package"], [aria-label*="Performance"])) {
+  background: #fffefb !important;
+  border: 2px solid var(--cn-amber-gold) !important;
+  box-shadow: 0 10px 30px rgba(221, 160, 54, 0.14) !important;
+  position: relative !important;
+}
+
+/* Card CTA button */
+html body .wj-platform .lx-page .lx-card-col .lx-actions {
+  margin-top: auto !important;
+  padding-top: 22px !important;
+  width: 100% !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col .lx-actions :is(.lx-btn, .btn, a, button) {
+  width: 100% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 13px 20px !important;
+  border-radius: 9999px !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  background-color: var(--cn-forest-dark) !important;
+  color: #ffffff !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col .lx-actions :is(.lx-btn, .btn, a, button):hover {
+  background-color: var(--cn-forest-darker) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Button on featured plan card */
+html body .wj-platform .lx-page .lx-card-col:has([aria-label*="Popular"]) .lx-actions :is(.lx-btn, .btn, a, button),
+html body .wj-platform .lx-page .lx-card-col:has(h2:is([aria-label*="Platinum"], [aria-label*="Professional Package"], [aria-label*="Performance"])) .lx-actions :is(.lx-btn, .btn, a, button) {
+  background-color: var(--cn-amber-gold) !important;
+  color: #112822 !important;
+  box-shadow: 0 2px 8px rgba(221, 160, 54, 0.25) !important;
+}
+
+html body .wj-platform .lx-page .lx-card-col:has([aria-label*="Popular"]) .lx-actions :is(.lx-btn, .btn, a, button):hover,
+html body .wj-platform .lx-page .lx-card-col:has(h2:is([aria-label*="Platinum"], [aria-label*="Professional Package"], [aria-label*="Performance"])) .lx-actions :is(.lx-btn, .btn, a, button):hover {
+  background-color: var(--cn-amber-gold-hover) !important;
+  box-shadow: 0 4px 14px rgba(221, 160, 54, 0.35) !important;
+}
+
+/* Non-plan Feature Cards: First card in soft sage tint */
+html body .wj-platform .lx-page .lx-cols.lx-cards:not(:has([aria-label*="$"])) > .lx-card-col:first-child {
+  background-color: var(--cn-sage) !important;
+  border-color: rgba(17, 48, 42, 0.12) !important;
+}
+
+/* 6. Photo & Split Sections */
+html body .wj-platform .lx-page .lx-cols.lx-split {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: clamp(36px, 5vw, 80px) !important;
+  align-items: center !important;
+}
+
+html body .wj-platform .lx-page .lx-split .lx-img {
+  border-radius: var(--cn-radius-lg) !important;
+  box-shadow: 0 12px 32px rgba(17, 48, 42, 0.08) !important;
+  border: 1px solid rgba(17, 48, 42, 0.05) !important;
+}
+
+/* 7. Dark Accent Sections & Feature Panels */
+html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-bg.has-copy,
+html body .wj-platform .lx-page .lx-sec .ip-wrap > .lx-stack > .lx-bg.has-copy {
+  background-color: var(--cn-forest-dark) !important;
+  border-radius: var(--cn-radius-xl) !important;
+  padding: clamp(52px, 6vw, 76px) clamp(36px, 5vw, 68px) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18) !important;
+}
+
+html body .wj-platform .lx-page .lx-bg.has-copy h2,
+html body .wj-platform .lx-page .lx-bg.has-copy .lx-h {
+  color: #ffffff !important;
+  font-family: var(--font-display, 'Playfair Display', serif) !important;
+}
+
+html body .wj-platform .lx-page .lx-bg.has-copy p {
+  color: #d8e5e0 !important;
+}
+
+html body .wj-platform .lx-page .lx-bg.has-copy .btn-primary,
+html body .wj-platform .lx-page .lx-bg.has-copy .btn-cream {
+  background-color: var(--cn-amber-gold) !important;
+  color: #112822 !important;
+  border: none !important;
+}
+
+/* 8. ServiceExplore Section ("More ways to move forward") at page bottom */
+html body .wj-platform .ip-explore {
+  background-color: var(--cn-canvas) !important;
+  padding-block: clamp(72px, 8vw, 104px) !important;
+  border-top: 1px solid var(--cn-line) !important;
+}
+
+html body .wj-platform .ip-explore .ip-section-heading h2 {
+  font-family: var(--font-display, 'Playfair Display', serif) !important;
+  font-size: clamp(28px, 3vw, 40px) !important;
+  color: var(--cn-ink) !important;
+}
+
+html body .wj-platform .ip-explore .ip-service-card {
+  background: var(--cn-surface) !important;
+  border: 1px solid var(--cn-line-strong) !important;
+  border-radius: 20px !important;
+  padding: 28px 24px !important;
+  box-shadow: 0 4px 14px rgba(17, 48, 42, 0.03) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+html body .wj-platform .ip-explore .ip-service-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 28px rgba(17, 48, 42, 0.08) !important;
+  border-color: rgba(17, 48, 42, 0.2) !important;
+}
+
+html body .wj-platform .ip-explore .ip-service-card h3 {
+  font-size: 18px !important;
+  color: var(--cn-ink) !important;
+}
+
+html body .wj-platform .ip-explore .ip-service-card .ip-card-top svg {
+  color: var(--cn-amber-gold) !important;
+  transition: transform 0.2s ease !important;
+}
+
+html body .wj-platform .ip-explore .ip-service-card:hover .ip-card-top svg {
+  transform: translate(3px, -3px) !important;
+}
+
+/* 9. Closing Pre-Footer Banner */
+html body .wj-platform:has(.lx-page) .wj-closing {
+  background-color: var(--cn-forest-dark) !important;
+  color: #ffffff !important;
+  padding-block: clamp(72px, 8vw, 104px) !important;
+  border-top: none !important;
+}
+
+html body .wj-platform:has(.lx-page) .wj-closing h2 {
+  color: #ffffff !important;
+  font-family: var(--font-display, 'Playfair Display', serif) !important;
+  font-size: clamp(34px, 4vw, 50px) !important;
+}
+
+html body .wj-platform:has(.lx-page) .wj-closing p {
+  color: #d8e5e0 !important;
+  font-size: 17px !important;
+}
+
+html body .wj-platform:has(.lx-page) .wj-closing .btn-cream {
+  background-color: var(--cn-amber-gold) !important;
+  color: #112822 !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(221, 160, 54, 0.25) !important;
+}
+
+html body .wj-platform:has(.lx-page) .wj-closing .text-link {
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+  padding: 10px 22px !important;
+  border-radius: 9999px !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+}
+
+/* 10. Responsive Breakpoints */
+@media (max-width: 1024px) {
+  html body .wj-platform .lx-page .lx-hero-split {
+    grid-template-columns: 1fr !important;
+    text-align: center !important;
+  }
+  html body .wj-platform .lx-page .lx-hero-split-copy {
+    align-items: center !important;
+  }
+  html body .wj-platform .lx-page .lx-hero-actions {
+    justify-content: center !important;
+  }
+  html body .wj-platform .lx-page .lx-cols.lx-cards:where([style*="--cols:4"],[style*="--cols: 4"]) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  html body .wj-platform .lx-page .lx-cols.lx-cards {
+    grid-template-columns: 1fr !important;
+  }
+  html body .wj-platform .lx-page .lx-cols.lx-split {
+    grid-template-columns: 1fr !important;
+  }
+}
