@@ -1,0 +1,86 @@
+[
+  {
+    "slug": "creative-designers-agencies",
+    "title": "Creative designers & agencies",
+    "status": "PUBLISHED",
+    "sortOrder": 1,
+    "excerpt": "A focused base for client work, collaboration, presentations and content production.",
+    "metadata": {
+      "number": "01",
+      "href": "/creative-designers-agencies/",
+      "featuredImage": "/media/c982925218-Group-1597884977.jpg",
+      "alt": "Creative workspace at Workspace Junction",
+      "enabled": true
+    }
+  },
+  {
+    "slug": "e-commerce-online-business",
+    "title": "E-commerce & online business",
+    "status": "PUBLISHED",
+    "sortOrder": 2,
+    "excerpt": "Bring your brand to life with room for product shoots, operations, meetings and growth.",
+    "metadata": {
+      "number": "02",
+      "href": "/e-commerce-online-business/",
+      "featuredImage": "/media/af55bc8a2b-image-17-1.png",
+      "alt": "Workspace for growing online businesses",
+      "enabled": true
+    }
+  },
+  {
+    "slug": "independent-professionals",
+    "title": "Independent professionals",
+    "status": "PUBLISHED",
+    "sortOrder": 3,
+    "excerpt": "A professional place to focus, meet clients and build a stronger everyday routine.",
+    "metadata": {
+      "number": "03",
+      "href": "/coworking/",
+      "featuredImage": "/media/b0cc56da0a-aboutus.png",
+      "alt": "Shared workspace for independent professionals",
+      "enabled": true
+    }
+  },
+  {
+    "slug": "remote-teams-collaborators",
+    "title": "Remote teams & collaborators",
+    "status": "PUBLISHED",
+    "sortOrder": 4,
+    "excerpt": "Come together for planning, presentations and the conversations that work better in person.",
+    "metadata": {
+      "number": "04",
+      "href": "/meeting-rooms/",
+      "featuredImage": "/media/c982925218-Group-1597884977.jpg",
+      "alt": "Meeting space for teams",
+      "enabled": true
+    }
+  },
+  {
+    "slug": "creators-storytellers",
+    "title": "Creators & storytellers",
+    "status": "PUBLISHED",
+    "sortOrder": 5,
+    "excerpt": "Make space for photography, podcasts and the ideas that deserve to be seen and heard.",
+    "metadata": {
+      "number": "05",
+      "href": "/photo-studio/",
+      "featuredImage": "/media/b0cc56da0a-aboutus.png",
+      "alt": "Creative production space",
+      "enabled": true
+    }
+  },
+  {
+    "slug": "founders-growing-businesses",
+    "title": "Founders & growing businesses",
+    "status": "PUBLISHED",
+    "sortOrder": 6,
+    "excerpt": "Connect your workspace, business presence and practical support under one roof.",
+    "metadata": {
+      "number": "06",
+      "href": "/virtual-office/",
+      "featuredImage": "/media/af55bc8a2b-image-17-1.png",
+      "alt": "Business workspace at Workspace Junction",
+      "enabled": true
+    }
+  }
+]

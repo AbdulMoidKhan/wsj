@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "jasie",
+    "name": "Jasie",
+    "role": "Software Engineer",
+    "company": "",
+    "avatar": "/media/9db926fdee-1.png",
+    "quote": "Workspace Junction is perfect for focused work. It is a modern, professional, and ideal hub for freelancers."
+  },
+  {
+    "slug": "podcast-user",
+    "name": "Podcast User",
+    "role": "Content Creator",
+    "company": "",
+    "avatar": "/media/8cc3046f95-3.png",
+    "quote": "I needed a soundproof studio for my podcast. Recording at Workspace Junction has never been easier."
+  },
+  {
+    "slug": "sarah",
+    "name": "Sarah",
+    "role": "Graphic Designer & Design Studio Owner",
+    "company": "",
+    "avatar": "/media/8f336ea9af-2.png",
+    "quote": "WorkSpace Junction transformed how I run my design business. The professional environment, reliable WiFi, and collaborative community helped me land major clients. I went from coffee shop freelancer to established designer."
+  },
+  {
+    "slug": "andrew",
+    "name": "Andrew",
+    "role": "Software Engineer & Tech Consultant",
+    "company": "",
+    "avatar": "/media/abbfc2e9a0-Image-26.png",
+    "quote": "As a software engineer, I need distraction-free focus time. WorkSpace Junction delivers exactly that. The quiet zones are perfect for deep coding, and the professional atmosphere keeps me productive. Best investment in my career."
+  },
+  {
+    "slug": "jamie",
+    "name": "Jamie",
+    "role": "Podcast Producer & Content Creator",
+    "company": "",
+    "avatar": "/media/55dd9ce645-4.png",
+    "quote": "Finding the perfect space to record my podcast was challenging until I discovered WorkSpace Junction. Their soundproof podcast studio and professional environment made launching my show effortless. Highly recommended!"
+  }
+]
