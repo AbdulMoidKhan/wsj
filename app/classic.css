@@ -125,8 +125,8 @@ html body .wj-platform .price-card.featured,html body .wj-platform .pricing-grid
 html body .wj-platform .hp-creative-links,html body .wj-platform .hp-creative-links a{border-color:rgba(227,207,166,.2)}
 
 /* pricing: cards share the row instead of leaving an orphan + empty field */
-html body .wj-platform .pricing-grid.pricing-grid.pricing-grid{display:flex;flex-wrap:wrap;gap:18px}
-html body .wj-platform .pricing-grid.pricing-grid>.price-card{flex:1 1 250px;min-width:0}
+/* pricing-grid layout lives in design-system.css (single grid definition) */
+html body .wj-platform .pricing-grid>.price-card{min-width:0}
 html body .wj-platform .price-card>.eyebrow{align-self:flex-start}
 html body .wj-platform .price-card>.eyebrow::before{display:none}
 html body .wj-platform .price-card.featured>.eyebrow{color:var(--c-forest-950);background:var(--c-champagne-300)}
@@ -552,8 +552,8 @@ html body .wj-platform .lv-faq-photo{aspect-ratio:4/3;margin:26px 0 8px}
 }
 @media (max-width:640px){
   html body .wj-platform .lv-hero{padding-top:12px}
-  html body .wj-platform .lv-hero-stage{width:calc(100% - 24px);height:auto;min-height:560px;border-radius:18px}
-  html body .wj-platform .lv-hero-copy{padding:28px 22px 76px}
+  html body .wj-platform .lv-hero-stage{width:calc(100% - 24px);height:auto;min-height:auto;border-radius:18px}
+  html body .wj-platform .lv-hero-copy{padding:24px 18px 24px}
   html body .wj-platform .lv-dots{left:22px;right:auto;bottom:28px}
   html body .wj-platform .lv-podcast-photos{grid-template-columns:1fr}
   html body .wj-platform .lv-tier-grid,html body .wj-platform .lv-service-grid{grid-template-columns:1fr}
@@ -577,7 +577,7 @@ html body .wj-platform .lv-service.has-text{grid-column:span 6}
   html body .wj-platform .lv-burger{width:42px;height:42px}
 }
 html body .wj-platform .lv-hero-copy{min-height:inherit}
-@media (max-width:640px){html body .wj-platform .lv-hero-stage{min-height:600px} html body .wj-platform .lv-hero-copy{min-height:600px}}
+@media (max-width:640px){html body .wj-platform .lv-hero-stage{min-height:auto;height:auto} html body .wj-platform .lv-hero-copy{min-height:auto;height:auto}}
 @media (max-width:640px){html body .wj-platform .lv-think{gap:10px} html body .wj-platform .lv-think-word{font-size:clamp(28px,9vw,40px)} html body .wj-platform .lv-emblem{width:clamp(100px,30vw,140px)}}
 
 
@@ -712,20 +712,18 @@ html body .wj-platform :is(.lv-primary a,.lv-plans,.lv-tabs button,.lv-pill-mini
 html body .wj-platform .lv-primary a{display:inline-flex;align-items:center}
 html body .wj-platform :is(.lv-icon-btn,.lv-burger){min-width:44px;min-height:44px}
 html body .wj-platform :is(.wj-footer-links a,.wj-footer-top>div>a:not(.wj-footer-brand),.wj-footer-bottom a,.wj-mobile-actions>a){min-height:44px;display:flex;align-items:center}
-html body .wj-platform .lv-dots{position:static;align-self:flex-start;align-items:center;flex-wrap:wrap;margin-top:24px;gap:8px}
-html body .wj-platform .lv-dots button{height:44px;min-width:44px;flex-shrink:0;touch-action:manipulation;transition:background-color var(--dur-fast) ease}
-html body .wj-platform .lv-dots .lv-slide-dot{width:44px;border-radius:4px;background:transparent;position:relative}
-html body .wj-platform .lv-dots .lv-slide-dot::before{content:'';position:absolute;left:3px;right:3px;top:19px;height:6px;margin:0;border-radius:6px;background:rgba(255,255,255,.55)}
-html body .wj-platform .lv-dots .lv-slide-dot[aria-pressed=true]{width:64px;background:transparent}
+html body .wj-platform .lv-dots{position:static;display:inline-flex;align-items:center;margin:0;gap:8px}
+html body .wj-platform .lv-dots button{height:34px;min-width:34px;padding:0;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;touch-action:manipulation;transition:background-color var(--dur-fast) ease}
+html body .wj-platform .lv-dots .lv-slide-dot{width:36px;height:34px;border:0;border-radius:4px;background:transparent;position:relative;cursor:pointer}
+html body .wj-platform .lv-dots .lv-slide-dot::before{content:'';position:absolute;left:3px;right:3px;top:50%;transform:translateY(-50%);height:5px;margin:0;border-radius:5px;background:rgba(255,255,255,.45);transition:background-color var(--dur-fast) ease}
+html body .wj-platform .lv-dots .lv-slide-dot:hover::before{background:rgba(255,255,255,.75)}
+html body .wj-platform .lv-dots .lv-slide-dot[aria-pressed=true]{width:52px;background:transparent}
 html body .wj-platform .lv-dots .lv-slide-dot[aria-pressed=true]::before{background:var(--c-amber)}
-html body .wj-platform .lv-dots .lv-slide-pause{width:auto;padding:0 14px;border:1px solid rgba(255,255,255,.65);border-radius:999px;background:rgba(12,31,27,.7);color:#fff;font:600 13px var(--ff-text)}
-html body .wj-platform .lv-dots .lv-slide-pause::before{content:none}
-html body .wj-platform .lv-dots .lv-slide-pause:hover{background:var(--c-forest-900)}
 html body .wj-platform .lv-hero-stage :is(a,button):focus-visible{outline:3px solid #fff;outline-offset:3px}
 html body .wj-platform .wj-mobile-panel{padding-top:env(safe-area-inset-top);padding-bottom:max(24px,env(safe-area-inset-bottom));scroll-padding-top:90px}
 html body .wj-platform .wj-mobile-panel :is(a,button){scroll-margin-block:90px 24px}
 html body .wj-platform .wj-mobile-top{top:calc(-1 * env(safe-area-inset-top))}
 html body .wj-platform .lv-hero-copy{height:auto;min-height:100%}
-@media(max-width:640px){html body .wj-platform .lv-hero-copy{min-height:600px;padding-bottom:28px}html body .wj-platform .lv-head-right{column-gap:4px}html body .wj-platform .lv-header .wj-brand{flex-shrink:1}html body .wj-platform .lv-header .wj-logo{max-width:100%;object-fit:contain}}
+@media(max-width:640px){html body .wj-platform .lv-hero-copy{min-height:auto;padding-bottom:20px}html body .wj-platform .lv-head-right{column-gap:4px}html body .wj-platform .lv-header .wj-brand{flex-shrink:1}html body .wj-platform .lv-header .wj-logo{max-width:100%;object-fit:contain}}
 @media(prefers-reduced-motion:reduce){html body .wj-platform :is(.lv-slide,.lv-slide-img,.lv-hero-title,.wj-mobile-panel,.lv-studio-panel){animation:none!important;transition:none!important;transform:none!important}}
 html[data-ambient=paused] body .wj-platform .lv-slide-img{transition:none;transform:none}
