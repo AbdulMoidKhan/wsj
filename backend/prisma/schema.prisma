@@ -115,3 +115,252 @@ model Booking {
  @@index([serviceType, status])
  @@index([customerEmail])
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Billing: catalog plans, orders/checkout attempts, Stripe subscriptions,
+// invoices, entitlement ledger, webhook journal and billing audit trail.
+// Additive only. Existing Booking/Inquiry/Content rows are untouched.
+// ─────────────────────────────────────────────────────────────────────────────
+enum BillingType {
+ ONE_TIME
+ RECURRING
+}
+enum BillingInterval {
+ MONTH
+ YEAR
+}
+enum PricingUnit {
+ PACKAGE
+ HOUR
+ DAY
+ SEAT
+ ITEM
+ SESSION
+}
+enum OrderStatus {
+ PENDING
+ PAID
+ PARTIALLY_PAID
+ FAILED
+ EXPIRED
+ CANCELLED
+}
+enum AccessStatus {
+ PENDING
+ ACTIVE
+ PAST_DUE
+ SUSPENDED
+ ENDED
+}
+enum EntitlementKind {
+ COWORKING_DAY
+ MEETING_ROOM_HOUR
+ STUDIO_HOUR
+ CREDIT
+}
+enum WebhookStatus {
+ PENDING
+ PROCESSED
+ FAILED
+ IGNORED
+}
+model Plan {
+ id String @id @default(uuid())
+ slug String @unique
+ name String
+ serviceType String
+ description String @default("")
+ billingType BillingType @default(ONE_TIME)
+ interval BillingInterval?
+ intervalCount Int @default(1)
+ unitAmount Int
+ currency String @default("usd")
+ pricingUnit PricingUnit @default(PACKAGE)
+ durationMinutes Int?
+ minQuantity Int @default(1)
+ maxQuantity Int @default(1)
+ requiresSchedule Boolean @default(false)
+ requiresResource Boolean @default(false)
+ requiresOnboarding Boolean @default(false)
+ trialDays Int @default(0)
+ includedCredits Json @default("[]")
+ metadata Json @default("{}")
+ active Boolean @default(true)
+ archivedAt DateTime?
+ sortOrder Int @default(0)
+ stripeProductId String?
+ stripePriceId String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ orderItems OrderItem[]
+ subscriptions Subscription[]
+ @@index([serviceType, active])
+}
+model Customer {
+ id String @id @default(uuid())
+ email String @unique
+ name String @default("")
+ phone String?
+ stripeCustomerId String? @unique
+ metadata Json @default("{}")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ orders Order[]
+ subscriptions Subscription[]
+ entitlements EntitlementEntry[]
+ invoices Invoice[]
+}
+model Order {
+ id String @id @default(uuid())
+ customerId String
+ customer Customer @relation(fields: [customerId], references: [id])
+ status OrderStatus @default(PENDING)
+ mode String @default("PAYMENT")
+ currency String @default("usd")
+ subtotalAmount Int @default(0)
+ discountAmount Int @default(0)
+ taxAmount Int @default(0)
+ totalAmount Int @default(0)
+ dueNowAmount Int @default(0)
+ recurringAmount Int @default(0)
+ recurringInterval BillingInterval?
+ couponCode String?
+ paymentMethod String @default("STRIPE")
+ stripeCheckoutSessionId String? @unique
+ stripePaymentIntentId String?
+ termsVersion String?
+ termsAcceptedAt DateTime?
+ notes String?
+ metadata Json @default("{}")
+ paidAt DateTime?
+ expiresAt DateTime?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ items OrderItem[]
+ subscriptions Subscription[]
+ @@index([customerId, status])
+ @@index([status, createdAt])
+}
+model OrderItem {
+ id String @id @default(uuid())
+ orderId String
+ order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+ planId String?
+ plan Plan? @relation(fields: [planId], references: [id])
+ description String
+ quantity Int @default(1)
+ unitAmount Int
+ amount Int
+ billingType BillingType @default(ONE_TIME)
+ interval BillingInterval?
+ metadata Json @default("{}")
+ @@index([orderId])
+}
+model Subscription {
+ id String @id @default(uuid())
+ customerId String
+ customer Customer @relation(fields: [customerId], references: [id])
+ orderId String?
+ order Order? @relation(fields: [orderId], references: [id])
+ planId String?
+ plan Plan? @relation(fields: [planId], references: [id])
+ stripeSubscriptionId String @unique
+ stripeCustomerId String
+ stripePriceId String?
+ stripeItemId String?
+ interval BillingInterval @default(MONTH)
+ intervalCount Int @default(1)
+ currency String @default("usd")
+ unitAmount Int @default(0)
+ quantity Int @default(1)
+ stripeStatus String @default("incomplete")
+ accessStatus AccessStatus @default(PENDING)
+ currentPeriodStart DateTime?
+ currentPeriodEnd DateTime?
+ nextInvoiceAt DateTime?
+ cancelAtPeriodEnd Boolean @default(false)
+ cancellationRequestedAt DateTime?
+ cancelAt DateTime?
+ endedAt DateTime?
+ canceledByType String?
+ canceledById String?
+ cancelReason String?
+ paymentFailedAt DateTime?
+ graceEndsAt DateTime?
+ latestInvoiceId String?
+ latestInvoiceUrl String?
+ metadata Json @default("{}")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ invoices Invoice[]
+ entitlements EntitlementEntry[]
+ events BillingEvent[]
+ @@index([customerId])
+ @@index([stripeStatus])
+ @@index([accessStatus])
+}
+model Invoice {
+ id String @id @default(uuid())
+ stripeInvoiceId String @unique
+ subscriptionId String?
+ subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+ customerId String?
+ customer Customer? @relation(fields: [customerId], references: [id])
+ amountDue Int @default(0)
+ amountPaid Int @default(0)
+ currency String @default("usd")
+ status String @default("draft")
+ hostedUrl String?
+ pdfUrl String?
+ periodStart DateTime?
+ periodEnd DateTime?
+ createdAt DateTime @default(now())
+ @@index([subscriptionId])
+}
+model BillingEvent {
+ id String @id @default(uuid())
+ subscriptionId String?
+ subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+ orderId String?
+ customerId String?
+ actorType String @default("SYSTEM")
+ actorId String?
+ actorLabel String?
+ action String
+ fromState String?
+ toState String?
+ reason String?
+ note String?
+ stripeRef String?
+ data Json @default("{}")
+ createdAt DateTime @default(now())
+ @@index([subscriptionId])
+ @@index([createdAt])
+}
+model EntitlementEntry {
+ id String @id @default(uuid())
+ customerId String
+ customer Customer @relation(fields: [customerId], references: [id])
+ subscriptionId String?
+ subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+ kind EntitlementKind
+ delta Int
+ reason String
+ sourceRef String? @unique
+ periodStart DateTime?
+ periodEnd DateTime?
+ createdAt DateTime @default(now())
+ @@index([customerId, kind])
+}
+model WebhookEvent {
+ id String @id @default(uuid())
+ stripeEventId String @unique
+ type String
+ status WebhookStatus @default(PENDING)
+ attempts Int @default(0)
+ error String?
+ payload Json @default("{}")
+ receivedAt DateTime @default(now())
+ processedAt DateTime?
+ @@index([status, receivedAt])
+}

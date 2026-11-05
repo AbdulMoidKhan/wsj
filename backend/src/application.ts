@@ -16,12 +16,21 @@ import {UsersController,OperationsController,ContentController} from './admin';
 import {MediaController} from './media';
 import {PaymentClient} from './payments';
 import {BookingController,BookingAdminController,PublicBookingController,StripeWebhookController} from './booking';
+import {BillingService,BillingWebhookService,PublicBillingController,CustomerPortalController,PlanAdminController,BillingAdminController} from './billing';
 @Module({imports:[ThrottlerModule.forRoot([{ttl:60000,limit:120}])],// PublicBookingController's literal 'public/booking-catalog' route must be
    // registered before PublicController's wildcard 'public/:resource', or the
    // wildcard would match first and this route would be unreachable.
-   controllers:[AuthController,PublicBookingController,PublicController,UsersController,OperationsController,MediaController,BookingController,BookingAdminController,StripeWebhookController,ContentController],providers:[Db,AuthGuard,PaymentClient,{provide:APP_GUARD,useClass:ThrottlerGuard}]})
+   // PublicBillingController's literal 'public/plans' route has the same
+   // constraint, and the admin billing routes must precede ContentController's
+   // wildcard 'admin/:resource'.
+   controllers:[AuthController,PublicBookingController,PublicBillingController,PublicController,UsersController,OperationsController,MediaController,BookingController,BookingAdminController,StripeWebhookController,CustomerPortalController,PlanAdminController,BillingAdminController,ContentController],providers:[Db,AuthGuard,PaymentClient,BillingService,BillingWebhookService,{provide:APP_GUARD,useClass:ThrottlerGuard}]})
 export class AppModule{}
-export async function createApplication(moduleType:any=AppModule){if(!process.env.JWT_SECRET||process.env.JWT_SECRET.length<32)throw new Error('JWT_SECRET must contain at least 32 characters');const origins=frontendOrigins();
+export async function createApplication(moduleType:any=AppModule){if(!process.env.JWT_SECRET||process.env.JWT_SECRET.length<32)throw new Error('JWT_SECRET must contain at least 32 characters');
+// Required billing configuration is reported once at startup. Missing values are
+// never silently bypassed: checkout fails closed and webhooks reject unsigned payloads.
+if(!process.env.STRIPE_SECRET_KEY?.trim())console.warn('[startup] STRIPE_SECRET_KEY is not set: checkout and subscription endpoints will fail until it is configured.');
+if(!process.env.STRIPE_WEBHOOK_SECRET?.trim())console.warn('[startup] STRIPE_WEBHOOK_SECRET is not set: Stripe webhooks will be rejected. Configure a dedicated signing secret for the /api/webhooks/stripe endpoint.');
+const origins=frontendOrigins();
 // rawBody:true makes req.rawBody available on every request (Buffer, alongside
 // the normal parsed JSON body) without disabling JSON parsing elsewhere. The
 // Stripe webhook handler needs the exact raw bytes to verify its signature.
