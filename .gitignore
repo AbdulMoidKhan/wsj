@@ -1,7 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 /node_modules
+/backend/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -10,42 +11,60 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# Production builds
 /.next/
 /out/
-
-# production
 /build
+/dist
+/backend/dist
+# scratch/experimental Next build dirs
+/.next-qa/
+/.next-prod/
+/.next-classic/
+/.next-redesign/
+/.next-billing-build/
 
-# misc
-.DS_Store
+# Testing / coverage
+/coverage
+/test-results/
+/playwright-report/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+/backend/.env
+/backend/.env.*
+!/backend/.env.example
 *.pem
+*.key
 
-# debug
+# Temporary artifacts and logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
+*.log
+.DS_Store
 *.tsbuildinfo
 next-env.d.ts
-/.next-qa/
+
+# Generated QA / capture artifacts
+/screenshots/
+/screenshot/
+/lighthouse/
 /.continuation.lock
 /.continuation-heartbeat.json
-!.env.example
 
+# Agent / editor scratch
+/.claude/worktrees/
+/.agents/tmp/
 
-/.next-redesign/
-.next-classic/
-/.next-prod/
-/test-results/
+# Deploy targets
+.vercel
+
+# Agent prompt scratch (kept locally, not versioned)
+/CLEAN_DEPLOY_MASTER_PROMPT.md
+/FULL_QA_TEST_PROMPT.md
+/GSAP_SCROLL_MOTION_PROMPT.md
+/MOTION_DESIGN_PROMPT.md

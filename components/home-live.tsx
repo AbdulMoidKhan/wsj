@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import Image from '@/components/consistent-image';
 import {useEffect, useState, useRef} from 'react';
 import {ArrowUpRight, Sparkles, ShieldCheck, Clock, MapPin, ChevronLeft, ChevronRight} from 'lucide-react';
 import {BookingButton} from './booking';
@@ -42,13 +42,12 @@ const SLIDES = [
 
 export function HeroSlides() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (paused || hovered || focused) return;
+    if (hovered || focused) return;
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (media.matches) return;
 
@@ -61,7 +60,7 @@ export function HeroSlides() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [paused, hovered, focused]);
+  }, [hovered, focused]);
 
   const slide = SLIDES[index];
 
@@ -152,7 +151,6 @@ export function HeroSlides() {
                 aria-label="Previous slide"
                 onClick={() => {
                   setIndex((index - 1 + SLIDES.length) % SLIDES.length);
-                  setPaused(true);
                 }}
               >
                 <ChevronLeft size={18} aria-hidden="true" />
@@ -163,7 +161,6 @@ export function HeroSlides() {
                 aria-label="Next slide"
                 onClick={() => {
                   setIndex((index + 1) % SLIDES.length);
-                  setPaused(true);
                 }}
               >
                 <ChevronRight size={18} aria-hidden="true" />
@@ -180,20 +177,10 @@ export function HeroSlides() {
                   aria-pressed={i === index}
                   onClick={() => {
                     setIndex(i);
-                    setPaused(true);
                   }}
                 />
               ))}
             </div>
-
-            <button
-              className="lv-slide-pause"
-              type="button"
-              aria-label={paused ? 'Resume slideshow' : 'Pause slideshow'}
-              onClick={() => setPaused(v => !v)}
-            >
-              {paused ? 'Resume' : 'Pause'}
-            </button>
           </div>
         </div>
       </div>

@@ -36,13 +36,16 @@ export function isAddOnId(value: unknown): value is AddOnId { return typeof valu
 
 export class UnknownAddOnError extends Error { constructor(public readonly addOnId: string) { super('Unknown add-on: ' + addOnId); } }
 
-/** Deterministic, server-only total. Throws on any add-on id this catalog does not recognize. */
+/** Deterministic, server-only total. Rejects unknown or repeated add-on ids. */
 export function resolveBookingTotal(planId: PlanId, addOnIds: readonly string[]): { subtotalCents: number; addOnsCents: number; totalCents: number; addOns: CatalogAddOn[] } {
   const plan = PLAN_CATALOG[planId];
   if (!plan) throw new Error('Unknown plan: ' + planId);
   const addOns: CatalogAddOn[] = [];
+  const seen = new Set<AddOnId>();
   for (const id of addOnIds) {
     if (!isAddOnId(id)) throw new UnknownAddOnError(id);
+    if (seen.has(id)) throw new Error('Duplicate add-on: ' + id);
+    seen.add(id);
     addOns.push(ADDON_CATALOG[id]);
   }
   const addOnsCents = addOns.reduce((sum, a) => sum + a.amountCents, 0);

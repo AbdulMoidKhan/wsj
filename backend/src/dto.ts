@@ -51,7 +51,7 @@ export class InquiryListDto {
  @ValidateIf((_object,value)=>value!==undefined) @IsString() @MaxLength(200) search?:string;
  @ValidateIf((_object,value)=>value!==undefined) @IsIn(['NEW','READ','RESOLVED']) status?:string;
 }
-import {IsArray,ArrayMaxSize,IsDateString} from 'class-validator';
+import {IsArray,ArrayMaxSize,ArrayUnique,IsDateString} from 'class-validator';
 import {PLAN_IDS,ADDON_IDS,type PlanId,type AddOnId} from './pricing-catalog';
 export class BookingDto {
  @ApiProperty() @Transform(({value})=>typeof value==='string'?value.trim():value) @IsString() @MinLength(1) @MaxLength(200) customerName!:string;
@@ -68,8 +68,9 @@ export class BookingDto {
  @ValidateIf((_object,value)=>value!==undefined) @Type(()=>Number) @IsInt() @Min(1) @Max(2147483647) duration?:number;
  @ValidateIf((_object,value)=>value!==undefined) @Type(()=>Number) @IsInt() @Min(1) @Max(500) guests?:number;
  // Each element must be a known catalog add-on id; an unrecognized id is
- // rejected here rather than silently dropped or priced as zero.
- @ValidateIf((_object,value)=>value!==undefined) @IsArray() @ArrayMaxSize(ADDON_IDS.length) @IsIn(ADDON_IDS,{each:true}) addOns?:AddOnId[];
+ // rejected here rather than silently dropped or priced as zero. Duplicate
+ // ids are invalid too: selecting an add-on is not a quantity purchase.
+ @ValidateIf((_object,value)=>value!==undefined) @IsArray() @ArrayMaxSize(ADDON_IDS.length) @ArrayUnique({message:'addOns must not contain duplicate IDs'}) @IsIn(ADDON_IDS,{each:true}) addOns?:AddOnId[];
  @ValidateIf((_object,value)=>value!==undefined) @IsString() @MaxLength(5000) notes?:string;
  @ValidateIf((_object,value)=>value!==undefined) @Transform(({value})=>typeof value==='string'?value.trim():value) @IsString() @MinLength(1) @MaxLength(100) couponCode?:string;
  @ValidateIf((_object,value)=>value!==undefined) @IsString() @MaxLength(200) website?:string;

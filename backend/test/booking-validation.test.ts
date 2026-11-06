@@ -74,3 +74,16 @@ test('booking updates reject null and unknown status but accept allowed statuses
  for(const status of ['PENDING','CONFIRMED','CANCELLED','COMPLETED','REFUNDED'])assert.deepEqual(updateErrors({status}),[]);
  for(const status of [null,'INVALID','confirmed','',7])assert.ok(updateErrors({status}).some(error=>error.property==='status'));
 });
+
+
+test('addOns rejects repeated catalog ids with a clear validation message',()=>{
+ for(const addOns of [['printing','printing'],['printing','mail','printing'],['events','events']]){
+  const error=bookingErrors({addOns}).find(error=>error.property==='addOns');
+  assert.equal(error?.constraints?.arrayUnique,'addOns must not contain duplicate IDs');
+ }
+});
+
+test('optional addOns stays optional and distinct selections remain valid',()=>{
+ assert.deepEqual(bookingErrors({addOns:undefined}),[]);
+ assert.deepEqual(bookingErrors({addOns:['events','assistant','podcast','mail','storage','printing']}),[]);
+});

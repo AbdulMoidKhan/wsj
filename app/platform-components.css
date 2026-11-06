@@ -42,9 +42,9 @@
 .wj-platform .ip-highlights .ip-highlight-number{color:#5a6c5f}
 
 /* Popup overlay */
-.popup-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0);pointer-events:none;transition:background .35s}
+.popup-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0);pointer-events:none;transition:background var(--mo-base,280ms) var(--mo-ease-state,cubic-bezier(.4,0,.2,1))}
 .popup-overlay.popup-visible{background:rgba(0,0,0,.55);pointer-events:auto}
-.popup-box{position:relative;background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.18);max-width:560px;width:100%;max-height:90dvh;overflow-y:auto;display:flex;flex-direction:column;opacity:0;transform:translateY(24px) scale(.97);transition:opacity .35s,transform .35s}
+.popup-box{position:relative;background:#fff;border-radius:5px;box-shadow:0 24px 64px rgba(0,0,0,.18);max-width:560px;width:100%;max-height:90dvh;overflow-y:auto;display:flex;flex-direction:column;opacity:0;transform:translateY(14px) scale(.985);transition:opacity var(--mo-base,280ms) var(--mo-ease-state,cubic-bezier(.4,0,.2,1)),transform var(--mo-base,280ms) var(--mo-ease-enter,cubic-bezier(.16,1,.3,1))}
 .popup-visible .popup-box{opacity:1;transform:none}
 .popup-close{position:absolute;top:14px;right:14px;z-index:1;width:36px;height:36px;border:none;background:rgba(0,0,0,.07);border-radius:50%;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#465b51;transition:background .15s}
 .popup-close:hover{background:rgba(0,0,0,.14)}
@@ -57,3 +57,4 @@
 .popup-content a{color:#245438;text-decoration:underline;text-underline-offset:3px}
 .popup-cta{align-self:flex-start;margin-top:4px}
 @media(max-width:480px){.popup-body{padding:24px 20px 20px}.popup-title{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.popup-overlay{transition:background 120ms ease}.popup-box{transform:none;transition:opacity 120ms ease}}

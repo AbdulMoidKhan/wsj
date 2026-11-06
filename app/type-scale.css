@@ -109,7 +109,7 @@ html .archive-intro h1{margin-bottom:22px}
 html .archive-intro p:not(.eyebrow){font-size:var(--fs-lead)}
 html .category-tabs a{font-size:13px;padding:9px 14px}
 html .search-input input{font-size:15px}
-html .pagination a{font-size:var(--fs-sm);width:42px;height:42px}
+html .pagination a{font-size:var(--fs-sm)}
 html .contact-detail h3{font-size:var(--fs-micro)}
 html .contact-detail p,html .contact-detail a{font-size:var(--fs-body)}
 

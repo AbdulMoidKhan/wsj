@@ -6,7 +6,7 @@ import {Db,parsePagination} from './core';
 import {ListDto,InquiryDto,PopupEventDto} from './dto';
 import {serviceSubtypes} from './admin';
 import nodemailer from 'nodemailer';
-export const kinds=['pages','services','pricing','blog','categories','tags','popups','settings','coworking','virtual-office','dedicated-desk','business-address','mailbox','podcast-packages','meeting-rooms','events-space','photo-studio','llc-services','workshops','webinars','memberships'];
+export const kinds=['pages','services','pricing','blog','categories','tags','popups','settings','use-cases','testimonials','coworking','virtual-office','dedicated-desk','business-address','mailbox','podcast-packages','meeting-rooms','events-space','photo-studio','llc-services','workshops','webinars','memberships'];
 export function kind(value:string){if(!kinds.includes(value))throw new NotFoundException();return value;}
 @Controller()
 export class PublicController {

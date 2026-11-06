@@ -3,6 +3,7 @@
 import Image from '@/components/consistent-image';
 import {useState, useEffect, useRef} from 'react';
 import {ChevronUp, ChevronDown, Quote, Star} from 'lucide-react';
+import './testimonials-slider.css';
 
 export type TestimonialItem = {
   id?: string;

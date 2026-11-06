@@ -1,7 +1,7 @@
 'use client';
 import {PUBLIC_API_URL} from '@/lib/public-api';
-import {useEffect, useRef, useState} from 'react';
-import Image from 'next/image';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import Image from '@/components/consistent-image';
 
 type ApiContent = {
   id: string;
@@ -48,6 +48,9 @@ export function Popup({popups}: {popups: ApiContent[]}) {
   const [visible, setVisible] = useState(false);
   const sessionId = useRef('');
   const dismissed = useRef(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     sessionId.current = sid();
@@ -64,6 +67,7 @@ export function Popup({popups}: {popups: ApiContent[]}) {
 
     const show = () => {
       if (dismissed.current) return;
+      triggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       setActive(popup);
       setVisible(true);
       markShown(popup.id);
@@ -101,12 +105,47 @@ export function Popup({popups}: {popups: ApiContent[]}) {
     }
   }, [popups]);
 
-  const close = () => {
+  const close = useCallback(() => {
+    if (closeTimerRef.current) return;
     setVisible(false);
     dismissed.current = true;
     if (active) track(active.id, 'dismiss', sessionId.current);
-    setTimeout(() => setActive(null), 350);
-  };
+    closeTimerRef.current = setTimeout(() => {
+      setActive(null);
+      closeTimerRef.current = null;
+      requestAnimationFrame(() => triggerRef.current?.isConnected && triggerRef.current.focus({preventScroll:true}));
+    }, 160);
+  }, [active]);
+
+  useEffect(() => {
+    if (!visible || !active) return;
+    const overlay = overlayRef.current;
+    const body = document.body;
+    const root = document.documentElement;
+    const scrollX = window.scrollX, scrollY = window.scrollY;
+    const saved = {overflow:body.style.overflow,position:body.style.position,top:body.style.top,left:body.style.left,width:body.style.width,rootOverflow:root.style.overflow};
+    Object.assign(body.style,{overflow:'hidden',position:'fixed',top:-scrollY+'px',left:-scrollX+'px',width:'100%'});
+    root.style.overflow='hidden';
+    requestAnimationFrame(() => overlay?.querySelector<HTMLButtonElement>('.popup-close')?.focus({preventScroll:true}));
+    const keydown = (event:KeyboardEvent) => {
+      if (event.key === 'Escape') {event.preventDefault(); close(); return;}
+      if (event.key !== 'Tab' || !overlay) return;
+      const targets = Array.from(overlay.querySelectorAll<HTMLElement>('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')).filter(el => el.getClientRects().length > 0);
+      const first=targets[0], last=targets[targets.length-1];
+      if (!first) {event.preventDefault(); overlay.focus(); return;}
+      if (event.shiftKey && document.activeElement === first) {event.preventDefault(); last.focus();}
+      else if (!event.shiftKey && document.activeElement === last) {event.preventDefault(); first.focus();}
+    };
+    document.addEventListener('keydown',keydown);
+    return () => {
+      document.removeEventListener('keydown',keydown);
+      Object.assign(body.style,{overflow:saved.overflow,position:saved.position,top:saved.top,left:saved.left,width:saved.width});
+      root.style.overflow=saved.rootOverflow;
+      const behavior=root.style.scrollBehavior;root.style.scrollBehavior='auto';window.scrollTo(scrollX,scrollY);root.style.scrollBehavior=behavior;
+    };
+  }, [visible, active, close]);
+
+  useEffect(() => () => {if (closeTimerRef.current) clearTimeout(closeTimerRef.current);}, []);
 
   if (!active) return null;
 
@@ -119,10 +158,13 @@ export function Popup({popups}: {popups: ApiContent[]}) {
 
   return (
     <div
+      ref={overlayRef}
       className={'popup-overlay' + (visible ? ' popup-visible' : '')}
       role="dialog"
       aria-modal="true"
       aria-label={active.title}
+      tabIndex={-1}
+      data-lenis-prevent
       onClick={e => {if (e.target === e.currentTarget) close();}}
     >
       <div className="popup-box">

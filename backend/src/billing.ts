@@ -332,7 +332,11 @@ export class BillingService {
     let session: Stripe.Checkout.Session;
     try {
       session = await this.stripe().checkout.sessions.create(params, {idempotencyKey: 'checkout:' + order.id});
-    } catch {
+    } catch (error: unknown) {
+      /* Log the provider failure type for operators only; never echo provider
+         detail back to the client, which can disclose account/config internals. */
+      const kind = error && typeof error === 'object' && 'type' in error ? String((error as {type?: unknown}).type) : 'unknown_error';
+      console.error('Stripe checkout session failed for order ' + order.id + ' (' + kind + ')');
       await this.db.order.update({where: {id: order.id}, data: {status: 'FAILED'}});
       await this.record({orderId: order.id, customerId: customer.id, actorType: 'SYSTEM', action: 'CHECKOUT_FAILED', fromState: 'PENDING', toState: 'FAILED'});
       throw new BadRequestException('Unable to start checkout. Please try again.');

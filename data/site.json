@@ -179767,14 +179767,15 @@
       "https://workspacejunction.com/wp-content/cache/background-css/1/workspacejunction.com/wp-content/uploads/elementor/css/post-251.css?ver=1793025915&wpr_t=1793134274",
       "https://workspacejunction.com/wp-content/cache/background-css/1/workspacejunction.com/wp-content/uploads/elementor/css/post-251.css?ver=1793025915&wpr_t=1793134277"
     ],
-    "logo": "/media/c3ab3155ea-logonew.png",
+    "logo": "/media/navbar-logo.png",
     "heroImages": [
       "/media/3675f6dc28-slide-1.png",
       "/media/ec32287da6-slide-2.png",
       "/media/48d393a566-slide-3.png"
     ],
     "primaryColor": "#0E3421",
-    "goldColor": "#D7902A"
+    "goldColor": "#D7902A",
+    "footerLogo": "/media/footer-logo.png"
   },
   "generatedAt": "2026-10-28T01:51:24.409Z",
   "sources": [

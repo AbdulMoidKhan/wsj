@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/consistent-image';
 import {ArrowUpRight, Check, Plus, X} from 'lucide-react';
 import {Fragment, type ReactNode} from 'react';
 import {BookingButton} from './booking';
@@ -6,12 +6,9 @@ import {InquiryForm} from './forms';
 import {LiveTabs} from './live-tabs';
 import {safeContent} from '@/lib/site';
 import livePages from '@/data/live-pages.json';
-// Photos exported from Elementor with a transparent "tab notch" cut into a corner (measured by alpha scan).
-import imageNotches from '@/data/image-notches.json';
 // Transparent cut-out photos (round avatars, isolated objects): show whole, never cover-crop.
 import imageCutouts from '@/data/image-cutouts.json';
 const CUTOUTS = new Set(imageCutouts as string[]);
-const NOTCHES = imageNotches as Record<string, {x: number; y: number; w: number; h: number}>;
 
 /*
   Renders the section structure captured from the live WordPress/Elementor pages
@@ -26,7 +23,7 @@ export type LNode =
   | {t: 'html'; html: string}
   | {t: 'text'; text: string}
   | {t: 'img'; src: string; alt: string; w?: number; h?: number; href?: string}
-  | {t: 'btn'; label: string; href?: string; book?: boolean}
+  | {t: 'btn'; label: string; href?: string; book?: boolean; service?: string}
   | {t: 'list'; items: {text: string; href?: string}[]}
   | {t: 'card'; title?: string; text?: string; img?: {src: string; alt: string; w?: number; h?: number}; href?: string}
   | {t: 'stat'; value: string; label?: string}
@@ -178,8 +175,7 @@ function Leaf({n, ctx}: {n: LNode; ctx: Ctx}): ReactNode {
       const small = !!n.w && n.w <= 240;
       const altText = cleanAlt(n.alt, `${ctx.service || 'Workspace'} space photo`);
       const img = <Image src={n.src} unoptimized={/\.gif$/i.test(n.src)} alt={altText} width={w} height={h} sizes={small ? `${w}px` : '(max-width: 760px) calc(100vw - 40px), (max-width: 1200px) 50vw, 640px'} className={(small ? 'lx-img lx-img-sm' : 'lx-img') + (CUTOUTS.has(n.src) ? ' lx-img-cutout' : '')} style={{['--lx-img-max' as string]: (small ? Math.min(w, 140) : n.w && n.w > 0 ? n.w : null) ? `${small ? Math.min(w, 140) : n.w}px` : undefined}}/>;
-      const crop = small ? undefined : NOTCHES[n.src];
-      const framed = crop ? <span className="lx-crop" style={{aspectRatio: `${(w * crop.w).toFixed(0)} / ${(h * crop.h).toFixed(0)}`, maxWidth: n.w && n.w > 0 && n.w < 800 ? `${Math.round(n.w * crop.w)}px` : undefined, ['--cx' as string]: crop.x, ['--cy' as string]: crop.y, ['--cw' as string]: crop.w, ['--ch' as string]: crop.h}}>{img}</span> : img;
+      const framed = img; // ConsistentImage serves pre-normalized, opaque media.
       return n.href ? <a href={n.href} className="lx-img-link">{framed}</a> : framed;
     }
     case 'btn': {
@@ -187,8 +183,9 @@ function Leaf({n, ctx}: {n: LNode; ctx: Ctx}): ReactNode {
       if (isPeriodTab) {
         return <span className="lx-period-pill">{n.label}</span>;
       }
-      return n.book || !n.href
-        ? <BookingButton className="btn btn-primary lx-btn" service={ctx.service}>{n.label} <ArrowUpRight size={17}/></BookingButton>
+      const isCardBtn = ctx.narrow && (n.label === 'Learn More' || /^(choose plan|book|select|get started|join|reserve|buy)/i.test(n.label) || n.href?.startsWith('#'));
+      return n.book || !n.href || isCardBtn
+        ? <BookingButton className="btn btn-primary lx-btn" service={n.service || ctx.service}>{n.label === 'Learn More' ? 'Choose Plan' : n.label} <ArrowUpRight size={17}/></BookingButton>
         : <a href={n.href} className="lx-btn lx-btn-ghost">{n.label} <ArrowUpRight size={17}/></a>;
     }
     case 'list':
@@ -344,7 +341,24 @@ function Box({n, ctx}: {n: Extract<LNode, {t: 'box'}>; ctx: Ctx}) {
       </div>;
     }
     const grid = <div id={leaves.length ? undefined : n.id} className={'lx-cols' + (split ? ' lx-split' : '') + (cards ? ' lx-cards' : '')} style={{['--cols' as string]: Math.min(activeBoxes.length, 4)}}>
-      {activeBoxes.map((b, i) => <div key={i} className={cards ? 'lx-col lx-card-col' : 'lx-col'}><Box n={b} ctx={{...inner, narrow: cards || activeBoxes.length >= 3}}/></div>)}
+      {activeBoxes.map((b, i) => {
+        const bStr = JSON.stringify(b);
+        const isPlanCard = cards && (bStr.includes('$') || /bronze|silver|gold|platinum|starter|basic package|professional package|premium package/i.test(bStr));
+        const hasBtn = bStr.includes('"t":"btn"');
+        const planTitle = b.t === 'box' ? (b.children.find((c): c is Extract<LNode, {t: 'h'}> => c.t === 'h')?.text ?? '') : '';
+        return (
+          <div key={i} className={cards ? 'lx-col lx-card-col' : 'lx-col'}>
+            <Box n={b} ctx={{...inner, narrow: cards || activeBoxes.length >= 3}}/>
+            {isPlanCard && !hasBtn && (
+              <div className="lx-actions" style={{marginTop: 'auto', paddingTop: '22px', width: '100%'}}>
+                <BookingButton className="btn btn-primary lx-btn" service={ctx.service ? `${ctx.service} - ${planTitle || 'Plan'}` : (planTitle || 'Plan')}>
+                  Choose Plan <ArrowUpRight size={17}/>
+                </BookingButton>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>;
     if (!leaves.length) return grid;
     // Loose headings/copy beside the columns used to be dropped; keep them in source order around the grid.

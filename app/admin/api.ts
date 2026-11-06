@@ -2,6 +2,15 @@ import {PUBLIC_API_URL} from '@/lib/public-api';
 export const API = PUBLIC_API_URL;
 let token: string | null = null;
 export function setToken(value: string | null) { token = value; }
+/** Purge the public site caches so published changes are visible straight away. */
+export async function revalidatePublic(): Promise<boolean> {
+ try {
+  /* Lives under /api so the httpOnly session cookie (path=/api) is sent after a page reload.
+     Next resolves its own app route before the /api/:path* rewrite to the backend. */
+  const response = await fetch('/api/studio-revalidate/', {method: 'POST', headers: token ? {Authorization: 'Bearer ' + token} : {}, credentials: 'include', cache: 'no-store'});
+  return response.ok;
+ } catch { return false; }
+}
 export class ApiError extends Error { constructor(message: string, public status: number) { super(message); } }
 export async function request<T = Record<string, unknown>>(endpoint: string, options: RequestInit = {}): Promise<T> {
  const headers = new Headers(options.headers);

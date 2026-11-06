@@ -81,12 +81,94 @@ export function BookingStatus({id}:{id:string}) {
 }
 
 
+type OrderStatusBody = {id:string;status:string;mode:string;processing:boolean;paymentMethod:string;currency:string;dueNowAmount:number;recurringAmount:number;recurringDescription:string|null;manageToken:string|null;items:Array<{description:string;quantity:number;amount:number;billingType:string}>;subscriptions:Array<{id:string;accessStatus:string;currentPeriodEnd:string|null}>};
+
+/**
+ * Checkout result for the billing catalog. Access is never claimed from the
+ * browser redirect: the page keeps showing "processing" until the backend has
+ * recorded Stripe's confirmation.
+ */
+export function OrderStatus({id}:{id:string}) {
+ const [data, setData] = useState<OrderStatusBody | null>(null);
+ const [notFound, setNotFound] = useState(false);
+ const [timedOut, setTimedOut] = useState(false);
+ const attempts = useRef(0);
+
+ useEffect(() => {
+  let cancelled = false;
+  let timer: ReturnType<typeof setTimeout>;
+  async function poll() {
+   try {
+    const res = await fetch(PUBLIC_API_URL + '/billing/orders/' + encodeURIComponent(id) + '/status', {cache:'no-store'});
+    if (cancelled) return;
+    if (res.status === 404) { setNotFound(true); return; }
+    if (!res.ok) throw new Error('request failed');
+    const body: OrderStatusBody = await res.json();
+    setData(body);
+    attempts.current += 1;
+    if (body.processing && attempts.current < MAX_ATTEMPTS) timer = setTimeout(poll, POLL_MS);
+    else if (body.processing) setTimedOut(true);
+   } catch {
+    attempts.current += 1;
+    if (!cancelled && attempts.current < MAX_ATTEMPTS) timer = setTimeout(poll, POLL_MS);
+    else if (!cancelled) setTimedOut(true);
+   }
+  }
+  void poll();
+  return () => { cancelled = true; clearTimeout(timer); };
+ }, [id]);
+
+ if (notFound) return <>
+  <p>We couldn&apos;t find that purchase.</p>
+  <p><Link href="/">Return home</Link> or <Link href="/contact-us/">contact us</Link> for help.</p>
+ </>;
+
+ if (!data) return <p role="status">Checking your payment status&hellip;</p>;
+
+ const amount = (minor:number) => money(minor/100, data.currency);
+
+ if (data.status === 'PAID') return <>
+  <p role="status"><strong>Payment confirmed.</strong> We received {amount(data.dueNowAmount)} for {data.items.map(item=>item.description).join(', ')}.</p>
+  {data.recurringAmount > 0 && <p>Your subscription renews automatically at {amount(data.recurringAmount)} {data.recurringDescription}. You can stop automatic renewal at any time.</p>}
+  {data.subscriptions[0]?.currentPeriodEnd && <p>Your current paid period runs until {new Date(data.subscriptions[0].currentPeriodEnd).toLocaleDateString(undefined,{dateStyle:'medium'})}.</p>}
+  <p>Reference: <code>{data.id}</code></p>
+  {data.manageToken
+   ? <p><Link href={'/account/?token=' + encodeURIComponent(data.manageToken)}>Manage your subscription</Link></p>
+   : <p><Link href="/account/">Manage your subscription</Link></p>}
+ </>;
+
+ if (data.paymentMethod === 'MANUAL') return <>
+  <p>Your request is recorded and is <strong>awaiting payment</strong>. Our team will contact you to arrange it.</p>
+  <p>Nothing is active until payment is confirmed. Reference: <code>{data.id}</code></p>
+ </>;
+
+ if (data.status === 'EXPIRED' || data.status === 'CANCELLED') return <>
+  <p>This checkout expired before payment completed. No charge was made.</p>
+  <p><Link href="/">Return home</Link> to start again.</p>
+ </>;
+
+ if (data.status === 'FAILED') return <>
+  <p>The payment did not go through, so nothing was charged and no service was activated.</p>
+  <p><Link href="/contact-us/">Contact us</Link> if you need a hand.</p>
+ </>;
+
+ if (timedOut) return <>
+  <p>We&apos;re still waiting for payment confirmation from Stripe. Your purchase is safe: it completes as soon as the confirmation arrives.</p>
+  <p>Reference: <code>{data.id}</code>. Refresh this page in a moment, or <Link href="/contact-us/">contact us</Link> if this continues.</p>
+ </>;
+
+ return <p role="status" aria-live="polite">Confirming your payment&hellip; this usually takes a few seconds.</p>;
+}
+
 export function BookingConfirmationClient() {
  const searchParams = useSearchParams();
  const booking = searchParams.get('booking') || undefined;
+ const order = searchParams.get('order') || undefined;
  return (
   <article className="container wj-policy-body">
-   {booking
+   {order
+    ? <OrderStatus id={order}/>
+    : booking
     ? <BookingStatus id={booking}/>
     : <>
        <p>We couldn&apos;t find a booking reference in this link.</p>

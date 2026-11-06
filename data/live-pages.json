@@ -5662,14 +5662,6 @@
                     "href": ""
                   },
                   {
-                    "text": "Marketplace Sellers",
-                    "href": ""
-                  },
-                  {
-                    "text": "DTC Product Lines",
-                    "href": ""
-                  },
-                  {
                     "text": "DTC Product Lines",
                     "href": ""
                   },
@@ -9503,9 +9495,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Entrepreneurs & Small Business Owners"
               }
             ]
           },
@@ -9591,9 +9584,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Remote & Hybrid Teams"
               }
             ]
           }
@@ -9655,9 +9649,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Tech Shartups & Founders"
               }
             ]
           },
@@ -9807,9 +9802,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Content & Media Creators"
               }
             ]
           },
@@ -9895,9 +9891,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Corporate Trainers & Workshop Facilitators"
               }
             ]
           }
@@ -9959,9 +9956,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Professional Services & Consultants"
               }
             ]
           },
@@ -10047,9 +10045,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Networking & Community Builders"
               }
             ]
           }
@@ -10111,9 +10110,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Trade Show & Brand Activation Teams"
               }
             ]
           },
@@ -10199,9 +10199,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Financial Professionals (Accountant & CPA's)"
               }
             ]
           },
@@ -10287,9 +10288,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Healthcare Professionals"
               }
             ]
           }
@@ -10321,9 +10323,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Architects & Engineering Firms"
               }
             ]
           },
@@ -10379,9 +10382,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Business Coaches & Corporate Trainers"
               }
             ]
           }
@@ -10413,9 +10417,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Remote Corporate Employees"
               }
             ]
           },
@@ -10471,9 +10476,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Small business owners and entrepreneurs"
               }
             ]
           }
@@ -10505,9 +10511,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Real Estate Agents & Brokers"
               }
             ]
           },
@@ -10563,9 +10570,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "Nonprofit Organizations"
               }
             ]
           }
@@ -10655,9 +10663,10 @@
               },
               {
                 "t": "btn",
-                "label": "Explore Industry",
+                "label": "Ask about this industry",
                 "href": "",
-                "book": true
+                "book": true,
+                "service": "PR & communications consultants"
               }
             ]
           }
@@ -12379,9 +12388,9 @@
                 "children": [
                   {
                     "t": "btn",
-                    "label": "View Upcoming Workshops",
-                    "href": "/workshops_list/",
-                    "book": false
+                    "label": "Ask about upcoming workshops",
+                    "href": "",
+                    "book": true
                   },
                   {
                     "t": "btn",
@@ -12487,9 +12496,9 @@
                       },
                       {
                         "t": "btn",
-                        "label": "View Upcoming Workshops",
-                        "href": "/workshops_list/",
-                        "book": false
+                        "label": "Ask about upcoming workshops",
+                        "href": "",
+                        "book": true
                       }
                     ]
                   }
@@ -12859,9 +12868,9 @@
               },
               {
                 "t": "btn",
-                "label": "View Upcoming Workshops",
-                "href": "/workshops_list/",
-                "book": false
+                "label": "Ask about upcoming workshops",
+                "href": "",
+                "book": true
               }
             ]
           }
@@ -18857,106 +18866,111 @@
             "children": [
               {
                 "t": "box",
-                "bg": "/media/2247a3347b-smart-auto-tracking-system.png",
                 "children": [
                   {
-                    "t": "img",
-                    "src": "/media/6b11c487dd-4.gif",
-                    "alt": "4",
-                    "w": 400,
-                    "h": 400
+                    "t": "box",
+                    "bg": "/media/2247a3347b-smart-auto-tracking-system.png",
+                    "children": [
+                      {
+                        "t": "img",
+                        "src": "/media/6b11c487dd-4.gif",
+                        "alt": "4",
+                        "w": 400,
+                        "h": 400
+                      },
+                      {
+                        "t": "h",
+                        "lv": 3,
+                        "text": "Smart Auto-Tracking Video System"
+                      }
+                    ]
                   },
                   {
-                    "t": "h",
-                    "lv": 3,
-                    "text": "Smart Auto-Tracking Video System"
+                    "t": "html",
+                    "html": "<p>Record professional video podcasts without a videographer — our intelligent camera keeps the focus on you so your episodes look polished and dynamic.</p>"
                   }
                 ]
               },
-              {
-                "t": "html",
-                "html": "<p>Record professional video podcasts without a videographer — our intelligent camera keeps the focus on you so your episodes look polished and dynamic.</p>"
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
               {
                 "t": "box",
-                "bg": "/media/3b3b92e6c9-broadcast-quality-soundproofing-audio.png",
                 "children": [
                   {
-                    "t": "img",
-                    "src": "/media/505412cd04-3-1.gif",
-                    "alt": "3 1",
-                    "w": 800,
-                    "h": 600
+                    "t": "box",
+                    "bg": "/media/3b3b92e6c9-broadcast-quality-soundproofing-audio.png",
+                    "children": [
+                      {
+                        "t": "img",
+                        "src": "/media/505412cd04-3-1.gif",
+                        "alt": "3 1",
+                        "w": 800,
+                        "h": 600
+                      },
+                      {
+                        "t": "h",
+                        "lv": 3,
+                        "text": "Broadcast-Quality Soundproofing & Audio"
+                      }
+                    ]
                   },
                   {
-                    "t": "h",
-                    "lv": 3,
-                    "text": "Broadcast-Quality Soundproofing & Audio"
+                    "t": "html",
+                    "html": "<p>Professional sound-treated space ensures crisp, clear audio that rivals studio-level production — no distracting background noise.</p>"
                   }
                 ]
               },
-              {
-                "t": "html",
-                "html": "<p>Professional sound-treated space ensures crisp, clear audio that rivals studio-level production — no distracting background noise.</p>"
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
               {
                 "t": "box",
-                "bg": "/media/659f523f8c-ultra-fast-wifi.png",
                 "children": [
                   {
-                    "t": "img",
-                    "src": "/media/e45222f36f-1.gif",
-                    "alt": "1",
-                    "w": 800,
-                    "h": 600
+                    "t": "box",
+                    "bg": "/media/659f523f8c-ultra-fast-wifi.png",
+                    "children": [
+                      {
+                        "t": "img",
+                        "src": "/media/e45222f36f-1.gif",
+                        "alt": "1",
+                        "w": 800,
+                        "h": 600
+                      },
+                      {
+                        "t": "h",
+                        "lv": 3,
+                        "text": "Ultra-Fast WiFi & Streaming-Ready Setup"
+                      }
+                    ]
                   },
                   {
-                    "t": "h",
-                    "lv": 3,
-                    "text": "Ultra-Fast WiFi & Streaming-Ready Setup"
+                    "t": "html",
+                    "html": "<p>Seamlessly livestream, upload, and collaborate online with high-speed connectivity built for multimedia workflows.</p>"
                   }
                 ]
               },
-              {
-                "t": "html",
-                "html": "<p>Seamlessly livestream, upload, and collaborate online with high-speed connectivity built for multimedia workflows.</p>"
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
               {
                 "t": "box",
-                "bg": "/media/ed4f2ee1e2-creative-comfort-1.png",
                 "children": [
                   {
-                    "t": "img",
-                    "src": "/media/f51ac98156-2.gif",
-                    "alt": "2",
-                    "w": 640,
-                    "h": 640
+                    "t": "box",
+                    "bg": "/media/ed4f2ee1e2-creative-comfort-1.png",
+                    "children": [
+                      {
+                        "t": "img",
+                        "src": "/media/f51ac98156-2.gif",
+                        "alt": "2",
+                        "w": 640,
+                        "h": 640
+                      },
+                      {
+                        "t": "h",
+                        "lv": 3,
+                        "text": "Creative Comfort & Amenities"
+                      }
+                    ]
                   },
                   {
-                    "t": "h",
-                    "lv": 3,
-                    "text": "Creative Comfort & Amenities"
+                    "t": "html",
+                    "html": "<p>Enjoy ergonomic seating, complimentary gourmet coffee, and an inspiring atmosphere built for extended recording sessions.</p>"
                   }
                 ]
-              },
-              {
-                "t": "html",
-                "html": "<p>Enjoy ergonomic seating, complimentary gourmet coffee, and an inspiring atmosphere built for extended recording sessions.</p>"
               }
             ]
           },
@@ -18994,105 +19008,110 @@
             "t": "box",
             "children": [
               {
-                "t": "img",
-                "src": "/media/d978fc3d1e-abd1.jpg",
-                "alt": "abd1",
-                "w": 1024,
-                "h": 572
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "h",
-                "lv": 2,
-                "text": "Studio Features"
+                "t": "box",
+                "children": [
+                  {
+                    "t": "img",
+                    "src": "/media/d978fc3d1e-abd1.jpg",
+                    "alt": "abd1",
+                    "w": 1024,
+                    "h": 572
+                  }
+                ]
               },
               {
-                "t": "card",
-                "title": "Professional broadcast microphones",
-                "text": "",
-                "img": {
-                  "src": "/media/9cefb08c70-proffesional-podcast.svg",
-                  "alt": "proffesional podcast",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Multi-camera video recording",
-                "text": "",
-                "img": {
-                  "src": "/media/312bf8f426-multicamera.svg",
-                  "alt": "multicamera",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Studio lighting for video podcasts",
-                "text": "",
-                "img": {
-                  "src": "/media/e3b1694098-studio-lightning.svg",
-                  "alt": "studio lightning",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "High-quality audio recording and mixing",
-                "text": "",
-                "img": {
-                  "src": "/media/5436aa787b-high-quality-studio.svg",
-                  "alt": "high quality studio",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Comfortable podcast seating and layouts",
-                "text": "",
-                "img": {
-                  "src": "/media/2044649fbb-comfortable-podcast.svg",
-                  "alt": "comfortable podcast",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Professional acoustic environment",
-                "text": "",
-                "img": {
-                  "src": "/media/1c24ce27a1-accoustic-enviorment.svg",
-                  "alt": "accoustic enviorment",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "High-speed internet",
-                "text": "",
-                "img": {
-                  "src": "/media/3ad6b1182e-high-speed-internet.svg",
-                  "alt": "high speed internet",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
+                "t": "box",
+                "children": [
+                  {
+                    "t": "h",
+                    "lv": 2,
+                    "text": "Studio Features"
+                  },
+                  {
+                    "t": "card",
+                    "title": "Professional broadcast microphones",
+                    "text": "",
+                    "img": {
+                      "src": "/media/9cefb08c70-proffesional-podcast.svg",
+                      "alt": "proffesional podcast",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Multi-camera video recording",
+                    "text": "",
+                    "img": {
+                      "src": "/media/312bf8f426-multicamera.svg",
+                      "alt": "multicamera",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Studio lighting for video podcasts",
+                    "text": "",
+                    "img": {
+                      "src": "/media/e3b1694098-studio-lightning.svg",
+                      "alt": "studio lightning",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "High-quality audio recording and mixing",
+                    "text": "",
+                    "img": {
+                      "src": "/media/5436aa787b-high-quality-studio.svg",
+                      "alt": "high quality studio",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Comfortable podcast seating and layouts",
+                    "text": "",
+                    "img": {
+                      "src": "/media/2044649fbb-comfortable-podcast.svg",
+                      "alt": "comfortable podcast",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Professional acoustic environment",
+                    "text": "",
+                    "img": {
+                      "src": "/media/1c24ce27a1-accoustic-enviorment.svg",
+                      "alt": "accoustic enviorment",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "High-speed internet",
+                    "text": "",
+                    "img": {
+                      "src": "/media/3ad6b1182e-high-speed-internet.svg",
+                      "alt": "high speed internet",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  }
+                ]
               }
             ]
           }
@@ -19111,7 +19130,7 @@
               },
               {
                 "t": "html",
-                "html": "<p>Our studio supports multiple podcast formats depending on your content and guests.</p>"
+                "html": "<p>Our studio supports multiple podcast formats depending on your content and guests.</p><p>No matter your format, our studio helps you produce professional-quality content.</p>"
               }
             ]
           },
@@ -19119,73 +19138,69 @@
             "t": "box",
             "children": [
               {
-                "t": "card",
-                "title": "Solo Podcast",
-                "text": "Perfect for personal podcasts, coaching content, and commentary shows.",
-                "img": {
-                  "src": "/media/2be6824b87-solo-podcast.svg",
-                  "alt": "solo podcast",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
+                "t": "box",
+                "children": [
+                  {
+                    "t": "card",
+                    "title": "Solo Podcast",
+                    "text": "Perfect for personal podcasts, coaching content, and commentary shows.",
+                    "img": {
+                      "src": "/media/2be6824b87-solo-podcast.svg",
+                      "alt": "solo podcast",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Interview Podcast",
+                    "text": "Great for host and guest conversations or expert interviews.",
+                    "img": {
+                      "src": "/media/bfd24faee5-interview-podcast.svg",
+                      "alt": "interview podcast",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Panel Podcast",
+                    "text": "Ideal for group discussions with multiple hosts or guests.",
+                    "img": {
+                      "src": "/media/135d7032bf-Group-1597886019.svg",
+                      "alt": "Group 1597886019",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Video Podcast",
+                    "text": "Multi-camera video production for YouTube and social media content.",
+                    "img": {
+                      "src": "/media/1f3d131d4d-video-podcast.svg",
+                      "alt": "video podcast",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  }
+                ]
               },
               {
-                "t": "card",
-                "title": "Interview Podcast",
-                "text": "Great for host and guest conversations or expert interviews.",
-                "img": {
-                  "src": "/media/bfd24faee5-interview-podcast.svg",
-                  "alt": "interview podcast",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Panel Podcast",
-                "text": "Ideal for group discussions with multiple hosts or guests.",
-                "img": {
-                  "src": "/media/135d7032bf-Group-1597886019.svg",
-                  "alt": "Group 1597886019",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Video Podcast",
-                "text": "Multi-camera video production for YouTube and social media content.",
-                "img": {
-                  "src": "/media/1f3d131d4d-video-podcast.svg",
-                  "alt": "video podcast",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "img",
-                "src": "/media/161e3d389e-Podcast-studio.jpg",
-                "alt": "Podcast studio",
-                "w": 365,
-                "h": 280
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "html",
-                "html": "<p>No matter your format, our studio helps you produce professional-quality content.</p>"
+                "t": "box",
+                "children": [
+                  {
+                    "t": "img",
+                    "src": "/media/161e3d389e-Podcast-studio.jpg",
+                    "alt": "Podcast studio",
+                    "w": 365,
+                    "h": 280
+                  }
+                ]
               }
             ]
           }
@@ -19212,76 +19227,81 @@
             "t": "box",
             "children": [
               {
-                "t": "card",
-                "title": "Modern & Tech-Forward",
-                "text": "Perfect for founders, SaaS experts, and innovation innovators.",
-                "img": {
-                  "src": "/media/6fc8aad0d3-Frame-19.svg",
-                  "alt": "Frame 19",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
+                "t": "box",
+                "children": [
+                  {
+                    "t": "card",
+                    "title": "Modern & Tech-Forward",
+                    "text": "Perfect for founders, SaaS experts, and innovation innovators.",
+                    "img": {
+                      "src": "/media/6fc8aad0d3-Frame-19.svg",
+                      "alt": "Frame 19",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Creative & Artistic",
+                    "text": "Ideal for lifestyle, creative, and storytelling podcasts.",
+                    "img": {
+                      "src": "/media/6ac782fabe-Frame-18.svg",
+                      "alt": "Frame 18",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Executive & Professional",
+                    "text": "Built for industry leaders, coaches, and business strategists.",
+                    "img": {
+                      "src": "/media/7992bc5c4d-Frame-19-1.svg",
+                      "alt": "Frame 19 1",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Urban & Energetic",
+                    "text": "Great for culture, entertainment, and youth-focused content.",
+                    "img": {
+                      "src": "/media/7f6e49f31d-Frame-19-2.svg",
+                      "alt": "Frame 19 2",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  },
+                  {
+                    "t": "card",
+                    "title": "Conversational & Intimate",
+                    "text": "Best for interviews, personal-growth, and deep-dialogue formats.",
+                    "img": {
+                      "src": "/media/dd42086f87-Frame-19-5.svg",
+                      "alt": "Frame 19 5",
+                      "w": 56,
+                      "h": 56
+                    },
+                    "href": ""
+                  }
+                ]
               },
               {
-                "t": "card",
-                "title": "Creative & Artistic",
-                "text": "Ideal for lifestyle, creative, and storytelling podcasts.",
-                "img": {
-                  "src": "/media/6ac782fabe-Frame-18.svg",
-                  "alt": "Frame 18",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Executive & Professional",
-                "text": "Built for industry leaders, coaches, and business strategists.",
-                "img": {
-                  "src": "/media/7992bc5c4d-Frame-19-1.svg",
-                  "alt": "Frame 19 1",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Urban & Energetic",
-                "text": "Great for culture, entertainment, and youth-focused content.",
-                "img": {
-                  "src": "/media/7f6e49f31d-Frame-19-2.svg",
-                  "alt": "Frame 19 2",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              },
-              {
-                "t": "card",
-                "title": "Conversational & Intimate",
-                "text": "Best for interviews, personal-growth, and deep-dialogue formats.",
-                "img": {
-                  "src": "/media/dd42086f87-Frame-19-5.svg",
-                  "alt": "Frame 19 5",
-                  "w": 56,
-                  "h": 56
-                },
-                "href": ""
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "img",
-                "src": "/media/291c0b2700-podcast21.jpg",
-                "alt": "podcast21",
-                "w": 800,
-                "h": 447
+                "t": "box",
+                "children": [
+                  {
+                    "t": "img",
+                    "src": "/media/291c0b2700-podcast21.jpg",
+                    "alt": "podcast21",
+                    "w": 800,
+                    "h": 447
+                  }
+                ]
               }
             ]
           }
@@ -19304,83 +19324,88 @@
             "t": "box",
             "children": [
               {
-                "t": "img",
-                "src": "/media/0d288e3909-Group-1597885772.svg",
-                "alt": "Group 1597885772",
-                "w": 58,
-                "h": 55
+                "t": "box",
+                "children": [
+                  {
+                    "t": "img",
+                    "src": "/media/0d288e3909-Group-1597885772.svg",
+                    "alt": "Group 1597885772",
+                    "w": 58,
+                    "h": 55
+                  },
+                  {
+                    "t": "h",
+                    "lv": 3,
+                    "text": "Comprehensive Production Setup"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<p>From soundproof mic systems to optional green screens, dual monitor setups, and lighting — everything you need is ready when you walk in.</p>"
+                  }
+                ]
               },
               {
-                "t": "h",
-                "lv": 3,
-                "text": "Comprehensive Production Setup"
+                "t": "box",
+                "children": [
+                  {
+                    "t": "img",
+                    "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                    "alt": "Group 1597885773",
+                    "w": 53,
+                    "h": 48
+                  },
+                  {
+                    "t": "h",
+                    "lv": 3,
+                    "text": "Professional Output Available"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<p>We take your raw content and deliver broadcast-ready episodes complete with audio optimization, color correction, and intro/outro branding ready for all major platforms (YouTube, Spotify, Apple Podcasts).</p>"
+                  }
+                ]
               },
               {
-                "t": "html",
-                "html": "<p>From soundproof mic systems to optional green screens, dual monitor setups, and lighting — everything you need is ready when you walk in.</p>"
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "img",
-                "src": "/media/0dd0dfccaa-Group-1597885773.svg",
-                "alt": "Group 1597885773",
-                "w": 53,
-                "h": 48
+                "t": "box",
+                "children": [
+                  {
+                    "t": "img",
+                    "src": "/media/5020a1fce3-Group-1597885774.svg",
+                    "alt": "Group 1597885774",
+                    "w": 57,
+                    "h": 48
+                  },
+                  {
+                    "t": "h",
+                    "lv": 3,
+                    "text": "Flexible Booking & Membership Options"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<p>Record as needed with hourly bookings or include podcast studio access as part of your Workspace Junction membership — perfect for frequent creators and occasional users alike.</p>"
+                  }
+                ]
               },
               {
-                "t": "h",
-                "lv": 3,
-                "text": "Professional Output Available"
-              },
-              {
-                "t": "html",
-                "html": "<p>We take your raw content and deliver broadcast-ready episodes complete with audio optimization, color correction, and intro/outro branding ready for all major platforms (YouTube, Spotify, Apple Podcasts).</p>"
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "img",
-                "src": "/media/5020a1fce3-Group-1597885774.svg",
-                "alt": "Group 1597885774",
-                "w": 57,
-                "h": 48
-              },
-              {
-                "t": "h",
-                "lv": 3,
-                "text": "Flexible Booking & Membership Options"
-              },
-              {
-                "t": "html",
-                "html": "<p>Record as needed with hourly bookings or include podcast studio access as part of your Workspace Junction membership — perfect for frequent creators and occasional users alike.</p>"
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "img",
-                "src": "/media/231973d110-Group-1597885775.svg",
-                "alt": "Group 1597885775",
-                "w": 60,
-                "h": 58
-              },
-              {
-                "t": "h",
-                "lv": 3,
-                "text": "Community + Collaboration Built In"
-              },
-              {
-                "t": "html",
-                "html": "<p>Benefit from the surrounding coworking ecosystem — meet guests, co-hosts, innovators, and professionals who can amplify your reach and help you innovate.</p>"
+                "t": "box",
+                "children": [
+                  {
+                    "t": "img",
+                    "src": "/media/231973d110-Group-1597885775.svg",
+                    "alt": "Group 1597885775",
+                    "w": 60,
+                    "h": 58
+                  },
+                  {
+                    "t": "h",
+                    "lv": 3,
+                    "text": "Community + Collaboration Built In"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<p>Benefit from the surrounding coworking ecosystem — meet guests, co-hosts, innovators, and professionals who can amplify your reach and help you innovate.</p>"
+                  }
+                ]
               }
             ]
           }
@@ -19496,103 +19521,79 @@
               {
                 "t": "html",
                 "html": "<p>From recording and collaboration to production-ready output, everything you need stays simple and connected in one professional studio environment. Focus on creating great content while we handle the setup—so you can move faster, stay consistent, and produce with confidence.</p>"
-              },
+              }
+            ]
+          },
+          {
+            "t": "box",
+            "children": [
               {
-                "t": "gallery",
-                "imgs": [
+                "t": "box",
+                "children": [
                   {
-                    "src": "/media/713b18fc9c-slide-4.png",
-                    "alt": "slide-4",
-                    "w": 566,
-                    "h": 367
-                  },
-                  {
-                    "src": "/media/48d393a566-slide-3.png",
-                    "alt": "slide-3",
-                    "w": 566,
-                    "h": 367
-                  },
-                  {
-                    "src": "/media/139b667d22-slide-2.png",
-                    "alt": "slide-2",
-                    "w": 566,
-                    "h": 367
-                  },
-                  {
-                    "src": "/media/1a78f59e17-slide-1.png",
-                    "alt": "Coworking space Near ICNA",
-                    "w": 566,
-                    "h": 367
+                    "t": "card",
+                    "title": "Independent Podcasters",
+                    "text": "Looking for high-quality production without the cost of owning a studio",
+                    "img": {
+                      "src": "/media/a12dfc4660-Frame-1597885108-1.svg",
+                      "alt": "Frame 1597885108 1",
+                      "w": 72,
+                      "h": 72
+                    },
+                    "href": ""
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
+              },
               {
-                "t": "card",
-                "title": "Independent Podcasters",
-                "text": "Looking for high-quality production without the cost of owning a studio",
-                "img": {
-                  "src": "/media/a12dfc4660-Frame-1597885108-1.svg",
-                  "alt": "Frame 1597885108 1",
-                  "w": 72,
-                  "h": 72
-                },
-                "href": ""
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
+                "t": "box",
+                "children": [
+                  {
+                    "t": "card",
+                    "title": "Business Owners & Thought Leaders",
+                    "text": "Aiming to build authority and grow their audience through audio and video content",
+                    "img": {
+                      "src": "/media/c5168e3fd1-Frame-1597885109.svg",
+                      "alt": "Frame 1597885109",
+                      "w": 72,
+                      "h": 72
+                    },
+                    "href": ""
+                  }
+                ]
+              },
               {
-                "t": "card",
-                "title": "Business Owners & Thought Leaders",
-                "text": "Aiming to build authority and grow their audience through audio and video content",
-                "img": {
-                  "src": "/media/c5168e3fd1-Frame-1597885109.svg",
-                  "alt": "Frame 1597885109",
-                  "w": 72,
-                  "h": 72
-                },
-                "href": ""
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
+                "t": "box",
+                "children": [
+                  {
+                    "t": "card",
+                    "title": "Content Creators & Media Professionals",
+                    "text": "Seeking polished, professional-grade recordings",
+                    "img": {
+                      "src": "/media/9083da11aa-Frame-1597885110.svg",
+                      "alt": "Frame 1597885110",
+                      "w": 72,
+                      "h": 72
+                    },
+                    "href": ""
+                  }
+                ]
+              },
               {
-                "t": "card",
-                "title": "Content Creators & Media Professionals",
-                "text": "Seeking polished, professional-grade recordings",
-                "img": {
-                  "src": "/media/9083da11aa-Frame-1597885110.svg",
-                  "alt": "Frame 1597885110",
-                  "w": 72,
-                  "h": 72
-                },
-                "href": ""
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "card",
-                "title": "Teams & Creative Groups",
-                "text": "Producing interviews, panel discussions, and brand storytelling",
-                "img": {
-                  "src": "/media/3652f76ede-Frame-1597885111.svg",
-                  "alt": "Frame 1597885111",
-                  "w": 72,
-                  "h": 72
-                },
-                "href": ""
+                "t": "box",
+                "children": [
+                  {
+                    "t": "card",
+                    "title": "Teams & Creative Groups",
+                    "text": "Producing interviews, panel discussions, and brand storytelling",
+                    "img": {
+                      "src": "/media/3652f76ede-Frame-1597885111.svg",
+                      "alt": "Frame 1597885111",
+                      "w": 72,
+                      "h": 72
+                    },
+                    "href": ""
+                  }
+                ]
               }
             ]
           }
@@ -19664,7 +19665,7 @@
       },
       {
         "t": "box",
-        "bg": "/media/7b11033687-Group-1597885193.png",
+        "bg": "/media/4e8f9c9042-Flexible-Podcast-Recording-Options-2048x1143.jpg.webp",
         "children": [
           {
             "t": "box",
@@ -19812,12 +19813,7 @@
             "t": "h",
             "lv": 2,
             "text": "Studio Gallery"
-          }
-        ]
-      },
-      {
-        "t": "box",
-        "children": [
+          },
           {
             "t": "gallery",
             "imgs": [
@@ -19876,13 +19872,18 @@
                 "html": "<p>Record Your Podcast at Chicagoland Podcast Studio</p><p>Choose the perfect studio environment for your podcast recording. Our studios are designed for solo creators, interviews, and multi-host shows with professional audio and video production.</p>"
               }
             ]
+          },
+          {
+            "t": "box",
+            "children": [
+              {
+                "t": "btn",
+                "label": "Plans & Pricing",
+                "book": true
+              }
+            ]
           }
         ]
-      },
-      {
-        "t": "btn",
-        "label": "Plans & Pricing",
-        "book": true
       },
       {
         "t": "box",
@@ -20023,10 +20024,10 @@
         "children": [
           {
             "t": "img",
-            "src": "/media/10aa7de5b3-image-1-4.png",
-            "alt": "image 1 4",
-            "w": 1170,
-            "h": 406
+            "src": "/media/colorful-coworking-office-scene.png",
+            "alt": "Coworking at Workspace Junction illustration",
+            "w": 1200,
+            "h": 800
           }
         ]
       },
@@ -20500,6 +20501,10 @@
                 "t": "h",
                 "lv": 2,
                 "text": "Built for the Days You Need More"
+              },
+              {
+                "t": "html",
+                "html": "<h5>Some ways to cope with working from home, based on years of experience.</h5><p>Working from home has its advantages — until the distractions start stacking up. Workspace Junction offers a professional coworking environment in Oakbrook Terrace where structure, clarity, and momentum return.</p><p>Whether you need a focused day away from noise or a consistent workspace that supports your growth, our flexible memberships give you access to an environment designed for serious work — without the weight of a traditional office lease.</p>"
               }
             ]
           },
@@ -20510,8 +20515,11 @@
                 "t": "box",
                 "children": [
                   {
-                    "t": "html",
-                    "html": "<h5>Some ways to cope with working from home, based on years of experience.</h5><p>Working from home has its advantages — until the distractions start stacking up. Workspace Junction offers a professional coworking environment in Oakbrook Terrace where structure, clarity, and momentum return. Whether you need a focused day away from noise or a consistent workspace that supports your growth, our flexible memberships give you access to an environment designed for serious work — without the weight of a traditional office lease.</p>"
+                    "t": "img",
+                    "src": "/media/9db926fdee-1.png",
+                    "alt": "Modern kitchen and refreshment bar",
+                    "w": 571,
+                    "h": 411
                   }
                 ]
               },
@@ -20520,25 +20528,8 @@
                 "children": [
                   {
                     "t": "img",
-                    "src": "/media/9db926fdee-1.png",
-                    "alt": "1",
-                    "w": 571,
-                    "h": 411
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "box",
-                "children": [
-                  {
-                    "t": "img",
                     "src": "/media/8f336ea9af-2.png",
-                    "alt": "2",
+                    "alt": "Collaborative workstations and desks",
                     "w": 276,
                     "h": 294
                   }
@@ -20550,7 +20541,7 @@
                   {
                     "t": "img",
                     "src": "/media/8cc3046f95-3.png",
-                    "alt": "3",
+                    "alt": "Conference and team meeting room",
                     "w": 276,
                     "h": 294
                   }
@@ -20561,20 +20552,8 @@
                 "children": [
                   {
                     "t": "img",
-                    "src": "/media/55dd9ce645-4.png",
-                    "alt": "4",
-                    "w": 272,
-                    "h": 294
-                  }
-                ]
-              },
-              {
-                "t": "box",
-                "children": [
-                  {
-                    "t": "img",
                     "src": "/media/85a4df6f6f-5.png",
-                    "alt": "5",
+                    "alt": "Executive boardroom and conference space",
                     "w": 274,
                     "h": 294
                   }
@@ -21079,12 +21058,11 @@
               {
                 "t": "h",
                 "lv": 2,
-                "text": "Unlock Growth"
+                "text": "Join Our Inspiring Events at Workspace Junction"
               },
               {
-                "t": "h",
-                "lv": 2,
-                "text": "Join Our Inspiring Events at Workspace Junction"
+                "t": "html",
+                "html": "<h5>Where Ideas Meet Opportunity</h5><p>At Workspace Junction, community and continuous learning go hand in hand. We host a dynamic lineup of events designed to help you connect with others, gain new insights, and grow professionally.</p><p>From networking mixers and expert-led panels to hands-on workshops, explore our calendar and join a driven community focused on collaboration and real growth.</p>"
               },
               {
                 "t": "box",
@@ -21097,25 +21075,11 @@
                   },
                   {
                     "t": "btn",
-                    "label": "Reserve for Event",
+                    "label": "Reserve Space for Event",
                     "href": "",
                     "book": true
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "h",
-                "lv": 2,
-                "text": "Where Ideas Meet Opportunity"
-              },
-              {
-                "t": "html",
-                "html": "<p>At Workspace Junction, community and continuous learning go hand in hand. We host a dynamic lineup of events designed to help you connect with others, gain new insights, and grow professionally. Whether you’re an entrepreneur, a remote professional, or a solo business owner, our events are built to support your goals.</p><p>From networking mixers and expert-led panels to hands-on workshops, there’s always something happening at workspace junction. Explore our event calendar and join a driven community that’s focused on learning, collaboration, and growth.</p>"
               }
             ]
           }
@@ -21130,29 +21094,6 @@
             "alt": "image 11",
             "w": 1170,
             "h": 406
-          }
-        ]
-      },
-      {
-        "t": "box",
-        "children": [
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "html",
-                "html": "At Workspace Junction, community and continuous learning go hand in hand. We host a dynamic lineup of events designed to help you connect with others, gain new insights, and grow professionally. Whether you’re an entrepreneur, a remote professional, or a solo business owner, our events are built to support your goals."
-              }
-            ]
-          },
-          {
-            "t": "box",
-            "children": [
-              {
-                "t": "html",
-                "html": "From networking mixers and expert-led panels to hands-on workshops, there’s always something happening at Workspace Junction. Explore our event calendar and join a driven community that’s focused on learning, collaboration, and growth."
-              }
-            ]
           }
         ]
       },
@@ -21249,81 +21190,100 @@
         "t": "box",
         "children": [
           {
-            "t": "h",
-            "lv": 2,
-            "text": "Signature Event Series"
+            "t": "box",
+            "children": [
+              {
+                "t": "h",
+                "lv": 2,
+                "text": "Signature Event Series"
+              },
+              {
+                "t": "html",
+                "html": "<p>A curated calendar of regular meetups, skill sprints, and high-impact founder sessions built for professionals, creators, and business leaders in Oakbrook Terrace.</p>"
+              }
+            ]
           },
           {
-            "t": "html",
-            "html": "<p>A Hub for Collaboration, Conversation, and Growth</p>"
-          }
-        ]
-      },
-      {
-        "t": "box",
-        "children": [
-          {
-            "t": "h",
-            "lv": 2,
-            "text": "Founders Fuel Fridays"
-          },
-          {
-            "t": "html",
-            "html": "<p>Monthly networking for entrepreneurs, founders, and startup builders.</p>"
-          },
-          {
-            "t": "h",
-            "lv": 2,
-            "text": "Growth Lab Live"
-          },
-          {
-            "t": "html",
-            "html": "<p>Hands-on business growth workshops on marketing, sales, automation, and scaling.</p>"
-          },
-          {
-            "t": "h",
-            "lv": 2,
-            "text": "Connector Circles"
-          },
-          {
-            "t": "html",
-            "html": "<p> A curated circle where professionals connect, exchange ideas, and create opportunities for growth.</p>"
-          },
-          {
-            "t": "h",
-            "lv": 2,
-            "text": "Pitch & Polish Nights"
-          },
-          {
-            "t": "html",
-            "html": "<p>Members pitch ideas and receive expert feedback in a supportive environment.</p>"
-          },
-          {
-            "t": "h",
-            "lv": 2,
-            "text": "Skill Sprint Sessions"
-          },
-          {
-            "t": "html",
-            "html": "<p>Short, tactical learning workshops (branding, AI tools, CRM, finance, leadership).</p>"
-          },
-          {
-            "t": "h",
-            "lv": 2,
-            "text": "Community Spotlight Evenings"
-          },
-          {
-            "t": "html",
-            "html": "<p>Members showcase their businesses, projects, and stories.</p>"
-          },
-          {
-            "t": "h",
-            "lv": 2,
-            "text": "Corporate to Creator Meetups"
-          },
-          {
-            "t": "html",
-            "html": "<p>Professionals transitioning into entrepreneurship.</p>"
+            "t": "box",
+            "children": [
+              {
+                "t": "card",
+                "title": "Founders Fuel Fridays",
+                "text": "Monthly networking for entrepreneurs, founders, and startup builders to exchange high-momentum ideas.",
+                "img": {
+                  "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                  "alt": "Founders Fuel Fridays",
+                  "w": 44,
+                  "h": 44
+                }
+              },
+              {
+                "t": "card",
+                "title": "Growth Lab Live",
+                "text": "Hands-on business growth workshops on modern marketing, sales funnels, automation, and scaling.",
+                "img": {
+                  "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                  "alt": "Growth Lab Live",
+                  "w": 44,
+                  "h": 44
+                }
+              },
+              {
+                "t": "card",
+                "title": "Connector Circles",
+                "text": "A curated circle where professionals connect, exchange valuable insights, and build strategic partnerships.",
+                "img": {
+                  "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                  "alt": "Connector Circles",
+                  "w": 44,
+                  "h": 44
+                }
+              },
+              {
+                "t": "card",
+                "title": "Pitch & Polish Nights",
+                "text": "Members pitch business concepts and receive constructive expert feedback in a supportive community setting.",
+                "img": {
+                  "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                  "alt": "Pitch & Polish Nights",
+                  "w": 44,
+                  "h": 44
+                }
+              },
+              {
+                "t": "card",
+                "title": "Skill Sprint Sessions",
+                "text": "Short, tactical learning workshops covering AI tools, branding, CRM architectures, finance, and leadership.",
+                "img": {
+                  "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                  "alt": "Skill Sprint Sessions",
+                  "w": 44,
+                  "h": 44
+                }
+              },
+              {
+                "t": "card",
+                "title": "Community Spotlight Evenings",
+                "text": "Members showcase their businesses, projects, and personal stories to celebrate growth and foster collaboration.",
+                "img": {
+                  "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                  "alt": "Community Spotlight Evenings",
+                  "w": 44,
+                  "h": 44
+                }
+              },
+              {
+                "t": "card",
+                "title": "Corporate to Creator Meetups",
+                "text": "Dedicated sessions for corporate professionals transitioning into independent entrepreneurship.",
+                "img": {
+                  "src": "/media/0dd0dfccaa-Group-1597885773.svg",
+                  "alt": "Corporate to Creator Meetups",
+                  "w": 44,
+                  "h": 44
+                }
+              }
+            ]
           }
         ]
       },
@@ -21337,6 +21297,35 @@
                 "t": "h",
                 "lv": 2,
                 "text": "Private Event Types You Can Host Here"
+              },
+              {
+                "t": "html",
+                "html": "<h5>Turnkey Space for Workshops, Mixers, and Launches</h5><p>Looking for a modern, fully-equipped venue in Oakbrook Terrace? Our versatile event space accommodates up to 50 guests with flexible seating arrangements, high-speed WiFi, AV presentation gear, and catering support.</p>"
+              },
+              {
+                "t": "html",
+                "html": "<div class=\"lx-event-types-list\"><span>Business Workshops</span><span>Product Launches</span><span>Networking Mixers</span><span>Panel Discussions</span><span>Mastermind Groups</span><span>Podcast Live Recordings</span><span>Coaching Sessions</span><span>Brand Activations</span><span>Creator Meetups</span></div>"
+              },
+              {
+                "t": "html",
+                "html": "<div class=\"lx-event-capacity-tag\"><span class=\"lx-badge-dot\" aria-hidden=\"true\"></span><span>Up to 50 Guests • Flexible Seating • 4K AV Setup • Catering Allowed</span></div>"
+              },
+              {
+                "t": "box",
+                "children": [
+                  {
+                    "t": "btn",
+                    "label": "Reserve Space",
+                    "href": "",
+                    "book": true
+                  },
+                  {
+                    "t": "btn",
+                    "label": "Review Pricing",
+                    "href": "#events-table",
+                    "book": false
+                  }
+                ]
               }
             ]
           },
@@ -21344,128 +21333,11 @@
             "t": "box",
             "children": [
               {
-                "t": "box",
-                "children": [
-                  {
-                    "t": "html",
-                    "html": "<p>These are bookable event categories:</p>"
-                  },
-                  {
-                    "t": "box",
-                    "children": [
-                      {
-                        "t": "box",
-                        "children": [
-                          {
-                            "t": "list",
-                            "items": [
-                              {
-                                "text": "Business Workshops",
-                                "href": ""
-                              },
-                              {
-                                "text": "Product Launches",
-                                "href": ""
-                              },
-                              {
-                                "text": "Networking Mixers",
-                                "href": ""
-                              },
-                              {
-                                "text": "Panel Discussions",
-                                "href": ""
-                              },
-                              {
-                                "text": "Mastermind Groups",
-                                "href": ""
-                              },
-                              {
-                                "text": "Podcast Live Recordings",
-                                "href": ""
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "t": "box",
-                        "children": [
-                          {
-                            "t": "list",
-                            "items": [
-                              {
-                                "text": "Podcast Live Recordings",
-                                "href": ""
-                              },
-                              {
-                                "text": "Coaching Sessions",
-                                "href": ""
-                              },
-                              {
-                                "text": "Coaching Sessions",
-                                "href": ""
-                              },
-                              {
-                                "text": "Brand Activations",
-                                "href": ""
-                              },
-                              {
-                                "text": "Content Creator Meetups",
-                                "href": ""
-                              },
-                              {
-                                "text": "Trade Show Prep Sessions",
-                                "href": ""
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "t": "box",
-                    "children": [
-                      {
-                        "t": "html",
-                        "html": "<p>Capacity:</p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Up to 50 guests | Flexible seating | AV setup | Catering allowed</p>"
-                      },
-                      {
-                        "t": "box",
-                        "children": [
-                          {
-                            "t": "btn",
-                            "label": "Reserve Space",
-                            "href": "",
-                            "book": true
-                          },
-                          {
-                            "t": "btn",
-                            "label": "Pricing",
-                            "href": "",
-                            "book": true
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "t": "box",
-                "children": [
-                  {
-                    "t": "img",
-                    "src": "/media/9cc9bda081-Rectangle-5663-3.png",
-                    "alt": "Rectangle 5663 3",
-                    "w": 672,
-                    "h": 426
-                  }
-                ]
+                "t": "img",
+                "src": "/media/9cc9bda081-Rectangle-5663-3.png",
+                "alt": "Modern event space at Workspace Junction",
+                "w": 672,
+                "h": 426
               }
             ]
           }
@@ -21555,8 +21427,22 @@
       },
       {
         "t": "box",
-        "bg": "/media/7b11033687-Group-1597885193.png",
         "children": [
+          {
+            "t": "box",
+            "id": "events-table",
+            "children": [
+              {
+                "t": "h",
+                "lv": 2,
+                "text": "Affordable Event Space Rental Packages"
+              },
+              {
+                "t": "html",
+                "html": "<p>Explore transparent event space rental packages in Oakbrook Terrace at Workspace Junction. Perfect for workshops, networking mixers, seminars, and corporate gatherings with presentation screens, flexible seating layouts, and dedicated staff support.</p>"
+              }
+            ]
+          },
           {
             "t": "box",
             "children": [
@@ -21564,167 +21450,32 @@
                 "t": "box",
                 "children": [
                   {
-                    "t": "box",
-                    "id": "events-table",
-                    "children": [
-                      {
-                        "t": "h",
-                        "lv": 2,
-                        "text": "Private Event Types You Can Host Here"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Explore affordable event space rental packages in Oak Brook at Workspace Junction, perfect for workshops, networking events, seminars, and community gatherings. Our professional venue accommodates up to 50 guests and includes WiFi, presentation screens, and flexible seating layouts. Members receive discounted pricing and priority booking for hosting events.</p>"
-                      }
-                    ]
+                    "t": "h",
+                    "lv": 3,
+                    "text": "Community Package"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<p>Perfect for small meetups, workshops, and community gatherings.</p><div class=\"lx-pkg-meta\"><p><strong>Duration:</strong> Up to 2 hours</p><p><strong>Capacity:</strong> Up to 30 guests</p></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-prices\"><div class=\"lx-pkg-price-mem\"><p>Members: <strong>$120</strong></p></div><div class=\"lx-pkg-price-non\"><p>Non-Members: <strong>$180</strong></p></div></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-features\"><h6>What's Included</h6><ul> <li>Event space access</li> <li>Flexible seating setup</li> <li>High-speed WiFi</li> <li>Presentation screen / TV</li> <li>Whiteboard / flip chart</li> <li>Basic event support from staff</li> </ul></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-bestfor\"><h6>Best For</h6><ul> <li>Meetups</li> <li>Small workshops</li> <li>Study groups</li> <li>Community discussions</li> </ul></div>"
                   },
                   {
                     "t": "box",
                     "children": [
                       {
-                        "t": "h",
-                        "lv": 2,
-                        "text": "Community Package"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Perfect for small meetups, workshops, and community gatherings.</p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p><strong>Duration:</strong> Up to 2 hours</p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p><strong>Capacity:</strong> Up to 30 guests</p>"
-                      },
-                      {
-                        "t": "h",
-                        "lv": 4,
-                        "text": "Includes:"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<ul> <li>Event space access</li> <li>Flexible seating setup</li> <li>High-speed WiFi</li> <li>Presentation screen / TV</li> <li>Whiteboard / flip chart</li> <li>Basic event support from staff</li> </ul>"
-                      },
-                      {
-                        "t": "h",
-                        "lv": 4,
-                        "text": "Best for:"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<ul> <li>Meetups</li> <li>Small workshops</li> <li>Study groups</li> <li>Community discussions</li> </ul>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Members: <strong>$120</strong></p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Non-Members: <strong>$180</strong></p>"
-                      },
-                      {
                         "t": "btn",
-                        "label": "Book Now",
-                        "href": "",
-                        "book": true
-                      },
-                      {
-                        "t": "h",
-                        "lv": 2,
-                        "text": "Professional Package"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Ideal for structured workshops, training sessions, and networking events.</p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p><strong>Duration:</strong> Up to 4 hours</p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p><strong>Capacity:</strong> Up to 50 guests</p>"
-                      },
-                      {
-                        "t": "h",
-                        "lv": 4,
-                        "text": "Includes:"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<ul> <li>Event space access</li> <li>Flexible seating arrangement</li> <li>High-speed WiFi</li> <li>Large presentation screen</li> <li>Whiteboards and markers</li> <li>Basic AV support</li> <li>Setup assistance before event</li> <li>Access to lounge areas</li> </ul>"
-                      },
-                      {
-                        "t": "h",
-                        "lv": 4,
-                        "text": "Best for:"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<ul> <li>Business workshops</li> <li>Startup meetups</li> <li>Professional seminars</li> <li>Training sessions</li> </ul>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Members: <strong>$280</strong></p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Non-Members: <strong>$400</strong></p>"
-                      },
-                      {
-                        "t": "btn",
-                        "label": "Book Now",
-                        "href": "",
-                        "book": true
-                      },
-                      {
-                        "t": "h",
-                        "lv": 2,
-                        "text": "Premium Event Package"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Designed for full events, panels, and special gatherings.</p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p><strong>Duration:</strong> Up to 8 hours</p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p><strong>Capacity:</strong> Up to 50 guests</p>"
-                      },
-                      {
-                        "t": "h",
-                        "lv": 4,
-                        "text": "Includes:"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<ul> <li>Full-day access to event space</li> <li>Custom seating layout</li> <li>High-speed WiFi</li> <li>AV setup for presentations</li> <li>Dedicated event support</li> <li>Lounge access</li> <li>Event promotion (optional)</li> <li>Extended setup time</li> </ul>"
-                      },
-                      {
-                        "t": "h",
-                        "lv": 4,
-                        "text": "Best for:"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<ul> <li>Conferences</li> <li>Panel discussions</li> <li>Networking events</li> <li>Launch events</li> <li>Community programs</li> </ul>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Members: <strong>$520</strong></p>"
-                      },
-                      {
-                        "t": "html",
-                        "html": "<p>Non-Members: <strong>$720</strong></p>"
-                      },
-                      {
-                        "t": "btn",
-                        "label": "Book Now",
+                        "label": "Book This Package",
                         "href": "",
                         "book": true
                       }
@@ -21736,51 +21487,71 @@
                 "t": "box",
                 "children": [
                   {
-                    "t": "box",
-                    "children": [
-                      {
-                        "t": "html",
-                        "html": "<p>Explore upcoming events, connect with leaders, and host experiences that elevate your brand.</p>"
-                      },
-                      {
-                        "t": "list",
-                        "items": [
-                          {
-                            "text": "View Calendar",
-                            "href": "/events_list/"
-                          }
-                        ]
-                      },
-                      {
-                        "t": "btn",
-                        "label": "Become a Member",
-                        "href": "",
-                        "book": true
-                      },
-                      {
-                        "t": "list",
-                        "items": [
-                          {
-                            "text": "Reach out with Inquiries",
-                            "href": "#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjEzNjA2IiwidG9nZ2xlIjpmYWxzZX0%3D"
-                          }
-                        ]
-                      },
-                      {
-                        "t": "btn",
-                        "label": "Book an Event",
-                        "href": "",
-                        "book": true
-                      }
-                    ]
+                    "t": "h",
+                    "lv": 3,
+                    "text": "Professional Package"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<p>Ideal for structured workshops, training sessions, and networking events.</p><div class=\"lx-pkg-meta\"><p><strong>Duration:</strong> Up to 4 hours</p><p><strong>Capacity:</strong> Up to 50 guests</p></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-prices\"><div class=\"lx-pkg-price-mem\"><p>Members: <strong>$280</strong></p></div><div class=\"lx-pkg-price-non\"><p>Non-Members: <strong>$400</strong></p></div></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-features\"><h6>What's Included</h6><ul> <li>Event space access</li> <li>Flexible seating arrangement</li> <li>High-speed WiFi</li> <li>Large presentation screen</li> <li>Whiteboards and markers</li> <li>Basic AV support</li> <li>Setup assistance before event</li> <li>Access to lounge areas</li> </ul></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-bestfor\"><h6>Best For</h6><ul> <li>Business workshops</li> <li>Startup meetups</li> <li>Professional seminars</li> <li>Training sessions</li> </ul></div>"
                   },
                   {
                     "t": "box",
                     "children": [
                       {
-                        "t": "h",
-                        "lv": 4,
-                        "text": "Don’t Just Attend Events. Become Part of the Community."
+                        "t": "btn",
+                        "label": "Book This Package",
+                        "href": "",
+                        "book": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "t": "box",
+                "children": [
+                  {
+                    "t": "h",
+                    "lv": 3,
+                    "text": "Premium Event Package"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<p>Designed for full events, panels, and special gatherings.</p><div class=\"lx-pkg-meta\"><p><strong>Duration:</strong> Up to 8 hours</p><p><strong>Capacity:</strong> Up to 50 guests</p></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-prices\"><div class=\"lx-pkg-price-mem\"><p>Members: <strong>$520</strong></p></div><div class=\"lx-pkg-price-non\"><p>Non-Members: <strong>$720</strong></p></div></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-features\"><h6>What's Included</h6><ul> <li>Full-day access to event space</li> <li>Custom seating layout</li> <li>High-speed WiFi</li> <li>AV setup for presentations</li> <li>Dedicated event support</li> <li>Lounge access</li> <li>Event promotion (optional)</li> <li>Extended setup time</li> </ul></div>"
+                  },
+                  {
+                    "t": "html",
+                    "html": "<div class=\"lx-pkg-bestfor\"><h6>Best For</h6><ul> <li>Conferences</li> <li>Panel discussions</li> <li>Networking events</li> <li>Launch events</li> <li>Community programs</li> </ul></div>"
+                  },
+                  {
+                    "t": "box",
+                    "children": [
+                      {
+                        "t": "btn",
+                        "label": "Book This Package",
+                        "href": "",
+                        "book": true
                       }
                     ]
                   }

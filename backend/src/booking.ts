@@ -13,6 +13,7 @@ import {frontendOrigins} from './origins';
 import {CURRENCY,PLAN_CATALOG,publicCatalog,resolveBookingTotal,UnknownAddOnError,type PlanId} from './pricing-catalog';
 import nodemailer from 'nodemailer';
 import {PaymentClient} from './payments';
+import {BillingWebhookService} from './billing';
 
 
 async function sendBookingEmail(subject: string, item: {customerName:string;customerEmail:string;customerPhone?:string|null;serviceName:string;bookingDate?:string|null;bookingTime?:string|null;guests?:number|null;totalPrice:number;notes?:string|null}): Promise<string> {
@@ -105,7 +106,7 @@ export class BookingController {
 
 @Controller('webhooks')
 export class StripeWebhookController {
- constructor(@Inject(Db) private db:Db,@Inject(PaymentClient) private payments:PaymentClient=new PaymentClient()){}
+ constructor(@Inject(Db) private db:Db,@Inject(PaymentClient) private payments:PaymentClient=new PaymentClient(),@Inject(BillingWebhookService) private billing?:BillingWebhookService){}
  // No AuthGuard/Origin check: this endpoint is called server-to-server by
  // Stripe, authenticated purely by the signed payload below. @Throttle is a
  // high ceiling, not a rate limit on legitimate Stripe delivery.
@@ -116,6 +117,14 @@ export class StripeWebhookController {
   let event:Stripe.Event;
   try{event=this.payments.client().webhooks.constructEvent(req.rawBody,signature,secret);}
   catch{return res.status(400).json({message:'Invalid signature'});}
+
+  // Billing (orders, subscriptions, invoices) is journaled and processed idempotently
+  // by its own service. Legacy booking events keep the original path below.
+  if(BillingWebhookService.handles(event)){
+   if(!this.billing)return res.status(200).json({received:true,ignored:'billing processor unavailable'});
+   try{const outcome=await this.billing.process(event);return res.status(200).json({received:true,outcome});}
+   catch{console.error('[stripe-webhook] billing processing failed; retry required');return res.status(503).json({received:false,message:'Temporary processing failure'});}
+  }
 
   try{
    if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){

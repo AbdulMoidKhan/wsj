@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/consistent-image';
 const widths=[384,640,828,867];
 const sizes='(max-width: 650px) 100vw, (max-width: 900px) 50vw, (min-width: 1920px) 1018px, 53vw';
 const srcSet=(format:string)=>widths.map(width=>`/media/optimized/home-hero-${width}.${format} ${width}w`).join(', ');

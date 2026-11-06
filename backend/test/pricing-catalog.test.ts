@@ -43,3 +43,15 @@ test('publicCatalog exposes the exact same priced data the server will charge, n
  assert.deepEqual(catalog.addOns.map(a=>a.id).sort(),[...ADDON_IDS].sort());
  for(const plan of catalog.plans)assert.equal(plan.amountCents,PLAN_CATALOG[plan.id].amountCents);
 });
+
+
+test('duplicate add-on ids are rejected before a total can be charged',()=>{
+ for(const id of ADDON_IDS){
+  for(const ids of [[id,id],[id,...ADDON_IDS.filter(other=>other!==id),id]]){
+   assert.throws(()=>resolveBookingTotal('bronze',ids),{message:'Duplicate add-on: '+id});
+  }
+ }
+ const ids=['printing','mail','printing'];
+ assert.throws(()=>resolveBookingTotal('silver',ids));
+ assert.deepEqual(ids,['printing','mail','printing']);
+});

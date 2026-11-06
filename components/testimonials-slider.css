@@ -1,0 +1,299 @@
+
+/* Dedicated Testimonials Slider CSS - Workspace Junction Luxury Design */
+.wj-testimonials-sec {
+  background: #193c32 !important;
+  color: #ffffff !important;
+  padding: clamp(60px, 8vw, 100px) 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.wj-testimonials-sec .ip-wrap {
+  width: min(1200px, calc(100% - 80px));
+  margin: 0 auto;
+}
+
+.lx-vslider-container {
+  width: 100%;
+  margin-top: 0;
+  position: relative;
+}
+
+.lx-vslider-layout {
+  display: grid !important;
+  grid-template-columns: minmax(260px, 340px) 1fr !important;
+  gap: clamp(36px, 5vw, 64px) !important;
+  align-items: center !important;
+}
+
+/* Sidebar */
+.lx-vslider-sidebar {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 16px !important;
+}
+
+.lx-vslider-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 14px !important;
+  border-radius: 999px !important;
+  background: rgba(217, 145, 11, 0.16) !important;
+  border: 1px solid rgba(217, 145, 11, 0.55) !important;
+  color: #f3c87a !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+.lx-vslider-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #d9910b !important;
+  box-shadow: 0 0 8px rgba(217, 145, 11, 0.7) !important;
+}
+
+.lx-vslider-heading {
+  font-family: var(--font-display), "Playfair Display", Georgia, serif !important;
+  font-size: clamp(32px, 3.8vw, 48px) !important;
+  font-weight: 500 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+.lx-vslider-rating {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.lx-vslider-stars {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 3px !important;
+}
+
+.lx-vslider-star {
+  color: #d9910b !important;
+  fill: #d9910b !important;
+  display: inline-block !important;
+}
+
+.lx-vslider-score {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: #eef1ea !important;
+}
+
+.lx-vslider-desc {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  color: rgba(238, 241, 234, 0.82) !important;
+  margin: 0 !important;
+}
+
+.lx-vslider-nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  margin-top: 12px !important;
+}
+
+.lx-vslider-arrows {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.lx-vslider-arrow {
+  display: grid !important;
+  place-items: center !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.lx-vslider-arrow:hover,
+.lx-vslider-arrow:focus-visible {
+  background: #d9910b !important;
+  border-color: #d9910b !important;
+  color: #193c32 !important;
+}
+
+.lx-vslider-dots {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.lx-vslider-dots .lx-vdot {
+  position: relative !important;
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.38) !important;
+  border: none !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+}
+
+.lx-vslider-dots .lx-vdot.is-active {
+  width: 24px !important;
+  background: #d9910b !important;
+  border-radius: 5px !important;
+}
+
+/* Stage & Track */
+.lx-vslider-stage {
+  position: relative !important;
+  width: 100% !important;
+  height: 380px !important;
+  overflow: hidden !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%) !important;
+}
+
+.lx-vslider-track {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+/* Individual Testimonial Item */
+.lx-vitem {
+  position: absolute !important;
+  top: 50% !important;
+  left: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: clamp(22px, 2.5vw, 32px) !important;
+  border-radius: 5px !important;
+  box-sizing: border-box !important;
+  background: #15362c !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  cursor: pointer !important;
+  transform-origin: center center !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, filter 0.5s ease !important;
+}
+
+.lx-vitem.is-active {
+  transform: translateY(-50%) scale(1) !important;
+  opacity: 1 !important;
+  filter: none !important;
+  z-index: 3 !important;
+  border-color: rgba(217, 145, 11, 0.7) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38) !important;
+  pointer-events: auto !important;
+}
+
+.lx-vitem.is-prev {
+  transform: translateY(calc(-50% - 110px)) scale(0.92) !important;
+  opacity: 0.5 !important;
+  filter: blur(2px) !important;
+  z-index: 2 !important;
+}
+
+.lx-vitem.is-next {
+  transform: translateY(calc(-50% + 110px)) scale(0.92) !important;
+  opacity: 0.5 !important;
+  filter: blur(2px) !important;
+  z-index: 2 !important;
+}
+
+.lx-vitem.is-hidden {
+  transform: translateY(-50%) scale(0.8) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  z-index: 1 !important;
+}
+
+.lx-vitem-quote-row {
+  display: flex !important;
+  gap: 16px !important;
+  align-items: flex-start !important;
+  margin-bottom: 20px !important;
+}
+
+.lx-vitem-quote-icon {
+  color: #d9910b !important;
+  flex-shrink: 0 !important;
+  margin-top: 2px !important;
+}
+
+.lx-vitem-quote {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.lx-vitem-quote p {
+  font-size: clamp(15px, 1.6vw, 18px) !important;
+  line-height: 1.65 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  font-weight: 400 !important;
+}
+
+.lx-vitem-footer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding-top: 18px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+}
+
+.lx-vitem-avatar {
+  border-radius: 50% !important;
+  border: 2px solid #d9910b !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+}
+
+.lx-vitem-meta {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.lx-vitem-name {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  font-style: normal !important;
+}
+
+.lx-vitem-role {
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.lx-vitem-company {
+  font-size: 12px !important;
+  color: #d9910b !important;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .lx-vslider-layout {
+    grid-template-columns: 1fr !important;
+    gap: 36px !important;
+  }
+  .lx-vslider-stage {
+    height: 320px !important;
+  }
+}
