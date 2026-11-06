@@ -1,41 +1,139 @@
 name: Deploy to VPS
 
+# Deploys Workspace Junction only (wp.workspacejunction.com).
+# Scope guarantees:
+#   - every command runs inside /root/wsj-next
+#   - only the wsj-web and wsj-backend PM2 processes are restarted
+#   - no server-wide service restarts, no nginx reload, no reboot
+#   - no destructive database commands (migrate deploy only; never reset/push --force-reset)
+#   - no secret or environment values are ever printed
+#   - build output is backed up first and restored automatically if health checks fail
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+# Never let two deploys of this app overlap.
+concurrency:
+  group: wsj-vps-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
-    name: Deploy wsj
+    name: Deploy Workspace Junction
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     steps:
-      - name: Run deploy on VPS
+      - name: Deploy and verify on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
-          command_timeout: 20m
+          command_timeout: 25m
           script: |
-            set -e
-            echo "=== Pulling latest changes on VPS ==="
-            cd /root/wsj-next
-            GIT_SSH_COMMAND="ssh -i /root/.ssh/id_ed25519_wsj -o IdentitiesOnly=yes" git pull origin main
+            set -euo pipefail
 
-            echo "=== Building Next.js production bundle ==="
+            APP_DIR=/root/wsj-next
+            BACKUP_ROOT=/root/wsj-backups
+            BK="$BACKUP_ROOT/ci-$(date +%Y%m%d-%H%M%S)"
+            DEPLOY_KEY=/root/.ssh/id_ed25519_wsj
+
+            # --- guard: only ever operate on the confirmed Workspace Junction checkout ---
+            if [ ! -f "$APP_DIR/package.json" ] || [ ! -d "$APP_DIR/.git" ]; then
+              echo "ABORT: $APP_DIR is not the Workspace Junction git checkout"
+              exit 1
+            fi
+            cd "$APP_DIR"
+
+            PREV_REV="$(git rev-parse HEAD)"
+            echo "--- pre-deploy ---"
+            echo "dir          : $APP_DIR"
+            echo "current rev  : $PREV_REV"
+
+            # --- backup current build output so a bad build can be undone ---
+            mkdir -p "$BK"
+            echo "$PREV_REV" > "$BK/GIT_REVISION.txt"
+            if [ -d .next ]; then tar czf "$BK/next-build.tgz" .next; fi
+            if [ -d backend/dist ]; then tar czf "$BK/backend-dist.tgz" backend/dist; fi
+            # retain only the 5 newest CI backups for this app
+            ls -1dt "$BACKUP_ROOT"/ci-* 2>/dev/null | tail -n +6 | xargs -r rm -rf
+            echo "backup       : $BK"
+
+            rollback() {
+              echo "!! deploy failed - restoring $PREV_REV and previous build"
+              cd "$APP_DIR" || exit 1
+              git reset --hard "$PREV_REV" >/dev/null 2>&1 || true
+              rm -rf .next backend/dist
+              if [ -f "$BK/next-build.tgz" ]; then tar xzf "$BK/next-build.tgz" -C "$APP_DIR"; fi
+              if [ -f "$BK/backend-dist.tgz" ]; then tar xzf "$BK/backend-dist.tgz" -C "$APP_DIR"; fi
+              pm2 restart wsj-backend --update-env >/dev/null 2>&1 || true
+              pm2 restart wsj-web --update-env >/dev/null 2>&1 || true
+              echo "rollback complete"
+              exit 1
+            }
+            trap rollback ERR
+
+            # --- fast-forward only: never rewrite or force anything ---
+            echo "--- fetching origin/main ---"
+            GIT_SSH_COMMAND="ssh -i $DEPLOY_KEY -o IdentitiesOnly=yes" git fetch --quiet origin main
+            git merge --ff-only origin/main
+            NEW_REV="$(git rev-parse HEAD)"
+            echo "deploying rev: $NEW_REV"
+
+            # --- dependencies (idempotent; preserves existing node_modules) ---
+            echo "--- installing dependencies ---"
+            npm install --no-audit --no-fund --silent
+            npm --prefix backend install --no-audit --no-fund --silent
+
+            # --- database: generate client, apply pending migrations only ---
+            # migrate deploy never drops data and never resets the database.
+            echo "--- prisma generate + migrate deploy ---"
+            npm --prefix backend run prisma:generate --silent
+            npm --prefix backend run db:migrate --silent
+
+            # --- builds ---
+            echo "--- building backend (NestJS) ---"
+            npm --prefix backend run build
+            echo "--- building frontend (Next.js) ---"
             npm run build
-            pm2 restart wsj-web
 
-            echo "=== Building NestJS backend ==="
-            cd /root/wsj-next/backend
-            npm run build
-            pm2 restart wsj-backend
+            # --- restart ONLY the two Workspace Junction processes ---
+            echo "--- restarting wsj-backend and wsj-web ---"
+            pm2 restart wsj-backend --update-env
+            pm2 restart wsj-web --update-env
+            pm2 save >/dev/null
 
-            echo "=== Verifying health checks ==="
-            sleep 4
-            curl -sf http://127.0.0.1:4000/api/health | grep -q ok && echo "API healthy"
-            curl -sf http://127.0.0.1:3600/ | grep -qi html && echo "Web healthy"
-            echo "=== Deployment to wp.workspacejunction.com complete! ==="
+            # --- health checks: fail the deploy (and roll back) if anything is unhealthy ---
+            echo "--- health checks ---"
+            check() {
+              local label="$1" url="$2" expect="$3" i code
+              for i in 1 2 3 4 5 6 7 8 9 10; do
+                code="$(curl -s -o /tmp/wsj_hc.out -w '%{http_code}' -m 20 "$url" || true)"
+                if [ "$code" = "200" ] && grep -qi "$expect" /tmp/wsj_hc.out; then
+                  echo "  PASS $label ($code)"
+                  return 0
+                fi
+                sleep 3
+              done
+              echo "  FAIL $label (last status $code)"
+              return 1
+            }
+
+            check "api/health"        "http://127.0.0.1:4000/api/health"              '"status"'
+            check "api/public/plans" "http://127.0.0.1:4000/api/public/plans"         'slug'
+            check "web root"         "http://127.0.0.1:3600/"                         '<html'
+
+            for p in / /use-cases/ /memberships/ /coworking/ /meeting-rooms/ /services/ /contact-us/; do
+              code="$(curl -s -o /dev/null -w '%{http_code}' -m 25 "https://wp.workspacejunction.com$p" || true)"
+              if [ "$code" != "200" ]; then
+                echo "  FAIL public page $p ($code)"
+                false
+              fi
+              echo "  PASS public page $p ($code)"
+            done
+
+            trap - ERR
+            echo "--- deploy complete: $PREV_REV -> $NEW_REV ---"

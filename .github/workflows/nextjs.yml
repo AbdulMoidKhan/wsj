@@ -4,12 +4,10 @@
 #
 name: Deploy Next.js site to Pages
 
+# DISABLED on push: Workspace Junction is deployed to its own VPS by deploy.yml.
+# This GitHub Pages workflow cannot host the NestJS API or server-rendered routes,
+# so it failed on every push. Left in place for manual runs only.
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
