@@ -138,7 +138,18 @@ function reducer(s:S,a:A):S{
   }
 }
 
-function CalendarPicker({selected,onChange}:{selected:string;onChange:(d:string)=>void}){
+const MEMBERSHIP_CIRCLES = [
+  'Community Circles',
+  'Founder Circle',
+  'Healthcare Entrepreneurs Circle',
+  'Finance & Investment Circle',
+  'Legal Professionals Circle',
+  'Restaurant & Catering Owners Circle',
+  'Tech Innovators Circle',
+  'Marketing Leaders Circle',
+];
+
+function CalendarPicker({selected,onChange,blockToday=false}:{selected:string;onChange:(d:string)=>void;blockToday?:boolean}){
   const today=new Date();
   const [yr,setYr]=useState(today.getFullYear());
   const [mo,setMo]=useState(today.getMonth());
@@ -149,7 +160,12 @@ function CalendarPicker({selected,onChange}:{selected:string;onChange:(d:string)
   for(let d=1;d<=daysInMonth;d++)cells.push(d);
   const prev=()=>{if(mo===0){setMo(11);setYr(y=>y-1);}else setMo(m=>m-1);};
   const next=()=>{if(mo===11){setMo(0);setYr(y=>y+1);}else setMo(m=>m+1);};
-  const isPast=(d:number)=>{const dt=new Date(yr,mo,d);dt.setHours(0,0,0,0);const t=new Date();t.setHours(0,0,0,0);return dt<t;};
+  const isPast=(d:number)=>{
+    const dt=new Date(yr,mo,d);dt.setHours(0,0,0,0);
+    const t=new Date();t.setHours(0,0,0,0);
+    if(blockToday)t.setDate(t.getDate()+1);
+    return dt<t;
+  };
   const toStr=(d:number)=>`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   const isToday=(d:number)=>d===today.getDate()&&mo===today.getMonth()&&yr===today.getFullYear();
   const DAY_NAMES=['Su','Mo','Tu','We','Th','Fr','Sa'];
@@ -479,6 +495,8 @@ export function BookingDialog({service,plan:preselectedPlan,onClose}:{service?:s
                     <span className="bk-detail-price">{money(plan.unitAmount,currency)}<small style={{fontSize:14,fontWeight:400}}> {priceSuffix(plan)}</small></span>
                   </div>
                   {plan.description&&<p className="bk-detail-desc">{plan.description}</p>}
+                  {plan.serviceType==='llc-setup'&&<p className="bk-detail-desc" style={{borderLeft:'3px solid #d9910b',paddingLeft:10}}><strong>State Filing Fees:</strong> Note that mandatory Illinois Secretary of State statutory filing fees ($150) are separate from our formation service fee.</p>}
+                  {plan.serviceType==='memberships'&&plan.interval==='YEAR'&&<p className="bk-detail-desc" style={{color:'#214d3e'}}><strong>Annual Savings:</strong> You save over 16% (equivalent to 2 free months) with annual billing.</p>}
                   {plan.billingType==='RECURRING'&&<p className="bk-detail-desc"><strong>This is a subscription.</strong> It renews {plan.intervalDescription} automatically until you cancel. You can stop renewal any time from your account.</p>}
                   {plan.requiresOnboarding&&<p className="bk-detail-desc">This service needs a short onboarding step after payment; our team will reach out to complete it.</p>}
                   {plan.maxQuantity>1&&(
@@ -538,10 +556,18 @@ export function BookingDialog({service,plan:preselectedPlan,onClose}:{service?:s
 
           {step==='schedule'&&(
             <>
-              <CalendarPicker selected={s.date} onChange={v=>{dispatch({t:'SET_FIELD',k:'date',v});setQuote(null);}}/>
+              <CalendarPicker selected={s.date} blockToday={s.serviceType==='coworking'} onChange={v=>{dispatch({t:'SET_FIELD',k:'date',v});setQuote(null);}}/>
+              {s.date&&s.serviceType==='dedicated'&&(
+                <div className="bk-plan-fallback-note" style={{marginTop:12,padding:'10px 14px',background:'var(--bk-sand)',borderRadius:5}}>
+                  <strong>30-Day Reservation:</strong> {s.date} to {new Date(new Date(s.date).getTime()+30*86400000).toISOString().split('T')[0]}
+                </div>
+              )}
               {s.date&&(
                 <div className="bk-time-section">
-                  <div className="bk-time-title">Select a start time{plan?.pricingUnit==='HOUR'?' ('+s.quantity+' hour'+(s.quantity===1?'':'s')+')':plan?.durationMinutes?' ('+plan.durationMinutes+' minutes)':''}</div>
+                  <div className="bk-time-title">
+                    {s.serviceType==='dedicated'?'Select arrival window on day 1':s.serviceType==='coworking'?'Select arrival window (08:00 – 19:00)':s.serviceType==='llc-setup'?'Select onboarding consultation slot':'Select a start time'}
+                    {plan?.pricingUnit==='HOUR'?' ('+s.quantity+' hour'+(s.quantity===1?'':'s')+')':plan?.durationMinutes?' ('+plan.durationMinutes+' minutes)':''}
+                  </div>
                   <div className="bk-time-grid">
                     {TIME_SLOTS.map(ts=>(
                       <button key={ts} type="button" aria-pressed={s.time===ts} className={'bk-time-slot'+(s.time===ts?' selected':'')} onClick={()=>{dispatch({t:'SET_FIELD',k:'time',v:ts});setQuote(null);}}>{ts}</button>
@@ -575,8 +601,11 @@ export function BookingDialog({service,plan:preselectedPlan,onClose}:{service?:s
                 </div>
                 {plan?.serviceType==='memberships'?(
                   <div className="bk-field">
-                    <label className="bk-label" htmlFor="bk-circle">Membership circle (optional)</label>
-                    <input id="bk-circle" className="bk-input" type="text" placeholder="Which circle would you like to join?" maxLength={120} readOnly={s.submitting} value={s.circle} onChange={e=>dispatch({t:'SET_FIELD',k:'circle',v:e.target.value})}/>
+                    <label className="bk-label" htmlFor="bk-circle">Industry Circle (required)</label>
+                    <select id="bk-circle" className="bk-input" value={s.circle} onChange={e=>dispatch({t:'SET_FIELD',k:'circle',v:e.target.value})} required>
+                      <option value="">Select your professional Circle</option>
+                      {MEMBERSHIP_CIRCLES.map(c=><option key={c} value={c}>{c}</option>)}
+                    </select>
                   </div>
                 ):(
                   <div className="bk-field">

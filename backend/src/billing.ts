@@ -87,6 +87,7 @@ export class PlanDto {
   @IsOptional() @IsArray() includedCredits?: unknown[];
   @IsOptional() @Type(() => Number) @IsInt() @Min(-2147483648) @Max(2147483647) sortOrder?: number;
   @IsOptional() @IsBoolean() active?: boolean;
+  @IsOptional() metadata?: Record<string, unknown>;
 }
 
 export class PlanUpdateDto extends PlanDto {}
@@ -791,15 +792,25 @@ export class BillingWebhookService {
 
 @Controller()
 export class PublicBillingController {
+  private static plansCache = new Map<string, { time: number; data: any }>();
+
+  static clearCache() {
+    PublicBillingController.plansCache.clear();
+  }
+
   constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService) {}
 
   @Get('public/plans') @Throttle({default: {limit: 600, ttl: 60000}})
   async plans(@Query('serviceType') serviceType?: string) {
+    const cacheKey = serviceType || '__all__';
+    const hit = PublicBillingController.plansCache.get(cacheKey);
+    if (hit && Date.now() - hit.time < 30000) return hit.data;
+
     const items = await this.db.plan.findMany({
       where: {active: true, archivedAt: null, ...(serviceType ? {serviceType} : {})},
       orderBy: [{serviceType: 'asc'}, {sortOrder: 'asc'}, {unitAmount: 'asc'}],
     });
-    return {
+    const result = {
       termsVersion: BILLING_TERMS_VERSION,
       items: items.map(plan => ({
         slug: plan.slug,
@@ -822,6 +833,8 @@ export class PublicBillingController {
         metadata: plan.metadata,
       })),
     };
+    this.plansCache.set(cacheKey, { time: Date.now(), data: result });
+    return result;
   }
 
   /** Price preview: identical server maths to checkout, no Stripe objects created. */
@@ -976,6 +989,7 @@ export class PlanAdminController {
   @Post() @Roles('ADMIN', 'EDITOR') async create(@ValidatedBody(PlanDto) dto: PlanDto, @Req() req: {user: {id: string; email: string}}) {
     this.validate(dto);
     const item = await this.db.plan.create({data: this.data(dto)});
+    PublicBillingController.clearCache();
     await this.billing.record({actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'PLAN_CREATED', toState: item.slug, data: {unitAmount: item.unitAmount, billingType: item.billingType}});
     return item;
   }
@@ -985,6 +999,7 @@ export class PlanAdminController {
     if (!existing) throw new NotFoundException();
     this.validate(dto);
     const item = await this.db.plan.update({where: {id}, data: this.data(dto)});
+    PublicBillingController.clearCache();
     await this.billing.record({
       actorType: 'ADMIN',
       actorId: req.user.id,
@@ -1003,6 +1018,7 @@ export class PlanAdminController {
     const existing = await this.db.plan.findUnique({where: {id}});
     if (!existing) throw new NotFoundException();
     const item = await this.db.plan.update({where: {id}, data: {active: false, archivedAt: new Date()}});
+    PublicBillingController.clearCache();
     await this.billing.record({actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'PLAN_ARCHIVED', fromState: 'active', toState: 'archived', data: {slug: item.slug}});
     return {archived: true};
   }
@@ -1037,6 +1053,7 @@ export class PlanAdminController {
       includedCredits: (dto.includedCredits ?? []) as object,
       sortOrder: dto.sortOrder ?? 0,
       active: dto.active ?? true,
+      metadata: (dto.metadata ?? {}) as object,
     };
   }
 }
