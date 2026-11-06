@@ -76,6 +76,17 @@ jobs:
             }
             trap rollback ERR
 
+            # --- working tree must be clean before a fast-forward ---
+            # npm install can rewrite lockfiles on the server; that drift is expected and
+            # is discarded. Any OTHER local modification is a human change: stop instead.
+            git checkout -- package-lock.json backend/package-lock.json 2>/dev/null || true
+            DIRTY="$(git status --porcelain)"
+            if [ -n "$DIRTY" ]; then
+              echo "ABORT: unexpected local changes in $APP_DIR (not deploying over them):"
+              echo "$DIRTY"
+              exit 1
+            fi
+
             # --- fast-forward only: never rewrite or force anything ---
             echo "--- fetching origin/main ---"
             GIT_SSH_COMMAND="ssh -i $DEPLOY_KEY -o IdentitiesOnly=yes" git fetch --quiet origin main
@@ -87,6 +98,8 @@ jobs:
             echo "--- installing dependencies ---"
             npm install --no-audit --no-fund --silent
             npm --prefix backend install --no-audit --no-fund --silent
+            # keep the checkout clean: npm may rewrite lockfiles on the server
+            git checkout -- package-lock.json backend/package-lock.json 2>/dev/null || true
 
             # --- database: generate client, apply pending migrations only ---
             # migrate deploy never drops data and never resets the database.
