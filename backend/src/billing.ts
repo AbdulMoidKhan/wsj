@@ -790,12 +790,12 @@ export class BillingWebhookService {
 
 /* ───────────────────────────── Public API ───────────────────────────── */
 
+const globalPlansCache = new Map<string, { time: number; data: any }>();
+
 @Controller()
 export class PublicBillingController {
-  private static plansCache = new Map<string, { time: number; data: any }>();
-
   static clearCache() {
-    PublicBillingController.plansCache.clear();
+    globalPlansCache.clear();
   }
 
   constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService) {}
@@ -803,7 +803,7 @@ export class PublicBillingController {
   @Get('public/plans') @Throttle({default: {limit: 600, ttl: 60000}})
   async plans(@Query('serviceType') serviceType?: string) {
     const cacheKey = serviceType || '__all__';
-    const hit = PublicBillingController.plansCache.get(cacheKey);
+    const hit = globalPlansCache.get(cacheKey);
     if (hit && Date.now() - hit.time < 30000) return hit.data;
 
     const items = await this.db.plan.findMany({
@@ -833,7 +833,7 @@ export class PublicBillingController {
         metadata: plan.metadata,
       })),
     };
-    this.plansCache.set(cacheKey, { time: Date.now(), data: result });
+    globalPlansCache.set(cacheKey, { time: Date.now(), data: result });
     return result;
   }
 
@@ -965,7 +965,11 @@ export class PlanAdminController {
 
   @Get() async list(@ValidatedQuery(BillingListDto) q: BillingListDto) {
     const {page, limit, skip, take, search} = parsePagination(q, 10);
-    const where = {...(search ? {OR: [{name: {contains: search, mode: 'insensitive' as const}}, {slug: {contains: search, mode: 'insensitive' as const}}, {serviceType: {contains: search, mode: 'insensitive' as const}}]} : {})};
+    const where = {
+      ...(search ? {OR: [{name: {contains: search, mode: 'insensitive' as const}}, {slug: {contains: search, mode: 'insensitive' as const}}, {serviceType: {contains: search, mode: 'insensitive' as const}}]} : {}),
+      ...(q.serviceType ? {serviceType: q.serviceType} : {}),
+      ...(q.status === 'PUBLISHED' ? {active: true, archivedAt: null} : q.status === 'DRAFT' ? {active: false, archivedAt: null} : q.status === 'ARCHIVED' ? {archivedAt: {not: null}} : {}),
+    };
     const [items, total] = await Promise.all([this.db.plan.findMany({where, skip, take, orderBy: [{serviceType: 'asc'}, {sortOrder: 'asc'}]}), this.db.plan.count({where})]);
     return {
       items: items.map(plan => ({
