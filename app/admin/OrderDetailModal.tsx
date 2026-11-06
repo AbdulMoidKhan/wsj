@@ -64,7 +64,7 @@ export function OrderDetailModal({item, onClose}: {item: Json; onClose: () => vo
             <span className="adm-badge" style={{fontSize: 13, padding: '6px 14px', background: 'var(--bk-sand)'}}>
               {item.mode === 'SUBSCRIPTION' ? 'Recurring Subscription' : 'One-Time Payment'}
             </span>
-            {item.paymentMethod && (
+            {Boolean(item.paymentMethod) && (
               <span className="adm-badge" style={{fontSize: 13, padding: '6px 14px', background: '#eef1ea'}}>
                 Method: {String(item.paymentMethod)}
               </span>
@@ -181,10 +181,10 @@ export function OrderDetailModal({item, onClose}: {item: Json; onClose: () => vo
           <div className="adm-card" style={{padding: '16px 20px', background: '#fff', border: '1px dashed var(--adm-border)', borderRadius: 5, fontSize: 13}}>
             <h4 style={{margin: '0 0 8px', fontSize: 12, textTransform: 'uppercase', color: 'var(--adm-muted)'}}>Stripe &amp; Gateway References</h4>
             <div style={{display: 'grid', gap: 4, wordBreak: 'break-all', fontFamily: 'monospace', color: '#333'}}>
-              {item.stripeCheckoutSessionId && <div>Session: {String(item.stripeCheckoutSessionId)}</div>}
-              {item.stripePaymentIntentId && <div>PaymentIntent: {String(item.stripePaymentIntentId)}</div>}
-              {item.stripeSubscriptionId && <div>Subscription: {String(item.stripeSubscriptionId)}</div>}
-              {item.customerId && <div>Internal Customer ID: {String(item.customerId)}</div>}
+              {Boolean(item.stripeCheckoutSessionId) && <div>Session: {String(item.stripeCheckoutSessionId)}</div>}
+              {Boolean(item.stripePaymentIntentId) && <div>PaymentIntent: {String(item.stripePaymentIntentId)}</div>}
+              {Boolean(item.stripeSubscriptionId) && <div>Subscription: {String(item.stripeSubscriptionId)}</div>}
+              {Boolean(item.customerId) && <div>Internal Customer ID: {String(item.customerId)}</div>}
             </div>
           </div>
         </div>
