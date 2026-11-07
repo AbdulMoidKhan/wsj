@@ -16,6 +16,7 @@ export function createOfficeKit(THREE: T, merge: (g: Geo[]) => Geo | null, palet
     const m = new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, ry, rz)), new THREE.Vector3(1, 1, 1));
     // merging needs matching attributes: drop uv on every part for consistency
     const out = g.index ? g.toNonIndexed() : g;
+    if (out !== g) g.dispose();
     out.deleteAttribute('uv');
     out.applyMatrix4(m);
     return out;
@@ -124,5 +125,15 @@ export function createOfficeKit(THREE: T, merge: (g: Geo[]) => Geo | null, palet
     p.metal.push(at(box(0.6, 0.04, 0.35), 0, 0.06, 0));
   });
 
-  return {officeChair, desk, podcastMic, laptop, deskLamp, coffeeCup, plant, headphones, monitor};
+  // All instances have independent transforms, but the merged geometry and
+  // palette are immutable. Build each model once per scene, not once per item.
+  const reuse = (make: () => THREE_NS.Group) => {
+    let template: THREE_NS.Group | undefined;
+    return () => (template ??= make()).clone(true);
+  };
+  return {
+    officeChair: reuse(officeChair), desk: reuse(desk), podcastMic: reuse(podcastMic),
+    laptop: reuse(laptop), deskLamp: reuse(deskLamp), coffeeCup: reuse(coffeeCup),
+    plant: reuse(plant), headphones: reuse(headphones), monitor: reuse(monitor),
+  };
 }

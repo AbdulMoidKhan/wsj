@@ -7,7 +7,9 @@ import {routeFor, jsonLd, publicItems, publicSetting} from '@/lib/site';
 import {Pricing} from '@/components/pricing';
 import {HeroSlides, StudioTabs} from '@/components/home-live';
 import {fetchHomepageUseCases} from '@/lib/use-cases';
+import {fetchCatalogService} from '@/lib/catalog';
 import {TestimonialsSection} from '@/components/testimonials-section';
+import {SectionMotif} from '@/components/decorative-visual';
 import homeFaqs from '@/lib/home-faqs.json';
 
 /* Homepage content mirrors the live workspacejunction.com homepage (captured 28 Oct 2026). */
@@ -39,11 +41,14 @@ const defaultServices: Array<{title: string; img: string; href: string; text?: s
 const faqs = homeFaqs as Array<{q: string; a: string}>;
 
 export default async function Home() {
-  const [rawServices, statsItem, useCases] = await Promise.all([
+  const [rawServices, statsItem, useCases, podcast] = await Promise.all([
     publicItems('services'),
     publicSetting('homepage-stats'),
     fetchHomepageUseCases(),
+    /* Studio rates are read from the catalog, never written in the page. */
+    fetchCatalogService('podcast-studio'),
   ]);
+  const studioRates = (podcast?.plans ?? []).map(plan => ({slug: plan.slug, name: plan.name, capacityText: plan.capacityText, unitAmountCents: plan.unitAmountCents, currency: plan.currency, description: plan.description}));
 
   /* CMS service records without an image cannot render as homepage cards; fall back to the
      curated defaults whenever nothing usable remains (otherwise the grid renders empty). */
@@ -63,7 +68,7 @@ export default async function Home() {
     <main id="main" className="home-page hp-home lv-home">
       <section className="lv-hero" aria-labelledby="hp-title"><HeroSlides/></section>
 
-      <section className="hp-section lv-intro" aria-labelledby="lv-intro-title"><div className="hp-shell lv-intro-grid">
+      <section className="hp-section lv-intro wj-motif-section" aria-labelledby="lv-intro-title"><SectionMotif variant="network"/><div className="hp-shell lv-intro-grid">
         <div>
           <p className="eyebrow hp-eyebrow" data-anim="fade-up">MORE THAN A WORKSPACE</p>
           <h2 id="lv-intro-title" className="hp-heading" data-anim="split-lines">At The Junction, we go beyond providing workspaces</h2>
@@ -76,7 +81,7 @@ export default async function Home() {
         </div>
       </div></section>
 
-      <section className="hp-section lv-events" aria-labelledby="lv-events-title"><div className="hp-shell">
+      <section className="hp-section lv-events wj-motif-section" aria-labelledby="lv-events-title"><SectionMotif variant="route"/><div className="hp-shell">
         <dl className="lv-stats" data-anim-stagger-group="true" data-anim-stagger="0.08">{stats.map(s => <div key={s.label} data-anim="counter"><dt>{s.label}</dt><dd>{s.value}</dd></div>)}</dl>
         <div className="lv-split">
           <figure className="lv-photo" data-anim="mask-reveal" data-lag="0.08" data-skew="true"><Image src="/media/2b124bae06-Rectangle-5527.png" alt="A workshop audience seated in the Workspace Junction event space" fill sizes="(max-width: 900px) calc(100vw - 40px), 560px" className="hp-photo"/></figure>
@@ -90,7 +95,7 @@ export default async function Home() {
         </div>
       </div></section>
 
-      {useCases.length > 0 && <section className="hp-section lv-services lv-usecases" aria-labelledby="lv-usecases-title"><div className="hp-shell">
+      {useCases.length > 0 && <section className="hp-section lv-services lv-usecases wj-motif-section" aria-labelledby="lv-usecases-title"><SectionMotif variant="network"/><div className="hp-shell">
         <div className="hp-section-head">
           <div>
             <p className="eyebrow hp-eyebrow" data-anim="fade-up">MADE FOR THE WAY YOU WORK</p>
@@ -109,7 +114,7 @@ export default async function Home() {
 
       <div className="hp-pricing lv-pricing"><Pricing eyebrow="MEMBERSHIPS" title="Workspace on Your Terms" intro="Why adjust your workday to an office when your workspace can adjust to you? Workspace Junction offers flexible, on-demand shared and private workspaces — available when you need them, with no long-term commitments. An environment where entrepreneurs stay focused and move faster."/></div>
 
-      <section className="hp-section lv-meeting" aria-labelledby="lv-meeting-title"><div className="hp-shell lv-split lv-split-rev">
+      <section className="hp-section lv-meeting wj-motif-section" aria-labelledby="lv-meeting-title"><SectionMotif variant="meeting"/><div className="hp-shell lv-split lv-split-rev">
         <div className="lv-copy" data-anim="fade-up">
           <p className="eyebrow hp-eyebrow">MEETING ROOMS</p>
           <h2 id="lv-meeting-title" className="hp-heading" data-anim="split-lines">Meeting &amp; Conference Room Rental in Oakbrook / Lombard / Villa Park</h2>
@@ -120,9 +125,9 @@ export default async function Home() {
         <figure className="lv-photo lv-photo-free" data-parallax="0.08" data-lag="0.1" data-anim="mask-reveal" data-skew="true"><Image src="/media/17c10c9bf6-Group-1597885688.png" alt="A client presentation in a conference room, with a boardroom video call inset" fill sizes="(max-width: 900px) calc(100vw - 40px), 560px" className="lv-contain"/></figure>
       </div></section>
 
-      <section className="hp-section lv-podcast amb-local" aria-labelledby="lv-podcast-title"><div className="hp-shell">
+      <section className="hp-section lv-podcast amb-local wj-motif-section" aria-labelledby="lv-podcast-title"><SectionMotif variant="studio"/><div className="hp-shell">
         <div className="lv-podcast-head" data-anim="fade-up">
-          <Image src="/media/chicagoland-podcast-studio-white.png" alt="Chicagoland Podcast Studio" width={260} height={74} priority className="lv-podcast-logo"/>
+          <Image src="/media/chicagoland-podcast-studio-white.png" alt="Chicagoland Podcast Studio" width={260} height={74} className="lv-podcast-logo"/>
           <div><p className="eyebrow hp-eyebrow">CREATE &amp; BROADCAST</p><h2 id="lv-podcast-title" className="hp-heading" data-anim="split-lines">Chicagoland Podcast Studio</h2></div>
           <a href="https://chicagolandpodcaststudio.com" target="_blank" rel="noreferrer" className="text-link hp-link">Visit Site <ArrowUpRight size={18}/></a>
         </div>
@@ -130,10 +135,10 @@ export default async function Home() {
           <figure className="lv-photo" data-parallax="0.06" data-skew="true"><Image src="/media/d978fc3d1e-abd1.jpg" alt="Three people recording a podcast at the studio desk" fill sizes="(max-width: 900px) calc(100vw - 40px), 760px" className="hp-photo"/></figure>
           <figure className="lv-photo" data-parallax="0.09" data-skew="true"><Image src="/media/80ce3cafcc-ezgif-553327e8e003b6e3.png" alt="An interview podcast recorded at a round table" fill sizes="(max-width: 900px) calc(100vw - 40px), 400px" className="hp-photo"/></figure>
         </div>
-        <StudioTabs/>
+        <StudioTabs rates={studioRates}/>
       </div></section>
 
-      <section className="hp-section lv-services" aria-labelledby="lv-services-title"><div className="hp-shell">
+      <section className="hp-section lv-services wj-motif-section" aria-labelledby="lv-services-title"><SectionMotif variant="route"/><div className="hp-shell">
         <div className="hp-section-head">
           <div>
             <p className="eyebrow hp-eyebrow" data-anim="fade-up">BEYOND THE DESK</p>
@@ -158,7 +163,7 @@ export default async function Home() {
 
       <TestimonialsSection/>
 
-      <section className="hp-section hp-faq lv-faq" aria-labelledby="hp-faq-title"><div className="hp-shell hp-faq-grid">
+      <section className="hp-section hp-faq lv-faq wj-motif-section" aria-labelledby="hp-faq-title"><SectionMotif variant="mail"/><div className="hp-shell hp-faq-grid">
         <div className="lv-faq-side" data-anim="fade-up">
           <p className="eyebrow hp-eyebrow">FAQ &amp; CONTACT</p>
           <h2 id="hp-faq-title" className="hp-heading" data-anim="split-lines">Got questions? We’ve got you covered!</h2>

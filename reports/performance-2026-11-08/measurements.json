@@ -1,0 +1,1239 @@
+{
+  "observedAt": "2026-11-07T23:18:37.951Z",
+  "baseline": {
+    "conditions": "Read-only direct PublicController calls, local PostgreSQL; 10 cleared-cache and 30 warm-cache samples per resource. NOT HTTP latency.",
+    "rows": [
+      {
+        "resource": "pages",
+        "total": 65,
+        "bytes": 12737,
+        "coldMs": {
+          "median": 102.60339999999997,
+          "p95": 132.17150000000038
+        },
+        "warmMs": {
+          "median": 0.008200000000215368,
+          "p95": 0.011300000000119326
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 51.5,
+          "p95": 71
+        }
+      },
+      {
+        "resource": "blog",
+        "total": 71,
+        "bytes": 1942,
+        "coldMs": {
+          "median": 66.13594999999987,
+          "p95": 71.47080000000005
+        },
+        "warmMs": {
+          "median": 0.004399999999805004,
+          "p95": 0.031899999999950523
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 40.5,
+          "p95": 46
+        }
+      },
+      {
+        "resource": "settings",
+        "total": 1,
+        "bytes": 3934299,
+        "coldMs": {
+          "median": 328.9381500000004,
+          "p95": 373.7341999999999
+        },
+        "warmMs": {
+          "median": 0.0032000000010157237,
+          "p95": 0.008700000000317232
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 171.5,
+          "p95": 192
+        }
+      },
+      {
+        "resource": "pricing",
+        "total": 59,
+        "bytes": 1563,
+        "coldMs": {
+          "median": 22.775399999999536,
+          "p95": 28.608299999999872
+        },
+        "warmMs": {
+          "median": 0.003349999999954889,
+          "p95": 0.011000000000422006
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 8,
+          "p95": 10
+        }
+      },
+      {
+        "resource": "catalog/services",
+        "bytes": 6242,
+        "coldMs": {
+          "median": 29.04504999999972,
+          "p95": 62.17519999999968
+        },
+        "warmMs": {
+          "median": 0.004649999999855936,
+          "p95": 0.02530000000115251
+        },
+        "queryCounts": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "dbQueryMs": {
+          "median": 12.5,
+          "p95": 43
+        }
+      },
+      {
+        "resource": "catalog/services/coworking",
+        "bytes": 16514,
+        "coldMs": {
+          "median": 19.9628500000008,
+          "p95": 43.829100000000835
+        },
+        "warmMs": {
+          "median": 0.0033999999996012775,
+          "p95": 0.007400000000416185
+        },
+        "queryCounts": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "dbQueryMs": {
+          "median": 9,
+          "p95": 30
+        }
+      }
+    ]
+  },
+  "candidate": {
+    "conditions": "Read-only direct PublicController calls, local PostgreSQL; 10 cleared-cache and 30 warm-cache samples per resource. NOT HTTP latency.",
+    "rows": [
+      {
+        "resource": "pages",
+        "total": 65,
+        "bytes": 12737,
+        "coldMs": {
+          "median": 101.5664999999999,
+          "p95": 131.98360000000048
+        },
+        "warmMs": {
+          "median": 0.007899999999608553,
+          "p95": 0.011300000000119326
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 51.5,
+          "p95": 75
+        }
+      },
+      {
+        "resource": "blog",
+        "total": 71,
+        "bytes": 1942,
+        "coldMs": {
+          "median": 58.70899999999983,
+          "p95": 72.55290000000059
+        },
+        "warmMs": {
+          "median": 0.00889999999981228,
+          "p95": 0.06490000000030705
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 36,
+          "p95": 48
+        }
+      },
+      {
+        "resource": "settings",
+        "total": 1,
+        "bytes": 3934299,
+        "coldMs": {
+          "median": 311.1511499999997,
+          "p95": 340.8980999999985
+        },
+        "warmMs": {
+          "median": 0.0033000000003085006,
+          "p95": 0.007000000001426088
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 161.5,
+          "p95": 192
+        }
+      },
+      {
+        "resource": "pricing",
+        "total": 59,
+        "bytes": 1563,
+        "coldMs": {
+          "median": 20.823349999999664,
+          "p95": 25.894500000000335
+        },
+        "warmMs": {
+          "median": 0.0033999999996012775,
+          "p95": 0.0063999999983934686
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 7,
+          "p95": 8
+        }
+      },
+      {
+        "resource": "catalog/services",
+        "bytes": 6242,
+        "coldMs": {
+          "median": 11.908849999999802,
+          "p95": 33.856799999999566
+        },
+        "warmMs": {
+          "median": 0.0020000000004074536,
+          "p95": 0.011600000001635635
+        },
+        "queryCounts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "dbQueryMs": {
+          "median": 4.5,
+          "p95": 22
+        }
+      },
+      {
+        "resource": "catalog/services/coworking",
+        "bytes": 16514,
+        "coldMs": {
+          "median": 18.72189999999955,
+          "p95": 41.2432000000008
+        },
+        "warmMs": {
+          "median": 0.009949999999662396,
+          "p95": 0.0183999999990192
+        },
+        "queryCounts": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "dbQueryMs": {
+          "median": 9,
+          "p95": 28
+        }
+      }
+    ]
+  },
+  "modelsBefore": {
+    "conditions": "CPU-only Three.js construction for the exact 18-model scene sequence, 5 discarded warm-ups, 20 measured samples; no rendering/GPU/network.",
+    "medianMs": 24.180349999999976,
+    "p95Ms": 29.66910000000007,
+    "samples": [
+      {
+        "durationMs": 23.295200000000023,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 25.986599999999953,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 31.750299999999925,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 24.661499999999933,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 23.519200000000183,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 24.26260000000002,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 29.326300000000174,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 25.989199999999983,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 26.32029999999986,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 22.241600000000062,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 21.45620000000008,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 22.45640000000003,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 24.09809999999993,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 21.95180000000005,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 21.842099999999846,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 29.66910000000007,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 25.84109999999987,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 21.320399999999836,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 25.023699999999963,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      },
+      {
+        "durationMs": 21.465700000000197,
+        "uniqueGeometries": 49,
+        "geometryBytes": 1408032,
+        "meshes": 49
+      }
+    ]
+  },
+  "modelsAfter": {
+    "conditions": "CPU-only Three.js construction for the exact 18-model scene sequence, 5 discarded warm-ups, 20 measured samples; no rendering/GPU/network.",
+    "medianMs": 13.439550000000054,
+    "p95Ms": 17.307199999999966,
+    "samples": [
+      {
+        "durationMs": 16.387100000000032,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 17.307199999999966,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 13.827499999999986,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 13.377700000000004,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 12.32269999999994,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 14.237499999999955,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 14.232700000000023,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 18.003100000000018,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 14.863099999999918,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 11.284899999999993,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 13.153099999999995,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 13.698600000000056,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 12.479000000000042,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 13.501400000000103,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 10.826500000000124,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 12.774499999999989,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 10.986599999999953,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 15.190600000000131,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 11.120799999999917,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      },
+      {
+        "durationMs": 12.597899999999981,
+        "uniqueGeometries": 24,
+        "geometryBytes": 683712,
+        "meshes": 49
+      }
+    ]
+  },
+  "browserBefore": {
+    "conditions": "Development frontend localhost3000, API unavailable/fallback; unthrottled existing browser, warm HTTP cache; 1 discarded warm-up then 3 samples per viewport; 2.5-second post-load observation; NOT production CWV or field INP",
+    "samples": [
+      {
+        "label": "desktop",
+        "sample": 1,
+        "lcp": 1660,
+        "cls": 0,
+        "longTaskMs": 3615,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "ttfb": 1294.2999999998137,
+        "dom": 1693.6999999997206,
+        "load": 1912.0999999996275,
+        "jsBytes": 4669446,
+        "imgBytes": 12906,
+        "hero": [
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F3675f6dc28-slide-1.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          }
+        ]
+      },
+      {
+        "label": "desktop",
+        "sample": 2,
+        "lcp": 1740,
+        "cls": 0,
+        "longTaskMs": 3618,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "ttfb": 1450.4000000003725,
+        "dom": 1696.8999999999069,
+        "load": 1932.8999999999069,
+        "jsBytes": 4652790,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F3675f6dc28-slide-1.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          }
+        ]
+      },
+      {
+        "label": "desktop",
+        "sample": 3,
+        "lcp": 1548,
+        "cls": 0,
+        "longTaskMs": 3355,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "ttfb": 1181.5,
+        "dom": 1502.5,
+        "load": 1741.2000000001863,
+        "jsBytes": 4652790,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F3675f6dc28-slide-1.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=1080&q=75",
+            "complete": true,
+            "width": 1156
+          }
+        ]
+      },
+      {
+        "label": "mobile",
+        "sample": 1,
+        "lcp": 1544,
+        "cls": 0,
+        "longTaskMs": 3672,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "ttfb": 1281,
+        "dom": 1371.3999999999069,
+        "load": 1739.8999999999069,
+        "jsBytes": 4669446,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F3675f6dc28-slide-1.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          }
+        ]
+      },
+      {
+        "label": "mobile",
+        "sample": 2,
+        "lcp": 1852,
+        "cls": 0,
+        "longTaskMs": 3387,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "ttfb": 1582.5,
+        "dom": 1680.9000000003725,
+        "load": 2041.3000000002794,
+        "jsBytes": 4669446,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F3675f6dc28-slide-1.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          }
+        ]
+      },
+      {
+        "label": "mobile",
+        "sample": 3,
+        "lcp": 1488,
+        "cls": 0,
+        "longTaskMs": 3491,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "ttfb": 1214.5999999996275,
+        "dom": 1308.2999999998137,
+        "load": 1709.5,
+        "jsBytes": 0,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F3675f6dc28-slide-1.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          }
+        ]
+      }
+    ]
+  },
+  "browserAfter": {
+    "conditions": "Development frontend localhost3000, API unavailable/fallback; unthrottled existing browser, warm HTTP cache; 1 discarded warm-up then 3 samples per viewport; 2.5-second post-load observation; NOT production CWV or field INP",
+    "samples": [
+      {
+        "label": "desktop",
+        "sample": 1,
+        "lcp": 1532,
+        "cls": 0,
+        "longTaskMs": 3370,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "ttfb": 1197.3999999999069,
+        "dom": 1700.3000000002794,
+        "load": 1843.6000000000931,
+        "jsBytes": 4676275,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/media/optimized/home-hero-828.webp",
+            "complete": true,
+            "width": 1440
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=750&q=75",
+            "complete": true,
+            "width": 1440
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=750&q=75",
+            "complete": true,
+            "width": 1440
+          }
+        ]
+      },
+      {
+        "label": "desktop",
+        "sample": 2,
+        "lcp": 1620,
+        "cls": 0,
+        "longTaskMs": 3501,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "ttfb": 1269.5,
+        "dom": 1651.7000000001863,
+        "load": 1870.5,
+        "jsBytes": 4676275,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/media/optimized/home-hero-828.webp",
+            "complete": true,
+            "width": 1440
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=750&q=75",
+            "complete": true,
+            "width": 1440
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=750&q=75",
+            "complete": true,
+            "width": 1440
+          }
+        ]
+      },
+      {
+        "label": "desktop",
+        "sample": 3,
+        "lcp": 1568,
+        "cls": 0,
+        "longTaskMs": 3504,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "ttfb": 1224,
+        "dom": 1732.5,
+        "load": 1839.3999999999069,
+        "jsBytes": 4676275,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/media/optimized/home-hero-828.webp",
+            "complete": true,
+            "width": 1440
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=750&q=75",
+            "complete": true,
+            "width": 1440
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=750&q=75",
+            "complete": true,
+            "width": 1440
+          }
+        ]
+      },
+      {
+        "label": "mobile",
+        "sample": 1,
+        "lcp": 1680,
+        "cls": 0,
+        "longTaskMs": 3640,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "ttfb": 1325.6000000000931,
+        "dom": 1654.7000000001863,
+        "load": 1848.8999999999069,
+        "jsBytes": 4676275,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/media/optimized/home-hero-828.webp",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          }
+        ]
+      },
+      {
+        "label": "mobile",
+        "sample": 2,
+        "lcp": 2148,
+        "cls": 0,
+        "longTaskMs": 3646,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "ttfb": 1805.6999999997206,
+        "dom": 2128.8000000002794,
+        "load": 2366.600000000093,
+        "jsBytes": 32959,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/media/optimized/home-hero-828.webp",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          }
+        ]
+      },
+      {
+        "label": "mobile",
+        "sample": 3,
+        "lcp": 1508,
+        "cls": 0,
+        "longTaskMs": 3760,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "ttfb": 1222.5,
+        "dom": 1319.8999999999069,
+        "load": 1645.7000000001863,
+        "jsBytes": 0,
+        "imgBytes": 0,
+        "hero": [
+          {
+            "src": "http://localhost:3000/media/optimized/home-hero-828.webp",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2Fec32287da6-slide-2.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          },
+          {
+            "src": "http://localhost:3000/_next/image/?url=%2Fmedia%2F48d393a566-slide-3.png&w=640&q=75",
+            "complete": true,
+            "width": 390
+          }
+        ]
+      }
+    ]
+  },
+  "verificationRepeat": {
+    "conditions": "Read-only direct PublicController calls, local PostgreSQL; 10 cleared-cache and 30 warm-cache samples per resource. NOT HTTP latency.",
+    "catalogSummaryEquivalent": true,
+    "rows": [
+      {
+        "resource": "pages",
+        "total": 65,
+        "bytes": 12737,
+        "coldMs": {
+          "median": 102.45009999999957,
+          "p95": 129.6322
+        },
+        "warmMs": {
+          "median": 0.008500000000367436,
+          "p95": 0.023300000000745058
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 54,
+          "p95": 72
+        }
+      },
+      {
+        "resource": "blog",
+        "total": 71,
+        "bytes": 1942,
+        "coldMs": {
+          "median": 63.41020000000026,
+          "p95": 68.86639999999989
+        },
+        "warmMs": {
+          "median": 0.008400000000619912,
+          "p95": 0.05010000000038417
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 40.5,
+          "p95": 46
+        }
+      },
+      {
+        "resource": "settings",
+        "total": 1,
+        "bytes": 3934299,
+        "coldMs": {
+          "median": 292.10725000000093,
+          "p95": 341.71050000000014
+        },
+        "warmMs": {
+          "median": 0.002800000000206637,
+          "p95": 0.0059999999994033715
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 156.5,
+          "p95": 171
+        }
+      },
+      {
+        "resource": "pricing",
+        "total": 59,
+        "bytes": 1563,
+        "coldMs": {
+          "median": 18.540500000000065,
+          "p95": 23.77520000000004
+        },
+        "warmMs": {
+          "median": 0.0032000000010157237,
+          "p95": 0.005499999999301508
+        },
+        "queryCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "dbQueryMs": {
+          "median": 6.5,
+          "p95": 9
+        }
+      },
+      {
+        "resource": "catalog/services",
+        "bytes": 6242,
+        "coldMs": {
+          "median": 11.348700000000463,
+          "p95": 34.04619999999886
+        },
+        "warmMs": {
+          "median": 0.0017000000007101335,
+          "p95": 0.01599999999962165
+        },
+        "queryCounts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "dbQueryMs": {
+          "median": 5,
+          "p95": 24
+        }
+      },
+      {
+        "resource": "catalog/services/coworking",
+        "bytes": 16514,
+        "coldMs": {
+          "median": 18.113550000000032,
+          "p95": 41.710800000000745
+        },
+        "warmMs": {
+          "median": 0.0030000000006111804,
+          "p95": 0.01989999999932479
+        },
+        "queryCounts": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "dbQueryMs": {
+          "median": 9,
+          "p95": 30
+        }
+      }
+    ]
+  },
+  "verification": {
+    "newRegressions": {
+      "passed": 10,
+      "failed": 0
+    },
+    "contentSafety": {
+      "passed": 9,
+      "failed": 0
+    },
+    "serviceContent": {
+      "passed": 11,
+      "failed": 0
+    },
+    "catalogCore": {
+      "passed": 18,
+      "failed": 0
+    },
+    "existingPure": {
+      "passed": 75,
+      "failed": 1,
+      "failure": "api-scenarios-safety.test.cjs: mapService is not defined in unchanged booking-source extraction"
+    },
+    "frontendTypecheck": "pass",
+    "frontendLint": "pass",
+    "backendBuild": "pass",
+    "productionFrontendBuild": "blocked EPERM lstat C:\\",
+    "httpApi": "blocked local health requests timed out",
+    "productionDeployed": false,
+    "databaseMutations": false
+  },
+  "subsequentReleaseVerification": {
+    "testsPassed": 218,
+    "testsFailed": 0,
+    "frontendProductionBuild": "pass",
+    "backendBuild": "pass",
+    "lint": "pass",
+    "prismaValidate": "pass",
+    "localMigrations": "up to date: 4",
+    "apiHealth": 200,
+    "publicServices": 13,
+    "unauthenticatedAdminCatalog": 401,
+    "databaseMutations": false,
+    "productionDeployed": false
+  }
+}

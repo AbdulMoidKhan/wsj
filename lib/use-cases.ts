@@ -75,7 +75,10 @@ export type UseCaseResult = {items: UseCase[]; offline: boolean};
 export async function fetchUseCases(): Promise<UseCaseResult> {
   const rows = (await publicItems('use-cases')) as Row[] | null;
   if (rows === null) return {items: useCaseFallback, offline: true};
-  return {items: rows.map(toUseCase).filter(item => item.title), offline: false};
+  const filtered = rows
+    .map(toUseCase)
+    .filter(item => item.title && !['asdasd', 'test', 'dummy', 'ascsc'].includes(item.slug.toLowerCase()) && !['asdasd', 'test', 'dummy', 'ascsc'].includes(item.title.toLowerCase()));
+  return {items: filtered.length >= 2 ? filtered : useCaseFallback, offline: false};
 }
 
 /** One published use case by slug, or null when it is missing, unpublished or the API is down. */

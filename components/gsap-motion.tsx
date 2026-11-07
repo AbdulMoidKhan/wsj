@@ -12,8 +12,22 @@ import {splitText} from '@/lib/split-text';
 // Register standard free GSAP plugins once
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Observer);
-  (window as any).gsap = gsap;
-  (window as any).ScrollTrigger = ScrollTrigger;
+  /* Exposed for debugging and for inline page scripts that drive timelines. */
+  const motionWindow = window as unknown as {gsap?: typeof gsap; ScrollTrigger?: typeof ScrollTrigger};
+  motionWindow.gsap = gsap;
+  motionWindow.ScrollTrigger = ScrollTrigger;
+}
+
+/** The slice of Lenis this module actually uses. */
+interface LenisInstance {
+  on(event: string, handler: (payload: never) => void): void;
+  off(event: string, handler: (payload: never) => void): void;
+  raf(time: number): void;
+  stop(): void;
+  start(): void;
+  destroy(): void;
+  scrollTo(target: Element | string | number, options?: {offset?: number; duration?: number}): void;
+  isStopped: boolean;
 }
 
 const REVEAL_SELECTOR = [
@@ -88,27 +102,28 @@ export function GsapMotion() {
     }
 
     // Initialize Lenis smooth scroll
-    let lenis: any = null;
+    let lenis: LenisInstance | null = null;
     let frameLoop: ((time: number) => void) | null = null;
 
     if (!reduced && fine && !isLowEnd) {
       import('@studio-freight/lenis')
         .then(({default: Lenis}) => {
-          lenis = new Lenis({
+          const instance = new Lenis({
             lerp: 0.09,
             duration: 1.1,
             smoothWheel: true,
             wheelMultiplier: 1.0,
             touchMultiplier: 1.0,
             syncTouch: false,
-          });
+          }) as unknown as LenisInstance;
+          lenis = instance;
 
           // Sync Lenis with GSAP ScrollTrigger
-          lenis.on('scroll', ScrollTrigger.update);
+          instance.on('scroll', ScrollTrigger.update as never);
           gsap.ticker.lagSmoothing(0);
 
           frameLoop = (time: number) => {
-            lenis.raf(time * 1000);
+            instance.raf(time * 1000);
           };
           gsap.ticker.add(frameLoop);
 
@@ -404,9 +419,12 @@ export function GsapMotion() {
           });
         };
 
-        if (lenis) {
-          lenis.on('scroll', onLenisScroll);
-          cleanups.push(() => lenis.off('scroll', onLenisScroll));
+        /* `lenis` is only assigned inside the dynamic import callback, so the
+           assertion keeps the union instead of control-flow narrowing to null. */
+        const lagScroller = lenis as LenisInstance | null;
+        if (lagScroller) {
+          lagScroller.on('scroll', onLenisScroll as never);
+          cleanups.push(() => lagScroller.off('scroll', onLenisScroll as never));
         }
       }
     }
@@ -428,9 +446,10 @@ export function GsapMotion() {
           skewSetters.forEach(quick => quick(clamped));
         };
 
-        if (lenis) {
-          lenis.on('scroll', onSkewScroll);
-          cleanups.push(() => lenis.off('scroll', onSkewScroll));
+        const skewScroller = lenis as LenisInstance | null;
+        if (skewScroller) {
+          skewScroller.on('scroll', onSkewScroll as never);
+          cleanups.push(() => skewScroller.off('scroll', onSkewScroll as never));
         }
       }
     }

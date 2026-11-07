@@ -253,7 +253,10 @@ export function SceneBackdrop() {
         window.removeEventListener('resize', resize);
         window.removeEventListener('pointermove', onPointer);
         delete document.documentElement.dataset.scene;
-        scene.traverse(o => {const m = o as unknown as {geometry?: {dispose: () => void}}; m.geometry?.dispose();});
+        // Repeated model instances share geometry; release each GPU buffer once.
+        const geometries = new Set<{dispose: () => void}>();
+        scene.traverse(o => {const m = o as unknown as {geometry?: {dispose: () => void}}; if (m.geometry) geometries.add(m.geometry);});
+        geometries.forEach(geometry => geometry.dispose());
         Object.values(palette).forEach(m => m.dispose());
         dustMat.dispose(); envTex.dispose(); pmrem.dispose(); renderer.dispose();
         renderer.domElement.remove();
@@ -261,11 +264,17 @@ export function SceneBackdrop() {
     };
 
     // Start after the page has painted so the scene never competes with LCP.
-    const w = window as Window & {requestIdleCallback?: (cb: () => void, o?: {timeout: number}) => number};
-    const kick = () => {start().catch(() => {/* CSS ambient layer remains */});};
-    if (w.requestIdleCallback) w.requestIdleCallback(kick, {timeout: 1500}); else window.setTimeout(kick, 600);
+    const w = window as Window & {requestIdleCallback?: (cb: () => void, o?: {timeout: number}) => number; cancelIdleCallback?: (id: number) => void};
+    const kick = () => {if (!disposed) start().catch(() => {/* CSS ambient layer remains */});};
+    const idle = w.requestIdleCallback?.(kick, {timeout: 1500});
+    const timer = idle === undefined ? window.setTimeout(kick, 600) : undefined;
 
-    return () => {disposed = true; cleanup();};
+    return () => {
+      disposed = true;
+      if (idle !== undefined) w.cancelIdleCallback?.(idle);
+      if (timer !== undefined) window.clearTimeout(timer);
+      cleanup();
+    };
   }, []);
 
   return <div ref={host} className="scene-backdrop" aria-hidden="true"/>;

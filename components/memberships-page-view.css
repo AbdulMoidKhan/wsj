@@ -628,3 +628,8 @@
     padding: 30px 20px;
   }
 }
+
+/* Validity / usage rule authored per package in the admin catalog. */
+.mem-rule-pill{display:flex;align-items:flex-start;gap:9px;margin:22px auto 0;max-width:720px;padding:12px 18px;border:1px solid rgba(25,60,50,.14);border-radius:999px;background:#fff;font:400 13px/1.6 var(--font-body,inherit);color:#214d3e;text-align:left}
+.mem-rule-pill svg{flex-shrink:0;margin-top:3px;color:#d9910b}
+@media (max-width:640px){.mem-rule-pill{border-radius:10px}}

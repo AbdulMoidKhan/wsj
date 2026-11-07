@@ -52,14 +52,31 @@ test('fix: resume binds to backend source and resets an unconfirmed interrupted 
   assert.match(source, /if\(report\.current\)\{const row=report\.scenarios\[report\.current\.scenario\];if\(row\)\{advance\(row,false,0\)/);
 });
 
-test('fix: contextual workspace mapping prefers an exact phrase over a shared single word', () => {
-  const src = read('components/booking-dialog.tsx');
-  const ids = [...src.slice(src.indexOf('const WORKSPACE_TYPES='), src.indexOf('const PLANS=')).matchAll(/id:'([^']+)'/g)].map(m => ({ id: m[1] }));
-  const fn = src.slice(src.indexOf('function mapService('), src.indexOf('\ninterface S{')).replace('s?:string', 's').replace('):string{', '){');
-  const context = { WORKSPACE_TYPES: ids }; vm.createContext(context); vm.runInContext(fn + ';this.map=mapService;', context);
-  assert.equal(context.map('Dedicated Desk'), 'dedicated-desk');
-  assert.equal(context.map('Virtual Office'), 'virtual-office');
-  assert.equal(context.map('Conference Room'), 'conference-room');
-  // A single shared word with no exact phrase present still falls back correctly.
-  assert.equal(context.map('I need a quiet room to work'), 'meeting-room');
+test('fix: contextual catalog mapping prefers exact and longer phrases over shared words', () => {
+  require('./ts-register.cjs');
+  const {findCatalogServiceHint} = require('../../lib/catalog-service-hint.ts');
+  const services = [
+    {slug: 'office', name: 'Office'},
+    {slug: 'desk', name: 'Desk'},
+    {slug: 'dedicated-desk', name: 'Dedicated Desk'},
+    {slug: 'virtual-office', name: 'Virtual Office'},
+    {slug: 'meeting-room', name: 'Meeting Room'},
+    {slug: 'conference-room', name: 'Conference Room'},
+  ];
+  for (const [hint, slug] of [['Dedicated Desk', 'dedicated-desk'], ['Virtual Office', 'virtual-office'], ['Conference Room', 'conference-room'], ['Please reserve a Virtual Office for my team', 'virtual-office'], ['VIRTUAL-OFFICE', 'virtual-office']]) {
+    assert.equal(findCatalogServiceHint(services, hint)?.slug, slug, hint);
+  }
+  assert.match(read('components/booking-dialog.tsx'), /findCatalogServiceHint\(items, service\)/);
+});
+
+test('catalog mapping never guesses an unrelated or ambiguous service', () => {
+  require('./ts-register.cjs');
+  const {findCatalogServiceHint} = require('../../lib/catalog-service-hint.ts');
+  const services = [{slug: 'meeting-room', name: 'Meeting Room'}, {slug: 'conference-room', name: 'Conference Room'}];
+  for (const hint of [undefined, '', 'room', 'I need a quiet room to work', 'Unsupported offer', 'Meeting Room or Conference Room']) {
+    assert.equal(findCatalogServiceHint(services, hint), undefined, String(hint));
+  }
+  assert.equal(findCatalogServiceHint(services, 'Meeting')?.slug, 'meeting-room');
+  const custom = [{slug: 'new-service', name: 'A New Service'}];
+  assert.equal(findCatalogServiceHint(custom, 'A New Service')?.slug, 'new-service', 'new administrator-defined catalog entries work without a hardcoded service map');
 });

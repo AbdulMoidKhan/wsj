@@ -1,30 +1,10 @@
 import Link from 'next/link';
 import Image from '@/components/consistent-image';
-import {Suspense} from 'react';
 import {ArrowUpRight} from 'lucide-react';
 import {BookingButton} from '@/components/booking';
 import {TestimonialsSection} from '@/components/testimonials-section';
 import {fetchUseCases, type UseCase} from '@/lib/use-cases';
 import './use-cases-view.css';
-
-/** Placeholder while published use cases are fetched from the content API. */
-function UseCasesSkeleton(){
-  return (
-    <div className="uc-grid" aria-hidden="true">
-      {[0,1,2,3].map(key=>(
-        <article className="uc-card uc-card-skeleton" key={key}>
-          <span className="uc-skeleton uc-skeleton-image"/>
-          <div className="uc-card-copy">
-            <span className="uc-skeleton uc-skeleton-line uc-skeleton-eyebrow"/>
-            <span className="uc-skeleton uc-skeleton-line uc-skeleton-title"/>
-            <span className="uc-skeleton uc-skeleton-line"/>
-            <span className="uc-skeleton uc-skeleton-line uc-skeleton-short"/>
-          </div>
-        </article>
-      ))}
-    </div>
-  );
-}
 
 function UseCaseCard({item}:{item:UseCase}){
   return (
@@ -57,7 +37,11 @@ async function UseCasesGrid(){
   return <div className="uc-grid" data-anim-stagger-group="true" data-anim-stagger="0.06">{items.map(item=><UseCaseCard key={item.id} item={item}/>)}</div>;
 }
 
-export function UseCasesView(){
+/* Not streamed behind Suspense: the grid carries motion attributes, and GSAP
+   starts when the shell hydrates, so a dehydrated boundary here would be
+   split and transformed before React hydrated it. */
+export async function UseCasesView(){
+  const grid = await UseCasesGrid();
   return (
     <main id="main" className="uc-page">
       <div className="uc-wrap">
@@ -87,9 +71,7 @@ export function UseCasesView(){
             <h2 id="uc-title" data-anim="split-lines">Built around what you do.</h2>
             <p>Explore the ways our workspace, studios and business services can support you.</p>
           </div>
-          <Suspense fallback={<UseCasesSkeleton/>}>
-            <UseCasesGrid/>
-          </Suspense>
+          {grid}
         </section>
       </div>
 

@@ -43,10 +43,54 @@ export function findPage(term:string){return site().pages.find(p=>p.slug===term|
 export function routeFor(term:string,fallback='/services/'){const pages=site().pages;const words=term.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ');return pages.find(p=>p.slug===term)?.path||pages.find(p=>words.every(w=>(p.slug+' '+p.title).toLowerCase().replace(/-/g,' ').includes(w)))?.path||fallback}
 type ApiContent={id:string;slug:string;title:string;content:unknown;excerpt?:string;metadata?:Record<string,unknown>;createdAt?:string;updatedAt?:string};
 function fromApi(d:ApiContent,kind:string,original?:Entry):Entry{const m=d.metadata||{};return {...original,id:d.id,slug:d.slug,title:d.title,content:safeContent(d.content),excerpt:d.excerpt||original?.excerpt,path:String(m.path||m.originalPath||original?.path||'/'+d.slug+'/'),type:kind==='blog'?'post':String(m.type||original?.type||'page'),date:String(m.date||m.publishedAt||original?.date||d.createdAt||''),modified:d.updatedAt||original?.modified,seo:m.seo as Entry['seo']||original?.seo,featuredImage:localMedia(String(m.featuredImage||original?.featuredImage||'')),images:((m.images as string[])||original?.images)?.map(localMedia),categories:m.categories as (number|string)[]||original?.categories,tags:m.tags as (number|string)[]||original?.tags,author:String(m.author||original?.author||'Workspace Junction'),featured:m.featured===true}}
-export async function publicItems(resource:string):Promise<ApiContent[]|null>{try{const items:ApiContent[]=[];for(let page=1;page<=100;page++){const r=await fetch((process.env.API_URL||'http://localhost:4000/api')+'/public/'+resource+'?limit=25&page='+page,{next:{revalidate:30},signal:AbortSignal.timeout(2500)});if(!r.ok)return null;const d=await r.json(),batch=Array.isArray(d)?d:d.items||[];items.push(...batch);if(Array.isArray(d)||items.length>=(d.total||0)||batch.length===0)break;}return items}catch{return null}}
+
+const siteCache = new Map<string, { time: number; data: unknown }>();
+
+export async function publicItems(resource:string):Promise<ApiContent[]|null>{
+  const cacheKey = 'resource:' + resource;
+  const cached = siteCache.get(cacheKey);
+  if (cached && Date.now() - cached.time < 30000) return cached.data as ApiContent[];
+  try{
+    const items:ApiContent[]=[];
+    // Keep each cached fetch below Next's 2 MB item limit. The previous
+    // 100-record pages response exceeded it; retain the same 1,000-item cap.
+    for(let page=1;page<=40;page++){
+      const r=await fetch((process.env.API_URL||'http://localhost:4000/api')+'/public/'+resource+'?limit=25&page='+page,{next:{revalidate:30},signal:AbortSignal.timeout(3000)});
+      if(!r.ok)return null;
+      const d=await r.json(),batch=Array.isArray(d)?d:d.items||[];
+      items.push(...batch);
+      if(Array.isArray(d)||items.length>=(d.total||0)||batch.length===0)break;
+    }
+    siteCache.set(cacheKey, { time: Date.now(), data: items });
+    return items;
+  }catch{return null}
+}
 /** One published setting by slug (null when absent or the API is unavailable). Avoids pulling the multi-MB settings collection. */
-export async function publicSetting(slug:string):Promise<ApiContent|null>{try{const r=await fetch((process.env.API_URL||'http://localhost:4000/api')+'/public/settings/'+encodeURIComponent(slug),{next:{revalidate:30},signal:AbortSignal.timeout(2500)});return r.ok?await r.json():null}catch{return null}}
-async function businessSettings():Promise<ApiContent[]> {const items:ApiContent[]=[];for(const slug of ['business','business-settings']){try{const r=await fetch((process.env.API_URL||'http://localhost:4000/api')+'/public/settings/'+slug,{next:{revalidate:30},signal:AbortSignal.timeout(1800)});if(r.ok)items.push(await r.json())}catch{}}return items}
+export async function publicSetting(slug:string):Promise<ApiContent|null>{
+  const cacheKey = 'setting:' + slug;
+  const cached = siteCache.get(cacheKey);
+  if (cached && Date.now() - cached.time < 30000) return cached.data as ApiContent;
+  try{
+    const r=await fetch((process.env.API_URL||'http://localhost:4000/api')+'/public/settings/'+encodeURIComponent(slug),{next:{revalidate:30},signal:AbortSignal.timeout(2500)});
+    const data = r.ok?await r.json():null;
+    if (data) siteCache.set(cacheKey, { time: Date.now(), data });
+    return data;
+  }catch{return null}
+}
+async function businessSettings():Promise<ApiContent[]> {
+  const cacheKey = 'settings:business';
+  const cached = siteCache.get(cacheKey);
+  if (cached && Date.now() - cached.time < 30000) return cached.data as ApiContent[];
+  const items:ApiContent[]=[];
+  for(const slug of ['business','business-settings']){
+    try{
+      const r=await fetch((process.env.API_URL||'http://localhost:4000/api')+'/public/settings/'+slug,{next:{revalidate:30},signal:AbortSignal.timeout(1800)});
+      if(r.ok)items.push(await r.json());
+    }catch{}
+  }
+  siteCache.set(cacheKey, { time: Date.now(), data: items });
+  return items;
+}
 export const loadSite=cache(async function():Promise<Site>{const original=site();const [pages,services,posts,categories,tags,settings]=await Promise.all([publicItems('pages'),publicItems('services'),publicItems('blog'),publicItems('categories'),publicItems('tags'),businessSettings()]);const b=settings?.find(r=>['business','business-settings'].includes(r.slug))?.metadata||{};const business={...businessDefaults};for(const key of Object.keys(businessDefaults).concat(['logo','seoTitle','seoDescription']) as (keyof Business)[]){if(typeof b[key]==='string'&&String(b[key]).trim())business[key]=String(b[key]).trim()}if(business.logo)business.logo=localMedia(business.logo);return {...original,business,brand:{...original.brand,...(business.logo?{logo:business.logo}:{})},pages:pages!==null?[...pages,...(services||[])].map(d=>fromApi(d,'pages',original.pages.find(p=>p.path===d.metadata?.path||p.slug===d.slug))):original.pages,posts:posts!==null?posts.map(d=>fromApi(d,'blog',original.posts.find(p=>p.slug===d.slug))):original.posts,tags:tags!==null?tags.map(c=>({id:c.id,slug:c.slug,name:c.title})):original.tags||[],categories:categories!==null?categories.map(c=>({id:(c.metadata?.sourceId as number|string)||(c.metadata?.id as number|string)||c.id,slug:c.slug,name:c.title})):original.categories}});
 export async function liveEntry(entry:Entry):Promise<Entry>{try{const resource=entry.type==='post'?'blog':'pages';const r=await fetch((process.env.API_URL||'http://localhost:4000/api')+'/public/'+resource+'/'+entry.slug,{next:{revalidate:30},signal:AbortSignal.timeout(1800)});if(!r.ok)return {...entry,content:safeContent(entry.content)};return fromApi(await r.json(),resource,entry)}catch{return {...entry,content:safeContent(entry.content)}}}
 export const address='1S280 Summit Ave Unit E2 Suite 1, Oakbrook Terrace, IL 60181';

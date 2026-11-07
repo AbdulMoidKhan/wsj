@@ -102,7 +102,9 @@ test('an embedded checkout returns a client secret and the publishable key, neve
   try {
     const result: any = await h.publicApi.checkout({...buyer, items: [{planSlug: 'community-membership'}], acceptRecurringTerms: true, embedded: true} as never);
     const session = h.stripe.calls.find(call => call.kind === 'checkout.sessions.create')!.input as Record<string, any>;
-    assert.equal(session.ui_mode, 'embedded');
+    /* Stripe renamed this value: 'embedded' became 'embedded_page' in the API
+       version this SDK targets. Embedded Checkout is unchanged. */
+    assert.equal(session.ui_mode, 'embedded_page');
     assert.match(session.return_url, /\/booking-confirmation\/\?order=.+&session_id=\{CHECKOUT_SESSION_ID\}$/);
     assert.equal(session.success_url, undefined, 'embedded sessions must not set a hosted success URL');
     assert.ok(result.clientSecret, 'the browser receives a client secret for the embedded form');

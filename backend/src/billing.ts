@@ -18,6 +18,7 @@ import {Db, AuthGuard, Roles, parsePagination} from './core';
 import {ValidatedBody, ValidatedQuery} from './validation';
 import {PaymentClient} from './payments';
 import {frontendOrigins} from './origins';
+import {clearCatalogCache} from './catalog-cache';
 import {
   BILLING_TERMS_VERSION,
   DEFAULT_GRACE_DAYS,
@@ -35,11 +36,20 @@ import {
   resolveQuantity,
   selectionErrors,
   type BillingIntervalValue,
+  type BillingTypeValue,
   type Discount,
+  type Totals,
 } from './billing-core';
 
 const PORTAL_TOKEN_TTL = '2h';
 const PORTAL_PURPOSE = 'billing-portal';
+
+/** Checkout-time JSON only: never resolve current catalog benefits on renewal. */
+function catalogPlanSnapshot(metadata: unknown): Record<string, unknown> | null {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return null;
+  const snapshot = (metadata as Record<string, unknown>).catalogPlan;
+  return snapshot && typeof snapshot === 'object' && !Array.isArray(snapshot) ? snapshot as Record<string, unknown> : null;
+}
 
 /* ───────────────────────────── DTOs ───────────────────────────── */
 
@@ -87,6 +97,7 @@ export class PlanDto {
   @IsOptional() @IsArray() includedCredits?: unknown[];
   @IsOptional() @Type(() => Number) @IsInt() @Min(-2147483648) @Max(2147483647) sortOrder?: number;
   @IsOptional() @IsBoolean() active?: boolean;
+  @IsOptional() metadata?: Record<string, unknown>;
 }
 
 export class PlanUpdateDto extends PlanDto {}
@@ -118,7 +129,34 @@ export class BillingListDto {
 
 /* ───────────────────────────── Service ───────────────────────────── */
 
-type PlanRecord = Awaited<ReturnType<Db['plan']['findFirst']>>;
+/**
+ * One server-priced checkout line, normalised so the Stripe path does not care
+ * whether the amount came from the legacy plan table or from the dynamic
+ * service catalog. planId is null for catalog-sourced lines, which keeps the
+ * order item readable without inventing a legacy plan row.
+ */
+export interface PricedLine {
+  planId: string | null;
+  slug: string;
+  name: string;
+  description: string;
+  currency: string;
+  unitAmount: number;
+  quantity: number;
+  amount: number;
+  billingType: BillingTypeValue;
+  interval: BillingIntervalValue | null;
+  intervalCount: number;
+  metadata: Record<string, unknown>;
+}
+
+export interface PricedBundle {
+  lines: PricedLine[];
+  totals: Totals;
+  coupon: {promotionCodeId: string; discount: Discount} | null;
+  hasRecurring: boolean;
+  currency: string;
+}
 
 @Injectable()
 export class BillingService {
@@ -193,12 +231,20 @@ export class BillingService {
   }
 
   /** Server recomputes everything; the request only names catalog entries. */
-  async priceCheckout(dto: CheckoutDto) {
+  async priceCheckout(dto: CheckoutDto): Promise<PricedBundle> {
     if (!dto.items?.length) throw new BadRequestException('Select at least one package');
     if (dto.items.length > 10) throw new BadRequestException('Too many items in one checkout');
-    const lines: Array<{plan: NonNullable<PlanRecord>; quantity: number; amount: number}> = [];
+    const lines: PricedLine[] = [];
     const errors: string[] = [];
     for (const item of dto.items) {
+      // Ownership is independent of publication and parent status. An old Plan
+      // row must never bypass catalog pricing, archives or required add-ons.
+      // Older fakeDb callers have no catalog delegate and remain legacy-only.
+      const catalogPlan = this.db.catalogPlan;
+      if (catalogPlan && await catalogPlan.findFirst({where: {slug: item.planSlug}, select: {id: true}})) {
+        errors.push('Use the catalog checkout for package: ' + item.planSlug);
+        continue;
+      }
       const plan = await this.db.plan.findFirst({where: {slug: item.planSlug, active: true, archivedAt: null}});
       if (!plan) {
         errors.push('Unknown or unavailable package: ' + item.planSlug);
@@ -207,36 +253,58 @@ export class BillingService {
       errors.push(...selectionErrors(plan as never, {quantity: item.quantity, startAt: item.startAt ?? null, resourceId: item.resourceId ?? null}));
       try {
         const quantity = resolveQuantity(plan as never, item.quantity);
-        lines.push({plan, quantity, amount: lineAmount(plan as never, quantity)});
+        lines.push({
+          planId: plan.id,
+          slug: plan.slug,
+          name: plan.name,
+          description: plan.description || plan.serviceType,
+          currency: plan.currency,
+          unitAmount: plan.unitAmount,
+          quantity,
+          amount: lineAmount(plan as never, quantity),
+          billingType: plan.billingType as BillingTypeValue,
+          interval: plan.interval as BillingIntervalValue | null,
+          intervalCount: plan.intervalCount || 1,
+          metadata: {slug: plan.slug, serviceType: plan.serviceType},
+        });
       } catch (error) {
         errors.push(error instanceof PricingError ? error.message : 'Invalid quantity');
       }
     }
     if (errors.length) throw new BadRequestException(errors);
+    return this.totalsFor(lines, dto.couponCode);
+  }
 
-    const currencies = new Set(lines.map(line => line.plan.currency));
+  /**
+   * Shared tail of every pricing path: one currency, a verified coupon and
+   * server-side totals. Lines may come from the legacy plan table or from the
+   * dynamic service catalog; the maths is identical for both.
+   */
+  async totalsFor(lines: PricedLine[], couponCode?: string): Promise<PricedBundle> {
+    if (!lines.length) throw new BadRequestException('Select at least one package');
+    const currencies = new Set(lines.map(line => line.currency));
     if (currencies.size > 1) throw new BadRequestException('All packages in one checkout must share a currency');
-    const coupon = await this.resolveCoupon(dto.couponCode);
+    const coupon = await this.resolveCoupon(couponCode);
     let totals;
     try {
       totals = computeTotals({
-        lines: lines.map(line => ({amount: line.amount, billingType: line.plan.billingType as 'ONE_TIME' | 'RECURRING', interval: line.plan.interval as BillingIntervalValue | null})),
+        lines: lines.map(line => ({amount: line.amount, billingType: line.billingType, interval: line.interval})),
         discount: coupon?.discount ?? null,
       });
     } catch (error) {
       throw new BadRequestException(error instanceof PricingError ? error.message : 'Unable to price this selection');
     }
-    const hasRecurring = lines.some(line => line.plan.billingType === 'RECURRING');
-    return {lines, totals, coupon, hasRecurring, currency: lines[0]?.plan.currency ?? 'usd'};
+    const hasRecurring = lines.some(line => line.billingType === 'RECURRING');
+    return {lines, totals, coupon, hasRecurring, currency: lines[0]?.currency ?? 'usd'};
   }
 
   /**
    * Persist the checkout attempt first, then contact Stripe. A browser that
    * disappears after paying still has a durable order the webhook can complete.
    */
-  async createCheckout(dto: CheckoutDto) {
+  async createCheckout(dto: CheckoutDto, pricedOverride?: PricedBundle) {
     if (dto.website) throw new BadRequestException('Invalid submission');
-    const priced = await this.priceCheckout(dto);
+    const priced = pricedOverride ?? (await this.priceCheckout(dto));
     if (priced.hasRecurring && dto.acceptRecurringTerms !== true) throw new BadRequestException('You must accept the recurring billing terms to continue');
 
     const customer = await this.customerFor(dto.customerEmail, dto.customerName, dto.customerPhone);
@@ -266,14 +334,14 @@ export class BillingService {
         expiresAt: new Date(Date.now() + 60 * 60 * 1000),
         items: {
           create: priced.lines.map(line => ({
-            planId: line.plan.id,
-            description: line.plan.name,
+            planId: line.planId,
+            description: line.name,
             quantity: line.quantity,
-            unitAmount: line.plan.unitAmount,
+            unitAmount: line.unitAmount,
             amount: line.amount,
-            billingType: line.plan.billingType,
-            interval: line.plan.interval,
-            metadata: {slug: line.plan.slug, serviceType: line.plan.serviceType},
+            billingType: line.billingType,
+            interval: line.interval,
+            metadata: line.metadata as object,
           })),
         },
       },
@@ -293,22 +361,22 @@ export class BillingService {
 
     const stripeCustomerId = await this.stripeCustomerFor(customer);
     const origin = this.origin();
-    const recurringLines = priced.lines.filter(line => line.plan.billingType === 'RECURRING');
-    const oneTimeLines = priced.lines.filter(line => line.plan.billingType === 'ONE_TIME');
+    const recurringLines = priced.lines.filter(line => line.billingType === 'RECURRING');
+    const oneTimeLines = priced.lines.filter(line => line.billingType === 'ONE_TIME');
     const mode: Stripe.Checkout.SessionCreateParams.Mode = recurringLines.length ? 'subscription' : 'payment';
 
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = recurringLines.map(line => ({
       quantity: line.quantity,
       price_data: {
-        currency: line.plan.currency,
-        unit_amount: line.plan.unitAmount,
-        recurring: {interval: line.plan.interval === 'YEAR' ? 'year' : 'month', interval_count: line.plan.intervalCount || 1},
-        product_data: {name: line.plan.name, description: (line.plan.description || line.plan.serviceType).slice(0, 300)},
+        currency: line.currency,
+        unit_amount: line.unitAmount,
+        recurring: {interval: line.interval === 'YEAR' ? 'year' : 'month', interval_count: line.intervalCount || 1},
+        product_data: {name: line.name, description: (line.description || line.slug).slice(0, 300)},
       },
     }));
     const oneTimeItems: Stripe.Checkout.SessionCreateParams.LineItem[] = oneTimeLines.map(line => ({
       quantity: line.quantity,
-      price_data: {currency: line.plan.currency, unit_amount: line.plan.unitAmount, product_data: {name: line.plan.name, description: (line.plan.description || line.plan.serviceType).slice(0, 300)}},
+      price_data: {currency: line.currency, unit_amount: line.unitAmount, product_data: {name: line.name, description: (line.description || line.slug).slice(0, 300)}},
     }));
 
     const params: Stripe.Checkout.SessionCreateParams = {
@@ -391,9 +459,12 @@ export class BillingService {
     if (!customerId) return null;
 
     let planId = existing?.planId ?? null;
-    if (!planId && orderId) {
+    const savedSnapshot = catalogPlanSnapshot(existing?.metadata);
+    let initialSnapshot: Record<string, unknown> | null = null;
+    if (!planId && !savedSnapshot && orderId) {
       const orderItem = await this.db.orderItem.findFirst({where: {orderId, billingType: 'RECURRING'}});
       planId = orderItem?.planId ?? null;
+      if (!planId) initialSnapshot = catalogPlanSnapshot(orderItem?.metadata);
     }
 
     const periodStart = fromStripeTimestamp((sub as never as Record<string, unknown>).current_period_start ?? item?.current_period_start);
@@ -407,6 +478,11 @@ export class BillingService {
       customerId: resolvedCustomerId,
       orderId,
       planId,
+      // Do not rewrite existing metadata or the immutable purchased benefits.
+      ...(initialSnapshot ? {metadata: {
+        ...(existing?.metadata && typeof existing.metadata === 'object' && !Array.isArray(existing.metadata) ? existing.metadata : {}),
+        catalogPlan: JSON.parse(JSON.stringify(initialSnapshot)),
+      } as object} : {}),
       stripeCustomerId: String(stripeCustomerId ?? existing?.stripeCustomerId ?? ''),
       stripePriceId: price?.id ?? existing?.stripePriceId ?? null,
       stripeItemId: item?.id ?? existing?.stripeItemId ?? null,
@@ -453,8 +529,10 @@ export class BillingService {
    */
   async grantEntitlements(subscriptionId: string, periodRef: string) {
     const sub = await this.db.subscription.findUnique({where: {id: subscriptionId}, include: {plan: true}});
-    if (!sub?.plan) return;
-    for (const grant of creditGrantsFor(sub.plan as never)) {
+    if (!sub) return;
+    const benefitPlan = sub.plan ?? catalogPlanSnapshot(sub.metadata);
+    if (!benefitPlan) return;
+    for (const grant of creditGrantsFor(benefitPlan as never)) {
       const sourceRef = 'grant:' + subscriptionId + ':' + grant.kind + ':' + periodRef;
       const existing = await this.db.entitlementEntry.findUnique({where: {sourceRef}});
       if (existing) continue;
@@ -602,10 +680,11 @@ export class BillingService {
 
   subscriptionView(sub: Record<string, unknown> & {plan?: {name?: string; serviceType?: string} | null}) {
     const cancelScheduled = Boolean(sub.cancelAtPeriodEnd);
+    const snapshot = catalogPlanSnapshot(sub.metadata);
     return {
       id: sub.id,
-      planName: sub.plan?.name ?? 'Subscription',
-      serviceType: sub.plan?.serviceType ?? null,
+      planName: sub.plan?.name ?? (typeof snapshot?.name === 'string' ? snapshot.name : 'Subscription'),
+      serviceType: sub.plan?.serviceType ?? (typeof snapshot?.serviceType === 'string' ? snapshot.serviceType : null),
       interval: sub.interval,
       intervalDescription: describeInterval(sub.interval as BillingIntervalValue, Number(sub.intervalCount ?? 1)),
       unitAmount: sub.unitAmount,
@@ -789,17 +868,40 @@ export class BillingWebhookService {
 
 /* ───────────────────────────── Public API ───────────────────────────── */
 
+const globalPlansCache = new Map<string, {time: number; data: any}>();
+const PLANS_CACHE_TTL = 30000;
+const PLANS_CACHE_MAX = 200;
+let plansCacheGeneration = 0;
+
+function prunePlansCache(now: number) {
+  for (const [key, entry] of globalPlansCache) {
+    if (now - entry.time >= PLANS_CACHE_TTL) globalPlansCache.delete(key);
+  }
+}
+
 @Controller()
 export class PublicBillingController {
+  static clearCache() {
+    plansCacheGeneration++;
+    globalPlansCache.clear();
+    clearCatalogCache();
+  }
+
   constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService) {}
 
   @Get('public/plans') @Throttle({default: {limit: 600, ttl: 60000}})
   async plans(@Query('serviceType') serviceType?: string) {
+    const cacheKey = serviceType ? 'service:' + serviceType : '__all__';
+    prunePlansCache(Date.now());
+    const hit = globalPlansCache.get(cacheKey);
+    if (hit) return hit.data;
+    const generation = plansCacheGeneration;
+
     const items = await this.db.plan.findMany({
       where: {active: true, archivedAt: null, ...(serviceType ? {serviceType} : {})},
       orderBy: [{serviceType: 'asc'}, {sortOrder: 'asc'}, {unitAmount: 'asc'}],
     });
-    return {
+    const result = {
       termsVersion: BILLING_TERMS_VERSION,
       items: items.map(plan => ({
         slug: plan.slug,
@@ -822,6 +924,15 @@ export class PublicBillingController {
         metadata: plan.metadata,
       })),
     };
+    if (generation === plansCacheGeneration) {
+      prunePlansCache(Date.now());
+      globalPlansCache.delete(cacheKey);
+      while (globalPlansCache.size >= PLANS_CACHE_MAX) {
+        globalPlansCache.delete(globalPlansCache.keys().next().value!);
+      }
+      globalPlansCache.set(cacheKey, {time: Date.now(), data: result});
+    }
+    return result;
   }
 
   /** Price preview: identical server maths to checkout, no Stripe objects created. */
@@ -835,7 +946,7 @@ export class PublicBillingController {
       discountDuration: priced.coupon?.discount.duration ?? null,
       discountDurationInMonths: priced.coupon?.discount.durationInMonths ?? null,
       termsVersion: priced.hasRecurring ? BILLING_TERMS_VERSION : null,
-      items: priced.lines.map(line => ({planSlug: line.plan.slug, name: line.plan.name, quantity: line.quantity, amount: line.amount, billingType: line.plan.billingType, interval: line.plan.interval})),
+      items: priced.lines.map(line => ({planSlug: line.slug, name: line.name, quantity: line.quantity, amount: line.amount, billingType: line.billingType, interval: line.interval})),
     };
   }
 
@@ -952,7 +1063,11 @@ export class PlanAdminController {
 
   @Get() async list(@ValidatedQuery(BillingListDto) q: BillingListDto) {
     const {page, limit, skip, take, search} = parsePagination(q, 10);
-    const where = {...(search ? {OR: [{name: {contains: search, mode: 'insensitive' as const}}, {slug: {contains: search, mode: 'insensitive' as const}}, {serviceType: {contains: search, mode: 'insensitive' as const}}]} : {})};
+    const where = {
+      ...(search ? {OR: [{name: {contains: search, mode: 'insensitive' as const}}, {slug: {contains: search, mode: 'insensitive' as const}}, {serviceType: {contains: search, mode: 'insensitive' as const}}]} : {}),
+      ...(q.serviceType ? {serviceType: q.serviceType} : {}),
+      ...(q.status === 'PUBLISHED' ? {active: true, archivedAt: null} : q.status === 'DRAFT' ? {active: false, archivedAt: null} : q.status === 'ARCHIVED' ? {archivedAt: {not: null}} : {}),
+    };
     const [items, total] = await Promise.all([this.db.plan.findMany({where, skip, take, orderBy: [{serviceType: 'asc'}, {sortOrder: 'asc'}]}), this.db.plan.count({where})]);
     return {
       items: items.map(plan => ({
@@ -976,6 +1091,7 @@ export class PlanAdminController {
   @Post() @Roles('ADMIN', 'EDITOR') async create(@ValidatedBody(PlanDto) dto: PlanDto, @Req() req: {user: {id: string; email: string}}) {
     this.validate(dto);
     const item = await this.db.plan.create({data: this.data(dto)});
+    PublicBillingController.clearCache();
     await this.billing.record({actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'PLAN_CREATED', toState: item.slug, data: {unitAmount: item.unitAmount, billingType: item.billingType}});
     return item;
   }
@@ -985,6 +1101,7 @@ export class PlanAdminController {
     if (!existing) throw new NotFoundException();
     this.validate(dto);
     const item = await this.db.plan.update({where: {id}, data: this.data(dto)});
+    PublicBillingController.clearCache();
     await this.billing.record({
       actorType: 'ADMIN',
       actorId: req.user.id,
@@ -1003,6 +1120,7 @@ export class PlanAdminController {
     const existing = await this.db.plan.findUnique({where: {id}});
     if (!existing) throw new NotFoundException();
     const item = await this.db.plan.update({where: {id}, data: {active: false, archivedAt: new Date()}});
+    PublicBillingController.clearCache();
     await this.billing.record({actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'PLAN_ARCHIVED', fromState: 'active', toState: 'archived', data: {slug: item.slug}});
     return {archived: true};
   }
@@ -1037,6 +1155,7 @@ export class PlanAdminController {
       includedCredits: (dto.includedCredits ?? []) as object,
       sortOrder: dto.sortOrder ?? 0,
       active: dto.active ?? true,
+      ...(dto.metadata !== undefined ? {metadata: dto.metadata as object} : {}),
     };
   }
 }

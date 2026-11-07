@@ -20,6 +20,7 @@ import './button-system.css';
 import './requested-pages-polish.css';
 import './mega-menu.css';
 import './motion-system.css';
+import './decorative-system.css';
 
 // Classic editorial pairing: Playfair Display for display type, Inter for reading text.
 const display = Playfair_Display({subsets:['latin'], variable:'--font-display', display:'swap', style:['normal','italic']});

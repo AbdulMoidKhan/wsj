@@ -191,7 +191,7 @@ export function stripeFixture(options: {origin?: string} = {}): StripeFixture {
               if (fixture.failCheckout) throw new Error('fixture checkout failure');
               const id = nextId('cs');
               /* Embedded sessions return a client secret instead of a hosted URL. */
-              if (input.ui_mode === 'embedded') return {id, url: null, client_secret: id + '_secret_fixture'};
+              if (input.ui_mode === 'embedded_page') return {id, url: null, client_secret: id + '_secret_fixture'};
               return {id, url: origin + '/booking-confirmation/?order=' + input.metadata.orderId};
             },
           },

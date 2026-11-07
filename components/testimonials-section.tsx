@@ -1,42 +1,27 @@
-import {Suspense} from 'react';
 import {TestimonialsSlider} from './testimonials-slider';
 import {fetchTestimonials} from '@/lib/testimonials';
 
 const EXCLUDED_PAGES = new Set(['terms-and-privacy', 'community-network', 'coworking']);
 
-/** Skeleton shown while published testimonials are fetched from the content API. */
-function TestimonialsSkeleton() {
-  return (
-    <div className="lx-vskel" aria-hidden="true">
-      <div className="lx-vskel-side">
-        <span className="lx-vskel-line lx-vskel-badge"/>
-        <span className="lx-vskel-line lx-vskel-title"/>
-        <span className="lx-vskel-line lx-vskel-short"/>
-        <span className="lx-vskel-line"/>
-      </div>
-      <div className="lx-vskel-stage">
-        <span className="lx-vskel-card"/>
-      </div>
-    </div>
-  );
-}
-
-/** Live published testimonials from /api/public/testimonials. */
-async function TestimonialsContent() {
+/**
+ * Live published testimonials from /api/public/testimonials.
+ *
+ * Rendered with the rest of the page rather than streamed behind Suspense: the
+ * slider carries motion attributes, and GSAP (initialised when the shell
+ * hydrates) would otherwise split and transform this markup while React still
+ * had it as a dehydrated boundary, producing a hydration mismatch. The fetch is
+ * the same memoised, timeout-guarded call the rest of the page already awaits,
+ * and it falls back to captured content when the API is unavailable.
+ */
+export async function TestimonialsSection({slug}: {slug?: string}) {
+  if (slug && EXCLUDED_PAGES.has(slug)) return null;
   const items = await fetchTestimonials();
   if (!items.length) return null;
-  return <TestimonialsSlider items={items}/>;
-}
-
-export function TestimonialsSection({slug}: {slug?: string}) {
-  if (slug && EXCLUDED_PAGES.has(slug)) return null;
 
   return (
     <section className="lx-sec lx-band wj-testimonials-sec" aria-label="Client testimonials">
       <div className="ip-wrap">
-        <Suspense fallback={<TestimonialsSkeleton/>}>
-          <TestimonialsContent/>
-        </Suspense>
+        <TestimonialsSlider items={items}/>
       </div>
     </section>
   );

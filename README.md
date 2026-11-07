@@ -172,3 +172,16 @@ npm run test:api:input-guards
 ```
 
 That companion adds 153 SQL-like/script-like/Unicode/search-boundary/public-safety and invalid-JSON/auth scenarios, each requiring 20 consecutive passes. It enforces the predecessor fingerprint, completion and lock state. Public-safety reads are bounded observations, not exhaustive security proof.
+
+## Focused performance audit (8 November 2026)
+
+See `PERFORMANCE_AUDIT.md` and `reports/performance-2026-11-08/measurements.json` for measured scope, before/after results, and blocked production gates. No deployment or database mutation was performed.
+
+```powershell
+npm run test:performance-optimizations
+# Each profiler requires a fresh absolute JSON output filename; neither overwrites evidence.
+npm run profile:public-reads -- 'C:\absolute\fresh\public-reads.json'
+npm run profile:office-models -- 'C:\absolute\fresh\office-models.json'
+```
+
+The public-reader profiler refuses nonlocal database hosts, reads only public content/catalog data, and prints only timing, query-count and byte aggregates. It calls controllers/services directly, so its results do not include HTTP, guards, reverse proxies or response serialization. Database buffers remain warm. The model profiler is CPU-only and measures geometry attribute bytes, not total browser/GPU memory. The new regression suite uses mocks and procedural geometry only, without database or network access. On this Windows Guard environment, direct Node commands with `--preserve-symlinks --preserve-symlinks-main` and the existing synchronous test loader were used instead of npm/tsx subprocess paths. Those flags do not fix the blocked Next.js production build.

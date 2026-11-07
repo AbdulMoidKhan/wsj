@@ -4,6 +4,9 @@
  * split visual spans hidden from screen readers, keyboard focus unaffected).
  */
 
+/** An element that has been split carries its own revert handle. */
+type SplitHost = HTMLElement & {__wj_split_revert?: () => void};
+
 export interface SplitResult {
   lines: HTMLElement[];
   words: HTMLElement[];
@@ -16,8 +19,9 @@ export function splitText(
   options: { lines?: boolean; words?: boolean; chars?: boolean } = { lines: true }
 ): SplitResult {
   // If already split, revert first
-  if ((element as any).__wj_split_revert) {
-    (element as any).__wj_split_revert();
+  const target = element as SplitHost;
+  if (target.__wj_split_revert) {
+    target.__wj_split_revert();
   }
 
   const originalHTML = element.innerHTML;
@@ -139,10 +143,10 @@ export function splitText(
 
   const revert = () => {
     element.innerHTML = originalHTML;
-    delete (element as any).__wj_split_revert;
+    delete target.__wj_split_revert;
   };
 
-  (element as any).__wj_split_revert = revert;
+  target.__wj_split_revert = revert;
 
   return {
     lines: createdLines,

@@ -13,6 +13,7 @@ import {VenueGallery} from '@/components/venue-gallery';
 import {LiveSections,liveSectionsFor} from '@/components/live-sections';
 import {CommunityNetworkView} from '../../components/community-network-view';
 import {fetchCommunityPlans} from '../../lib/community-pricing';
+import {fetchCatalogService} from '../../lib/catalog';
 import {ServicePricingSection} from '../../components/service-pricing-section';
 import {CoworkingView} from '../../components/coworking-view';
 import {LibraryView} from '../../components/library-view';
@@ -62,8 +63,9 @@ export default async function Page({params,searchParams}:Props){
    return <PublicLayout><CommunityNetworkView plans={communityPlans}/></PublicLayout>;
  }
  if(source.slug==='memberships') {
-   const communityPlans = await fetchCommunityPlans();
-   return <PublicLayout><MembershipsPageView communityPlans={communityPlans}/></PublicLayout>;
+   /* Pass prices come from the coworking service in the dynamic catalog. */
+   const [communityPlans,coworking] = await Promise.all([fetchCommunityPlans(),fetchCatalogService('coworking')]);
+   return <PublicLayout><MembershipsPageView communityPlans={communityPlans} coworking={coworking}/></PublicLayout>;
  }
  if(source.slug==='workshops')return <PublicLayout><WorkshopsPageView/></PublicLayout>;
  if(source.slug==='services')return <PublicLayout><ServicesDirectoryView/></PublicLayout>;

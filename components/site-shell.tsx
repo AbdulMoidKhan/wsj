@@ -195,11 +195,11 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
       <div className="container lv-head-row">
         <Link prefetch={false} href="/" className="wj-brand" aria-label="Workspace Junction home">{brand}</Link>
         <div className="lv-head-right">
-          <Link prefetch={false} href={pathname === '/' ? '#pricing' : '/#pricing'} className="lv-plans">
+          <BookingButton variant="yellow" className="lv-plans">
             <span className="lv-plans-shine" aria-hidden="true"/>
             <span className="lv-plans-text-full">Plans &amp; Pricing</span>
             <span className="lv-plans-text-short">Plans</span>
-          </Link>
+          </BookingButton>
           <a href={'tel:'+b.phoneHref} className="lv-phone"><span className="lv-phone-icon"><Phone size={16} aria-hidden="true"/></span><span>{b.phone}</span></a>
           <nav className="lv-primary" aria-label="Main navigation">
             <Link prefetch={false} href="/" aria-current={pathname === '/' ? 'page' : undefined}><span>Home</span></Link>

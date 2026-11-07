@@ -44,5 +44,8 @@ function toTestimonial(row: Row): Testimonial {
 export async function fetchTestimonials(): Promise<Testimonial[]> {
   const rows = (await publicItems('testimonials')) as Row[] | null;
   if (rows === null) return testimonialFallback;
-  return rows.map(toTestimonial).filter(item => item.name && item.quote);
+  const filtered = rows
+    .map(toTestimonial)
+    .filter(item => item.name && item.quote && !['ascsc', 'cascasc', 'test', 'asdasd'].includes(item.name.toLowerCase()) && !['ascsc', 'cascasc', 'test', 'asdasd'].includes(item.quote.toLowerCase()));
+  return filtered.length >= 2 ? filtered : testimonialFallback;
 }

@@ -1,0 +1,68 @@
+/* Intentional whitespace system: lightweight SVG rails that frame content without becoming content. */
+.wj-platform .wj-motif-section,
+.wj-platform .wj-decorated-page{position:relative;isolation:isolate;overflow:clip}
+.wj-platform .wj-section-motif{position:absolute;z-index:-1;pointer-events:none;inset:auto 0 8px; height:clamp(76px,9vw,120px);opacity:.82;overflow:hidden}
+.wj-platform .wj-section-motif svg{display:block;width:100%;height:100%}
+.wj-platform .wj-motif-track{fill:none;stroke:rgba(14,52,33,.16);stroke-width:1.2;stroke-dasharray:5 9;vector-effect:non-scaling-stroke}
+.wj-platform .wj-motif-accent{fill:none;stroke:rgba(215,144,42,.38);stroke-width:1.1;vector-effect:non-scaling-stroke}
+.wj-platform .wj-motif-node{fill:#d7902a;opacity:.6}
+.wj-platform .wj-section-motif-network .wj-motif-track{stroke:rgba(14,52,33,.2)}
+.wj-platform .wj-section-motif-studio .wj-motif-accent,
+.wj-platform .wj-section-motif-meeting .wj-motif-accent{stroke:rgba(215,144,42,.52)}
+.wj-platform .wj-section-motif-mail .wj-motif-track{stroke:rgba(14,52,33,.13)}
+.wj-platform .wj-motif-section > :not(.wj-section-motif){position:relative;z-index:1}
+.wj-platform .wj-motif-section > .hp-shell,
+.wj-platform .wj-motif-section > .ip-wrap{position:relative}
+.wj-platform .wj-hero .wj-section-motif,
+.wj-platform .ip-hero .wj-section-motif{inset:auto 0 0;opacity:.72}
+.wj-platform .wj-page-motif{position:absolute;z-index:0;pointer-events:none;inset:clamp(120px,17vw,220px) 0 auto;height:clamp(110px,14vw,180px);opacity:.38}
+.wj-platform .wj-page-motif + *{position:relative;z-index:1}
+.wj-platform .ip-hero .wj-section-motif{z-index:0}
+.wj-platform .ip-hero .wj-section-motif + .ip-wrap{position:relative;z-index:1}
+.wj-platform .wj-section-motif::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.78),transparent 18%,transparent 82%,rgba(255,255,255,.78));pointer-events:none}
+.wj-platform .lv-podcast .wj-section-motif{opacity:.56}
+.wj-platform .lv-podcast .wj-motif-track{stroke:rgba(255,255,255,.18)}
+.wj-platform .lv-podcast .wj-motif-accent{stroke:rgba(215,144,42,.5)}
+@media(max-width:767px){
+  .wj-platform .wj-section-motif{height:82px;inset:auto 0 2px;opacity:.64}
+  .wj-platform .wj-page-motif{inset:118px 0 auto;height:90px;opacity:.3}
+  .wj-platform .wj-section-motif::after{background:linear-gradient(90deg,rgba(255,255,255,.92),transparent 25%,transparent 75%,rgba(255,255,255,.92))}
+  .wj-platform .lv-podcast .wj-section-motif{display:none}
+}
+@media(prefers-reduced-motion:reduce){.wj-platform .wj-section-motif,.wj-platform .wj-page-motif{opacity:.5}}
+
+/* Spacing corrections from rendered audit. Keep content-led heights and prevent portrait
+   source images from turning service heroes into oversized blank bands. */
+html body .wj-platform .hp-home .hp-section{padding-block:clamp(64px,5.2vw,76px)}
+html body .wj-platform .hp-home .hp-pricing .pricing-section{padding-block:clamp(60px,5vw,72px)}
+html body .wj-platform .hp-home .wj-testimonials-sec,
+html body .wj-platform .hp-home .lx-sec.wj-testimonials-sec{padding-block:clamp(64px,5vw,76px)!important}
+html body .wj-platform .info-wrap.info-split{padding-block:clamp(64px,5vw,78px)}
+html body .wj-platform .info-band{padding-block:clamp(56px,4.5vw,68px)}
+html body .wj-platform .info-wrap.info-directory{padding-block:clamp(64px,5vw,76px)}
+html body .wj-platform .info-faq.info-wrap{padding-block:clamp(64px,5vw,76px)}
+html body .wj-platform .cn-page .cn-hero{padding-top:clamp(40px,4.2vw,56px);padding-bottom:clamp(48px,5vw,68px)}
+html body .wj-platform .cn-page .cn-hero-media{aspect-ratio:1.22 / 1;max-height:540px;overflow:hidden;align-self:center}
+html body .wj-platform .cn-page .cn-hero-img{width:100%;height:100%;max-width:none;object-fit:cover}
+html body .wj-platform .cn-page .cn-about{padding-block:clamp(60px,6vw,78px)}
+html body .wj-platform .cn-page .cn-works{padding-block:clamp(68px,6.2vw,88px)}
+html body .wj-platform .cn-page .cn-circles{padding-block:clamp(64px,6vw,86px)}
+html body .wj-platform .cn-page .cn-events{padding-block:clamp(64px,6vw,86px)}
+html body .wj-platform .cn-page .cn-memberships{padding-block:clamp(64px,6vw,86px)}
+html body .wj-platform .cn-page .cn-more-ways{padding-block:clamp(64px,6vw,86px)}
+html body .wj-platform .cn-page .cn-works-top{margin-bottom:clamp(42px,5vw,64px)}
+html body .wj-platform .cn-page .cn-benefits-wrap{padding-block:clamp(32px,3.5vw,52px)}
+
+@media(max-width:767px){
+  html body .wj-platform .hp-home .hp-section{padding-block:52px}
+  html body .wj-platform .hp-home .hp-pricing .pricing-section{padding-block:52px}
+  html body .wj-platform .cn-page .cn-hero{padding-block:38px 48px}
+  html body .wj-platform .cn-page .cn-hero-media{aspect-ratio:1.2 / 1;max-height:360px}
+  html body .wj-platform .cn-page .cn-hero-img{object-fit:cover}
+  html body .wj-platform .cn-page .cn-about,
+  html body .wj-platform .cn-page .cn-works,
+  html body .wj-platform .cn-page .cn-circles,
+  html body .wj-platform .cn-page .cn-events,
+  html body .wj-platform .cn-page .cn-memberships,
+  html body .wj-platform .cn-page .cn-more-ways{padding-block:54px}
+}

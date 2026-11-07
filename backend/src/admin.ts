@@ -5,7 +5,7 @@ import {ApiBearerAuth} from '@nestjs/swagger';
 import {hash} from 'bcryptjs';
 import {Db,AuthGuard,Roles,parsePagination} from './core';
 import {ContentDto,UpdateContentDto,UserDto,UpdateUserDto,InquiryUpdateDto,InquiryListDto,ListDto} from './dto';
-import {kind} from './public';
+import {kind,clearPublicCache} from './public';
 
 export const serviceSubtypes: Record<string, string> = {
   'coworking': 'csb_studios',
@@ -109,6 +109,7 @@ export class ContentController {
   const metadata = cleanContent(dto.metadata||{});
   if(subType && !metadata.type) metadata.type = subType;
   const item=await this.db.content.create({data:{...dto,content:cleanContent(dto.content||{}),metadata,kind:resource}});
+  clearPublicCache();
   await audit(this.db,req,'CREATE',resource,item.id);
   return item;
  }
@@ -118,6 +119,7 @@ export class ContentController {
   const errors=configurationErrors(resource,dto.metadata);
   if(errors.length)throw new BadRequestException(errors);
   const item=await this.db.content.update({where:{id},data:{...dto,...(dto.content?{content:cleanContent(dto.content)}:{}),...(dto.metadata?{metadata:cleanContent(dto.metadata)}:{})}});
+  clearPublicCache();
   await audit(this.db,req,'UPDATE',resource,id);
   return item;
  }
@@ -125,6 +127,7 @@ export class ContentController {
   this.check(resource,req,true);
   await this.detail(resource,id,req);
   await this.db.content.delete({where:{id}});
+  clearPublicCache();
   await audit(this.db,req,'DELETE',resource,id);
   return {deleted:true};
  }

@@ -7,6 +7,7 @@ import {motion} from 'motion/react';
 import {ArrowRight, Play, Check, Plus, type LucideIcon} from 'lucide-react';
 import {ServicePricingSection} from './service-pricing-section';
 import {DYNAMIC_PAGES} from '@/lib/dynamic-pages-config';
+import {SectionMotif} from './decorative-visual';
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -202,7 +203,8 @@ export function DynamicPageView({slug}: {slug: string}) {
   const {hero, about, works, grid, benefits, banner, moreWays, faq, pricingService, pricingTitle} = config;
 
   return (
-    <main id="main" className={`cn-page dp-page ${pageId}-root`} ref={rootRef}>
+    <main id="main" className={`cn-page dp-page ${pageId}-root wj-decorated-page`} ref={rootRef}>
+      <SectionMotif variant={pageId.includes('podcast') ? 'studio' : pageId.includes('meeting') ? 'meeting' : pageId.includes('mail') || pageId.includes('address') ? 'mail' : 'route'} className="wj-page-motif" />
       {/* ==================== Hero ==================== */}
       <section className={`cn-hero cn-container ${cx('hero')}`} aria-label={`${pricingTitle} Hero`}>
         <div className="cn-hero-content">

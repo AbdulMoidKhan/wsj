@@ -10,8 +10,6 @@ name: Deploy to VPS
 #   - build output is backed up first and restored automatically if health checks fail
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 # Never let two deploys of this app overlap.

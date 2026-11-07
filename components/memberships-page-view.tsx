@@ -9,6 +9,7 @@ import {BookingButton} from './booking';
 import {CommunityMembershipSection} from './community-membership-section';
 import {TestimonialsSection} from './testimonials-section';
 import type {MembershipPlanItem} from '@/lib/community-pricing';
+import {findPlan, money, priceLabel, serviceRules, type CatalogPlan, type ServiceDetail} from '@/lib/catalog';
 import livePages from '@/data/live-pages.json';
 import {safeContent} from '@/lib/site';
 import './memberships-page-view.css';
@@ -33,14 +34,15 @@ const membershipFaqs = rawMemNodes
   .flatMap(n => n.items || [])
   .filter(item => item.q && item.a);
 
+/* Marketing copy only. Names, prices and billing periods are read from the
+   catalog at render time, so a price change in the admin portal appears here
+   with no code change and can never contradict checkout. */
 const passCards = [
   {
     num: '01',
     tier: 'Bronze',
     badge: 'Single Day',
     pass: '1 Day Pass',
-    price: '$50',
-    period: 'per day',
     tagline: 'Best for occasional visits & focused sprints',
     hours: '8 AM – 6 PM Access',
     popular: false,
@@ -59,8 +61,6 @@ const passCards = [
     tier: 'Silver',
     badge: 'Flexible Flex',
     pass: '5 Day Pass Bundle',
-    price: '$100',
-    period: '5 visits / month',
     tagline: 'Ideal for hybrid workers & freelancers',
     hours: '8 AM – 6 PM Access',
     popular: false,
@@ -79,8 +79,6 @@ const passCards = [
     tier: 'Gold',
     badge: 'Most Popular',
     pass: '10 Day Pass Bundle',
-    price: '$150',
-    period: '10 visits / month',
     tagline: 'Consistent productivity for hybrid teams',
     hours: '8 AM – 6 PM Access',
     popular: true,
@@ -99,8 +97,6 @@ const passCards = [
     tier: 'Platinum',
     badge: 'Unlimited',
     pass: 'Unlimited Monthly Access',
-    price: '$250',
-    period: 'full monthly access',
     tagline: 'Your everyday flexible headquarters',
     hours: '24/7 Unrestricted Access',
     popular: false,
@@ -134,7 +130,10 @@ const comparisonData = [
   {feature: 'Acoustic Telephone Booths', bronze: 'yes', silver: 'yes', gold: 'yes', platinum: 'yes'}
 ];
 
-export function MembershipsPageView({communityPlans}: {communityPlans: MembershipPlanItem[]}) {
+export function MembershipsPageView({communityPlans, coworking}: {communityPlans: MembershipPlanItem[]; coworking?: ServiceDetail | null}) {
+  /* Each presentational card is matched to its catalog package by tier name. */
+  const passes: Array<(typeof passCards)[number] & {plan: CatalogPlan | null}> = passCards.map(card => ({...card, plan: findPlan(coworking ?? null, 'coworking-' + card.tier.toLowerCase(), card.tier)}));
+  const rules = serviceRules(coworking ?? null);
   return (
     <main id="main" className="mem-page">
       <div className="mem-wrap">
@@ -200,16 +199,16 @@ export function MembershipsPageView({communityPlans}: {communityPlans: Membershi
           </div>
 
           <div className="mem-passes-grid" data-anim-stagger-group="true" data-anim-stagger="0.07">
-            {passCards.map((p) => (
+            {passes.map((p) => (
               <article key={p.tier} className={`mem-pass-card ${p.popular ? 'is-popular' : ''}`} data-tilt="5">
                 {p.popular && <span className="mem-pass-badge">{p.badge}</span>}
 
                 <div className="mem-card-header">
                   <span className="mem-number">{p.num}</span>
-                  <h3 className="mem-card-title">{p.tier}</h3>
+                  <h3 className="mem-card-title">{p.plan?.name || p.tier}</h3>
                   <div className="mem-price-display">
-                    <span className="mem-price-number">{p.price}</span>
-                    <span className="mem-price-period">/ {p.period}</span>
+                    <span className="mem-price-number">{p.plan ? money(p.plan.unitAmountCents, p.plan.currency) : 'On request'}</span>
+                    <span className="mem-price-period">{p.plan ? '/ ' + p.plan.unitLabel.replace(/^per /, '') : ''}</span>
                   </div>
                   <p className="mem-card-tagline">{p.pass} · {p.hours}</p>
                 </div>
@@ -236,7 +235,8 @@ export function MembershipsPageView({communityPlans}: {communityPlans: Membershi
                   {/* Opens the booking popup, which now runs the real checkout
                       against the structured billing catalog. */}
                   <BookingButton
-                    service="Memberships"
+                    service={coworking?.slug || 'coworking'}
+                    plan={p.plan?.slug}
                     data-magnetic="0.25"
                     className={`mem-plan-btn ${p.popular ? 'wj-button-yellow' : 'wj-button-green'}`}
                   >
@@ -247,6 +247,14 @@ export function MembershipsPageView({communityPlans}: {communityPlans: Membershi
               </article>
             ))}
           </div>
+
+          {/* Validity rules are authored per package in the admin portal. */}
+          {rules.map(rule => (
+            <p className="mem-rule-pill" key={rule}>
+              <Check size={13} strokeWidth={3} aria-hidden="true" />
+              {rule}
+            </p>
+          ))}
         </section>
 
         {/* ── SECTION 2: Polished Side-by-Side Comparison Table ── */}
@@ -269,10 +277,11 @@ export function MembershipsPageView({communityPlans}: {communityPlans: Membershi
               <thead>
                 <tr>
                   <th scope="col" className="mem-th-feature">Access &amp; Inclusions</th>
-                  <th scope="col" className="mem-th-col">Bronze <span>$50 / day</span></th>
-                  <th scope="col" className="mem-th-col">Silver <span>$100 / mo</span></th>
-                  <th scope="col" className="mem-th-col is-popular">Gold <span>$150 / mo</span></th>
-                  <th scope="col" className="mem-th-col">Platinum <span>$250 / mo</span></th>
+                  {passes.map(p => (
+                    <th scope="col" className={'mem-th-col' + (p.popular ? ' is-popular' : '')} key={p.tier}>
+                      {p.plan?.name || p.tier} <span>{priceLabel(p.plan, 'On request')}</span>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>

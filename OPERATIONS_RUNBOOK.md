@@ -1,3 +1,6 @@
+<!-- Restored from personal repository main on 8 November 2026. -->
+> Historical review: the operational statements below were captured on 29 October 2026, not verified as current. Current local validation and environment blockers are recorded in PERFORMANCE_AUDIT.md and RELEASE_VALIDATION.md. No deployment or database mutation is authorized by this document.
+
 # Operations runbook
 
 Reviewed 29 October 2026. STATIC PREPARATION ONLY. API398-case20x is active. This document does not authorize execution, production access, spending, deployment, mail delivery, schema or data changes.

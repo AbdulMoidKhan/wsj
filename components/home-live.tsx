@@ -1,9 +1,10 @@
 'use client';
 
 import Image from '@/components/consistent-image';
-import {useEffect, useState, useRef} from 'react';
+import {useEffect, useMemo, useState, useRef} from 'react';
 import {ArrowUpRight, Sparkles, ShieldCheck, Clock, MapPin, ChevronLeft, ChevronRight} from 'lucide-react';
 import {BookingButton} from './booking';
+import {HomeHeroImage} from './home-hero-image';
 
 /* Content in this file is taken from the live workspacejunction.com homepage (Oct 2026). */
 
@@ -79,7 +80,9 @@ export function HeroSlides() {
     >
       {SLIDES.map((s, i) => (
         <figure key={s.src} className={'lv-slide' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
-          <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes="100vw" className="lv-slide-img" />
+          {i === 0
+            ? <HomeHeroImage alt={s.alt} sizes="100vw" className="lv-slide-img"/>
+            : <Image src={s.src} alt={s.alt} fill fetchPriority="low" sizes="100vw" className="lv-slide-img" />}
         </figure>
       ))}
 
@@ -119,9 +122,9 @@ export function HeroSlides() {
             <BookingButton className="btn btn-primary lv-pill lv-hero-primary-cta" service={slide.ctaService}>
               {slide.ctaLabel} <ArrowUpRight size={17} aria-hidden="true" />
             </BookingButton>
-            <a href="#pricing" className="lv-pill lv-pill-ghost lv-hero-secondary-cta">
+            <BookingButton className="lv-pill lv-pill-ghost lv-hero-secondary-cta">
               Plans &amp; Pricing <ArrowUpRight size={17} aria-hidden="true" />
-            </a>
+            </BookingButton>
           </div>
         </div>
 
@@ -188,34 +191,76 @@ export function HeroSlides() {
   );
 }
 
-type Tier = {name: string; duration: string; includes: string[]; price: string};
-type Studio = {name: string; blurb: string; capacity: string; tiers: Tier[]};
-export const STUDIOS: Studio[] = [
-  {name: 'Solo Creator Studio', blurb: 'Perfect for solo podcasters, content creators, and short-form recordings.', capacity: '1–2 people', tiers: [
-    {name: 'Starter Podcast Session', duration: '1 Hour', includes: ['Professional microphone', '1 camera video recording', 'Studio lighting', 'Audio recording', 'Raw audio and video files'], price: '$75/hour'},
-    {name: 'Standard Podcast Session', duration: '2 Hour', includes: ['1 camera video recording', 'Professional audio recording', 'Studio lighting', 'Raw audio and video files'], price: '$140 for 2 hours'},
-    {name: 'Premium Podcast Production', duration: '3 Hour', includes: ['Audio cleanup', '1 edited video episode', 'Social media clip (1 highlight)'], price: '$260 for 3 hours'},
-  ]},
-  {name: 'Interview Studio', blurb: 'Ideal for interview-style podcasts and two-host shows.', capacity: '2–3 people', tiers: [
-    {name: 'Starter Podcast Session', duration: '1 Hour', includes: ['2 Professional microphone', '2 camera video recording', 'Studio lighting', 'Audio recording'], price: '$95/hour'},
-    {name: 'Standard Podcast Session', duration: '2 Hour', includes: ['Multi-camera recording', 'Professional audio recording', 'Studio lighting', 'Raw audio and video files'], price: '$180/hour'},
-    {name: 'Premium Podcast Production', duration: '3 Hour', includes: ['Audio cleanup', '1 edited video episode', 'Social media clip (1 highlight)', 'Multi-camera recording'], price: '$320/hour'},
-  ]},
-  {name: 'Panel Podcast Studio', blurb: 'Designed for multi-host podcasts and panel discussions.', capacity: 'Up to 4 people', tiers: [
-    {name: 'Starter Podcast Session', duration: '1 Hour', includes: ['3–4 microphones', 'Multi-camera recording', 'Studio lighting', 'Audio recording'], price: '$120/hour'},
-    {name: 'Standard Podcast Session', duration: '2 Hour', includes: ['Multi-camera production', 'Professional audio mixing', 'Raw audio and video files'], price: '$220/hour'},
-    {name: 'Premium Podcast Production', duration: '3 Hour', includes: ['Audio cleanup', '1 edited podcast episode', 'Social media clip (1 highlight)', 'Multi-camera recording'], price: '$380/hour'},
-  ]},
-  {name: 'Premium Video Podcast Studio', blurb: 'Our flagship studio for high-end video podcasts and professional shows.', capacity: 'Up to 4–5 people', tiers: [
-    {name: 'Starter Podcast Session', duration: '1 Hour', includes: ['Professional podcast microphones', '3 camera video production', 'Professional lighting setup', 'Studio operator'], price: '$150/hour'},
-    {name: 'Standard Podcast Session', duration: '2 Hour', includes: ['Multi-camera production', 'Audio recording and mixing', 'Professional lighting setup', 'Raw files included'], price: '$280/hour'},
-    {name: 'Premium Podcast Production', duration: '3 Hour', includes: ['Full multi-camera production', 'Audio mastering', '1 fully edited episode', '3 Social media clip'], price: '$480/hour'},
-  ]},
+/* Studio tabs: the copy below is marketing only. Studio names, capacity and
+   every amount are read from the podcast-studio service in the dynamic catalog
+   and passed in by the page, so a rate change in the admin portal appears here
+   immediately. Session prices are the catalog hourly rate multiplied by the
+   session length, which is why they can never disagree with checkout. */
+type Tier = {name: string; duration: string; hours: number; includes: string[]};
+type Studio = {slug?: string; name: string; blurb: string; capacity: string; tiers: Tier[]};
+
+const SESSION_TIERS: Tier[][] = [
+  [
+    {name: 'Starter Podcast Session', duration: '1 Hour', hours: 1, includes: ['Professional microphone', '1 camera video recording', 'Studio lighting', 'Audio recording', 'Raw audio and video files']},
+    {name: 'Standard Podcast Session', duration: '2 Hour', hours: 2, includes: ['1 camera video recording', 'Professional audio recording', 'Studio lighting', 'Raw audio and video files']},
+    {name: 'Premium Podcast Production', duration: '3 Hour', hours: 3, includes: ['Audio cleanup', '1 edited video episode', 'Social media clip (1 highlight)']},
+  ],
+  [
+    {name: 'Starter Podcast Session', duration: '1 Hour', hours: 1, includes: ['2 Professional microphone', '2 camera video recording', 'Studio lighting', 'Audio recording']},
+    {name: 'Standard Podcast Session', duration: '2 Hour', hours: 2, includes: ['Multi-camera recording', 'Professional audio recording', 'Studio lighting', 'Raw audio and video files']},
+    {name: 'Premium Podcast Production', duration: '3 Hour', hours: 3, includes: ['Audio cleanup', '1 edited video episode', 'Social media clip (1 highlight)', 'Multi-camera recording']},
+  ],
+  [
+    {name: 'Starter Podcast Session', duration: '1 Hour', hours: 1, includes: ['3–4 microphones', 'Multi-camera recording', 'Studio lighting', 'Audio recording']},
+    {name: 'Standard Podcast Session', duration: '2 Hour', hours: 2, includes: ['Multi-camera production', 'Professional audio mixing', 'Raw audio and video files']},
+    {name: 'Premium Podcast Production', duration: '3 Hour', hours: 3, includes: ['Audio cleanup', '1 edited podcast episode', 'Social media clip (1 highlight)', 'Multi-camera recording']},
+  ],
+  [
+    {name: 'Starter Podcast Session', duration: '1 Hour', hours: 1, includes: ['Professional podcast microphones', '3 camera video production', 'Professional lighting setup', 'Studio operator']},
+    {name: 'Standard Podcast Session', duration: '2 Hour', hours: 2, includes: ['Multi-camera production', 'Audio recording and mixing', 'Professional lighting setup', 'Raw files included']},
+    {name: 'Premium Podcast Production', duration: '3 Hour', hours: 3, includes: ['Full multi-camera production', 'Audio mastering', '1 fully edited episode', '3 Social media clip']},
+  ],
+];
+const STUDIO_BLURBS = [
+  'Perfect for solo podcasters, content creators, and short-form recordings.',
+  'Ideal for interview-style podcasts and two-host shows.',
+  'Designed for multi-host podcasts and panel discussions.',
+  'Our flagship studio for high-end video podcasts and professional shows.',
 ];
 
-export function StudioTabs() {
+export interface StudioRate {
+  slug: string;
+  name: string;
+  capacityText: string | null;
+  unitAmountCents: number;
+  currency: string;
+  description: string;
+}
+
+/** Build the tab data from catalog packages, keeping the marketing copy. */
+export function studiosFromCatalog(rates: StudioRate[]): Studio[] {
+  return rates.map((rate, index) => ({
+    slug: rate.slug,
+    name: rate.name,
+    blurb: rate.description || STUDIO_BLURBS[index] || STUDIO_BLURBS[0],
+    capacity: rate.capacityText || 'Capacity confirmed by our team',
+    tiers: SESSION_TIERS[index] || SESSION_TIERS[0],
+  }));
+}
+
+export function StudioTabs({rates = []}: {rates?: StudioRate[]}) {
   const [active, setActive] = useState(0);
-  const studio = STUDIOS[active];
+  const STUDIOS = useMemo(() => studiosFromCatalog(rates), [rates]);
+  const studio = STUDIOS[active] as Studio | undefined;
+  const rate = rates[active];
+  const sessionPrice = (hours: number) => (rate ? (rate.unitAmountCents * hours / 100).toLocaleString('en-US', {style: 'currency', currency: rate.currency.toUpperCase(), maximumFractionDigits: 0}) : 'On request');
+  if (!studio) {
+    return (
+      <div className="lv-studios">
+        <p className="lv-studio-empty">Studio packages are confirmed by our team. Ask us about availability and current session rates.</p>
+      </div>
+    );
+  }
   const onKey = (e: React.KeyboardEvent) => {
     if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
@@ -278,8 +323,9 @@ export function StudioTabs() {
               </div>
 
               <div className="lv-tier-footer">
-                <BookingButton className="btn btn-primary lv-pill lv-tier-cta" service={`${studio.name}: ${t.name}`}>
-                  {t.price}
+                <BookingButton className="btn btn-primary lv-pill lv-tier-cta" service="podcast-studio" plan={studio.slug}>
+                  {sessionPrice(t.hours)}
+                  <span className="lv-tier-hours"> / {t.hours} hour{t.hours === 1 ? '' : 's'}</span>
                 </BookingButton>
               </div>
             </article>

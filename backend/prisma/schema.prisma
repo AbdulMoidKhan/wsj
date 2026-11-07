@@ -364,3 +364,158 @@ model WebhookEvent {
  processedAt DateTime?
  @@index([status, receivedAt])
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Dynamic service catalog: admin-managed services, packages, reusable add-ons
+// and amenities. Purely additive. Orders and subscriptions keep their own price
+// snapshots (OrderItem.unitAmount, Subscription.unitAmount), so editing a price
+// here never rewrites a historical financial record or an active billing cycle.
+// ─────────────────────────────────────────────────────────────────────────────
+enum ServiceBookingFlow {
+ STANDARD // 6-step: Service -> Plan -> Amenities -> Extras -> Schedule -> Checkout
+ NO_EXTRAS // Skips add-on selection (e.g. Business Address, Mailbox)
+ MEMBERSHIP // Skips amenities, add-ons, calendar; routes to Circle selection
+ CUSTOM // Admin-defined step array
+}
+enum BillingIntervalUnit {
+ ONE_TIME // Flat one-time charge
+ PER_HOUR // Multiplied by selected duration hours (1-24h)
+ PER_DAY // Multiplied by day count
+ PER_MONTH // Monthly recurring cycle (30 days)
+ PER_YEAR // Annual recurring cycle
+ PER_SESSION // Billed per appointment session
+ PER_ITEM // Multiplied by gear/item quantity
+ PER_SETUP // Flat technical staging fee
+ PER_BOOKING // Flat booking surcharge
+ PER_PODCAST // Media fee per podcast episode
+ PER_CLIP // Media fee per highlight clip
+ CUSTOM // Custom duration
+}
+model ServiceCategory {
+ id String @id @default(uuid())
+ slug String @unique
+ name String
+ description String @default("")
+ categoryBadge String?
+ iconName String @default("Layers")
+ heroImageUrl String?
+ displayOrder Int @default(0)
+ active Boolean @default(true)
+ flowType ServiceBookingFlow @default(STANDARD)
+ customSteps Json @default("[]")
+ metadata Json @default("{}")
+ archivedAt DateTime?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ plans CatalogPlan[]
+ serviceAddOns ServiceAddOn[]
+ serviceAmenities ServiceAmenity[]
+ @@index([active, displayOrder])
+}
+model CatalogPlan {
+ id String @id @default(uuid())
+ slug String @unique
+ serviceId String
+ service ServiceCategory @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+ name String
+ description String @default("")
+ unitAmountCents Int
+ currency String @default("usd")
+ billingUnit BillingIntervalUnit @default(PER_MONTH)
+ durationMinutes Int?
+ durationDays Int?
+ minQuantity Int @default(1)
+ maxQuantity Int @default(1)
+ capacityText String?
+ capacityMin Int?
+ capacityMax Int?
+ featured Boolean @default(false)
+ active Boolean @default(true)
+ archivedAt DateTime?
+ sortOrder Int @default(0)
+ rulesNotice String?
+ governmentNotice String?
+ adminFlagNote String?
+ metadata Json @default("{}")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ planAddOns PlanAddOn[]
+ planAmenities PlanAmenity[]
+ @@index([serviceId, active, sortOrder])
+}
+model CatalogAddOn {
+ id String @id @default(uuid())
+ slug String @unique
+ name String
+ description String @default("")
+ unitAmountCents Int
+ currency String @default("usd")
+ billingUnit BillingIntervalUnit @default(ONE_TIME)
+ minQuantity Int @default(0)
+ maxQuantity Int @default(10)
+ defaultQuantity Int @default(1)
+ imageUrl String?
+ active Boolean @default(true)
+ archivedAt DateTime?
+ adminFlagNote String?
+ metadata Json @default("{}")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ serviceAddOns ServiceAddOn[]
+ planAddOns PlanAddOn[]
+ @@index([active])
+}
+model ServiceAddOn {
+ serviceId String
+ service ServiceCategory @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+ addOnId String
+ addOn CatalogAddOn @relation(fields: [addOnId], references: [id], onDelete: Cascade)
+ priceOverrideCents Int?
+ isRequired Boolean @default(false)
+ sortOrder Int @default(0)
+ @@id([serviceId, addOnId])
+ @@index([addOnId])
+}
+model PlanAddOn {
+ planId String
+ plan CatalogPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+ addOnId String
+ addOn CatalogAddOn @relation(fields: [addOnId], references: [id], onDelete: Cascade)
+ priceOverrideCents Int?
+ isRequired Boolean @default(false)
+ sortOrder Int @default(0)
+ @@id([planId, addOnId])
+ @@index([addOnId])
+}
+model CatalogAmenity {
+ id String @id @default(uuid())
+ slug String @unique
+ name String
+ description String @default("")
+ iconUrl String?
+ iconName String @default("Check")
+ active Boolean @default(true)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ serviceAmenities ServiceAmenity[]
+ planAmenities PlanAmenity[]
+ @@index([active])
+}
+model ServiceAmenity {
+ serviceId String
+ service ServiceCategory @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+ amenityId String
+ amenity CatalogAmenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+ sortOrder Int @default(0)
+ @@id([serviceId, amenityId])
+ @@index([amenityId])
+}
+model PlanAmenity {
+ planId String
+ plan CatalogPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+ amenityId String
+ amenity CatalogAmenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+ sortOrder Int @default(0)
+ @@id([planId, amenityId])
+ @@index([amenityId])
+}

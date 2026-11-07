@@ -10,6 +10,7 @@
     "db:migrate": "node node_modules/prisma/build/index.js migrate deploy",
     "db:push": "node node_modules/prisma/build/index.js db push",
     "db:seed": "node --import tsx prisma/seed.ts",
+    "db:seed:catalog": "node --import tsx prisma/seed-service-catalog.ts",
     "test": "node --import tsx --test test/*.test.ts"
   },
   "dependencies": {

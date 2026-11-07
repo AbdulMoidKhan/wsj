@@ -34,6 +34,10 @@
     "images:hero": "node scripts/generate-hero-images.cjs",
     "test:performance-baseline": "node scripts/qa/performance-baseline.mjs",
     "test:performance-guards": "node --test scripts/qa/performance-baseline-guards.test.cjs",
+    "test:performance-optimizations": "node scripts/qa/performance-optimizations.test.cjs",
+    "test:release": "node scripts/qa/release-regressions.cjs && node --experimental-strip-types --test backend/test/operations-review.test.ts",
+    "profile:public-reads": "node scripts/qa/public-read-profile.cjs",
+    "profile:office-models": "node scripts/qa/office-model-profile.cjs",
     "test:paint-timeline": "node --test scripts/qa/paint-timeline.test.mjs",
     "test:service-content": "node --import ./backend/node_modules/tsx/dist/loader.mjs --test scripts/qa/service-content.test.ts",
     "test:redesign-ui": "node --import ./backend/node_modules/tsx/dist/loader.mjs scripts/qa/redesign-ui.ts"
