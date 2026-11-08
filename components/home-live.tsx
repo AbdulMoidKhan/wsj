@@ -147,6 +147,12 @@ export function HeroSlides() {
           </div>
 
           <div className="lv-controls-cluster">
+            {/* Slide position, read as an editorial folio rather than a widget. */}
+            <p className="lv-hero-folio" aria-hidden="true">
+              <em>{String(index + 1).padStart(2, '0')}</em>
+              <span className="lv-folio-rule"><span className="lv-folio-fill" style={{width: ((index + 1) / SLIDES.length) * 100 + '%'}}/></span>
+              <span>{String(SLIDES.length).padStart(2, '0')}</span>
+            </p>
             <div className="lv-arrow-nav">
               <button
                 type="button"

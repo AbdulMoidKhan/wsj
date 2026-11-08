@@ -21,6 +21,9 @@ import './requested-pages-polish.css';
 import './mega-menu.css';
 import './motion-system.css';
 import './decorative-system.css';
+// Loaded last: the senior art-direction layer that re-proportions the existing
+// brand into the architectural editorial system. Copy and palette unchanged.
+import './architectural-redesign.css';
 
 // Classic editorial pairing: Playfair Display for display type, Inter for reading text.
 const display = Playfair_Display({subsets:['latin'], variable:'--font-display', display:'swap', style:['normal','italic']});

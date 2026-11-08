@@ -64,6 +64,14 @@ export default async function Home() {
     ? (statsItem.metadata.items as Array<{value: string; label: string}>)
     : defaultStats;
 
+  /* "Beyond the Desk" reads as two tiers rather than thirteen equal tiles:
+     the spatial amenities that deserve photography, and the business services
+     that are really a directory. Records that carry a description are the
+     feature set; the rest become the index. */
+  const described = services.filter(item => item.text);
+  const featureServices = (described.length >= 2 ? described : services).slice(0, 4);
+  const directoryServices = services.filter(item => !featureServices.includes(item));
+
   return <PublicLayout>
     <main id="main" className="home-page hp-home lv-home">
       <section className="lv-hero" aria-labelledby="hp-title"><HeroSlides/></section>
@@ -82,7 +90,7 @@ export default async function Home() {
       </div></section>
 
       <section className="hp-section lv-events wj-motif-section" aria-labelledby="lv-events-title"><SectionMotif variant="route"/><div className="hp-shell">
-        <dl className="lv-stats" data-anim-stagger-group="true" data-anim-stagger="0.08">{stats.map(s => <div key={s.label} data-anim="counter"><dt>{s.label}</dt><dd>{s.value}</dd></div>)}</dl>
+        <dl className="lv-stats wj-ledger" data-anim-stagger-group="true" data-anim-stagger="0.08">{stats.map(s => <div key={s.label} data-anim="counter"><dt>{s.label}</dt><dd>{s.value}</dd></div>)}</dl>
         <div className="lv-split">
           <figure className="lv-photo" data-anim="mask-reveal" data-lag="0.08" data-skew="true"><Image src="/media/2b124bae06-Rectangle-5527.png" alt="A workshop audience seated in the Workspace Junction event space" fill sizes="(max-width: 900px) calc(100vw - 40px), 560px" className="hp-photo"/></figure>
           <div className="lv-copy" data-anim="fade-up">
@@ -106,8 +114,9 @@ export default async function Home() {
             <Link href="/use-cases/" className="text-link hp-link">Explore all use cases <ArrowUpRight size={18}/></Link>
           </div>
         </div>
-        <div className="lv-service-grid" data-anim-stagger-group="true" data-anim-stagger="0.06">{useCases.map(item => <a key={item.id} href={item.href} className="lv-service has-text" data-tilt="5">
-          <span className={'lv-service-img' + (item.image ? '' : ' lv-service-img-empty')}>{item.image && <Image src={item.image} alt={item.alt} fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 400px" className="hp-photo"/>}</span>
+        <div className="lv-service-grid wj-bento" data-anim-stagger-group="true" data-anim-stagger="0.06">{useCases.map(item => <a key={item.id} href={item.href} className="lv-service has-text wj-bento-card" data-tilt="5">
+          <span className={'lv-service-img' + (item.image ? '' : ' lv-service-img-empty')}>{item.image && <Image src={item.image} alt={item.alt} fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 520px" className="hp-photo"/>}</span>
+          <span className="wj-bento-index" aria-hidden="true">{item.number}</span>
           <span className="lv-service-body"><span className="lv-service-title">{item.title}</span>{item.description && <span className="lv-service-text">{item.description}</span>}<ArrowUpRight size={18} aria-hidden="true"/></span>
         </a>)}</div>
       </div></section>}
@@ -155,10 +164,15 @@ export default async function Home() {
             </div>
           </div>
         </div>
-        <div className="lv-service-grid" data-anim-stagger-group="true" data-anim-stagger="0.04">{services.map(s => <a key={s.title} href={s.href} className={'lv-service' + (s.text ? ' has-text' : '')} data-tilt="5">
-          <span className="lv-service-img"><Image src={s.img} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 400px" className="hp-photo"/></span>
+        <div className="lv-service-grid wj-amenity-bento" data-anim-stagger-group="true" data-anim-stagger="0.04">{featureServices.map(s => <a key={s.title} href={s.href} className={'lv-service wj-bento-card' + (s.text ? ' has-text' : '')} data-tilt="5">
+          <span className="lv-service-img"><Image src={s.img} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 560px" className="hp-photo"/></span>
           <span className="lv-service-body"><span className="lv-service-title">{s.title}</span>{s.text && <span className="lv-service-text">{s.text}</span>}<ArrowUpRight size={18} aria-hidden="true"/></span>
         </a>)}</div>
+        {directoryServices.length > 0 && <div className="wj-index-table" data-anim-stagger-group="true" data-anim-stagger="0.03">{directoryServices.map((s, i) => <a key={s.title} href={s.href} className="wj-index-row">
+          <span className="wj-index-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <span className="wj-index-label">{s.title}</span>
+          <ArrowUpRight size={17} aria-hidden="true" className="wj-index-arrow"/>
+        </a>)}</div>}
       </div></section>
 
       <TestimonialsSection/>

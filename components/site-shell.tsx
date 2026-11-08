@@ -61,6 +61,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
   const [mobileClosing, setMobileClosing] = useState(false);
   const [openMegaGroup, setOpenMegaGroup] = useState('Work & Meet');
   const mobileTrigger = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const mobilePanel = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<NodeJS.Timeout | null>(null);
   const b = business || {phone:'(773) 986-1908', phoneHref:'+17739861908', email:'grow@workspacejunction.com', address:'1S280 Summit Ave, Unit E2 Suite 1, Oakbrook Terrace, IL 60181', tagline:'A space for your next chapter.'};
@@ -100,6 +101,27 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
     {label:'Mailbox', href:'/mail-box/', icon:Mailbox},
     {label:'Community', href:'/community-network/', icon:Handshake},
   ];
+
+  /* The header docks on scroll: the category index compresses to a single
+     precise rule so the page, not the navigation, holds the viewport. */
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    let frame = 0;
+    const apply = () => {
+      frame = 0;
+      header.classList.toggle('is-docked', window.scrollY > 96);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+    apply();
+    window.addEventListener('scroll', onScroll, {passive: true});
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     if (!mobileMounted) return;
@@ -187,11 +209,11 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
   ));
   const brand = <>{logoSrc ? <Image src={logoSrc} alt="Workspace Junction" width={220} height={67} priority className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
 
-  return <div className="wj-platform">
+  return <div className="wj-platform" data-art-direction="architectural">
     <a className="wj-skip" href="#main">Skip to content</a>
     <AmbientBackdrop/>
     <SceneBackdrop/>
-    <header className="wj-header lv-header">
+    <header className="wj-header lv-header" ref={headerRef}>
       <div className="container lv-head-row">
         <Link prefetch={false} href="/" className="wj-brand" aria-label="Workspace Junction home">{brand}</Link>
         <div className="lv-head-right">
