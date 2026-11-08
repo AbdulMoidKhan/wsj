@@ -1,5 +1,7 @@
 # Release validation: 8 November 2026
 
+> This pre-deployment release record is historical. The application and additive database changes are now live; see `DEPLOYMENT_2026-11-08.md` for the current 219-test deployment, live webhook setup, verification and configuration limits.
+
 Destination: **AbdulMoidKhan/wsj**, branch **main**. Commit email: **moidkhan127@gmail.com**.
 
 ## Completed corrections

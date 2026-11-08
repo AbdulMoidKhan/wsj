@@ -1,6 +1,6 @@
 # Workspace Junction replacement
 
-Local Next.js 16.4.3 / React 19 frontend, NestJS / Prisma / PostgreSQL backend. This repository is a replacement for review, not a live deployment. Do not point integration tests at production.
+Next.js 16.4.3 / React 19 frontend with a NestJS / Prisma / PostgreSQL backend. Live on the existing VPS at **https://wp.workspacejunction.com/**. See `DEPLOYMENT_2026-11-08.md` for verified deployment scope, database preservation and remaining configuration limits. Never point mutation or load-test suites at production.
 
 ## Requirements
 Node.js 22+, npm, Docker Desktop with Linux containers. Existing node_modules are present locally. Keep backend/.env private. Never paste credentials into reports or commit them.
@@ -67,16 +67,16 @@ Run the suites sequentially. API/functional tests create temporary globally visi
 - scripts/import-approved-pricing.cjs: local-only additive import, refuses nonlocal DB, preserves existing records.
 
 ## Deployment checklist (approval required; not executed)
-1. Review PROJECT_STATUS, TEST_REPORT, BLOCKERS, pricing conflicts and approved business legal policies. Obtain explicit deployment approval.
+1. Review RELEASE_VALIDATION.md, DEPLOYMENT_2026-11-08.md, remaining pricing configuration and approved business legal policies. Obtain explicit deployment approval.
 2. Provision PostgreSQL, private network/backups, durable upload volume, Node frontend/API processes or build containers. Keep live WordPress intact until an approved cutover.
 3. Generate fresh production database/JWT/admin/SMTP credentials. Do not reuse local credentials. Set NODE_ENV=production, exact HTTPS FRONTEND_URL, API_ORIGIN and root NEXT_PUBLIC_SITE_URL/NEXT_PUBLIC_API_URL/API_URL.
 4. Run Prisma migration deploy, seed/import reviewed content once, inspect record counts and media. Seeding is additive and will not update existing CMS edits; resolve desired content updates explicitly.
 5. Build frontend only after build-time public environment values are set; `npm run build`, then `npm start`. Run backend from backend working directory with its private environment. Reverse proxy /api and /uploads consistently, set TLS, persistent storage, safe rate limits, logging, monitoring and backups. Never expose PostgreSQL publicly.
-6. Configure real SMTP only after approved sender/domain credentials and perform an approved delivery test. Booking providers stay external; no payment processing is implemented or enabled.
+6. Configure real SMTP only after approved sender/domain credentials and perform an approved delivery test. Stripe catalog checkout and subscription handling are implemented; the live webhook is configured. A real payment/refund was not performed during release verification.
 7. Run staging route/redirect/content/SEO/accessibility/auth/media/backup-restore checks, verify Lighthouse on staging, then approve DNS/cutover and retain rollback.
 
 ## Limits
-Email delivery, business-approved privacy/terms, third-party booking/payment credentials, hosting approval and real-device field performance cannot be fabricated. SMTP-not-configured submissions are database receipts, not delivered email. Newsletter forms record consent requests; they do not subscribe an external list. Booking inquiries do not reserve a space, create a paid membership or charge a card. See BLOCKERS.md and latest reports for the exact remaining implementation and external gaps.
+Email delivery, business-approved privacy/terms, third-party booking/payment credentials, hosting approval and real-device field performance cannot be fabricated. SMTP-not-configured submissions are database receipts, not delivered email. Newsletter forms record consent requests; they do not subscribe an external list. Booking inquiries do not reserve a space, create a paid membership or charge a card. See DEPLOYMENT_2026-11-08.md and the latest validation reports for the remaining configuration and external gaps.
 
 ## Repeated local performance profiling
 
