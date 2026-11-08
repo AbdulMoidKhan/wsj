@@ -208,7 +208,11 @@ test('a customer who closes the browser still gets the purchase completed by web
   assert.equal(subscription.stripeStatus, 'active');
   const status = await h.publicApi.orderStatus(order.id);
   assert.equal(status.processing, false);
-  assert.ok(status.manageToken, 'a management link is only issued once Stripe confirmed payment');
+  assert.equal(status.paid, true);
+  /* An order id is a reference, not proof of identity: the public status must
+     never hand out a credential for the whole customer account. */
+  assert.equal('manageToken' in status, false);
+  assert.doesNotMatch(JSON.stringify(status), /eyJ|token/i);
 });
 
 test('duplicate and out-of-order webhooks never duplicate orders, subscriptions or credits', async () => {

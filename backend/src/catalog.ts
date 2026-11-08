@@ -457,6 +457,8 @@ interface ResolvedPlan {
   planId: string | null;
   intervalCount: number;
   requiresSchedule: boolean;
+  /** How long one purchase stays usable, when the package sells a period. */
+  durationDays: number | null;
   legacyPlan?: PlanLike;
   includedCredits?: unknown[];
 }
@@ -785,6 +787,7 @@ export class CatalogService {
           flowType: row.service.flowType,
           intervalCount: 1,
           requiresSchedule: requiresSchedule(row.billingUnit),
+          durationDays: row.durationDays ?? null,
           includedCredits: Array.isArray(row.metadata?.includedCredits) ? row.metadata.includedCredits : [],
         },
         addOns: new Map(views.map(view => [view.slug, view])),
@@ -817,6 +820,7 @@ export class CatalogService {
         flowType: service?.flowType ?? 'STANDARD',
         intervalCount: legacy.intervalCount || 1,
         requiresSchedule: legacy.requiresSchedule,
+        durationDays: null,
         legacyPlan: legacy as PlanLike,
       },
       addOns: new Map((service?.addOns ?? []).map(view => [view.slug, view])),

@@ -186,13 +186,31 @@
 .bk-submit-btn:disabled{opacity:.45;cursor:not-allowed}
 .bk-error-msg{margin:0 0 14px;padding:12px 14px;border-radius:5px;background:#fdecec;border:1px solid #e3b7b7;color:#8a2b2b;font:400 13.5px/1.55 var(--bk-body)}
 
-/* ── Embedded Stripe payment step ── */
+/* ── Our own payment form: Stripe owns only the card field ── */
 .bk-pay{display:flex;flex-direction:column;gap:14px}
 .bk-pay-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 18px;background:#fff;border:1px solid var(--bk-line);border-left:3px solid var(--bk-amber);border-radius:5px}
 .bk-pay-head span{font:600 13px/1 var(--bk-body);color:var(--bk-muted)}
 .bk-pay-head strong{font-family:var(--bk-display);font-weight:500;font-size:26px;letter-spacing:-.02em;color:var(--bk-forest)}
-.bk-pay-mount{min-height:120px}
+.bk-pay-mount{min-height:52px;padding:12px 14px;border:1px solid var(--bk-line);border-radius:5px;background:#fff;transition:border-color .18s}
+.bk-pay-mount.is-ready{min-height:0}
 .bk-pay-mount iframe{width:100%!important;border:0;display:block}
+.bk-field-error{margin:8px 0 0;font:400 12.5px/1.5 var(--bk-body);color:#8a2b2b}
+
+/* Reference photo at the head of the details step. */
+.bk-checkout-hero{margin:0 0 20px;border-radius:5px;overflow:hidden;border:1px solid var(--bk-line);background:var(--bk-sand)}
+.bk-checkout-hero img{display:block;width:100%;height:clamp(110px,18vw,168px);object-fit:cover}
+
+/* Coupon field with its own apply action, as in the reference layout. */
+.bk-coupon-row{display:flex;gap:10px;align-items:stretch}
+.bk-coupon-row .bk-input{flex:1;min-width:0}
+.bk-coupon-apply{flex:0 0 auto;white-space:nowrap}
+
+/* The renewal choice. Never pre-selected, always priced before the tick. */
+.bk-renew{padding:14px 15px;border:1px solid var(--bk-line);border-radius:5px;background:#fff}
+.bk-renew.is-on{border-color:var(--bk-amber);box-shadow:0 0 0 1px var(--bk-amber) inset}
+.bk-renew-choice{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font:600 13px/1.5 var(--bk-body);color:var(--bk-ink)}
+.bk-renew-choice input[type=checkbox]{width:18px;height:18px;min-width:18px;min-height:18px;margin:1px 0 0;flex-shrink:0;accent-color:var(--bk-forest);cursor:pointer}
+.bk-renew-note{margin:9px 0 0;font:400 12px/1.6 var(--bk-body);color:var(--bk-muted)}
 .bk-status{margin:0;display:flex;align-items:center;gap:8px;font:400 13.5px/1.55 var(--bk-body);color:var(--bk-muted)}
 .bk-pay-cancel{align-self:flex-start}
 

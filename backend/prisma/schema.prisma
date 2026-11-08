@@ -226,6 +226,13 @@ model Order {
  recurringInterval BillingInterval?
  couponCode String?
  paymentMethod String @default("STRIPE")
+ checkoutTokenHash String?
+ idempotencyKey String? @unique
+ requestFingerprint String?
+ autoRenew Boolean @default(false)
+ recurringConsentAt DateTime?
+ stripeDirectSubscriptionId String? @unique
+ providerProcessing Boolean @default(false)
  stripeCheckoutSessionId String? @unique
  stripePaymentIntentId String?
  termsVersion String?
@@ -264,7 +271,11 @@ model Subscription {
  order Order? @relation(fields: [orderId], references: [id])
  planId String?
  plan Plan? @relation(fields: [planId], references: [id])
- stripeSubscriptionId String @unique
+ stripeSubscriptionId String? @unique
+ autoRenew Boolean @default(true)
+ recurringConsentAt DateTime?
+ paidThrough DateTime?
+ finiteOrderItemId String? @unique
  stripeCustomerId String
  stripePriceId String?
  stripeItemId String?

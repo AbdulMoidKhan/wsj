@@ -59,7 +59,9 @@ function table(name: string, uniqueKeys: string[] = []) {
     async create({data, include}: Row) {
       for (const key of uniqueKeys) {
         if (data[key] !== undefined && data[key] !== null && rows.some(row => row[key] === data[key])) {
-          throw new Error('Unique constraint failed on ' + name + '.' + key);
+          /* Mirrors Prisma's own unique-violation code so retry and
+             idempotency paths are exercised exactly as they run live. */
+          throw Object.assign(new Error('Unique constraint failed on ' + name + '.' + key), {code: 'P2002', meta: {target: [key]}});
         }
       }
       const nested = data.items?.create;
@@ -129,9 +131,9 @@ function table(name: string, uniqueKeys: string[] = []) {
 export function fakeDb() {
   const plan = table('plan', ['slug']);
   const customer = table('customer', ['email', 'stripeCustomerId']);
-  const order = table('order', ['stripeCheckoutSessionId']);
+  const order = table('order', ['stripeCheckoutSessionId', 'idempotencyKey', 'stripeDirectSubscriptionId']);
   const orderItem = table('orderItem');
-  const subscription = table('subscription', ['stripeSubscriptionId']);
+  const subscription = table('subscription', ['stripeSubscriptionId', 'finiteOrderItemId']);
   const invoice = table('invoice', ['stripeInvoiceId']);
   const billingEvent = table('billingEvent');
   const entitlementEntry = table('entitlementEntry', ['sourceRef']);
@@ -156,8 +158,11 @@ export function fakeDb() {
 export interface StripeFixture extends PaymentClient {
   calls: Array<{kind: string; input?: unknown}>;
   subscriptions: Map<string, Row>;
+  paymentIntents: Map<string, Row>;
   promotion: Row | null;
   failCheckout: boolean;
+  failPaymentIntent: boolean;
+  failSubscriptionCreate: boolean;
 }
 
 /** Offline Stripe double. Subscriptions behave like Stripe's own state machine. */
@@ -165,11 +170,26 @@ export function stripeFixture(options: {origin?: string} = {}): StripeFixture {
   const origin = options.origin ?? 'http://localhost:3100';
   const calls: Array<{kind: string; input?: unknown}> = [];
   const subscriptions = new Map<string, Row>();
+  const paymentIntents = new Map<string, Row>();
+  /* Stripe replays the first response for a repeated idempotency key rather
+     than creating a second object; the double must behave the same way. */
+  const idempotent = new Map<string, Promise<Row>>();
+  const once = (key: string | undefined, build: () => Promise<Row> | Row): Promise<Row> => {
+    const pending = key ? idempotent.get(key) : undefined;
+    if (pending) return pending;
+    /* Registered before the first await, so concurrent callers share it. */
+    const created = Promise.resolve().then(build);
+    if (key) idempotent.set(key, created);
+    return created;
+  };
   const fixture: StripeFixture = {
     calls,
     subscriptions,
+    paymentIntents,
     promotion: null,
     failCheckout: false,
+    failPaymentIntent: false,
+    failSubscriptionCreate: false,
     client() {
       return {
         customers: {
@@ -196,7 +216,58 @@ export function stripeFixture(options: {origin?: string} = {}): StripeFixture {
             },
           },
         },
+        prices: {
+          create: async (input: Row, options?: Row) => {
+            calls.push({kind: 'prices.create', input: {...input, idempotencyKey: options?.idempotencyKey}});
+            return once(options?.idempotencyKey, () => ({id: nextId('price'), ...input}));
+          },
+        },
+        paymentIntents: {
+          create: async (input: Row, options?: Row) => {
+            calls.push({kind: 'paymentIntents.create', input: {...input, idempotencyKey: options?.idempotencyKey}});
+            if (fixture.failPaymentIntent) throw Object.assign(new Error('fixture decline'), {type: 'StripeCardError', code: 'card_declined'});
+            return once(options?.idempotencyKey, () => {
+              const id = nextId('pi');
+              const intent: Row = {id, object: 'payment_intent', status: 'requires_payment_method', client_secret: id + '_secret_fixture', amount: input.amount, currency: input.currency, metadata: input.metadata};
+              paymentIntents.set(id, intent);
+              return intent;
+            });
+          },
+          retrieve: async (id: string) => {
+            calls.push({kind: 'paymentIntents.retrieve', input: id});
+            const intent = paymentIntents.get(id);
+            if (!intent) throw new Error('No such payment intent: ' + id);
+            return intent;
+          },
+          cancel: async (id: string) => {
+            calls.push({kind: 'paymentIntents.cancel', input: id});
+            const intent = paymentIntents.get(id);
+            if (!intent) throw new Error('No such payment intent: ' + id);
+            intent.status = 'canceled';
+            return intent;
+          },
+        },
         subscriptions: {
+          create: async (input: Row, options?: Row) => {
+            calls.push({kind: 'subscriptions.create', input: {...input, idempotencyKey: options?.idempotencyKey}});
+            if (fixture.failSubscriptionCreate) throw Object.assign(new Error('fixture provider failure'), {type: 'StripeAPIError'});
+            return once(options?.idempotencyKey, () => {
+            const id = nextId('sub');
+            const created: Row = {
+              id,
+              object: 'subscription',
+              customer: input.customer,
+              status: 'incomplete',
+              metadata: input.metadata ?? {},
+              cancel_at_period_end: false,
+              items: {data: [{id: nextId('si'), quantity: 1, price: {id: nextId('price'), currency: 'usd', unit_amount: 10000, recurring: {interval: 'month', interval_count: 1}}}]},
+              latest_invoice: {id: nextId('in'), confirmation_secret: {client_secret: id + '_invoice_secret'}},
+              pending_setup_intent: null,
+            };
+            subscriptions.set(id, created);
+            return created;
+            });
+          },
           retrieve: async (id: string) => {
             calls.push({kind: 'subscriptions.retrieve', input: id});
             const sub = subscriptions.get(id);

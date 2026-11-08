@@ -40,6 +40,7 @@ import {
   type Discount,
   type Totals,
 } from './billing-core';
+import {finiteAccessStatus} from './direct-payments-core';
 
 const PORTAL_TOKEN_TTL = '2h';
 const PORTAL_PURPOSE = 'billing-portal';
@@ -189,6 +190,32 @@ export class BillingService {
         data: (entry.data ?? {}) as object,
       },
     });
+  }
+
+  /**
+   * Guest checkout variant. An email address alone does not prove who is
+   * typing, so an existing customer's name and phone are never overwritten
+   * from an unverified form; blanks are filled in, nothing is replaced.
+   */
+  async customerForGuest(email: string, name: string, phone?: string) {
+    const normalised = email.trim().toLowerCase();
+    const existing = await this.db.customer.findUnique({where: {email: normalised}});
+    if (!existing) {
+      try {
+        return await this.db.customer.create({data: {email: normalised, name: name || normalised, phone: phone ?? null}});
+      } catch (error) {
+        /* Two parallel first purchases from the same address: reuse the winner. */
+        if ((error as {code?: string})?.code !== 'P2002') throw error;
+        const raced = await this.db.customer.findUnique({where: {email: normalised}});
+        if (raced) return raced;
+        throw error;
+      }
+    }
+    const fill = {
+      ...(name && (!existing.name || existing.name === normalised) ? {name} : {}),
+      ...(phone && !existing.phone ? {phone} : {}),
+    };
+    return Object.keys(fill).length ? this.db.customer.update({where: {id: existing.id}, data: fill}) : existing;
   }
 
   async customerFor(email: string, name: string, phone?: string) {
@@ -551,6 +578,88 @@ export class BillingService {
     }
   }
 
+  /**
+   * Record the finite paid term bought when a customer did not opt in to
+   * automatic renewal. It is stored as a subscription row with no Stripe
+   * subscription behind it, so one place answers "does this person have
+   * access", while `autoRenew: false` and `paidThrough` make clear that
+   * nothing will ever be charged again.
+   *
+   * finiteOrderItemId is unique, so a replayed webhook cannot grant twice.
+   */
+  async activatePaidTerm(orderId: string) {
+    const order = await this.db.order.findUnique({where: {id: orderId}, include: {items: true}});
+    if (!order || order.status !== 'PAID' || order.autoRenew) return null;
+    const metadata = (order.metadata ?? {}) as Record<string, unknown>;
+    const termDays = typeof metadata.termDays === 'number' && metadata.termDays > 0 ? metadata.termDays : null;
+    if (!termDays) return null;
+
+    const anchorItem = order.items.find(item => item.billingType === 'RECURRING') ?? order.items[0];
+    if (!anchorItem) return null;
+    const existing = await this.db.subscription.findUnique({where: {finiteOrderItemId: anchorItem.id}});
+    if (existing) return existing;
+
+    const start = order.paidAt ?? new Date();
+    const paidThrough = new Date(start.getTime() + termDays * 24 * 60 * 60 * 1000);
+    const customer = await this.db.customer.findUnique({where: {id: order.customerId}});
+    const snapshot = catalogPlanSnapshot(anchorItem.metadata);
+
+    let saved;
+    try {
+      saved = await this.db.subscription.create({
+        data: {
+          customerId: order.customerId,
+          orderId: order.id,
+          planId: anchorItem.planId,
+          stripeSubscriptionId: null,
+          finiteOrderItemId: anchorItem.id,
+          stripeCustomerId: customer?.stripeCustomerId ?? '',
+          autoRenew: false,
+          recurringConsentAt: null,
+          interval: (anchorItem.interval as BillingIntervalValue | null) ?? 'MONTH',
+          intervalCount: 1,
+          currency: order.currency,
+          unitAmount: anchorItem.unitAmount,
+          quantity: anchorItem.quantity,
+          /* Not a Stripe state: this term is paid in full and simply ends. */
+          stripeStatus: 'paid_term',
+          accessStatus: 'ACTIVE',
+          currentPeriodStart: start,
+          currentPeriodEnd: paidThrough,
+          paidThrough,
+          nextInvoiceAt: null,
+          cancelAtPeriodEnd: true,
+          ...(snapshot ? {metadata: {catalogPlan: JSON.parse(JSON.stringify(snapshot))} as object} : {}),
+        },
+      });
+    } catch (error) {
+      if ((error as {code?: string})?.code === 'P2002') return this.db.subscription.findUnique({where: {finiteOrderItemId: anchorItem.id}});
+      throw error;
+    }
+
+    await this.record({
+      subscriptionId: saved.id,
+      orderId: order.id,
+      customerId: order.customerId,
+      actorType: 'SYSTEM',
+      action: 'PAID_TERM_ACTIVATED',
+      toState: 'ACTIVE',
+      data: {autoRenew: false, termDays, paidThrough: paidThrough.toISOString()},
+    });
+    await this.grantEntitlements(saved.id, 'term:' + order.id);
+    return saved;
+  }
+
+  /** End finite paid terms the moment the paid period runs out. */
+  async expirePaidTerms(now = new Date()) {
+    const due = await this.db.subscription.findMany({where: {stripeSubscriptionId: null, paidThrough: {lte: now}, accessStatus: {in: ['ACTIVE', 'PENDING']}}});
+    for (const sub of due) {
+      await this.db.subscription.update({where: {id: sub.id}, data: {accessStatus: 'ENDED', endedAt: sub.paidThrough ?? now}});
+      await this.record({subscriptionId: sub.id, customerId: sub.customerId, actorType: 'SYSTEM', action: 'PAID_TERM_ENDED', fromState: 'ACTIVE', toState: 'ENDED', reason: 'The paid period ended and automatic renewal was never requested'});
+    }
+    return due.length;
+  }
+
   async entitlementSummary(customerId: string) {
     const entries = await this.db.entitlementEntry.findMany({where: {customerId}, orderBy: {createdAt: 'desc'}, take: 500});
     const byKind = new Map<string, {kind: string; balance: number; entries: number}>();
@@ -569,6 +678,9 @@ export class BillingService {
     const sub = await this.db.subscription.findUnique({where: {id: subscriptionId}});
     if (!sub) throw new NotFoundException('Subscription not found');
     if (sub.accessStatus === 'ENDED' || sub.stripeStatus === 'canceled') throw new BadRequestException('This subscription has already ended. Start a new purchase to reactivate.');
+    /* A finite paid term has no renewal to stop. Cancelling it would only take
+       away access that is already paid for, so the paid period is kept. */
+    if (!sub.stripeSubscriptionId) throw new BadRequestException('This purchase does not renew. Your access stays until the paid period ends, and nothing further will be charged.');
 
     let updated: Stripe.Subscription;
     try {
@@ -612,6 +724,7 @@ export class BillingService {
     const sub = await this.db.subscription.findUnique({where: {id: subscriptionId}});
     if (!sub) throw new NotFoundException('Subscription not found');
     if (sub.stripeStatus === 'canceled' || sub.accessStatus === 'ENDED') throw new BadRequestException('This subscription has already ended and cannot be resumed. Start a new purchase.');
+    if (!sub.stripeSubscriptionId) throw new BadRequestException('This purchase was bought as a single paid period and has no renewal to resume. Start a new purchase to continue.');
     if (!sub.cancelAtPeriodEnd) throw new BadRequestException('No scheduled cancellation to withdraw');
     let updated: Stripe.Subscription;
     try {
@@ -629,6 +742,8 @@ export class BillingService {
   async reconcile(subscriptionId: string) {
     const sub = await this.db.subscription.findUnique({where: {id: subscriptionId}});
     if (!sub) throw new NotFoundException('Subscription not found');
+    /* Nothing to reconcile against: this term exists only in our records. */
+    if (!sub.stripeSubscriptionId) return sub;
     const fresh = await this.stripe().subscriptions.retrieve(sub.stripeSubscriptionId);
     return this.syncSubscription(fresh as Stripe.Subscription);
   }
@@ -681,8 +796,13 @@ export class BillingService {
   subscriptionView(sub: Record<string, unknown> & {plan?: {name?: string; serviceType?: string} | null}) {
     const cancelScheduled = Boolean(sub.cancelAtPeriodEnd);
     const snapshot = catalogPlanSnapshot(sub.metadata);
+    const renews = sub.autoRenew !== false && Boolean(sub.stripeSubscriptionId) && !cancelScheduled;
     return {
       id: sub.id,
+      autoRenew: sub.autoRenew !== false && Boolean(sub.stripeSubscriptionId),
+      renews,
+      paidThrough: sub.paidThrough ?? null,
+      accessEndsAt: sub.paidThrough ?? sub.currentPeriodEnd ?? null,
       planName: sub.plan?.name ?? (typeof snapshot?.name === 'string' ? snapshot.name : 'Subscription'),
       serviceType: sub.plan?.serviceType ?? (typeof snapshot?.serviceType === 'string' ? snapshot.serviceType : null),
       interval: sub.interval,
@@ -691,10 +811,12 @@ export class BillingService {
       quantity: sub.quantity,
       currency: sub.currency,
       stripeStatus: sub.stripeStatus,
-      accessStatus: sub.accessStatus,
+      /* A finite term ends by the clock, so it is reported from paidThrough
+         rather than from a stored status that nothing would update. */
+      accessStatus: sub.stripeSubscriptionId ? sub.accessStatus : finiteAccessStatus(sub.paidThrough as Date | null | undefined),
       currentPeriodStart: sub.currentPeriodStart,
       currentPeriodEnd: sub.currentPeriodEnd,
-      renewsAt: cancelScheduled ? null : sub.nextInvoiceAt ?? sub.currentPeriodEnd,
+      renewsAt: renews ? sub.nextInvoiceAt ?? sub.currentPeriodEnd : null,
       cancelAtPeriodEnd: cancelScheduled,
       cancellationRequestedAt: sub.cancellationRequestedAt,
       cancelAt: sub.cancelAt,
@@ -716,6 +838,10 @@ export class BillingWebhookService {
   /** True when this event belongs to the billing module rather than legacy bookings. */
   static handles(event: Stripe.Event): boolean {
     if (event.type.startsWith('customer.subscription.') || event.type.startsWith('invoice.')) return true;
+    if (event.type.startsWith('payment_intent.')) {
+      const intent = event.data.object as Stripe.PaymentIntent;
+      return Boolean(intent.metadata?.orderId);
+    }
     if (event.type.startsWith('checkout.session.')) {
       const session = event.data.object as Stripe.Checkout.Session;
       return Boolean(session.metadata?.orderId);
@@ -764,6 +890,12 @@ export class BillingWebhookService {
         return this.onInvoicePaid(event.data.object as Stripe.Invoice);
       case 'invoice.payment_failed':
         return this.onInvoiceFailed(event.data.object as Stripe.Invoice);
+      case 'payment_intent.succeeded':
+        return this.onPaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+      case 'payment_intent.payment_failed':
+        return this.onPaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
+      case 'payment_intent.canceled':
+        return this.onPaymentIntentCanceled(event.data.object as Stripe.PaymentIntent);
       default:
         return undefined;
     }
@@ -813,6 +945,58 @@ export class BillingWebhookService {
     await this.billing.syncSubscription(sub);
   }
 
+  /**
+   * The only writer of PAID for the custom payment form. The browser's own
+   * "succeeded" result is never trusted; this runs on a signature-verified
+   * event and still checks that the intent belongs to this order and actually
+   * collected the amount the server priced.
+   */
+  private async onPaymentIntentSucceeded(intent: Stripe.PaymentIntent) {
+    const orderId = intent.metadata?.orderId;
+    if (!orderId) return;
+    const order = await this.db.order.findUnique({where: {id: orderId}});
+    if (!order) return;
+    /* The order must already point at this intent: metadata alone is not proof. */
+    if (order.stripePaymentIntentId !== intent.id) return;
+    if (intent.currency !== order.currency) return;
+    if ((intent.amount_received ?? 0) < order.dueNowAmount) return;
+
+    if (order.status !== 'PAID') {
+      await this.db.order.update({where: {id: order.id}, data: {status: 'PAID', paidAt: new Date(), providerProcessing: false}});
+      await this.billing.record({orderId: order.id, customerId: order.customerId, actorType: 'STRIPE', action: 'ORDER_PAID', fromState: order.status, toState: 'PAID', stripeRef: intent.id, data: {amountReceived: intent.amount_received}});
+    }
+    /* Idempotent: the unique paid-term row makes a replay a no-op. */
+    await this.billing.activatePaidTerm(order.id);
+  }
+
+  private async onPaymentIntentFailed(intent: Stripe.PaymentIntent) {
+    const orderId = intent.metadata?.orderId;
+    if (!orderId) return;
+    const order = await this.db.order.findUnique({where: {id: orderId}});
+    /* A declined card leaves the attempt payable, so the customer can retry
+       with another card on the same order rather than starting again. */
+    if (!order || order.status !== 'PENDING' || order.stripePaymentIntentId !== intent.id) return;
+    await this.billing.record({
+      orderId: order.id,
+      customerId: order.customerId,
+      actorType: 'STRIPE',
+      action: 'PAYMENT_ATTEMPT_FAILED',
+      fromState: 'PENDING',
+      toState: 'PENDING',
+      stripeRef: intent.id,
+      reason: intent.last_payment_error?.code ?? 'payment_failed',
+    });
+  }
+
+  private async onPaymentIntentCanceled(intent: Stripe.PaymentIntent) {
+    const orderId = intent.metadata?.orderId;
+    if (!orderId) return;
+    const order = await this.db.order.findUnique({where: {id: orderId}});
+    if (!order || order.status !== 'PENDING' || order.stripePaymentIntentId !== intent.id) return;
+    await this.db.order.update({where: {id: order.id}, data: {status: 'CANCELLED'}});
+    await this.billing.record({orderId: order.id, customerId: order.customerId, actorType: 'STRIPE', action: 'PAYMENT_CANCELLED', fromState: 'PENDING', toState: 'CANCELLED', stripeRef: intent.id});
+  }
+
   private async onInvoicePaid(invoice: Stripe.Invoice) {
     const record = invoice as unknown as Record<string, unknown>;
     const subscriptionId = typeof record.subscription === 'string' ? (record.subscription as string) : (record.subscription as {id?: string} | undefined)?.id;
@@ -845,6 +1029,15 @@ export class BillingWebhookService {
     if (!saved) return;
     await this.db.subscription.update({where: {id: saved.id}, data: {paymentFailedAt: null, graceEndsAt: null, latestInvoiceId: invoice.id ?? null, latestInvoiceUrl: invoice.hosted_invoice_url ?? null, accessStatus: accessStatusFor(fresh.status, {graceEndsAt: null})}});
     await this.billing.grantEntitlements(saved.id, String(invoice.id ?? saved.currentPeriodStart?.toISOString() ?? ''));
+    /* First invoice of a subscription bought through our own payment form:
+       this is where that order becomes paid, never the browser's result. */
+    if (saved.orderId) {
+      const order = await this.db.order.findUnique({where: {id: saved.orderId}});
+      if (order && order.status !== 'PAID' && (invoice.amount_paid ?? 0) > 0 && invoice.currency === order.currency) {
+        await this.db.order.update({where: {id: order.id}, data: {status: 'PAID', paidAt: new Date(), providerProcessing: false}});
+        await this.billing.record({orderId: order.id, customerId: order.customerId, actorType: 'STRIPE', action: 'ORDER_PAID', fromState: order.status, toState: 'PAID', stripeRef: invoice.id ?? null, data: {amountPaid: invoice.amount_paid}});
+      }
+    }
     await this.billing.record({subscriptionId: saved.id, customerId: saved.customerId, actorType: 'STRIPE', action: 'INVOICE_PAID', toState: fresh.status, stripeRef: invoice.id ?? null, data: {amountPaid: invoice.amount_paid, periodEnd: saved.currentPeriodEnd?.toISOString() ?? null}});
   }
 
@@ -967,9 +1160,14 @@ export class PublicBillingController {
       status: order.status,
       paymentMethod: order.paymentMethod,
       processing: order.status === 'PENDING',
-      subscriptions: order.subscriptions.map(sub => ({id: sub.id, accessStatus: sub.accessStatus, stripeStatus: sub.stripeStatus, currentPeriodEnd: sub.currentPeriodEnd})),
-      /* The management token is only issued once Stripe confirmed the payment. */
-      manageToken: paid ? this.billing.portalToken(order.customerId) : null,
+      subscriptions: order.subscriptions.map(sub => ({id: sub.id, accessStatus: sub.accessStatus, stripeStatus: sub.stripeStatus, currentPeriodEnd: sub.currentPeriodEnd ?? sub.paidThrough})),
+      /*
+       * No management credential is issued here. An order id is a reference,
+       * not proof of identity: anyone who saw or guessed one would otherwise
+       * have received a token for the whole customer account. Management is
+       * reached through the emailed sign-in link instead.
+       */
+      paid,
     };
   }
 
@@ -1292,12 +1490,14 @@ export class BillingAdminController {
         await this.billing.reconcile(sub.id);
         reconciled += 1;
       } catch {
-        failures.push(sub.stripeSubscriptionId);
+        failures.push(sub.stripeSubscriptionId ?? sub.id);
       }
     }
     const suspended = await this.billing.applyGracePolicy();
-    await this.billing.record({actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'RECONCILE_SWEEP', data: {reconciled, suspended, failures: failures.length}});
-    return {reconciled, suspended, failures};
+    /* Finite paid terms end by the clock, so the same sweep retires them. */
+    const expired = await this.billing.expirePaidTerms();
+    await this.billing.record({actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'RECONCILE_SWEEP', data: {reconciled, suspended, expired, failures: failures.length}});
+    return {reconciled, suspended, expired, failures};
   }
 
   /** Staff-issued management link for a customer who cannot receive email. */
