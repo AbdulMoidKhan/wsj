@@ -111,3 +111,17 @@ test('public content readers paginate below the Next cache item limit without lo
   assert.match(source('lib/site.ts'), /page<=40/);
  } finally {global.fetch = originalFetch;}
 });
+
+
+test('catalog booking preserves coworking same-day restrictions and declared dedicated durations', () => {
+ const {blocksSameDayBooking} = require('../../lib/booking-policy.ts');
+ assert.equal(blocksSameDayBooking('coworking', 'ONE_TIME'), true);
+ assert.equal(blocksSameDayBooking('coworking-space', 'ONE_TIME'), true);
+ assert.equal(blocksSameDayBooking('dedicated', 'RECURRING'), true);
+ assert.equal(blocksSameDayBooking('meeting-rooms', 'ONE_TIME'), false);
+ assert.match(source('components/booking-dialog.tsx'), /blockToday=\{blocksSameDayBooking\(detail\?\.slug, plan\?\.billingType\)\}/);
+ for (const slug of ['dedicated-desk-classic', 'dedicated-desk-performance']) {
+  const seedLine = source('backend/prisma/seed-service-catalog.ts').split('\n').find(line => line.includes("slug: '" + slug + "'"));
+  assert.match(seedLine, /durationDays: 30/);
+ }
+});

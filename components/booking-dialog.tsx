@@ -18,6 +18,7 @@
  */
 import {PUBLIC_API_URL} from '@/lib/public-api';
 import {findCatalogServiceHint} from '@/lib/catalog-service-hint';
+import {blocksSameDayBooking} from '@/lib/booking-policy';
 import './booking-dialog.css';
 import {sendInquiry} from './forms';
 import {useCallback, useEffect, useMemo, useReducer, useState, useRef, useId} from 'react';
@@ -1111,7 +1112,7 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
                 <>
                   <CalendarPicker
                     selected={s.date}
-                    blockToday={plan?.billingType === 'RECURRING'}
+                    blockToday={blocksSameDayBooking(detail?.slug, plan?.billingType)}
                     onChange={v => {
                       dispatch({t: 'SET_FIELD', k: 'date', v});
                       setQuote(null);
