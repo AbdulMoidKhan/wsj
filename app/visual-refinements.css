@@ -1,0 +1,68 @@
+/*
+ * Focused refinements to the established Workspace Junction design.
+ *
+ * Scope is deliberately narrow: four known weaknesses are corrected and
+ * nothing about the visual direction changes. The green, cream and amber
+ * palette, the card surfaces, the pill filters and the photographic sections
+ * are all left exactly as they are.
+ *
+ * The rules sit in the wj-art layer because several of them have to override
+ * declarations that the global button and consistency stylesheets mark as
+ * !important. For important declarations the cascade reverses layer order, so
+ * a layer declared first in globals.css wins without any selector here having
+ * to escalate specificity.
+ */
+
+@layer wj-art {
+  /* 1. Membership prices share one baseline.
+        The descriptions run to different lengths, which pushed $50, $100,
+        $150 and $250 onto four different lines. Reserving a consistent block
+        for the description aligns the numbers without shortening any copy. */
+  @media (min-width: 1100px) {
+    html body .wj-platform .pricing-grid .price-card > p:first-of-type {
+      min-height: 12.3em !important;
+    }
+    html body .wj-platform .pricing-grid .price-card > ul {
+      min-height: 15em !important;
+    }
+  }
+
+  /* 2. The service filter stays on one line.
+        Thirteen pills wrapped onto three rows and pushed the plans down the
+        page. Same pills, same colours, now a single scannable row that scrolls
+        horizontally when it runs out of room. */
+  @media (min-width: 900px) {
+    html body .wj-platform .pricing-filters {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      scrollbar-width: none !important;
+      padding-bottom: 4px !important;
+    }
+    html body .wj-platform .pricing-filters::-webkit-scrollbar { display: none !important; }
+    html body .wj-platform .pricing-filters button { flex: 0 0 auto !important; }
+  }
+
+  /* 3. Secondary calls to action stay legible on photography.
+        The dark green button sat on dark hero imagery with almost no edge.
+        It keeps its green, and gains a light rim and a readable hover. */
+  html body .wj-platform .lv-hero-actions .wj-button-green,
+  html body .wj-platform .lv-hero-actions .btn-outline {
+    border: 1px solid rgba(253, 251, 247, 0.55) !important;
+    box-shadow: 0 10px 26px -18px rgba(0, 0, 0, 0.9) !important;
+  }
+  html body .wj-platform .lv-hero-actions .wj-button-green:hover,
+  html body .wj-platform .lv-hero-actions .btn-outline:hover {
+    background-color: #fdfbf7 !important;
+    border-color: #fdfbf7 !important;
+    color: #0e3421 !important;
+  }
+
+  /* 4. Keyboard focus is visible everywhere, in the brand amber. */
+  html body .wj-platform a:focus-visible,
+  html body .wj-platform button:focus-visible,
+  html body .wj-platform [tabindex]:focus-visible {
+    outline: 2px solid #d7902a !important;
+    outline-offset: 2px !important;
+    border-radius: 3px;
+  }
+}

@@ -117,18 +117,32 @@ export function Popup({popups}: {popups: ApiContent[]}) {
     }, 160);
   }, [active]);
 
-  /*
-   * Deliberately not a modal. The offer is docked beside the content: the page
-   * keeps scrolling, keyboard focus stays where the reader left it, and
-   * nothing is covered. Escape still dismisses it for keyboard users.
-   */
   useEffect(() => {
     if (!visible || !active) return;
+    const overlay = overlayRef.current;
+    const body = document.body;
+    const root = document.documentElement;
+    const scrollX = window.scrollX, scrollY = window.scrollY;
+    const saved = {overflow:body.style.overflow,position:body.style.position,top:body.style.top,left:body.style.left,width:body.style.width,rootOverflow:root.style.overflow};
+    Object.assign(body.style,{overflow:'hidden',position:'fixed',top:-scrollY+'px',left:-scrollX+'px',width:'100%'});
+    root.style.overflow='hidden';
+    requestAnimationFrame(() => overlay?.querySelector<HTMLButtonElement>('.popup-close')?.focus({preventScroll:true}));
     const keydown = (event:KeyboardEvent) => {
-      if (event.key === 'Escape') {event.preventDefault(); close();}
+      if (event.key === 'Escape') {event.preventDefault(); close(); return;}
+      if (event.key !== 'Tab' || !overlay) return;
+      const targets = Array.from(overlay.querySelectorAll<HTMLElement>('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')).filter(el => el.getClientRects().length > 0);
+      const first=targets[0], last=targets[targets.length-1];
+      if (!first) {event.preventDefault(); overlay.focus(); return;}
+      if (event.shiftKey && document.activeElement === first) {event.preventDefault(); last.focus();}
+      else if (!event.shiftKey && document.activeElement === last) {event.preventDefault(); first.focus();}
     };
     document.addEventListener('keydown',keydown);
-    return () => document.removeEventListener('keydown',keydown);
+    return () => {
+      document.removeEventListener('keydown',keydown);
+      Object.assign(body.style,{overflow:saved.overflow,position:saved.position,top:saved.top,left:saved.left,width:saved.width});
+      root.style.overflow=saved.rootOverflow;
+      const behavior=root.style.scrollBehavior;root.style.scrollBehavior='auto';window.scrollTo(scrollX,scrollY);root.style.scrollBehavior=behavior;
+    };
   }, [visible, active, close]);
 
   useEffect(() => () => {if (closeTimerRef.current) clearTimeout(closeTimerRef.current);}, []);
@@ -143,11 +157,15 @@ export function Popup({popups}: {popups: ApiContent[]}) {
   const content = typeof active.content === 'string' ? active.content : '';
 
   return (
-    <aside
+    <div
       ref={overlayRef}
-      className={'popup-overlay wj-contextual-offer' + (visible ? ' popup-visible' : '')}
+      className={'popup-overlay' + (visible ? ' popup-visible' : '')}
+      role="dialog"
+      aria-modal="true"
       aria-label={active.title}
+      tabIndex={-1}
       data-lenis-prevent
+      onClick={e => {if (e.target === e.currentTarget) close();}}
     >
       <div className="popup-box">
         <button className="popup-close" onClick={close} aria-label="Close">&#x2715;</button>
@@ -167,6 +185,6 @@ export function Popup({popups}: {popups: ApiContent[]}) {
           )}
         </div>
       </div>
-    </aside>
+    </div>
   );
 }

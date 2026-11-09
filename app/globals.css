@@ -1,4 +1,3 @@
-/* Declared first so its !important declarations outrank every later layer:
-   for important declarations the cascade reverses layer order. */
+/* Declared first so refinement !important rules outrank later layers. */
 @layer wj-art;
 @import "tailwindcss";
