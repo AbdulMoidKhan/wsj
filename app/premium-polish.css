@@ -1,0 +1,197 @@
+/*
+ * Craft pass.
+ *
+ * No layout, content or structural change: this file only raises the finish of
+ * what is already there. It follows the house rules from the taste skill (no
+ * uniform shadows, no flat uniform cards, optical type, decisive interaction
+ * states) and the Vercel Web Interface Guidelines (focus-visible, honoured
+ * reduced motion, compositor-only animation, explicit transition properties,
+ * tabular figures, balanced headings, intentional tap highlight).
+ *
+ * Layer wj-art, declared first in globals.css, so important declarations here
+ * outrank the later global layers without inventing deeper selectors.
+ */
+
+@layer wj-art {
+  html body .wj-platform {
+    /* Motion tokens. One easing family across the site reads as deliberate;
+       five different easings read as assembled. */
+    --wj-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --wj-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+    --wj-fast: 160ms;
+    --wj-base: 280ms;
+    --wj-slow: 620ms;
+
+    /* Elevation. Tinted with the brand green rather than neutral black, and
+       layered (contact shadow + ambient shadow) instead of one flat blur. */
+    --wj-shadow-1:
+      0 1px 2px -1px rgba(14, 52, 33, 0.14),
+      0 2px 6px -2px rgba(14, 52, 33, 0.08);
+    --wj-shadow-2:
+      0 1px 2px -1px rgba(14, 52, 33, 0.16),
+      0 8px 20px -10px rgba(14, 52, 33, 0.18),
+      0 20px 44px -28px rgba(14, 52, 33, 0.22);
+    --wj-shadow-3:
+      0 2px 4px -2px rgba(14, 52, 33, 0.2),
+      0 16px 34px -14px rgba(14, 52, 33, 0.24),
+      0 38px 70px -40px rgba(14, 52, 33, 0.3);
+  }
+
+  /* ── 1. Typography craft ───────────────────────────────────────────────── */
+  html body .wj-platform h1,
+  html body .wj-platform h2,
+  html body .wj-platform h3,
+  html body .wj-platform .cn-title-serif,
+  html body .wj-platform .lv-h1 {
+    /* No widowed last words, and tighter optical tracking as size grows. */
+    text-wrap: balance;
+  }
+  html body .wj-platform p,
+  html body .wj-platform li {
+    text-wrap: pretty;
+  }
+  html body .wj-platform .price-value,
+  html body .wj-platform .cn-price-number,
+  html body .wj-platform .cn-price-display,
+  html body .wj-platform .hp-stat-value,
+  html body .wj-platform .lv-stat-value {
+    /* Figures line up column to column instead of jittering. */
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: 'tnum' 1, 'lnum' 1;
+  }
+  html body .wj-platform ::selection {
+    background: rgba(215, 144, 42, 0.26);
+    color: #0e3421;
+  }
+
+  /* ── 2. Elevation and surfaces ─────────────────────────────────────────── */
+  html body .wj-platform .price-card,
+  html body .wj-platform .cn-membership-card,
+  html body .wj-platform .lv-service-card,
+  html body .wj-platform .cn-circle-card,
+  html body .wj-platform .cn-work-card {
+    box-shadow: var(--wj-shadow-1);
+    transition:
+      box-shadow var(--wj-base) var(--wj-ease-out),
+      transform var(--wj-base) var(--wj-ease-out),
+      border-color var(--wj-base) var(--wj-ease-out);
+    will-change: transform;
+  }
+  html body .wj-platform .price-card:hover,
+  html body .wj-platform .cn-membership-card:hover,
+  html body .wj-platform .lv-service-card:hover,
+  html body .wj-platform .cn-circle-card:hover,
+  html body .wj-platform .cn-work-card:hover {
+    box-shadow: var(--wj-shadow-2);
+    transform: translate3d(0, -3px, 0);
+  }
+  /* The featured plan already carries the amber edge; it sits one step higher
+     so the hierarchy survives on a page full of white cards. */
+  html body .wj-platform .price-card.featured {
+    box-shadow: var(--wj-shadow-2);
+  }
+  html body .wj-platform .price-card.featured:hover {
+    box-shadow: var(--wj-shadow-3);
+  }
+
+  /* ── 3. Photography ────────────────────────────────────────────────────── */
+  html body .wj-platform .hp-photo,
+  html body .wj-platform .lv-photo img,
+  html body .wj-platform .cn-hero-img,
+  html body .wj-platform .cn-about-img {
+    /* A warm plate behind each photograph removes the white flash before
+       decode, and a hairline keeps light images from bleeding into cream. */
+    background-color: #ece7dc;
+    box-shadow: inset 0 0 0 1px rgba(14, 52, 33, 0.07);
+  }
+  html body .wj-platform a .hp-photo,
+  html body .wj-platform a img.hp-photo {
+    transition: transform var(--wj-slow) var(--wj-ease-out);
+  }
+  html body .wj-platform a:hover .hp-photo,
+  html body .wj-platform a:hover img.hp-photo {
+    transform: scale(1.03);
+  }
+
+  /* ── 4. Interaction states ─────────────────────────────────────────────── */
+  html body .wj-platform .wj-button,
+  html body .wj-platform .btn,
+  html body .wj-platform .cn-btn-gold,
+  html body .wj-platform .lv-plans {
+    transition:
+      background-color var(--wj-fast) var(--wj-ease-out),
+      border-color var(--wj-fast) var(--wj-ease-out),
+      color var(--wj-fast) var(--wj-ease-out),
+      box-shadow var(--wj-base) var(--wj-ease-out),
+      transform var(--wj-fast) var(--wj-ease-out);
+    touch-action: manipulation;
+  }
+  html body .wj-platform .wj-button:hover,
+  html body .wj-platform .btn:hover,
+  html body .wj-platform .cn-btn-gold:hover,
+  html body .wj-platform .lv-plans:hover {
+    box-shadow: var(--wj-shadow-2);
+    transform: translate3d(0, -1px, 0);
+  }
+  html body .wj-platform .wj-button:active,
+  html body .wj-platform .btn:active,
+  html body .wj-platform .cn-btn-gold:active,
+  html body .wj-platform .lv-plans:active {
+    /* A real press, so a click feels answered. */
+    transform: translate3d(0, 1px, 0);
+    box-shadow: var(--wj-shadow-1);
+  }
+  html body .wj-platform .text-link,
+  html body .wj-platform .cn-btn-text-play {
+    text-underline-offset: 0.28em;
+    text-decoration-thickness: 1px;
+    transition: color var(--wj-fast) var(--wj-ease-out), text-decoration-color var(--wj-fast) var(--wj-ease-out);
+  }
+  html body .wj-platform .text-link:hover {
+    text-decoration-color: #d7902a;
+  }
+
+  /* ── 5. Platform details ───────────────────────────────────────────────── */
+  html body .wj-platform {
+    -webkit-tap-highlight-color: rgba(215, 144, 42, 0.18);
+  }
+  html body .wj-platform .wj-mobile-panel,
+  html body .wj-platform .bk-overlay,
+  html body .wj-platform [role='dialog'] {
+    overscroll-behavior: contain;
+  }
+  html body .wj-platform [id] {
+    /* Anchored headings clear the sticky header instead of hiding under it. */
+    scroll-margin-top: clamp(96px, 12vh, 150px);
+  }
+
+  /* ── 6. Motion is a preference ─────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    html body .wj-platform *,
+    html body .wj-platform *::before,
+    html body .wj-platform *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+    html body .wj-platform .price-card:hover,
+    html body .wj-platform .cn-membership-card:hover,
+    html body .wj-platform .wj-button:hover,
+    html body .wj-platform a:hover .hp-photo {
+      transform: none !important;
+    }
+  }
+
+  /* Hover polish is for devices that can hover. */
+  @media (hover: none) {
+    html body .wj-platform .price-card:hover,
+    html body .wj-platform .cn-membership-card:hover,
+    html body .wj-platform .lv-service-card:hover,
+    html body .wj-platform .wj-button:hover,
+    html body .wj-platform .btn:hover {
+      transform: none;
+      box-shadow: var(--wj-shadow-1);
+    }
+  }
+}
