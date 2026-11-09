@@ -27,19 +27,14 @@
     }
   }
 
-  /* 2. The service filter stays on one line.
-        Thirteen pills wrapped onto three rows and pushed the plans down the
-        page. Same pills, same colours, now a single scannable row that scrolls
-        horizontally when it runs out of room. */
-  @media (min-width: 900px) {
-    html body .wj-platform .pricing-filters {
-      flex-wrap: nowrap !important;
-      overflow-x: auto !important;
-      scrollbar-width: none !important;
-      padding-bottom: 4px !important;
-    }
-    html body .wj-platform .pricing-filters::-webkit-scrollbar { display: none !important; }
-    html body .wj-platform .pricing-filters button { flex: 0 0 auto !important; }
+  /* 2. The service filter wraps instead of being cut off.
+        Thirteen pills do not fit one row on most screens, and a row that
+        scrolls with no visible scrollbar gives no way to reach the rest. The
+        pills wrap again, slightly tighter so they settle into two rows. */
+  html body .wj-platform .pricing-filters {
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    gap: 8px !important;
   }
 
   /* 3. Secondary calls to action stay legible on photography.

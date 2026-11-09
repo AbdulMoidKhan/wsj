@@ -31,9 +31,10 @@ export function SiteFooter({business, footerLogo, groups}: SiteFooterProps) {
                 <Image
                   src={footerLogoSrc}
                   alt="Workspace Junction"
-                  width={220}
-                  height={65}
+                  width={256}
+                  height={75}
                   priority={false}
+                  style={{height: 'auto'}}
                   className="wj-footer-logo"
                 />
               ) : (

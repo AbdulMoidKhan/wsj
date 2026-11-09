@@ -186,7 +186,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
       <span>{link.label}</span>
     </Link>
   ));
-  const brand = <>{logoSrc ? <Image src={logoSrc} alt="Workspace Junction" width={220} height={67} priority className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
+  const brand = <>{logoSrc ? <Image src={logoSrc} alt="Workspace Junction" width={256} height={79} priority className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
 
   return <div className="wj-platform">
     <a className="wj-skip" href="#main">Skip to content</a>
