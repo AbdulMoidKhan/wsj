@@ -13,6 +13,7 @@
 #
 # Env: PUBLIC_URL (https://wp.workspacejunction.com)  LOCAL_WEB (http://127.0.0.1:3600)
 #      LOCAL_API (http://127.0.0.1:4000)  PG_CONTAINER (wsj-app-postgres-1)  N (30 samples)
+#      Staging-only overrides: WSJ_WEB_PORT / WSJ_API_PORT (loopback check), PG_DB (database name)
 # ==============================================================================
 set -Euo pipefail
 MODE="${1:-}"; DIR="${2:-}"
@@ -116,14 +117,14 @@ for i in $(seq 1 16); do c=$(code -X POST -H 'Content-Type: application/json' -d
 
 # --- 7. Nginx routing + direct port exposure ----------------------------------
 curl -sI -m 10 "${PUBLIC_URL}/" | grep -qi '^server: nginx' && pass "public traffic served through Nginx" || warn "no 'Server: nginx' header"
-for port in 3600 4000; do
+for port in "${WSJ_WEB_PORT:-3600}" "${WSJ_API_PORT:-4000}"; do
   L=$(ss -ltnH "sport = :${port}" | awk '{print $4}' | sort -u | tr '\n' ' ')
   if [ "${MODE}" = verify ]; then echo "${L}" | grep -qvE '^(127\.0\.0\.1:[0-9]+ ?)+$' && fail "port ${port} listens on non-loopback: ${L}" || pass "port ${port} loopback only (${L})"; else info "port ${port} listeners: ${L}"; fi
 done
 
 # --- 8. database health -------------------------------------------------------
 [ "$(docker inspect -f '{{.State.Health.Status}}' "${PG_CONTAINER}" 2>/dev/null)" = healthy ] && pass "postgres container healthy" || fail "postgres container not healthy"
-DBU=$(docker exec "${PG_CONTAINER}" printenv POSTGRES_USER </dev/null); DBN=$(docker exec "${PG_CONTAINER}" printenv POSTGRES_DB </dev/null)
+DBU=$(docker exec "${PG_CONTAINER}" printenv POSTGRES_USER </dev/null); DBN="${PG_DB:-$(docker exec "${PG_CONTAINER}" printenv POSTGRES_DB </dev/null)}"
 MIG=$(docker exec "${PG_CONTAINER}" psql -U "${DBU}" -d "${DBN}" -XAtc "select count(*) from _prisma_migrations where finished_at is not null and rolled_back_at is null" </dev/null)
 BAD=$(docker exec "${PG_CONTAINER}" psql -U "${DBU}" -d "${DBN}" -XAtc "select count(*) from _prisma_migrations where finished_at is null and rolled_back_at is null" </dev/null)
 CONN=$(docker exec "${PG_CONTAINER}" psql -U "${DBU}" -d "${DBN}" -XAtc "select count(*) from pg_stat_activity where datname=current_database()" </dev/null)
