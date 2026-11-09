@@ -22,7 +22,10 @@ async function sendBookingEmail(subject: string, item: {customerName:string;cust
   const mail = nodemailer.createTransport({host:process.env.SMTP_HOST,port:Number(process.env.SMTP_PORT||587),secure:process.env.SMTP_PORT==='465',connectionTimeout:10000,socketTimeout:10000,...(process.env.SMTP_USER?{auth:{user:process.env.SMTP_USER,pass:process.env.SMTP_PASSWORD}}:{})});
   await mail.sendMail({from:process.env.SMTP_FROM,to:process.env.INQUIRY_TO,replyTo:item.customerEmail,subject,text:item.customerName+'\n'+item.customerEmail+'\n'+(item.customerPhone||'')+'\nService: '+item.serviceName+'\nDate: '+(item.bookingDate||'TBD')+' '+(item.bookingTime||'')+'\nGuests: '+(item.guests||1)+'\nTotal: $'+item.totalPrice.toFixed(2)+'\n\nNotes: '+(item.notes||'None')});
   return 'SENT';
- } catch { return 'FAILED'; }
+ } catch (err: any) {
+  console.error('[smtp] sendBookingEmail failed:', err?.message || err);
+  return 'FAILED';
+ }
 }
 
 class BookingListDto {
@@ -72,7 +75,7 @@ export class BookingController {
   // Create the booking as PENDING before contacting Stripe: if Stripe itself is
   // unreachable we still want a durable record of the attempt to diagnose from
   // admin, and we delete it below if the checkout session cannot be created.
-  const item=await this.db.booking.create({data:{...data,addOns:addOns||[],couponCode,status:'PENDING',subtotalPrice:resolved.subtotalCents/100,totalPrice:resolved.totalCents/100}});
+  const item=await this.db.booking.create({data:{...data,addOns:addOns||[],couponCode,status:'PENDING',subtotalPrice:resolved.subtotalCents/100,totalPrice:resolved.totalCents/100,subtotalPriceCents:resolved.subtotalCents,totalPriceCents:resolved.totalCents}});
 
   const origin=frontendOrigins()[0];
   const plan=PLAN_CATALOG[planId as PlanId];

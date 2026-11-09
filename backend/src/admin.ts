@@ -1,5 +1,5 @@
 import {ValidatedBody,ValidatedQuery} from './validation';
-import {cleanContent,configurationErrors} from './content-safety';
+import {cleanContent,configurationErrors,scheduleColumns} from './content-safety';
 import {Controller,Get,Post,Patch,Delete,Param,Req,UseGuards,BadRequestException,NotFoundException,ForbiddenException,Inject} from '@nestjs/common';
 import {ApiBearerAuth} from '@nestjs/swagger';
 import {hash} from 'bcryptjs';
@@ -108,7 +108,7 @@ export class ContentController {
   const subType = serviceSubtypes[resource];
   const metadata = cleanContent(dto.metadata||{});
   if(subType && !metadata.type) metadata.type = subType;
-  const item=await this.db.content.create({data:{...dto,content:cleanContent(dto.content||{}),metadata,kind:resource}});
+  const item=await this.db.content.create({data:{...dto,content:cleanContent(dto.content||{}),metadata,...scheduleColumns(metadata),kind:resource}});
   clearPublicCache();
   await audit(this.db,req,'CREATE',resource,item.id);
   return item;
@@ -118,7 +118,8 @@ export class ContentController {
   await this.detail(resource,id,req);
   const errors=configurationErrors(resource,dto.metadata);
   if(errors.length)throw new BadRequestException(errors);
-  const item=await this.db.content.update({where:{id},data:{...dto,...(dto.content?{content:cleanContent(dto.content)}:{}),...(dto.metadata?{metadata:cleanContent(dto.metadata)}:{})}});
+  const metadata=dto.metadata?cleanContent(dto.metadata):undefined;
+  const item=await this.db.content.update({where:{id},data:{...dto,...(dto.content?{content:cleanContent(dto.content)}:{}),...(metadata?{metadata,...scheduleColumns(metadata)}:{})}});
   clearPublicCache();
   await audit(this.db,req,'UPDATE',resource,id);
   return item;

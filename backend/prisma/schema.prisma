@@ -35,11 +35,19 @@ model Content {
  excerpt String?
  content Json @default("{}")
  metadata Json @default("{}")
+ /// F-003: SQL scheduling columns, kept in sync with metadata by the content_schedule_sync trigger
+ /// (migration 20261109000000) and by the admin write path. Public eligibility filters on these.
+ publishAt DateTime?
+ startsAt DateTime?
+ endsAt DateTime?
+ enabled Boolean @default(true)
+ requiresReview Boolean @default(false)
  sortOrder Int @default(0)
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
  @@unique([kind, slug])
- @@index([kind, status, sortOrder])
+ @@index([kind, status, sortOrder, createdAt(sort: Desc)])
+ @@index([kind, status, publishAt])
 }
 model Media {
  id String @id @default(uuid())
@@ -62,6 +70,7 @@ model Inquiry {
  emailStatus String @default("NOT_CONFIGURED")
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
+ @@index([status, createdAt(sort: Desc)])
 }
 model PopupEvent {
  id String @id @default(uuid())
@@ -70,6 +79,7 @@ model PopupEvent {
  sessionId String?
  createdAt DateTime @default(now())
  @@index([popupId, event])
+ @@index([createdAt(sort: Desc)])
 }
 model Audit {
  id String @id @default(uuid())
@@ -105,6 +115,9 @@ model Booking {
  couponDiscount Float @default(0)
  subtotalPrice Float
  totalPrice Float
+ /// F-014: expand-only integer cents mirror; the Float columns stay authoritative in this release.
+ subtotalPriceCents Int?
+ totalPriceCents Int?
  stripePaymentIntentId String?
  stripeChargeId String?
  stripeResponse Json?
@@ -240,6 +253,7 @@ model Order {
  subscriptions Subscription[]
  @@index([customerId, status])
  @@index([status, createdAt])
+ @@index([stripePaymentIntentId])
 }
 model OrderItem {
  id String @id @default(uuid())
@@ -298,6 +312,8 @@ model Subscription {
  @@index([customerId])
  @@index([stripeStatus])
  @@index([accessStatus])
+ @@index([stripeCustomerId])
+ @@index([orderId])
 }
 model Invoice {
  id String @id @default(uuid())

@@ -3,6 +3,17 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {NotFoundException} from '@nestjs/common';
 import {PublicController, clearPublicCache, getCachedPublic, setCachedPublic} from '../src/public';
+import {memoryContent} from './content-memory-db';
+
+const OMIT = {publishAt: true, startsAt: true, endsAt: true, enabled: true, requiresReview: true};
+/** SQL eligibility the controller must send (F-003), evaluated by the in-memory Prisma stand-in. */
+const eligibility = (resource: string, now: number) => {
+  const at = new Date(now);
+  const and: any[] = [{enabled: true}, {OR: [{publishAt: null}, {publishAt: {lte: at}}]}];
+  if (resource === 'pricing') and.push({requiresReview: false});
+  if (resource === 'popups') and.push({OR: [{startsAt: null}, {startsAt: {lte: at}}]}, {OR: [{endsAt: null}, {endsAt: {gt: at}}]});
+  return {AND: and};
+};
 
 const epoch = Date.parse('2026-11-08T12:00:00Z');
 const iso = (offset: number) => new Date(epoch + offset).toISOString();
@@ -29,13 +40,13 @@ async function withClock(run: (advance: (offset: number) => void) => Promise<voi
 function harness(rows: ReturnType<typeof row>[] = []) {
   clearPublicCache();
   const calls = {list: [] as any[], detail: [] as any[], health: [] as any[]};
+  const memory = memoryContent(rows, {ignoreKind: true}); // legacy fixture rows are all kind "popups"
   const db = {
     content: {
-      async findMany(args: any) { calls.list.push(args); return rows; },
-      async findFirst(args: any): Promise<ReturnType<typeof row> | null> {
-        calls.detail.push(args);
-        return rows.find(item => item.slug === args.where.slug) || null;
-      },
+      async findMany(args: any) { calls.list.push(args); return memory.findMany(args); },
+      async findFirst(args: any): Promise<any> { calls.detail.push(args); return memory.findFirst(args); },
+      count: memory.count,
+      aggregate: memory.aggregate,
     },
     async $queryRaw(strings: TemplateStringsArray, ...values: unknown[]): Promise<unknown> {
       calls.health.push({strings: [...strings], raw: [...strings.raw], values});
@@ -183,11 +194,13 @@ test('normal list/detail cache hits, full 45-second TTL, publicSafe and query co
     const detail = await controller.detail('blog', 'sample');
     assert.deepEqual(list, {items: [{...raw, metadata: {nested: {keep: true}}}], total: 1, page: 1, limit: 2});
     assert.deepEqual(detail.metadata, {nested: {keep: true}});
+    // F-003: eligibility and pagination are part of the SQL query; scheduling columns are omitted.
     assert.deepEqual(calls.list, [{
-      where: {kind: 'blog', status: 'PUBLISHED', title: {contains: 'sample', mode: 'insensitive'}},
+      where: {kind: 'blog', status: 'PUBLISHED', title: {contains: 'sample', mode: 'insensitive'}, ...eligibility('blog', epoch)},
       orderBy: [{sortOrder: 'asc'}, {createdAt: 'desc'}],
+      skip: 0, take: 2, omit: OMIT,
     }]);
-    assert.deepEqual(calls.detail, [{where: {kind: 'blog', slug: 'sample', status: 'PUBLISHED'}}]);
+    assert.deepEqual(calls.detail, [{where: {kind: 'blog', slug: 'sample', status: 'PUBLISHED', ...eligibility('blog', epoch)}, omit: OMIT}]);
     advance(44999);
     assert.strictEqual(await controller.list('blog', query), list);
     assert.strictEqual(await controller.detail('blog', 'sample'), detail);
@@ -220,12 +233,33 @@ test('resource/subtype filters and invalid resource behavior remain unchanged', 
     await controller.list('coworking', {});
     await controller.detail('coworking', 'sample');
     const subtype = {OR: [{kind: 'coworking'}, {kind: 'services', metadata: {path: ['type'], equals: 'csb_studios'}}]};
-    assert.deepEqual(calls.list[0].where, {...subtype, status: 'PUBLISHED'});
-    assert.deepEqual(calls.detail[0].where, {...subtype, slug: 'sample', status: 'PUBLISHED'});
+    assert.deepEqual(calls.list[0].where, {...subtype, status: 'PUBLISHED', ...eligibility('coworking', epoch)});
+    assert.deepEqual(calls.detail[0].where, {...subtype, slug: 'sample', status: 'PUBLISHED', ...eligibility('coworking', epoch)});
     await assert.rejects(controller.list('unknown-resource', {}), NotFoundException);
     await assert.rejects(controller.detail('unknown-resource', 'sample'), NotFoundException);
     assert.equal(calls.list.length, 1);
     assert.equal(calls.detail.length, 1);
+  });
+});
+
+test('settings responses strip multi-MB links archive while preserving other metadata', async () => {
+  await withClock(async () => {
+    const settingsRow = row('source-site', {
+      brand: { name: 'Workspace Junction' },
+      links: [{ href: 'https://example.com/huge-link-array', label: 'Huge' }],
+      source: 'crawled'
+    });
+    settingsRow.kind = 'settings';
+    const { controller } = harness([settingsRow]);
+    const list = await controller.list('settings', {});
+    assert.equal(list.items.length, 1);
+    assert.deepEqual(list.items[0].metadata.brand, { name: 'Workspace Junction' });
+    assert.equal(list.items[0].metadata.source, 'crawled');
+    assert.equal(list.items[0].metadata.links, undefined, 'links must be omitted from public settings response');
+
+    const detail = await controller.detail('settings', 'source-site');
+    assert.deepEqual(detail.metadata.brand, { name: 'Workspace Junction' });
+    assert.equal(detail.metadata.links, undefined, 'links must be omitted from public settings detail');
   });
 });
 
