@@ -60,4 +60,17 @@
     outline-offset: 2px !important;
     border-radius: 3px;
   }
+
+  /* 5. Section motif edges fade with a mask, not a white overlay.
+        The connector strip faded its ends with an opaque white gradient. On
+        the cream sections that was invisible, but on the forest and studio
+        bands it painted two pale grey rectangles across the section. A mask
+        fades the artwork itself, so it works on any surface. */
+  html body .wj-platform .wj-section-motif::after {
+    content: none !important;
+  }
+  html body .wj-platform .wj-section-motif {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%) !important;
+    mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%) !important;
+  }
 }
