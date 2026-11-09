@@ -29,8 +29,8 @@ export function PricingGrid({plans}:{plans:PublicPlan[]}) {
     can align plan name, description, price, features and CTA on shared
     baselines across every column instead of letting them drift. */
  return <>
-  {services.length>1&&<div className="pricing-filters wj-tab-rail" role="group" aria-label="Pricing services">{services.map(s=><button type="button" aria-pressed={selected===s} onClick={()=>{setSelected(s);setPeriod('all')}} key={s}>{cleanServiceName(s)}</button>)}</div>}
-  {periods.length>1&&<div className="pricing-filters wj-tab-rail" role="group" aria-label="Billing periods">{['all',...periods].map(s=><button type="button" aria-pressed={period===s} onClick={()=>setPeriod(s)} key={s}>{s==='all'?'All periods':cleanServiceName(s)||'Period not specified'}</button>)}</div>}
+  {services.length>1&&<div className="pricing-filters wj-tab-rail wj-rail-services" role="group" aria-label="Pricing services">{services.map(s=><button type="button" aria-pressed={selected===s} onClick={()=>{setSelected(s);setPeriod('all')}} key={s}>{cleanServiceName(s)}</button>)}</div>}
+  {periods.length>1&&<div className="pricing-filters wj-tab-rail wj-rail-periods" role="group" aria-label="Billing periods">{['all',...periods].map(s=><button type="button" aria-pressed={period===s} onClick={()=>setPeriod(s)} key={s}>{s==='all'?'All periods':cleanServiceName(s)||'Period not specified'}</button>)}</div>}
   <div className="pricing-grid wj-plan-matrix" data-anim-stagger-group="true" data-anim-stagger="0.06">{shown.map((p,i)=>{
    const m=p.metadata||{},value=m.price??m.amount,url=destination(m.ctaUrl);
    const amount=typeof value==='number'?new Intl.NumberFormat('en-US',{style:'currency',currency:/^[A-Z]{3}$/.test(m.currency||'')?m.currency:'USD',maximumFractionDigits:value%1===0?0:2}).format(value):value;

@@ -1505,3 +1505,338 @@ html body .wj-platform[data-art-direction='architectural'] .wj-platform {
     height: 72px !important;
   }
 }
+
+
+@layer wj-art {
+/* ═══════════════════════════════════════════════════════════════════════════
+   CASCADE NOTE
+   For !important declarations the cascade reverses layer order, so an
+   important declaration inside @layer wj-consistency outranks one inside
+   @layer wj-button-contract. Unlayered important beats both. The corrections
+   below therefore live outside every layer: it is the only reliable place to
+   undo the global "every control is a 5px gold pill" contract.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Service selector: an editorial underline nav, not a strip of boxes ──── */
+html body .wj-platform .pricing-filters.wj-rail-services {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  gap: clamp(12px, 2vw, 30px) !important;
+  padding: 0 !important;
+  margin-bottom: 14px !important;
+  border-bottom: 1px solid rgba(12, 24, 22, 0.12) !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  scroll-snap-type: x proximity;
+}
+html body .wj-platform .pricing-filters.wj-rail-services::-webkit-scrollbar { display: none; }
+/* Left edge stays hard so the first label is never clipped; the right edge
+   fades only as a scroll affordance. */
+html body .wj-platform .pricing-filters.wj-rail-services {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 52px), transparent 100%) !important;
+  mask-image: linear-gradient(90deg, #000 calc(100% - 52px), transparent 100%) !important;
+}
+html body .wj-platform .pricing-filters.wj-rail-services button {
+  flex: 0 0 auto !important;
+  scroll-snap-align: start;
+  position: relative !important;
+  min-height: 0 !important;
+  padding: 0 0 13px !important;
+  margin-bottom: -1px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: rgba(12, 24, 22, 0.52) !important;
+  font-family: var(--font-sans), system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.005em !important;
+  white-space: nowrap !important;
+  transition: color 0.22s var(--wj-ease-ui), border-color 0.22s var(--wj-ease-ui) !important;
+}
+html body .wj-platform .pricing-filters.wj-rail-services button:hover:not(:disabled) {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #0c1816 !important;
+  border-bottom-color: rgba(12, 24, 22, 0.25) !important;
+}
+html body .wj-platform .pricing-filters.wj-rail-services button[aria-pressed='true'] {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #0c1816 !important;
+  border-bottom-color: #e09f00 !important;
+  box-shadow: none !important;
+}
+
+/* ── Period selector: quiet secondary chips, one solid forest active ────── */
+html body .wj-platform .pricing-filters.wj-rail-periods {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  margin-bottom: 30px !important;
+  border: 0 !important;
+}
+html body .wj-platform .pricing-filters.wj-rail-periods button {
+  min-height: 32px !important;
+  padding: 6px 15px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 1px solid rgba(12, 24, 22, 0.16) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  color: rgba(12, 24, 22, 0.62) !important;
+  font-family: var(--font-sans), system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  transition: color 0.2s var(--wj-ease-ui), background-color 0.2s var(--wj-ease-ui),
+    border-color 0.2s var(--wj-ease-ui) !important;
+}
+html body .wj-platform .pricing-filters.wj-rail-periods button:hover:not(:disabled) {
+  background-color: rgba(12, 24, 22, 0.04) !important;
+  border-color: rgba(12, 24, 22, 0.3) !important;
+  color: #0c1816 !important;
+}
+html body .wj-platform .pricing-filters.wj-rail-periods button[aria-pressed='true'] {
+  background-color: #1e3e3b !important;
+  background-image: none !important;
+  border-color: #1e3e3b !important;
+  color: #fdfbf7 !important;
+  box-shadow: none !important;
+}
+
+/* ── Studio console selector: same underline logic on the dark surface ──── */
+html body .wj-platform .lv-podcast .lv-studios .lv-studio-tab-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: rgba(253, 251, 247, 0.58) !important;
+  padding: 12px 2px !important;
+  min-height: 0 !important;
+}
+html body .wj-platform .lv-podcast .lv-studios .lv-studio-tab-btn:hover {
+  color: rgba(253, 251, 247, 0.85) !important;
+}
+html body .wj-platform .lv-podcast .lv-studios .lv-studio-tab-btn[aria-selected='true'] {
+  color: #fdfbf7 !important;
+  border-bottom-color: #e09f00 !important;
+}
+html body .wj-platform .lv-podcast .lv-studios .lv-studio-tab-btn .lv-tab-title {
+  color: inherit !important;
+}
+
+/* ── The announcement stops hijacking the page ──────────────────────────────
+   No scrim, no scroll lock, no stolen focus: it docks in the lower corner and
+   the visitor keeps reading. Escape and the close control still dismiss it. */
+html body .wj-dialog-overlay { display: none !important; }
+html body .wj-dialog.wj-campaign.wj-campaign-dock {
+  position: fixed !important;
+  inset: auto 24px 24px auto !important;
+  transform: none !important;
+  width: min(390px, calc(100vw - 32px)) !important;
+  max-width: min(390px, calc(100vw - 32px)) !important;
+  max-height: min(70vh, 620px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  background: #fdfbf7 !important;
+  border: 1px solid rgba(12, 24, 22, 0.12) !important;
+  border-top: 2px solid #e09f00 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 24px 60px -24px rgba(12, 24, 22, 0.42) !important;
+  z-index: 1001 !important;
+  animation: wj-dock-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+@keyframes wj-dock-in {
+  from { opacity: 0; transform: translateY(16px) !important; }
+  to { opacity: 1; transform: none !important; }
+}
+html body .wj-campaign-dock .wj-campaign-header {
+  padding: 16px 16px 10px !important;
+  border-bottom: 1px solid rgba(12, 24, 22, 0.1) !important;
+}
+html body .wj-campaign-dock .wj-dialog-title {
+  font-family: var(--font-display), Georgia, serif !important;
+  font-size: 19px !important;
+  line-height: 1.22 !important;
+  color: #0c1816 !important;
+}
+html body .wj-campaign-dock .wj-dialog-close {
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 1px solid rgba(12, 24, 22, 0.16) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  color: #0c1816 !important;
+}
+html body .wj-campaign-dock .wj-dialog-close:hover {
+  background-color: rgba(12, 24, 22, 0.06) !important;
+}
+html body .wj-campaign-dock .wj-dialog-close svg { width: 16px !important; height: 16px !important; }
+html body .wj-campaign-dock .wj-campaign-scroll {
+  overflow-y: auto !important;
+  padding: 0 !important;
+}
+html body .wj-campaign-dock .wj-campaign-content { padding: 14px 16px 18px !important; }
+html body .wj-campaign-dock .wj-campaign-image {
+  width: 100% !important;
+  height: 136px !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+}
+html body .wj-campaign-dock .wj-dialog-description {
+  font-size: 14.5px !important;
+  line-height: 1.6 !important;
+  color: rgba(12, 24, 22, 0.72) !important;
+}
+@media (max-width: 560px) {
+  html body .wj-dialog.wj-campaign.wj-campaign-dock {
+    inset: auto 12px 12px 12px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .wj-dialog.wj-campaign.wj-campaign-dock { animation: none !important; }
+}
+
+
+  /* ── Service pricing: ledger cards, not a wall of boxed buttons ───────── */
+  html body .wj-platform .cn-memberships-grid {
+    gap: 0 !important;
+    border-top: 1px solid rgba(12, 24, 22, 0.14) !important;
+    border-left: 1px solid rgba(12, 24, 22, 0.14) !important;
+  }
+  html body .wj-platform .cn-membership-card {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    border-right: 1px solid rgba(12, 24, 22, 0.14) !important;
+    border-bottom: 1px solid rgba(12, 24, 22, 0.14) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 30px 26px 26px !important;
+    transition: background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-platform .cn-membership-card:hover {
+    background-color: rgba(253, 251, 247, 0.72) !important;
+    transform: none !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-card-icon-box {
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #e09f00 !important;
+    margin-bottom: 14px !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-membership-name {
+    font-family: var(--font-display), Georgia, serif !important;
+    font-size: clamp(19px, 1.4vw, 22px) !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em !important;
+    color: #0c1816 !important;
+    min-height: 3.65em !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-price-display {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 7px !important;
+    margin-top: 16px !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-price-number {
+    font-family: var(--font-display), Georgia, serif !important;
+    font-size: clamp(34px, 2.6vw, 42px) !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    color: #1e3e3b !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-price-period {
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: rgba(12, 24, 22, 0.5) !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-card-divider {
+    background: rgba(12, 24, 22, 0.12) !important;
+    height: 1px !important;
+    margin: 22px 0 18px !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-card-check-item {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: rgba(12, 24, 22, 0.74) !important;
+    gap: 10px !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-card-check-badge {
+    width: 15px !important;
+    height: 15px !important;
+    min-width: 15px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: #e09f00 !important;
+    box-shadow: none !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-card-footer {
+    margin-top: 22px !important;
+    padding-top: 0 !important;
+    border-top: 0 !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-plan-btn {
+    display: inline-flex !important;
+    width: auto !important;
+    min-height: 0 !important;
+    padding: 0 0 5px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(30, 62, 59, 0.32) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #1e3e3b !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em !important;
+    white-space: nowrap !important;
+    transition: color 0.22s ease, border-color 0.22s ease !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-plan-btn:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #0c1816 !important;
+    border-bottom-color: #e09f00 !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-plan-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-platform .cn-membership-card .cn-plan-btn:hover svg {
+    transform: translate(3px, -3px) !important;
+  }
+
+}
