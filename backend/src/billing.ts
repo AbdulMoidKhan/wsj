@@ -1006,7 +1006,7 @@ export class CustomerPortalController {
 
   private customerId(req: {headers: Record<string, string | undefined>; query?: Record<string, unknown>}): string {
     const header = req.headers?.authorization;
-    const token = header?.startsWith('Bearer ') ? header.slice(7) : (req.query?.token as string | undefined);
+    const token = header?.startsWith('Bearer ') ? header.slice(7) : undefined;
     return this.billing.customerFromToken(token);
   }
 

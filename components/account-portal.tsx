@@ -64,8 +64,14 @@ export function AccountPortal() {
   useEffect(() => {
     /* Deferred so the first paint is not blocked by a synchronous state update. */
     const timer = setTimeout(() => void load(), 0);
+    /* Clean token from URL query string immediately to avoid log/referer leakage. */
+    if (token && typeof window !== 'undefined' && window.location.search.includes('token=')) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('token');
+      window.history.replaceState({}, '', url.pathname + (url.search ? url.search : '') + url.hash);
+    }
     return () => clearTimeout(timer);
-  }, [load]);
+  }, [load, token]);
 
   async function openCancel(subscription: Json) {
     setBusy('preview');
