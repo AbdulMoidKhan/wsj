@@ -1,0 +1,145 @@
+/*
+ * Page decoration layer.
+ *
+ * Ornament only. Every rule here paints behind the page, takes no pointer
+ * events and changes no box in the document flow. Colours come from the
+ * existing brand set: forest #0E3421, amber #D7902A, on the cream canvas.
+ *
+ * Placement strategy: the pieces live in the outer margins of the route, so
+ * they frame the reading column rather than sitting under paragraphs. Below
+ * 1100px the heaviest pieces are dropped and the rest pull further out, and
+ * below 760px only a single dot cluster and the sparks remain.
+ */
+
+.wj-platform .wj-route-stage { position: relative; }
+.wj-platform .wj-route-stage > :not(.wj-decor) { position: relative; z-index: 1; }
+
+.wj-platform .wj-decor {
+  /*
+   * Sections paint their own opaque backgrounds, so a layer underneath them
+   * would never be seen. The layer therefore sits just above the section
+   * surfaces and keeps its pieces in the outer margins, at low opacity, with
+   * pointer events off, so nothing is obscured and nothing is clickable.
+   */
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+  contain: paint;
+  color: #0e3421;
+}
+
+/* ── Dot cluster ─────────────────────────────────────────────────────────── */
+.wj-platform .wj-decor-dots {
+  position: absolute;
+  top: clamp(90px, 12vw, 190px);
+  right: clamp(-46px, -2vw, -14px);
+  width: clamp(110px, 11vw, 170px);
+  height: clamp(110px, 11vw, 170px);
+  opacity: 0.5;
+  fill: rgba(14, 52, 33, 0.3);
+}
+
+/* ── Rings ───────────────────────────────────────────────────────────────── */
+.wj-platform .wj-decor-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(14, 52, 33, 0.12);
+}
+.wj-platform .wj-decor-ring-a {
+  top: 34%;
+  left: clamp(-300px, -14vw, -150px);
+  width: clamp(220px, 24vw, 380px);
+  aspect-ratio: 1;
+}
+.wj-platform .wj-decor-ring-b {
+  top: 37%;
+  left: clamp(-230px, -11vw, -110px);
+  width: clamp(150px, 16vw, 250px);
+  aspect-ratio: 1;
+  border-color: rgba(215, 144, 42, 0.22);
+}
+
+/* ── Connector curve ─────────────────────────────────────────────────────── */
+.wj-platform .wj-decor-curve {
+  position: absolute;
+  top: 52%;
+  left: 0;
+  width: 100%;
+  height: clamp(140px, 18vw, 260px);
+  opacity: 0.55;
+}
+.wj-platform .wj-decor-curve path {
+  fill: none;
+  stroke: rgba(14, 52, 33, 0.14);
+  stroke-width: 1.1;
+  stroke-dasharray: 4 10;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Line-art objects ────────────────────────────────────────────────────── */
+.wj-platform .wj-decor-object {
+  position: absolute;
+  width: var(--wj-decor-size, 130px);
+  aspect-ratio: 1;
+  opacity: 0.22;
+  transform: rotate(var(--wj-decor-rotate, 0deg));
+}
+.wj-platform .wj-decor-object svg { display: block; width: 100%; height: 100%; }
+.wj-platform .wj-decor-object path {
+  fill: none;
+  stroke: #0e3421;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.wj-platform .wj-decor-left { left: clamp(-30px, -1.1vw, -6px); }
+.wj-platform .wj-decor-right { right: clamp(-30px, -1.1vw, -6px); }
+/* Every third object is drawn in amber so the accent stays rare. */
+.wj-platform .wj-decor-object:nth-of-type(3n) path { stroke: #d7902a; }
+.wj-platform .wj-decor-object:nth-of-type(3n) { opacity: 0.3; }
+
+/* ── Amber sparks ────────────────────────────────────────────────────────── */
+.wj-platform .wj-decor-spark {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d7902a;
+  opacity: 0.4;
+}
+.wj-platform .wj-decor-spark-a { top: 18%; left: 7%; }
+.wj-platform .wj-decor-spark-b { top: 49%; right: 11%; width: 5px; height: 5px; }
+.wj-platform .wj-decor-spark-c { top: 74%; left: 12%; width: 9px; height: 9px; opacity: 0.26; }
+
+/* ── Per-route tuning ────────────────────────────────────────────────────── */
+.wj-platform .wj-decor-studio .wj-decor-object { opacity: 0.2; }
+.wj-platform .wj-decor-studio .wj-decor-ring-b { border-color: rgba(215, 144, 42, 0.3); }
+.wj-platform .wj-decor-community .wj-decor-dots { opacity: 0.62; }
+.wj-platform .wj-decor-mail .wj-decor-curve path { stroke-dasharray: 2 8; }
+.wj-platform .wj-decor-home .wj-decor-dots { top: clamp(120px, 16vw, 260px); }
+
+/* ── Responsive restraint ────────────────────────────────────────────────── */
+@media (max-width: 1099px) {
+  .wj-platform .wj-decor-ring-a,
+  .wj-platform .wj-decor-ring-b { display: none; }
+  .wj-platform .wj-decor-object { opacity: 0.12; width: calc(var(--wj-decor-size, 130px) * 0.74); }
+  .wj-platform .wj-decor-left { left: -34px; }
+  .wj-platform .wj-decor-right { right: -34px; }
+}
+@media (max-width: 759px) {
+  .wj-platform .wj-decor-object,
+  .wj-platform .wj-decor-curve { display: none; }
+  /* Clear of the hero headline on small screens. */
+  .wj-platform .wj-decor-dots { width: 110px; height: 110px; opacity: 0.32; right: -30px; top: 300px; }
+  .wj-platform .wj-decor-spark-c { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wj-platform .wj-decor { opacity: 0.8; }
+}
+@media print {
+  .wj-platform .wj-decor { display: none; }
+}

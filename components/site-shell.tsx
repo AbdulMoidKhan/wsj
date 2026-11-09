@@ -13,6 +13,7 @@ import {CampaignLoader} from './campaign-loader';
 import {AmbientBackdrop} from './ambient';
 import {SceneBackdrop} from './scene-backdrop';
 import {GsapMotion} from './gsap-motion';
+import {PageDecor, decorVariantFor} from './decorative-visual';
 
 export type NavLink = {label:string; href:string};
 type LinkGroup = {title:string; items:NavLink[]};
@@ -266,7 +267,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
         </div>
       </div>
     </>}
-    <div className="wj-route-stage" key={pathname}>{children}</div>
+    <div className="wj-route-stage" key={pathname}><PageDecor variant={decorVariantFor(pathname)}/>{children}</div>
     {pathname !== '/' && <section className="wj-closing amb-local" aria-labelledby="wj-closing-title" data-anim="fade-up"><div className="container wj-closing-inner"><div><p className="eyebrow" data-anim="fade-up">Your next chapter starts here</p><h2 id="wj-closing-title" aria-label="Good things happen at the Junction." data-anim="split-lines">Good things happen<br/>at the Junction.</h2><p data-anim="fade-up" data-anim-delay="0.1">Work. Connect. Grow.</p></div><div className="wj-closing-actions" data-anim="fade-up" data-anim-delay="0.15"><BookingButton service="Workspace Junction tour" variant="yellow" className="wj-button wj-button-yellow" data-magnetic="0.25">Come see for yourself <ArrowUpRight size={19} aria-hidden="true"/></BookingButton>{isCurrent(contactHref) ? <a href={'tel:' + b.phoneHref} className="text-link" data-magnetic="0.25">Call our team {b.phone} <ArrowUpRight size={17} aria-hidden="true"/></a> : <Link prefetch={false} href={contactHref} className="text-link" data-magnetic="0.25">Talk to our team <ArrowUpRight size={17} aria-hidden="true"/></Link>}</div></div></section>}
     <SiteFooter business={b} footerLogo={footerLogoSrc} groups={groups}/>
     <BookingLauncher/><CampaignLoader/><GsapMotion/>
