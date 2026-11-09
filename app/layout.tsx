@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import {Playfair_Display, Inter} from 'next/font/google';
-import {loadSite} from '@/lib/site';
+import {loadBusiness} from '@/lib/site';
 import './globals.css';
 import './design.css';
 import './responsive.css';
@@ -27,5 +27,5 @@ const display = Playfair_Display({subsets:['latin'], variable:'--font-display', 
 const sans = Inter({subsets:['latin'], variable:'--font-sans', display:'swap'});
 export const viewport:Viewport = {themeColor:'#D0CFCB'};
 const defaultMetadata:Metadata={metadataBase:new URL(process.env.NEXT_PUBLIC_SITE_URL||'https://workspacejunction.com'),title:{default:'Workspace Junction | Work. Connect. Grow.',template:'%s | Workspace Junction'},description:'Coworking, meeting rooms, creative studios and business services in Oakbrook Terrace, Illinois.',openGraph:{siteName:'Workspace Junction',locale:'en_US',type:'website'}};
-export async function generateMetadata():Promise<Metadata>{const b=(await loadSite()).business;return {...defaultMetadata,...(b?.seoTitle?{title:{default:b.seoTitle,template:'%s | Workspace Junction'}}:{}),description:b?.seoDescription||defaultMetadata.description}}
+export async function generateMetadata():Promise<Metadata>{const b=await loadBusiness();return {...defaultMetadata,...(b?.seoTitle?{title:{default:b.seoTitle,template:'%s | Workspace Junction'}}:{}),description:b?.seoDescription||defaultMetadata.description}}
 export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en" className={`${display.variable} ${sans.variable}`}><body>{children}</body></html>}

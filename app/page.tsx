@@ -156,7 +156,7 @@ export default async function Home() {
           </div>
         </div>
         <div className="lv-service-grid" data-anim-stagger-group="true" data-anim-stagger="0.04">{services.map(s => <a key={s.title} href={s.href} className={'lv-service' + (s.text ? ' has-text' : '')} data-tilt="5">
-          <span className="lv-service-img"><Image src={s.img} alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 400px" className="hp-photo"/></span>
+          <span className="lv-service-img"><Image src={s.img} alt={s.title} fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 400px" className="hp-photo"/></span>
           <span className="lv-service-body"><span className="lv-service-title">{s.title}</span>{s.text && <span className="lv-service-text">{s.text}</span>}<ArrowUpRight size={18} aria-hidden="true"/></span>
         </a>)}</div>
       </div></section>
