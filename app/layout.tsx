@@ -24,6 +24,7 @@ import './decorative-system.css';
 import './visual-refinements.css';
 import './decor-layer.css';
 import './premium-polish.css';
+import './footer-refine.css';
 
 // Classic editorial pairing: Playfair Display for display type, Inter for reading text.
 const display = Playfair_Display({subsets:['latin'], variable:'--font-display', display:'swap', style:['normal','italic']});

@@ -1,0 +1,205 @@
+/*
+ * Footer.
+ *
+ * Same markup, same links, same words. The problem was hierarchy and balance:
+ * four columns of identical-weight links, two of them three times longer than
+ * the others, leaving a large hole under the short ones, and a brand block
+ * that carried no more weight than a nav item.
+ *
+ * What changes here: a stated hierarchy (brand, then contact, then directory,
+ * then legal), hairline rules that separate those bands and the columns,
+ * amber micro-labels, and the two long link lists split into two sub-columns
+ * so all four groups finish at roughly the same depth.
+ *
+ * Layer wj-art, consistent with the other refinement sheets.
+ */
+
+@layer wj-art {
+  html body .wj-platform .wj-footer {
+    position: relative;
+    border-top: 1px solid rgba(215, 144, 42, 0.32) !important;
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.14) 100%) !important;
+    padding-block: clamp(56px, 6vw, 84px) 26px !important;
+  }
+
+  /* ── Band 1: brand and contact ─────────────────────────────────────────── */
+  html body .wj-platform .wj-footer .wj-footer-top {
+    display: grid !important;
+    grid-template-columns: minmax(240px, 1.35fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: clamp(28px, 4vw, 72px) !important;
+    align-items: start !important;
+    padding-bottom: clamp(32px, 3.5vw, 48px) !important;
+    border-bottom: 1px solid rgba(253, 251, 247, 0.14) !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-logo {
+    width: clamp(168px, 15vw, 210px) !important;
+    height: auto !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-tagline {
+    display: block !important;
+    margin-top: 14px !important;
+    max-width: 24ch !important;
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+    color: rgba(253, 251, 247, 0.6) !important;
+  }
+
+  /* Micro-labels: the only place amber appears in the directory. */
+  html body .wj-platform .wj-footer .wj-footer-top h2,
+  html body .wj-platform .wj-footer .wj-footer-group > h2 {
+    margin: 0 0 14px !important;
+    font-family: var(--font-sans), system-ui, sans-serif !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2em !important;
+    text-transform: uppercase !important;
+    color: rgba(215, 144, 42, 0.9) !important;
+  }
+
+  html body .wj-platform .wj-footer .wj-footer-address {
+    display: block !important;
+    margin: 0 0 14px !important;
+    max-width: 26ch !important;
+    font-style: normal !important;
+    font-size: 14.5px !important;
+    line-height: 1.6 !important;
+    color: rgba(253, 251, 247, 0.82) !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-top .wj-footer-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    margin-bottom: 9px !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    color: #fdfbf7 !important;
+    text-decoration: none !important;
+    transition: color 160ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-top .wj-footer-link:hover { color: #d7902a !important; }
+  html body .wj-platform .wj-footer .wj-footer-top > div > .wj-footer-link { display: flex !important; }
+  html body .wj-platform .wj-footer .wj-footer-admin-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 12px !important;
+    font-size: 12.5px !important;
+    color: rgba(253, 251, 247, 0.45) !important;
+    text-decoration: none !important;
+    transition: color 160ms ease !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-admin-link:hover { color: rgba(253, 251, 247, 0.8) !important; }
+
+  /* ── Band 2: the directory ─────────────────────────────────────────────── */
+  html body .wj-platform .wj-footer .wj-footer-links {
+    display: grid !important;
+    grid-template-columns: minmax(150px, 0.85fr) minmax(0, 1.55fr) minmax(140px, 0.9fr) minmax(0, 1.55fr) !important;
+    gap: 0 !important;
+    padding-block: clamp(34px, 3.6vw, 52px) !important;
+    border-bottom: 1px solid rgba(253, 251, 247, 0.14) !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-group {
+    padding-inline: clamp(18px, 2.4vw, 44px) !important;
+    border-left: 1px solid rgba(253, 251, 247, 0.1) !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-group:first-child {
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+  /* The two long lists run in two sub-columns, so every group ends at about
+     the same depth instead of leaving a hole under the short ones. */
+  html body .wj-platform .wj-footer .wj-footer-group:has(.wj-footer-nav-item:nth-of-type(8)) {
+    column-count: 2 !important;
+    column-gap: clamp(16px, 2vw, 34px) !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-group:has(.wj-footer-nav-item:nth-of-type(8)) > h2 {
+    column-span: all !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-nav-item {
+    display: block !important;
+    padding: 6px 0 !important;
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+    color: rgba(253, 251, 247, 0.66) !important;
+    text-decoration: none !important;
+    break-inside: avoid !important;
+    transition: color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      padding-left 260ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-nav-item:hover,
+  html body .wj-platform .wj-footer .wj-footer-nav-item:focus-visible {
+    color: #fdfbf7 !important;
+    padding-left: 7px !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-nav-item[aria-current='page'] { color: #d7902a !important; }
+
+  /* ── Band 3: legal ─────────────────────────────────────────────────────── */
+  html body .wj-platform .wj-footer .wj-footer-bottom {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px 28px !important;
+    padding-top: 22px !important;
+    border-top: 0 !important;
+  }
+  html body .wj-platform .wj-footer .wj-copyright,
+  html body .wj-platform .wj-footer .wj-credo,
+  html body .wj-platform .wj-footer .wj-terms-link {
+    font-size: 12.5px !important;
+    letter-spacing: 0.02em !important;
+    color: rgba(253, 251, 247, 0.45) !important;
+  }
+  html body .wj-platform .wj-footer .wj-terms-link {
+    text-decoration: none !important;
+    transition: color 160ms ease !important;
+  }
+  html body .wj-platform .wj-footer .wj-terms-link:hover { color: #d7902a !important; }
+
+  /* Text links in the footer are not buttons; the global 44px control height
+     inflated the contact block. Keep the comfortable target only on touch. */
+  @media (min-width: 720px) {
+    html body .wj-platform .wj-footer .wj-footer-link,
+    html body .wj-platform .wj-footer .wj-footer-admin-link,
+    html body .wj-platform .wj-footer .wj-footer-nav-item,
+    html body .wj-platform .wj-footer .wj-terms-link {
+      min-height: 0 !important;
+    }
+  }
+
+  /* ── Responsive ────────────────────────────────────────────────────────── */
+  @media (max-width: 1099px) {
+    html body .wj-platform .wj-footer .wj-footer-top {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    }
+    html body .wj-platform .wj-footer .wj-footer-links {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      row-gap: 32px !important;
+    }
+    html body .wj-platform .wj-footer .wj-footer-group:nth-child(odd) {
+      padding-left: 0 !important;
+      border-left: 0 !important;
+    }
+    html body .wj-platform .wj-footer .wj-footer-group:has(.wj-footer-nav-item:nth-of-type(8)) {
+      column-count: 1 !important;
+    }
+  }
+  @media (max-width: 719px) {
+    html body .wj-platform .wj-footer .wj-footer-top,
+    html body .wj-platform .wj-footer .wj-footer-links {
+      grid-template-columns: minmax(0, 1fr) !important;
+      row-gap: 28px !important;
+    }
+    html body .wj-platform .wj-footer .wj-footer-group {
+      padding-left: 0 !important;
+      border-left: 0 !important;
+      border-top: 1px solid rgba(253, 251, 247, 0.1) !important;
+      padding-top: 20px !important;
+    }
+    html body .wj-platform .wj-footer .wj-footer-group:first-child {
+      border-top: 0 !important;
+      padding-top: 0 !important;
+    }
+    html body .wj-platform .wj-footer .wj-footer-bottom { justify-content: flex-start !important; }
+  }
+}
