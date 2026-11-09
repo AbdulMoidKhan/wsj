@@ -1,0 +1,162 @@
+/*
+ * Page composition.
+ *
+ * Structural layout decisions only: measure, bleed, section grids and the
+ * shape of the pricing comparison. Surface detail stays in the earlier
+ * stylesheets. Everything is in the wj-art layer, which is declared first in
+ * globals.css and therefore wins important conflicts without new selectors
+ * being invented to outspecify the legacy sheets.
+ */
+
+@layer wj-art {
+  html body .wj-platform {
+    /* One measure for the whole site, plus a wide variant for showcases. */
+    --wj-measure: 1440px;
+    --wj-measure-wide: 1680px;
+    --wj-gutter-x: clamp(20px, 5vw, 72px);
+  }
+
+  /* ── Measure ───────────────────────────────────────────────────────────
+     The site was pinned to a 1240px column on every screen, which left a
+     third of a large display empty around small content. */
+  html body .wj-platform .container {
+    width: min(var(--wj-measure), 100% - (var(--wj-gutter-x) * 2)) !important;
+    max-width: none !important;
+    margin-inline: auto !important;
+  }
+  html body .wj-platform .lv-strip ul.container,
+  html body .wj-platform .lv-head-row.container {
+    width: min(var(--wj-measure-wide), 100% - (var(--wj-gutter-x) * 2)) !important;
+  }
+
+  /* ── Hero: edge to edge, not a framed picture ──────────────────────────── */
+  html body .wj-platform .lv-hero { padding-top: 0 !important; }
+  html body .wj-platform .lv-hero-stage {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-inline: calc(50% - 50vw) !important;
+    min-height: min(92vh, 940px) !important;
+    border-radius: 0 !important;
+  }
+  html body .wj-platform .lv-hero-copy,
+  html body .wj-platform .lv-hero-bottom-bar {
+    width: min(var(--wj-measure-wide), 100% - (var(--wj-gutter-x) * 2)) !important;
+    margin-inline: auto !important;
+  }
+  html body .wj-platform .lv-hero-titles h2,
+  html body .wj-platform .lv-hero-titles .lv-h1 {
+    font-size: clamp(42px, 6.4vw, 104px) !important;
+    line-height: 0.96 !important;
+    letter-spacing: -0.035em !important;
+    max-width: 15ch !important;
+  }
+  html body .wj-platform .lv-hero-content-wrap > * + * { margin-top: 0; }
+  html body .wj-platform .lv-hero-sub,
+  html body .wj-platform .lv-hero-titles p {
+    max-width: 46ch !important;
+    font-size: clamp(15px, 1.1vw, 18px) !important;
+  }
+
+  /* ── Pricing: a comparison ledger, not four identical columns ─────────────
+     Each plan keeps its five regions but reads as a row: name, description,
+     price, inclusions, action. Nothing is hidden to simplify the layout. */
+  @media (min-width: 1140px) {
+    html body .wj-platform .wj-plan-matrix {
+      grid-template-columns: minmax(0, 1fr) !important;
+      gap: 0 !important;
+      border-top: 1px solid rgba(12, 24, 22, 0.16) !important;
+    }
+    html body .wj-platform .wj-plan-matrix .price-card {
+      display: grid !important;
+      grid-template-columns: minmax(150px, 0.85fr) minmax(0, 1.45fr) minmax(130px, 0.6fr) minmax(0, 1.5fr) minmax(160px, auto) !important;
+      grid-template-rows: auto !important;
+      align-items: start !important;
+      column-gap: clamp(22px, 2.6vw, 48px) !important;
+      row-gap: 0 !important;
+      padding: 32px 22px !important;
+      border: 0 !important;
+      border-bottom: 1px solid rgba(12, 24, 22, 0.16) !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      transition: background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+    html body .wj-platform .wj-plan-matrix .price-card:hover {
+      background-color: rgba(253, 251, 247, 0.75) !important;
+      transform: none !important;
+    }
+    html body .wj-platform .wj-plan-matrix .price-card > * { grid-row: 1 !important; }
+    html body .wj-platform .wj-plan-matrix .pc-head { grid-column: 1 !important; }
+    html body .wj-platform .wj-plan-matrix .pc-desc { grid-column: 2 !important; }
+    html body .wj-platform .wj-plan-matrix .pc-price { grid-column: 3 !important; margin: 0 !important; padding: 0 !important; border: 0 !important; }
+    html body .wj-platform .wj-plan-matrix .pc-features { grid-column: 4 !important; margin: 0 !important; }
+    html body .wj-platform .wj-plan-matrix .pc-cta { grid-column: 5 !important; margin: 0 !important; justify-self: end !important; }
+    html body .wj-platform .wj-plan-matrix .pc-features {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      column-gap: 20px !important;
+      row-gap: 7px !important;
+    }
+    /* The featured plan is the only inverted row: emphasis by contrast, not by
+       a second visual language. */
+    html body .wj-platform .wj-plan-matrix .price-card.featured {
+      background-color: #0e3421 !important;
+      border-bottom-color: #0e3421 !important;
+      border-left: 3px solid #d7902a !important;
+      padding-left: 19px !important;
+    }
+    html body .wj-platform .wj-plan-matrix .price-card.featured:hover { background-color: #0e3421 !important; }
+  }
+  html body .wj-platform .pricing-section .section-head,
+  html body .wj-platform .hp-pricing .section-head { max-width: none !important; }
+
+  /* ── Studio: a cinematic full-bleed stage ──────────────────────────────── */
+  html body .wj-platform .lv-podcast {
+    width: 100vw !important;
+    margin-inline: calc(50% - 50vw) !important;
+    padding-block: clamp(84px, 9vw, 150px) !important;
+  }
+  /* The studio reads as a production stage: the photography runs wider than
+     the text measure and the frames keep a 2:1 relationship. */
+  html body .wj-platform .lv-podcast .container {
+    width: min(var(--wj-measure-wide), 100% - (var(--wj-gutter-x) * 2)) !important;
+  }
+  html body .wj-platform .lv-podcast .lv-podcast-gallery,
+  html body .wj-platform .lv-podcast .lv-studio-media {
+    gap: 10px !important;
+  }
+  html body .wj-platform .lv-podcast .lv-podcast-gallery img,
+  html body .wj-platform .lv-podcast .lv-studio-media img {
+    border-radius: 0 !important;
+  }
+
+  /* ── Footer: a brand close, not a sitemap dump ─────────────────────────── */
+  html body .wj-platform .wj-footer .wj-footer-links {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+    column-gap: clamp(18px, 2.4vw, 44px) !important;
+    row-gap: 26px !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-nav-item {
+    font-size: 13.5px !important;
+    line-height: 1.75 !important;
+    color: rgba(253, 251, 247, 0.6) !important;
+    transition: color 0.18s ease !important;
+  }
+  html body .wj-platform .wj-footer .wj-footer-nav-item:hover { color: #d7902a !important; }
+  html body .wj-platform .wj-footer .wj-footer-group > *:first-child {
+    font-size: 10.5px !important;
+    letter-spacing: 0.2em !important;
+    color: rgba(253, 251, 247, 0.4) !important;
+    margin-bottom: 10px !important;
+  }
+
+  @media (max-width: 1139px) {
+    html body .wj-platform .lv-hero-stage { min-height: min(86vh, 760px) !important; }
+  }
+  @media (max-width: 720px) {
+    html body .wj-platform .lv-hero-stage { min-height: 640px !important; }
+      html body .wj-platform .lv-hero-titles .lv-h1 { font-size: clamp(34px, 10vw, 52px) !important; }
+  }
+}

@@ -60,6 +60,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
   const [mobileMounted, setMobileMounted] = useState(false);
   const [mobileClosing, setMobileClosing] = useState(false);
   const [openMegaGroup, setOpenMegaGroup] = useState('Work & Meet');
+  const [compact, setCompact] = useState(false);
   const mobileTrigger = useRef<HTMLButtonElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const mobilePanel = useRef<HTMLDivElement>(null);
@@ -87,6 +88,16 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
     }, 280);
   };
   useEffect(() => () => {if (closeTimer.current) clearTimeout(closeTimer.current);}, []);
+  /* One breakpoint decides the navigation model: a three-part desktop sheet or
+     a single-column accordion. They are different compositions, not one layout
+     folded up. */
+  useEffect(() => {
+    const query = window.matchMedia('(max-width:959px)');
+    const apply = () => setCompact(query.matches);
+    apply();
+    query.addEventListener('change', apply);
+    return () => query.removeEventListener('change', apply);
+  }, []);
   const isCurrent = (href:string) => routePath(pathname) === routePath(href);
   const aboutHref = find(/^about/i, '/about-us/');
   // Secondary strip mirrors the live site's service bar (icon over label).
@@ -127,36 +138,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
     if (!mobileMounted) return;
     const trigger = mobileTrigger.current;
     const panel = mobilePanel.current;
-    // This dialog intentionally opts out of the site's global white-surface consistency layer.
-    // Inline priorities keep the art direction stable even when that late stylesheet is enabled.
-    if (panel) {
-      const compact = window.matchMedia('(max-width:899px)').matches;
-      const shortDesktop = !compact && window.matchMedia('(max-height:820px)').matches;
-      panel.style.setProperty('background-color', '#003f30', 'important');
-      panel.style.setProperty('background-image', 'radial-gradient(circle at 12% 0%,rgba(33,92,69,.32),transparent 32%),radial-gradient(circle at 92% 100%,rgba(17,73,54,.24),transparent 34%),linear-gradient(135deg,#073629 0%,#003f30 48%,#003126 100%)', 'important');
-      panel.style.setProperty('border-radius', compact ? '0' : shortDesktop ? '24px' : '34px', 'important');
-      panel.querySelectorAll<HTMLElement>('.wj-nav-group-toggle').forEach(item => {
-        item.style.setProperty('background', 'transparent', 'important');
-        item.style.setProperty('border', '0', 'important');
-        item.style.setProperty('border-radius', '0', 'important');
-        item.style.setProperty('box-shadow', 'none', 'important');
-      });
-      panel.querySelectorAll<HTMLElement>('.wj-mega-card').forEach(item => item.style.setProperty('border-radius', compact ? '17px' : '15px', 'important'));
-      panel.querySelector<HTMLElement>('.wj-mega-close')?.style.setProperty('border-radius', '50%', 'important');
-      const location = panel.querySelector<HTMLElement>('.wj-mega-location');
-      location?.style.setProperty('border-radius', compact ? '18px' : '17px', 'important');
-      const locationTitle = panel.querySelector<HTMLElement>('.wj-mega-location h2');
-      locationTitle?.style.setProperty('font-size', compact ? '36px' : shortDesktop ? '24px' : '27px', 'important');
-      locationTitle?.style.setProperty('line-height', '1.05', 'important');
-      locationTitle?.style.setProperty('color', '#f7f0df', 'important');
-      const addressCopy = panel.querySelector<HTMLElement>('.wj-mega-address p');
-      addressCopy?.style.setProperty('font-size', compact ? '14px' : shortDesktop ? '11px' : '12.5px', 'important');
-      addressCopy?.style.setProperty('line-height', '1.4', 'important');
-      const explore = panel.querySelector<HTMLElement>('.wj-mega-explore');
-      explore?.style.setProperty('background-color', '#f5a11a', 'important');
-      explore?.style.setProperty('color', '#073629', 'important');
-      explore?.style.setProperty('border-radius', '999px', 'important');
-    }
+    // Presentation lives in app/mega-nav.css (layer wj-art); no inline overrides.
     const onPanelWheel = (event:WheelEvent) => {
       if (!panel || panel.scrollHeight <= panel.clientHeight || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
       event.preventDefault();
@@ -202,6 +184,24 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
   // eslint-disable-next-line react-hooks/exhaustive-deps -- closeMobile is stable within a mobileMounted cycle; adding it would re-run the scroll-lock effect on every render
   }, [mobileMounted]);
 
+  /* Level 3 of the menu: one contextual photograph per category instead of a
+     wall of equally weighted tiles. Every destination here is also present as
+     a text link, so nothing becomes unreachable. */
+  const previews:Record<string,{label:string; href:string; img:string}> = {
+    'Work & Meet': {label:'Coworking', href:'/coworking/', img:'/media/5a32e442c2-coworking-space.jpg'},
+    'Business Services': {label:'Virtual Offices', href:'/virtual-office/', img:'/media/24aa74cdc6-virtual-office.png'},
+    'Create & Connect': {label:'Podcast Studio', href:'/podcast-studio/', img:'/media/6e6e0920a9-podcast-image-1.png'},
+    'Explore the Junction': {label:'Community Network', href:'/community-network/', img:'/media/c982925218-Group-1597884977.jpg'},
+  };
+  const activeGroup = groups.find(group => group.title === openMegaGroup) || groups[0] || {title:'', items:[]};
+  const preview = previews[activeGroup.title] || previews['Work & Meet'];
+  const exploreSpaces = () => {
+    if (closeTimer.current) {clearTimeout(closeTimer.current); closeTimer.current = null;}
+    const trigger = mobileTrigger.current;
+    flushSync(() => {setMobileMounted(false); setMobileClosing(false);});
+    window.dispatchEvent(new CustomEvent('wj:book', {detail:{trigger}}));
+  };
+
   const linkList = (items:NavLink[], close?:() => void) => items.map(link => (
     <Link prefetch={false} href={link.href} key={link.href} onClick={close} aria-current={isCurrent(link.href) ? 'page' : undefined}>
       <span>{link.label}</span>
@@ -242,50 +242,83 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
           <span className="wj-mega-brand">Workspace Junction</span>
           <button type="button" className="wj-mega-close" aria-label="Close menu" onClick={closeMobile}><X size={25} aria-hidden="true"/></button>
         </div>
-        <div className="wj-mega-feature-heading"><span>Featured services</span><i aria-hidden="true"/></div>
-        <div className="wj-mega-spaces">
-          {[
-            {label:'Coworking',href:'/coworking/',img:'/media/5a32e442c2-coworking-space.jpg'},
-            {label:'Meeting Rooms',href:'/meeting-rooms/',img:'/media/0c15617f3a-meeting-rooms.jpg'},
-            {label:'Event Space',href:'/events/',img:'/media/5f8e75abc6-events.png'},
-            {label:'Podcast Studio',href:'/podcast-studio/',img:'/media/6e6e0920a9-podcast-image-1.png'},
-            {label:'Dedicated Desks',href:'/dedicated/',img:'/media/6d247f9676-dedicated-desk.png'},
-            {label:'Virtual Offices',href:'/virtual-office/',img:'/media/24aa74cdc6-virtual-office.png'},
-          ].map(s => (
-            <Link key={s.href} prefetch={false} href={s.href} onClick={closeMobile} aria-current={isCurrent(s.href) ? 'page' : undefined} className="wj-mega-card">
-              <span className="wj-mega-card-img" style={{backgroundImage:`linear-gradient(180deg,transparent 42%,rgba(3,27,21,.92) 100%),url(${s.img})`}} aria-hidden="true"/>
-              <span className="wj-mega-card-label"><span>{s.label}</span><ArrowUpRight size={20} aria-hidden="true"/></span>
-            </Link>
-          ))}
-        </div>
-        <div className="wj-mega-divider" aria-hidden="true"/>
-        <div className="wj-mega-lower">
-          {/* eslint-disable react-hooks/refs -- closeMobile and mobileTrigger.current are accessed only in event handlers, not during render */}
-          <nav aria-label="Navigation" className="wj-mega-nav">
-            {groups.map(group => {
-              const expanded = openMegaGroup === group.title;
-              return <section className={'wj-nav-group' + (expanded ? ' is-open' : '')} key={group.title}>
-                <button type="button" className="wj-nav-group-toggle" aria-expanded={expanded} onClick={() => setOpenMegaGroup(expanded ? '' : group.title)}>
-                  <span>{group.title}</span><ChevronDown size={21} aria-hidden="true"/>
+        {/* eslint-disable react-hooks/refs -- closeMobile and mobileTrigger.current are read only inside event handlers, never during render */}
+        {compact ? (
+          /* Compact: one column, categories as disclosures, location last. */
+          <div className="wj-mega-stack">
+            <nav aria-label="Navigation" className="wj-mega-nav">
+              {groups.map(group => {
+                const expanded = openMegaGroup === group.title;
+                return <section className={'wj-nav-group' + (expanded ? ' is-open' : '')} key={group.title}>
+                  <button type="button" className="wj-nav-group-toggle" aria-expanded={expanded} onClick={() => setOpenMegaGroup(expanded ? '' : group.title)}>
+                    <span>{group.title}</span><ChevronDown size={21} aria-hidden="true"/>
+                  </button>
+                  <div className="wj-nav-group-links">{linkList(group.items, closeMobile)}</div>
+                </section>;
+              })}
+            </nav>
+            <aside className="wj-mega-location" aria-label="Find Workspace Junction">
+              <div className="wj-mega-location-copy">
+                <h2>Find your workspace</h2>
+                <div className="wj-mega-address"><MapPin size={22} aria-hidden="true"/><p><strong>Workspace Junction</strong><span>{b.address}</span></p></div>
+                <button type="button" className="wj-mega-explore" aria-haspopup="dialog" onClick={exploreSpaces}>Explore Spaces <ArrowUpRight size={18} aria-hidden="true"/></button>
+              </div>
+            </aside>
+          </div>
+        ) : (
+          /* Desktop: category rail, the active category's links, one preview. */
+          <div className="wj-mega-body">
+            <div className="wj-mega-rail" role="tablist" aria-orientation="vertical" aria-label="Navigation categories">
+              {groups.map((group, index) => (
+                <button
+                  type="button"
+                  key={group.title}
+                  id={'wj-cat-' + index}
+                  role="tab"
+                  aria-selected={activeGroup.title === group.title}
+                  aria-controls={'wj-catpanel-' + index}
+                  tabIndex={activeGroup.title === group.title ? 0 : -1}
+                  className={'wj-mega-cat' + (activeGroup.title === group.title ? ' is-active' : '')}
+                  onMouseEnter={() => setOpenMegaGroup(group.title)}
+                  onFocus={() => setOpenMegaGroup(group.title)}
+                  onClick={() => setOpenMegaGroup(group.title)}
+                  onKeyDown={event => {
+                    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+                    event.preventDefault();
+                    const next = (index + (event.key === 'ArrowDown' ? 1 : groups.length - 1)) % groups.length;
+                    setOpenMegaGroup(groups[next].title);
+                    document.getElementById('wj-cat-' + next)?.focus();
+                  }}
+                >
+                  <span className="wj-mega-cat-index">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="wj-mega-cat-label">{group.title}</span>
+                  <span className="wj-mega-cat-count">{activeGroup.title === group.title ? <ArrowUpRight size={16} aria-hidden="true"/> : null}</span>
                 </button>
-                <div className="wj-nav-group-links">{linkList(group.items, closeMobile)}</div>
-              </section>;
-            })}
-          </nav>
-          <aside className="wj-mega-location" aria-label="Find Workspace Junction">
-            <div className="wj-mega-location-image" aria-hidden="true"/>
-            <div className="wj-mega-location-copy">
-              <h2>Find your workspace</h2>
-              <div className="wj-mega-address"><MapPin size={26} aria-hidden="true"/><p><strong>Workspace Junction</strong><span>{b.address}</span></p></div>
-              <button type="button" className="wj-mega-explore" aria-haspopup="dialog" onClick={() => {
-                if (closeTimer.current) {clearTimeout(closeTimer.current); closeTimer.current = null;}
-                flushSync(() => {setMobileMounted(false); setMobileClosing(false);});
-                window.dispatchEvent(new CustomEvent('wj:book', {detail:{trigger:mobileTrigger.current}}));
-              }}>Explore Spaces <ArrowUpRight size={20} aria-hidden="true"/></button>
+              ))}
+              <div className="wj-mega-rail-foot">
+                <a href={'tel:' + b.phoneHref}>{b.phone}</a>
+                <a href={'mailto:' + b.email}>{b.email}</a>
+              </div>
             </div>
-          </aside>
-          {/* eslint-enable react-hooks/refs */}
-        </div>
+            <div className="wj-mega-panel-links" id={'wj-catpanel-' + groups.findIndex(group => group.title === activeGroup.title)} role="tabpanel" aria-labelledby={'wj-cat-' + groups.findIndex(group => group.title === activeGroup.title)}>
+              <p className="wj-mega-panel-title">{activeGroup.title}</p>
+              <div className="wj-mega-link-columns">{linkList(activeGroup.items, closeMobile)}</div>
+            </div>
+            <aside className="wj-mega-preview" aria-label="Find Workspace Junction">
+              <div className="wj-mega-feature-heading"><span>Featured services</span><i aria-hidden="true"/></div>
+              <Link prefetch={false} href={preview.href} onClick={closeMobile} className="wj-mega-card" aria-current={isCurrent(preview.href) ? 'page' : undefined}>
+                <span className="wj-mega-card-img" style={{backgroundImage:`linear-gradient(180deg,transparent 38%,rgba(3,27,21,.9) 100%),url(${preview.img})`}} aria-hidden="true"/>
+                <span className="wj-mega-card-label"><span>{preview.label}</span><ArrowUpRight size={20} aria-hidden="true"/></span>
+              </Link>
+              <div className="wj-mega-location-copy">
+                <h2>Find your workspace</h2>
+                <div className="wj-mega-address"><MapPin size={20} aria-hidden="true"/><p><strong>Workspace Junction</strong><span>{b.address}</span></p></div>
+                <button type="button" className="wj-mega-explore" aria-haspopup="dialog" onClick={exploreSpaces}>Explore Spaces <ArrowUpRight size={18} aria-hidden="true"/></button>
+              </div>
+            </aside>
+          </div>
+        )}
+        {/* eslint-enable react-hooks/refs */}
       </div>
     </>}
     <div className="wj-route-stage" key={pathname}>{children}</div>
