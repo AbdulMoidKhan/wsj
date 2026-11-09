@@ -1,0 +1,219 @@
+/*
+ * Mega menu refinements.
+ *
+ * Same panel, same links, same six featured services. What changes:
+ *
+ * - the surface now uses the brand forest (#0E3421) instead of the teal that
+ *   did not match any other green on the site (set alongside the inline
+ *   background in site-shell.tsx);
+ * - the featured cards get a proper aspect ratio and a deeper scrim so the
+ *   labels sit on darkness instead of across someone's face;
+ * - the amber arrow no longer repeats on all thirty-two links at full
+ *   strength; it appears on hover and focus;
+ * - the two long link lists split into two sub-columns so the four groups
+ *   finish at a similar depth instead of leaving a hole under the short ones;
+ * - the location card gets a taller photograph and calmer type.
+ *
+ * Layer wj-art, consistent with the other refinement sheets.
+ */
+
+@layer wj-art {
+  /* ── Header of the panel ───────────────────────────────────────────────── */
+  html body .wj-mobile-panel .wj-mega-brand {
+    font-family: var(--font-display), Georgia, serif !important;
+    letter-spacing: -0.015em !important;
+  }
+  html body .wj-mobile-panel .wj-mega-close {
+    background-color: rgba(253, 251, 247, 0.06) !important;
+    border: 1px solid rgba(253, 251, 247, 0.22) !important;
+    color: #fdfbf7 !important;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease !important;
+  }
+  html body .wj-mobile-panel .wj-mega-close:hover {
+    background-color: #d7902a !important;
+    border-color: #d7902a !important;
+    color: #0e3421 !important;
+  }
+
+  html body .wj-mobile-panel .wj-mega-feature-heading span {
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.22em !important;
+    color: rgba(215, 144, 42, 0.92) !important;
+  }
+
+  /* ── Featured service cards ────────────────────────────────────────────── */
+  @media (min-width: 900px) {
+    html body .wj-mobile-panel .wj-mega-spaces {
+      display: grid !important;
+      grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+      gap: clamp(10px, 1vw, 16px) !important;
+    }
+    html body .wj-mobile-panel .wj-mega-card {
+      aspect-ratio: 3 / 4 !important;
+      height: auto !important;
+      min-height: 0 !important;
+    }
+  }
+  html body .wj-mobile-panel .wj-mega-card {
+    position: relative !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(253, 251, 247, 0.1) !important;
+    box-shadow: 0 18px 40px -26px rgba(0, 0, 0, 0.8) !important;
+    transition: border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-mobile-panel .wj-mega-card:hover {
+    border-color: rgba(215, 144, 42, 0.6) !important;
+    transform: translate3d(0, -3px, 0) !important;
+  }
+  /* A deeper, taller scrim: the label reads on darkness, not on a face. */
+  html body .wj-mobile-panel .wj-mega-card-img {
+    position: absolute !important;
+    inset: 0 !important;
+    background-size: cover !important;
+    background-position: center !important;
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-mobile-panel .wj-mega-card:hover .wj-mega-card-img { transform: scale(1.06) !important; }
+  html body .wj-mobile-panel .wj-mega-card::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(
+      0deg,
+      rgba(7, 26, 18, 0.95) 0%,
+      rgba(7, 26, 18, 0.78) 26%,
+      rgba(7, 26, 18, 0.3) 56%,
+      rgba(7, 26, 18, 0.06) 100%
+    ) !important;
+    pointer-events: none !important;
+  }
+  html body .wj-mobile-panel .wj-mega-card-label {
+    position: absolute !important;
+    inset: auto 0 0 0 !important;
+    z-index: 1 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    padding: 14px 14px 13px !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    color: #fdfbf7 !important;
+    text-shadow: 0 1px 10px rgba(7, 26, 18, 0.7) !important;
+  }
+  html body .wj-mobile-panel .wj-mega-card-label svg {
+    flex: 0 0 auto !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: #d7902a !important;
+    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-mobile-panel .wj-mega-card:hover .wj-mega-card-label svg {
+    transform: translate(3px, -3px) !important;
+  }
+
+  /* ── Link columns ──────────────────────────────────────────────────────── */
+  @media (min-width: 900px) {
+    html body .wj-mobile-panel .wj-mega-nav {
+      display: grid !important;
+      grid-template-columns: minmax(130px, 0.78fr) minmax(0, 1.5fr) minmax(130px, 0.85fr) minmax(0, 1.5fr) !important;
+      gap: 0 !important;
+    }
+    html body .wj-mobile-panel .wj-nav-group {
+      padding-inline: clamp(14px, 1.8vw, 30px) !important;
+      border-left: 1px solid rgba(253, 251, 247, 0.1) !important;
+    }
+    html body .wj-mobile-panel .wj-nav-group:first-child {
+      padding-left: 0 !important;
+      border-left: 0 !important;
+    }
+    /* Long lists run in two sub-columns, so the groups end at a similar depth. */
+    html body .wj-mobile-panel .wj-nav-group-links:has(a:nth-of-type(8)) {
+      column-count: 2 !important;
+      column-gap: clamp(14px, 1.6vw, 28px) !important;
+    }
+  }
+  html body .wj-mobile-panel .wj-nav-group-toggle span,
+  html body .wj-mobile-panel .wj-nav-group > button span {
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2em !important;
+    text-transform: uppercase !important;
+    color: rgba(215, 144, 42, 0.92) !important;
+  }
+  html body .wj-mobile-panel .wj-nav-group-links a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding: 7px 0 !important;
+    min-height: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    color: rgba(253, 251, 247, 0.72) !important;
+    text-decoration: none !important;
+    break-inside: avoid !important;
+    border-bottom: 1px solid rgba(253, 251, 247, 0.07) !important;
+    transition: color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+      padding-left 260ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-mobile-panel .wj-nav-group-links a:hover,
+  html body .wj-mobile-panel .wj-nav-group-links a:focus-visible {
+    color: #fdfbf7 !important;
+    padding-left: 7px !important;
+  }
+  html body .wj-mobile-panel .wj-nav-group-links a[aria-current='page'] {
+    color: #d7902a !important;
+    font-weight: 600 !important;
+  }
+  /* The repeated amber arrow becomes a hover cue instead of constant noise. */
+  html body .wj-mobile-panel .wj-nav-group-links a::after,
+  html body .wj-mobile-panel .wj-nav-group-links a svg {
+    opacity: 0 !important;
+    transform: translateX(-4px) !important;
+    transition: opacity 160ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  html body .wj-mobile-panel .wj-nav-group-links a:hover::after,
+  html body .wj-mobile-panel .wj-nav-group-links a:focus-visible::after,
+  html body .wj-mobile-panel .wj-nav-group-links a:hover svg,
+  html body .wj-mobile-panel .wj-nav-group-links a:focus-visible svg {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+
+  /* ── Location card ─────────────────────────────────────────────────────── */
+  html body .wj-mobile-panel .wj-mega-location {
+    background-color: rgba(253, 251, 247, 0.05) !important;
+    border: 1px solid rgba(253, 251, 247, 0.12) !important;
+    overflow: hidden !important;
+  }
+  html body .wj-mobile-panel .wj-mega-location-image {
+    min-height: clamp(120px, 13vw, 170px) !important;
+  }
+  html body .wj-mobile-panel .wj-mega-location h2 {
+    font-family: var(--font-display), Georgia, serif !important;
+    letter-spacing: -0.015em !important;
+    color: #fdfbf7 !important;
+  }
+  html body .wj-mobile-panel .wj-mega-address p span {
+    color: rgba(253, 251, 247, 0.66) !important;
+  }
+  html body .wj-mobile-panel .wj-mega-explore {
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease !important;
+  }
+  html body .wj-mobile-panel .wj-mega-explore:hover {
+    background-color: #fdfbf7 !important;
+    color: #0e3421 !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html body .wj-mobile-panel .wj-mega-card,
+    html body .wj-mobile-panel .wj-mega-card-img,
+    html body .wj-mobile-panel .wj-nav-group-links a { transition: none !important; }
+    html body .wj-mobile-panel .wj-mega-card:hover { transform: none !important; }
+    html body .wj-mobile-panel .wj-mega-card:hover .wj-mega-card-img { transform: none !important; }
+  }
+}

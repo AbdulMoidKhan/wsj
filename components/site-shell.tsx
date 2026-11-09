@@ -111,8 +111,8 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
     if (panel) {
       const compact = window.matchMedia('(max-width:899px)').matches;
       const shortDesktop = !compact && window.matchMedia('(max-height:820px)').matches;
-      panel.style.setProperty('background-color', '#003f30', 'important');
-      panel.style.setProperty('background-image', 'radial-gradient(circle at 12% 0%,rgba(33,92,69,.32),transparent 32%),radial-gradient(circle at 92% 100%,rgba(17,73,54,.24),transparent 34%),linear-gradient(135deg,#073629 0%,#003f30 48%,#003126 100%)', 'important');
+      panel.style.setProperty('background-color', '#0e3421', 'important');
+      panel.style.setProperty('background-image', 'radial-gradient(circle at 10% -4%,rgba(30,62,59,.5),transparent 34%),radial-gradient(circle at 94% 104%,rgba(215,144,42,.1),transparent 36%),linear-gradient(135deg,#123d27 0%,#0e3421 52%,#0a2619 100%)', 'important');
       panel.style.setProperty('border-radius', compact ? '0' : shortDesktop ? '24px' : '34px', 'important');
       panel.querySelectorAll<HTMLElement>('.wj-nav-group-toggle').forEach(item => {
         item.style.setProperty('background', 'transparent', 'important');
