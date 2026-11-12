@@ -9,16 +9,31 @@
   --mo-ease-state:cubic-bezier(.4,0,.2,1);
   --mo-rise:16px;
   --mo-lift:3px;
-  --mo-stagger:70ms;
+  --mo-stagger:60ms;
+  /* Mission motion scale (mirrors lib/motion-tokens.ts). */
+  --motion-instant:100ms;
+  --motion-fast:180ms;
+  --motion-normal:280ms;
+  --motion-medium:400ms;
+  --motion-slow:600ms;
+  --motion-deliberate:850ms;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);
+  --ease-in-out-cubic:cubic-bezier(.65,0,.35,1);
+  --ease-standard:cubic-bezier(.2,.65,.3,1);
+  --ease-tactile:cubic-bezier(.25,1,.5,1);
 }
 
-/* Route content enters after first paint. Header, sticky navigation, mega menu
-   and portal/dialog roots are outside this animated main-content boundary. */
-.wj-route-stage>main{
-  animation:mo-route-in var(--mo-base) var(--mo-ease-enter) both;
+/* Lenis owns wheel smoothing; native smooth-scroll would double-ease anchor jumps. */
+html.has-lenis{scroll-behavior:auto!important}
+
+/* Client-side navigations only: the first document load paints immediately (LCP is never
+   delayed). Header, mega menu and dialogs sit outside this animated boundary. Opacity never
+   starts at 0, so content is always painted and there is no white flash between routes. */
+html[data-navigated] .wj-route-stage>main{
+  animation:mo-route-in 260ms var(--ease-out-expo) both;
 }
 @keyframes mo-route-in{
-  from{opacity:.01;translate:0 10px}
+  from{opacity:.35;translate:0 6px}
   to{opacity:1;translate:0 0}
 }
 
@@ -41,16 +56,11 @@
   transition:transform 80ms linear;
 }
 
-.wj-curtain-wipe{
-  position:fixed;inset:0;z-index:99999;pointer-events:none;
-  background:#073629;transform:scaleY(0);transform-origin:top center;
-}
+
 
 /* Elevated header styling */
 .wj-header.is-elevated{
-  background:rgba(255,255,255,0.96)!important;
-  backdrop-filter:blur(12px)!important;
-  -webkit-backdrop-filter:blur(12px)!important;
+  background:rgba(255,255,255,0.97)!important;
   box-shadow:0 8px 24px rgba(7,54,41,0.08)!important;
   border-bottom:1px solid rgba(217,145,11,0.18)!important;
   transition:background-color var(--mo-base) var(--mo-ease-state),box-shadow var(--mo-base) var(--mo-ease-state),border-color var(--mo-base) var(--mo-ease-state)!important;
@@ -63,7 +73,6 @@
 }
 .wj-split-line{
   display:block;
-  will-change:transform,opacity;
 }
 .wj-split-word{
   display:inline-block;
@@ -71,24 +80,28 @@
 }
 .wj-split-char{
   display:inline-block;
-  will-change:transform,opacity;
 }
 
 /* Declarative Motion Directives */
-[data-anim]{
-  will-change:transform,opacity;
-}
-[data-parallax], [data-lag]{
+
+[data-parallax]{
   will-change:transform;
 }
 [data-tilt]{
   transform-style:preserve-3d;
   perspective:1000px;
 }
-[data-magnetic]{
-  display:inline-block;
-  will-change:transform;
+/* Magnetic CTAs: JS writes --mag-x/--mag-y only on capable desktops; the separate
+   translate property composes with the shared hover lift (transform). */
+[data-magnetic-active]{
+  translate:var(--mag-x,0) var(--mag-y,0);
+  transition:translate var(--motion-medium) var(--ease-out-expo);
 }
+
+/* Direction-aware header: retracts on sustained downward scroll, returns on upward scroll,
+   focus or hover. Disabled for reduced motion in JS. */
+.wj-platform .wj-header{transition:transform var(--motion-normal) var(--ease-out-expo)}
+.wj-platform .wj-header.is-retracted:not(:focus-within){transform:translateY(-100%)}
 
 /* Loading feedback stays low contrast and never shifts layout. */
 :is(.lx-vskel,.uc-skeleton,.bk-skeleton,.adm-skeleton){
@@ -173,7 +186,9 @@
 @media (prefers-reduced-motion:reduce){
   :root{--mo-fast:120ms;--mo-base:160ms;--mo-slow:160ms;--mo-reveal:160ms;--mo-rise:0px}
   html{scroll-behavior:auto!important}
-  .wj-route-stage>main{animation:mo-fade-only var(--mo-base) ease both}
+  html[data-navigated] .wj-route-stage>main{animation:mo-fade-only var(--mo-base) ease both}
+  .wj-platform .wj-header{transition:none}
+  [data-magnetic-active]{translate:none;transition:none}
   @keyframes mo-fade-only{from{opacity:.01}to{opacity:1}}
   [data-mo-reveal][data-mo-pending]{opacity:1!important;translate:none!important;transition:opacity var(--mo-base) ease!important}
   [data-mo-image]{opacity:1!important;transition:none!important}
@@ -248,3 +263,41 @@ html body .wj-platform .wj-mobile-panel.is-closing{animation-duration:var(--mo-b
   .bk-overlay :where(.bk-type-card,.bk-plan-card,.bk-addon,.bk-time-slot,.bk-cal-day,.bk-cal-nav-btn):not(:disabled):active{transform:scale(.98)!important}
   @media(prefers-reduced-motion:reduce){.bk-overlay :where(.bk-type-card,.bk-plan-card,.bk-addon,.bk-time-slot,.bk-cal-day,.bk-cal-nav-btn){transform:none!important}}
 }
+
+/* WebGL world is paused and hidden on routes/devices where it is switched off. */
+html[data-scene-off] .scene-backdrop{display:none}
+
+/* Continuous decorative drift is a desktop luxury: phones/tablets and reduced-motion users get
+   the same composition, static. */
+@media (max-width:1023px),(pointer:coarse),(prefers-reduced-motion:reduce){
+  .amb-backdrop *,.amb-local,.amb-local::before,.amb-local::after{animation:none!important}
+}
+
+/* WSJ-04: mobile service pills. Directional edge fades driven by data-scroll (set in
+   gsap-motion), snap-assisted touch scrolling, and inset focus rings so the scroll container
+   never clips the keyboard indicator. */
+@media (max-width:1240px){
+  html body .wj-platform .lv-strip ul{
+    --fade-l:0px;--fade-r:32px;
+    scroll-snap-type:x proximity;scroll-padding-inline:24px;overscroll-behavior-x:contain;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%);
+  }
+  html body .wj-platform .lv-strip ul[data-scroll=middle]{--fade-l:32px}
+  html body .wj-platform .lv-strip ul[data-scroll=end]{--fade-l:32px;--fade-r:0px}
+  html body .wj-platform .lv-strip ul[data-scroll=none]{--fade-r:0px}
+  html body .wj-platform .lv-strip li{scroll-snap-align:start}
+}
+@layer wj-button-contract{
+  html body .wj-platform .lv-strip a:focus-visible{outline-offset:-3px!important;border-radius:6px}
+}
+
+/* Visually hidden text that remains available to assistive technology. */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Homepage hero carousel: slide indicators (transform-only active state) and pause control. */
+html body .wj-platform .lv-slide-dots{display:flex;align-items:center}
+html body .wj-platform .lv-slide-dot{display:grid;place-items:center;min-width:26px!important;min-height:44px;padding:0;border:0;background:none;color:inherit;cursor:pointer}
+html body .wj-platform .lv-slide-dot>span{display:block;width:20px;height:6px;border-radius:999px;background:currentColor;opacity:.32;transform:scaleX(.32);transition:transform var(--motion-normal) var(--ease-out-expo),opacity var(--motion-fast) ease}
+html body .wj-platform .lv-slide-dot[aria-current=true]>span{opacity:1;transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){html body .wj-platform .lv-slide-dot>span{transition:none}}

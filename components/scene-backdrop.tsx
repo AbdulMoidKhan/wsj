@@ -1,6 +1,20 @@
 'use client';
 
 import {useEffect, useRef} from 'react';
+import {usePathname} from 'next/navigation';
+import {canRunRichEffects, useReducedMotion} from '@/lib/use-reduced-motion';
+
+const SCENE_CHECK = 'wj:scene-check';
+/* Routes whose design hides the ambient layers (Figma homepage/page frames sit on opaque
+   backgrounds), so a WebGL world there would render invisibly and only cost CPU/GPU. */
+const HIDDEN_SCENE_ROUTES = '#main.figma-home, #main.fx-page';
+
+/* PublicLayout renders inside each page, so this component remounts on every navigation.
+   The built world (renderer, GPU buffers, ScrollTrigger) is kept at module level and its
+   canvas is re-attached to the new host; disposal is deferred and cancelled by a remount,
+   so navigating never rebuilds three.js scenes. */
+let world: {canvas: HTMLCanvasElement; dispose: () => void} | null = null;
+let worldDisposeTimer: number | undefined;
 
 /*
   <SceneBackdrop/> - one fixed, full-viewport WebGL world behind every public page.
@@ -16,19 +30,37 @@ import {useEffect, useRef} from 'react';
   Objects are anchored to the left/right edge band of the current viewport so
   they frame, rather than cover, the reading column. three.js and GSAP load
   after first paint. Stops when the tab is hidden or background motion is
-  paused; prefers-reduced-motion renders still frames that follow scroll.
+  paused. Only capable desktops (lib/use-reduced-motion canRunRichEffects) without reduced
+  motion, on routes that do not hide ambient layers, ever load three.js.
 */
 
 export function SceneBackdrop() {
   const host = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const reduced = useReducedMotion();
+
+  /* Per route: decide whether the world should be visible. It is created lazily the first time
+     a route wants it and then paused (not rebuilt) on routes that do not. Phones, tablets,
+     low-power/data-saver devices and reduced-motion users never download three.js at all. */
+  useEffect(() => {
+    const off = reduced || !canRunRichEffects() || Boolean(document.querySelector(HIDDEN_SCENE_ROUTES));
+    const root = document.documentElement;
+    if (off) root.dataset.sceneOff = ''; else delete root.dataset.sceneOff;
+    window.dispatchEvent(new Event(SCENE_CHECK));
+  }, [pathname, reduced]);
 
   useEffect(() => {
     const el = host.current;
     if (!el) return;
     let disposed = false;
-    let cleanup = () => {};
+    let started = false;
+    let idle: number | undefined;
+    let timer: number | undefined;
+    window.clearTimeout(worldDisposeTimer);
+    if (world) {el.appendChild(world.canvas); started = true;}
 
     const start = async () => {
+      if (world) {el.appendChild(world.canvas); return;}
       const probe = document.createElement('canvas');
       if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return;
       const [THREE, {mergeGeometries}, {RoomEnvironment}, {gsap}, {ScrollTrigger}, {createOfficeKit}] = await Promise.all([
@@ -228,24 +260,24 @@ export function SceneBackdrop() {
       window.addEventListener('resize', resize, {passive: true});
 
       let running = false;
-      const paused = () => document.documentElement.dataset.ambient === 'paused';
+      const paused = () => document.documentElement.dataset.ambient === 'paused' || document.documentElement.dataset.sceneOff !== undefined;
       const sync = () => {
         const should = !reduced && !document.hidden && !paused();
         if (should && !running) {running = true; gsap.ticker.add(tick);}
         else if (!should && running) {running = false; gsap.ticker.remove(tick);}
       };
       // still frames keep following scroll when the loop is off
-      camTl.eventCallback('onUpdate', () => {if (!running) render();});
+      camTl.eventCallback('onUpdate', () => {if (!running && !paused()) render();});
 
       document.documentElement.dataset.scene = 'live';
       const onVisibility = () => sync();
       document.addEventListener('visibilitychange', onVisibility);
       const mo = new MutationObserver(sync);
-      mo.observe(document.documentElement, {attributes: true, attributeFilter: ['data-ambient']});
+      mo.observe(document.documentElement, {attributes: true, attributeFilter: ['data-ambient', 'data-scene-off']});
       sync();
       render();
 
-      cleanup = () => {
+      world = {canvas: renderer.domElement, dispose: () => {
         gsap.ticker.remove(tick);
         camTl.scrollTrigger?.kill(); camTl.kill(); velTrigger.kill();
         mo.disconnect();
@@ -260,20 +292,27 @@ export function SceneBackdrop() {
         Object.values(palette).forEach(m => m.dispose());
         dustMat.dispose(); envTex.dispose(); pmrem.dispose(); renderer.dispose();
         renderer.domElement.remove();
-      };
+      }};
     };
 
     // Start after the page has painted so the scene never competes with LCP.
     const w = window as Window & {requestIdleCallback?: (cb: () => void, o?: {timeout: number}) => number; cancelIdleCallback?: (id: number) => void};
     const kick = () => {if (!disposed) start().catch(() => {/* CSS ambient layer remains */});};
-    const idle = w.requestIdleCallback?.(kick, {timeout: 1500});
-    const timer = idle === undefined ? window.setTimeout(kick, 600) : undefined;
+    const maybeStart = () => {
+      if (started || disposed || document.documentElement.dataset.sceneOff !== undefined) return;
+      started = true;
+      idle = w.requestIdleCallback?.(kick, {timeout: 2500});
+      if (idle === undefined) timer = window.setTimeout(kick, 1200);
+    };
+    window.addEventListener(SCENE_CHECK, maybeStart);
+    maybeStart();
 
     return () => {
       disposed = true;
+      window.removeEventListener(SCENE_CHECK, maybeStart);
       if (idle !== undefined) w.cancelIdleCallback?.(idle);
       if (timer !== undefined) window.clearTimeout(timer);
-      cleanup();
+      worldDisposeTimer = window.setTimeout(() => {world?.dispose(); world = null;}, 4000);
     };
   }, []);
 

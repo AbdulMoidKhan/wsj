@@ -18,7 +18,7 @@
  */
 import {PUBLIC_API_URL} from '@/lib/public-api';
 import {accountFetch, useCustomerSession} from '@/lib/account-client';
-import {findCatalogServiceHint} from '@/lib/catalog-service-hint';
+import {findCatalogServiceHint, findPlanHint} from '@/lib/catalog-service-hint';
 import {blocksSameDayBooking} from '@/lib/booking-policy';
 import './booking-dialog.css';
 import {sendInquiry} from './forms';
@@ -519,14 +519,17 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
         if (!response.ok) throw new Error('service');
         const body = (await response.json()) as ServiceDetail;
         setLoadedDetail({slug, data: body});
-        const target = preselectedPlan ? body.plans.find(entry => entry.slug === preselectedPlan) : undefined;
+        // An explicit package slug wins; otherwise a CTA labelled "Service - Package" may select
+        // its package when that name is unique within the live service.
+        const target = (preselectedPlan ? body.plans.find(entry => entry.slug === preselectedPlan) : undefined)
+          ?? (!preselectedPlan && service ? findPlanHint(body.plans, service) : undefined);
         if (target) dispatch({t: 'SET_PLAN', v: target.slug, units: Math.max(1, target.minQuantity), addOns: requiredAddOns(target)});
       } catch (error) {
         if ((error as {name?: string})?.name !== 'AbortError') setCatalogError(true);
       }
     })();
     return () => controller.abort();
-  }, [s.serviceSlug, preselectedPlan]);
+  }, [s.serviceSlug, preselectedPlan, service]);
 
   useEffect(() => {
     const dialog = dialogRef.current;

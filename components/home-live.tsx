@@ -2,7 +2,8 @@
 
 import Image from '@/components/consistent-image';
 import {useEffect, useMemo, useState, useRef} from 'react';
-import {ArrowUpRight, ArrowRight} from 'lucide-react';
+import {ArrowUpRight, ArrowRight, ArrowLeft, Pause, Play} from 'lucide-react';
+import {useReducedMotion} from '@/lib/use-reduced-motion';
 import {BookingButton} from './booking';
 
 /* Content in this file is taken from the live workspacejunction.com homepage (Oct 2026). */
@@ -44,24 +45,30 @@ export function HeroSlides() {
   const [index, setIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [paused, setPaused] = useState(false);
+  // Slides 2-3 are fetched only after the first slide (the LCP image) has had the network.
+  const [warm, setWarm] = useState(false);
+  const reduced = useReducedMotion();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const swipeRef = useRef<{x: number; y: number} | null>(null);
+  const autoplay = !paused && !reduced;
 
   useEffect(() => {
-    if (hovered || focused) return;
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (media.matches) return;
+    const t = window.setTimeout(() => setWarm(true), 2500);
+    return () => window.clearTimeout(t);
+  }, []);
 
+  useEffect(() => {
+    if (!autoplay || hovered || focused) return;
     timerRef.current = setInterval(() => {
-      if (!document.hidden && document.documentElement.dataset.ambient !== 'paused') {
-        setIndex(i => (i + 1) % SLIDES.length);
-      }
+      if (!document.hidden) setIndex(i => (i + 1) % SLIDES.length);
     }, 7000);
-
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [hovered, focused]);
+  }, [autoplay, hovered, focused]);
 
+  const go = (next: number) => {setWarm(true); setIndex((next + SLIDES.length) % SLIDES.length);};
   const slide = SLIDES[index];
 
   return (
@@ -76,6 +83,18 @@ export function HeroSlides() {
       onBlur={event => {
         if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
       }}
+      onPointerDown={event => {
+        if (event.pointerType !== 'mouse') swipeRef.current = {x: event.clientX, y: event.clientY};
+      }}
+      onPointerUp={event => {
+        const start = swipeRef.current;
+        swipeRef.current = null;
+        if (!start) return;
+        const dx = event.clientX - start.x;
+        // Horizontal swipes only; vertical drags keep scrolling the page.
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(event.clientY - start.y) * 1.5) go(index + (dx < 0 ? 1 : -1));
+      }}
+      onPointerCancel={() => {swipeRef.current = null;}}
     >
       <div className="lv-hero-copy">
         <div className="lv-hero-content-wrap">
@@ -101,7 +120,7 @@ export function HeroSlides() {
       <div className="lv-hero-media">
         {SLIDES.map((s, i) => (
           <figure key={s.src} className={'lv-slide' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
-            <Image src={s.src} alt={s.alt} fill preload={i === 0} fetchPriority={i === 0 ? 'high' : 'low'} sizes="(max-width: 767px) 100vw, 50vw" className="lv-slide-img" />
+            {(i === 0 || warm || i === index) && <Image src={s.src} alt={s.alt} fill preload={i === 0} fetchPriority={i === 0 ? 'high' : 'low'} sizes="(max-width: 767px) 100vw, 50vw" className="lv-slide-img" />}
           </figure>
         ))}
       </div>
@@ -109,17 +128,26 @@ export function HeroSlides() {
         <span className="lv-hero-motto">WORK. CONNECT. GROW.</span>
         <p>Flexible spaces for every way of working.</p>
         <div className="lv-controls-cluster">
-          <span>{String(index + 1).padStart(2, '0')} / 03</span>
-          <button
-            type="button"
-            className="lv-nav-arrow"
-            aria-label="Next slide"
-            onClick={() => {
-              setIndex((index + 1) % SLIDES.length);
-            }}
-          >
+          {/* Announce slide changes only when the user drives them, never on autoplay. */}
+          <span aria-live={autoplay ? 'off' : 'polite'} aria-atomic="true">
+            <span className="sr-only">Slide </span>{String(index + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+          </span>
+          <div className="lv-slide-dots" role="group" aria-label="Choose slide">
+            {SLIDES.map((s, i) => (
+              <button key={s.src} type="button" className="lv-slide-dot" aria-label={`Show slide ${i + 1}: ${s.title}`} aria-current={i === index ? 'true' : undefined} onClick={() => go(i)}><span aria-hidden="true"/></button>
+            ))}
+          </div>
+          <button type="button" className="lv-nav-arrow" aria-label="Previous slide" onClick={() => go(index - 1)}>
+            <ArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <button type="button" className="lv-nav-arrow" aria-label="Next slide" onClick={() => go(index + 1)}>
             <ArrowRight size={18} aria-hidden="true" />
           </button>
+          {!reduced && (
+            <button type="button" className="lv-nav-arrow lv-autoplay-toggle" aria-pressed={paused} aria-label={paused ? 'Play slideshow' : 'Pause slideshow'} onClick={() => setPaused(p => !p)}>
+              {paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+            </button>
+          )}
         </div>
       </div>
     </div>

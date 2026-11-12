@@ -4,33 +4,39 @@ import {useEffect, useRef} from 'react';
 import {usePathname} from 'next/navigation';
 import gsap from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
-import {ScrollToPlugin} from 'gsap/ScrollToPlugin';
-import {Observer} from 'gsap/Observer';
 import {MOTION_TOKENS} from '@/lib/motion-tokens';
 import {splitText} from '@/lib/split-text';
+import {canRunRichEffects, useReducedMotion} from '@/lib/use-reduced-motion';
 
-// Register standard free GSAP plugins once
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Observer);
-  /* Exposed for debugging and for inline page scripts that drive timelines. */
-  const motionWindow = window as unknown as {gsap?: typeof gsap; ScrollTrigger?: typeof ScrollTrigger};
-  motionWindow.gsap = gsap;
-  motionWindow.ScrollTrigger = ScrollTrigger;
-}
+if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
-/** The slice of Lenis this module actually uses. */
+/*
+  One motion orchestrator for every public page.
+
+  Contract:
+  - Server HTML is always fully visible. JS only adds temporary "pending" states to content
+    that is BELOW the first viewport, so the hero, H1 and LCP image are never hidden.
+  - Lenis (desktop, fine pointer, capable device, no reduced motion) shares gsap.ticker with
+    ScrollTrigger and the WebGL backdrop: a single animation loop.
+  - Per-route work lives in one gsap.context(), reverted on navigation, so timelines,
+    ScrollTriggers and inline styles never leak between routes.
+  - Reduced motion is observed live; switching it on reveals everything and stops Lenis.
+*/
+
 interface LenisInstance {
   on(event: string, handler: (payload: never) => void): void;
   off(event: string, handler: (payload: never) => void): void;
   raf(time: number): void;
   stop(): void;
   start(): void;
+  resize(): void;
   destroy(): void;
-  scrollTo(target: Element | string | number, options?: {offset?: number; duration?: number}): void;
+  scrollTo(target: Element | string | number, options?: {offset?: number; duration?: number; immediate?: boolean; force?: boolean}): void;
   isStopped: boolean;
 }
 
 const REVEAL_SELECTOR = [
+  '[data-reveal]',
   '.hp-section-head > *', '.hp-heading', '.hp-actions', '.hp-service-card', '.lv-service',
   '.price-card', '.pricing-filters', '.lx-card-col', '.lx-testimonial-card', '.lx-stat',
   '.lx-quote', '.lx-table-wrap', '.lx-faq details', '.ip-service-card', '.ip-feature-card',
@@ -41,51 +47,148 @@ const REVEAL_SELECTOR = [
   '.cn-section-head > *', '.sv-section-head > *', '.mem-section-head > *', '.uc-section-head > *'
 ].join(',');
 
+const SKIP_SCOPE = '[data-mo-static], dialog, [role="dialog"], .wj-header, .wj-footer';
 const COUNT_SELECTOR = '.lv-stats dd,[data-mo-count],[data-anim="counter"]';
-const IMAGE_SELECTOR = '.wj-platform img:not([data-mo-static])';
+const MAGNETIC_SELECTOR = '[data-magnetic]:is(.wj-button,.btn,.ip-button,.lv-pill,.cn-btn-gold)';
+
+/* PublicLayout renders inside each page, so this component remounts on every navigation.
+   Session-wide state therefore lives at module level: the first path seen (to tell the
+   initial document load from client navigations) and a single Lenis instance whose teardown
+   is deferred and cancelled by the next mount. */
+let initialPath: string | null = null;
+let sharedLenis: {lenis: LenisInstance; destroy: () => void} | null = null;
+let lenisDisposeTimer: number | undefined;
+const disposeLenis = () => {sharedLenis?.destroy(); sharedLenis = null;};
+
+/** Element starts inside (or just below) the first viewport: render it as-is, never hide it. */
+const inFirstView = (el: Element) => el.getBoundingClientRect().top < window.innerHeight * 0.98;
 
 export function GsapMotion() {
   const pathname = usePathname();
-  const prevPathRef = useRef<string>(pathname);
+  const reduced = useReducedMotion();
+  const lenisRef = useRef<LenisInstance | null>(null);
 
+  /* Route entrance is a CSS animation keyed off this flag, so the very first document load
+     paints instantly and only client-side navigations get the short fade-rise. */
+  useEffect(() => {
+    if (initialPath === null) initialPath = pathname;
+    else if (pathname !== initialPath) document.documentElement.dataset.navigated = '';
+  }, [pathname]);
+
+  useEffect(() => {
+    document.documentElement.dataset.motion = reduced ? 'reduced' : 'enhanced';
+  }, [reduced]);
+
+  /* ---- Smooth scroll: created once per preference, survives navigations. ---- */
+  useEffect(() => {
+    window.clearTimeout(lenisDisposeTimer);
+    if (reduced || !canRunRichEffects()) {
+      disposeLenis();
+      return;
+    }
+    const scheduleDispose = () => {lenisRef.current = null; lenisDisposeTimer = window.setTimeout(disposeLenis, 4000);};
+    if (sharedLenis) {
+      lenisRef.current = sharedLenis.lenis;
+      return scheduleDispose;
+    }
+    let disposed = false;
+    import('@studio-freight/lenis').then(({default: Lenis}) => {
+      if (disposed || sharedLenis) return;
+      const lenis = new Lenis({lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, syncTouch: false}) as unknown as LenisInstance;
+      lenisRef.current = lenis;
+      document.documentElement.classList.add('has-lenis');
+      lenis.on('scroll', ScrollTrigger.update as never);
+      const tick = (time: number) => lenis.raf(time * 1000);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+
+      // Scroll locks (booking dialog, mobile menu) write inline overflow on <body>/<html>.
+      // Watching only those two elements avoids reacting to GSAP's per-frame style writes.
+      const sync = () => {
+        const locked = [document.body, document.documentElement].some(node => node.style.overflow === 'hidden' || node.style.position === 'fixed');
+        if (locked) lenis.stop(); else lenis.start();
+      };
+      const observer = new MutationObserver(sync);
+      observer.observe(document.body, {attributes: true, attributeFilter: ['style']});
+      observer.observe(document.documentElement, {attributes: true, attributeFilter: ['style']});
+      sync();
+
+      sharedLenis = {lenis, destroy: () => {
+        observer.disconnect();
+        gsap.ticker.remove(tick);
+        lenis.destroy();
+        document.documentElement.classList.remove('has-lenis');
+      }};
+    }).catch(() => {/* native scrolling remains */});
+    return () => {disposed = true; scheduleDispose();};
+  }, [reduced]);
+
+  /* ---- Header: elevation + direction-aware retract. Persistent across routes. ---- */
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>('.wj-platform .wj-header');
+    if (!header) return;
+    let lastY = window.scrollY;
+    let travel = 0;
+    let frame = 0;
+    const holdOpen = () => header.matches(':focus-within, :hover') || Boolean(header.querySelector('[aria-expanded="true"]'));
+    const update = () => {
+      frame = 0;
+      const y = Math.max(0, window.scrollY);
+      header.classList.toggle('is-elevated', y > 80);
+      const delta = y - lastY;
+      lastY = y;
+      if (reduced || y < 320 || holdOpen()) {
+        travel = 0;
+        header.classList.remove('is-retracted');
+        return;
+      }
+      // Accumulate travel in one direction so small jitters never flicker the header.
+      travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
+      if (travel > 56) header.classList.add('is-retracted');
+      else if (travel < -28) header.classList.remove('is-retracted');
+    };
+    const onScroll = () => {if (!frame) frame = requestAnimationFrame(update);};
+    const reveal = () => header.classList.remove('is-retracted');
+    window.addEventListener('scroll', onScroll, {passive: true});
+    header.addEventListener('focusin', reveal);
+    update();
+
+    // Mobile service pills: edge fades follow the scroll position and the current page's pill
+    // starts in view (scrollLeft only, never scrolling the page itself).
+    const strip = header.querySelector<HTMLElement>('.lv-strip ul');
+    let stripObserver: ResizeObserver | undefined;
+    const edges = () => {
+      if (!strip) return;
+      const max = strip.scrollWidth - strip.clientWidth;
+      strip.dataset.scroll = max <= 2 ? 'none' : strip.scrollLeft <= 2 ? 'start' : strip.scrollLeft >= max - 2 ? 'end' : 'middle';
+    };
+    if (strip) {
+      const current = strip.querySelector<HTMLElement>('[aria-current="page"]');
+      if (current && strip.scrollWidth > strip.clientWidth) strip.scrollLeft = current.offsetLeft - (strip.clientWidth - current.offsetWidth) / 2;
+      strip.addEventListener('scroll', edges, {passive: true});
+      stripObserver = new ResizeObserver(edges);
+      stripObserver.observe(strip);
+      edges();
+    }
+    return () => {
+      strip?.removeEventListener('scroll', edges);
+      stripObserver?.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      header.removeEventListener('focusin', reveal);
+      cancelAnimationFrame(frame);
+      header.classList.remove('is-retracted');
+    };
+    // The header remounts with each route's shell, so rebind on navigation.
+  }, [reduced, pathname]);
+
+  /* ---- Per-route choreography. ---- */
   useEffect(() => {
     const root = document.querySelector<HTMLElement>('.wj-platform');
     if (!root) return;
-
-    // Detect user preferences and device capabilities
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const fine = window.matchMedia('(pointer: fine)').matches;
-    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
-    const nav = navigator as unknown as { connection?: { saveData?: boolean }; hardwareConcurrency?: number };
-    const isLowEnd = Boolean(nav.connection?.saveData || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4));
-
-    document.documentElement.dataset.motion = reduced ? 'reduced' : 'enhanced';
-
-    // Route transition animation if pathname changed
-    if (prevPathRef.current !== pathname && !reduced) {
-      prevPathRef.current = pathname;
-      const curtain = root.querySelector<HTMLElement>('.wj-curtain-wipe');
-      if (curtain) {
-        gsap.fromTo(
-          curtain,
-          {scaleY: 1, transformOrigin: 'top center'},
-          {
-            scaleY: 0,
-            duration: 0.42,
-            ease: 'expo.out',
-            overwrite: 'auto',
-          }
-        );
-      }
-    } else {
-      prevPathRef.current = pathname;
-    }
-
-    const cleanups: Array<() => void> = [];
     const timers: number[] = [];
-    const splits: Array<{ revert: () => void }> = [];
+    const cleanups: Array<() => void> = [];
+    const splits: Array<{revert: () => void}> = [];
 
-    // Safety fallback: reveal all content if anything delays
     const revealAll = () => {
       root.querySelectorAll<HTMLElement>('[data-mo-pending]').forEach(el => {
         el.classList.add('is-revealed');
@@ -93,594 +196,219 @@ export function GsapMotion() {
       });
     };
 
-    // If reduced motion, reveal everything immediately and skip heavy animations
+    // A navigation keeps the same Lenis instance; resync its target with the new document.
+    const lenis = lenisRef.current;
+    if (lenis) requestAnimationFrame(() => {lenis.resize(); lenis.scrollTo(window.scrollY, {immediate: true, force: true});});
+
     if (reduced) {
       revealAll();
-      return () => {
-        revealAll();
-      };
+      return revealAll;
     }
 
-    // Initialize Lenis smooth scroll
-    let lenis: LenisInstance | null = null;
-    let frameLoop: ((time: number) => void) | null = null;
+    const rich = canRunRichEffects();
+    const desktop = window.matchMedia('(min-width: 1024px)').matches;
 
-    if (!reduced && fine && !isLowEnd) {
-      import('@studio-freight/lenis')
-        .then(({default: Lenis}) => {
-          const instance = new Lenis({
-            lerp: 0.09,
-            duration: 1.1,
-            smoothWheel: true,
-            wheelMultiplier: 1.0,
-            touchMultiplier: 1.0,
-            syncTouch: false,
-          }) as unknown as LenisInstance;
-          lenis = instance;
-
-          // Sync Lenis with GSAP ScrollTrigger
-          instance.on('scroll', ScrollTrigger.update as never);
-          gsap.ticker.lagSmoothing(0);
-
-          frameLoop = (time: number) => {
-            instance.raf(time * 1000);
-          };
-          gsap.ticker.add(frameLoop);
-
-          // Stop Lenis when modal/dialogs are open to preserve scroll lock
-          const syncScrollLock = () => {
-            const locked =
-              document.body.style.overflow === 'hidden' ||
-              Boolean(document.querySelector('dialog[open], [role="dialog"][aria-modal="true"]'));
-            if (locked) {
-              lenis?.stop();
-            } else {
-              lenis?.start();
-            }
-          };
-
-          const observer = new MutationObserver(syncScrollLock);
-          observer.observe(document.body, {
-            attributes: true,
-            attributeFilter: ['style'],
-            childList: true,
-            subtree: true,
-          });
-          syncScrollLock();
-
-          cleanups.push(() => {
-            observer.disconnect();
-            if (frameLoop) gsap.ticker.remove(frameLoop);
-            lenis?.destroy();
-          });
-        })
-        .catch(() => {});
-    }
-
-    // Header elevation and shrink on scroll past 80px
-    const header = root.querySelector<HTMLElement>('.wj-header');
-    if (header) {
-      const headerTrigger = ScrollTrigger.create({
-        start: 'top -80px',
-        onUpdate: self => {
-          if (self.isActive || self.scroll() > 80) {
-            header.classList.add('is-elevated');
-          } else {
-            header.classList.remove('is-elevated');
-          }
-        },
-      });
-      cleanups.push(() => headerTrigger.kill());
-    }
-
-    // Smooth anchor jumps with offset
+    // In-page anchors glide with Lenis, offset by the live header height.
     const onAnchorClick = (event: MouseEvent) => {
       const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
       const href = anchor?.getAttribute('href');
       if (!anchor || !href || href === '#' || anchor.classList.contains('wj-skip')) return;
-
       const target = document.getElementById(decodeURIComponent(href.slice(1)));
-      if (!target) return;
-
-      if (lenis && !lenis.isStopped) {
-        event.preventDefault();
-        history.pushState(null, '', href);
-        lenis.scrollTo(target, {offset: -90, duration: 0.9});
-      }
+      const active = lenisRef.current;
+      if (!target || !active || active.isStopped) return;
+      event.preventDefault();
+      history.pushState(null, '', href);
+      const headerHeight = document.querySelector<HTMLElement>('.wj-header')?.offsetHeight ?? 90;
+      active.scrollTo(target, {offset: -(headerHeight + 12), duration: 0.9});
     };
     document.addEventListener('click', onAnchorClick);
     cleanups.push(() => document.removeEventListener('click', onAnchorClick));
 
-    // Thin amber reading progress bar
-    const progressBar = root.querySelector<HTMLElement>('.gx-progress');
-    if (progressBar) {
-      const progressTrigger = ScrollTrigger.create({
-        start: 'top top',
-        end: 'bottom bottom',
-        onUpdate: self => {
-          progressBar.style.transform = `scaleX(${self.progress})`;
-        },
-      });
-      cleanups.push(() => progressTrigger.kill());
-    }
-
-    // 1. DECLARATIVE DATA-ANIM REVEALS
-    const animElements = Array.from(root.querySelectorAll<HTMLElement>('[data-anim]'));
-    animElements.forEach(el => {
-      if (el.closest('[data-mo-static], dialog, [role="dialog"], .wj-header, .wj-footer')) return;
-
-      const animType = el.dataset.anim || 'fade-up';
-      const delay = parseFloat(el.dataset.animDelay || '0');
-      const start = el.dataset.animStart || 'top 88%';
-      const once = el.dataset.animOnce !== 'false';
-
-      if (animType === 'split-lines') {
-        const split = splitText(el, {lines: true});
-        splits.push(split);
-        if (split.lines.length > 0) {
-          gsap.set(split.lines, {y: '110%', opacity: 0});
-          const tween = gsap.to(split.lines, {
-            y: '0%',
-            opacity: 1,
-            duration: MOTION_TOKENS.duration.reveal,
-            ease: MOTION_TOKENS.ease.enter,
-            stagger: MOTION_TOKENS.stagger.base,
-            delay,
-            scrollTrigger: {
-              trigger: el,
-              start,
-              once,
-            },
-          });
-          cleanups.push(() => tween.kill());
-        }
-      } else if (animType === 'split-chars') {
-        const split = splitText(el, {chars: true, lines: false});
-        splits.push(split);
-        if (split.chars.length > 0) {
-          gsap.set(split.chars, {y: 20, opacity: 0});
-          const tween = gsap.to(split.chars, {
-            y: 0,
-            opacity: 1,
-            duration: MOTION_TOKENS.duration.slow,
-            ease: MOTION_TOKENS.ease.enter,
-            stagger: 0.02,
-            delay,
-            scrollTrigger: {
-              trigger: el,
-              start,
-              once,
-            },
-          });
-          cleanups.push(() => tween.kill());
-        }
-      } else if (animType === 'clip-up') {
-        gsap.set(el, {clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', y: 24, opacity: 0.01});
-        const tween = gsap.to(el, {
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          y: 0,
-          opacity: 1,
-          duration: MOTION_TOKENS.duration.reveal,
-          ease: MOTION_TOKENS.ease.enter,
-          delay,
-          scrollTrigger: {
-            trigger: el,
-            start,
-            once,
-          },
-        });
-        cleanups.push(() => tween.kill());
-      } else if (animType === 'mask-reveal') {
-        const innerImg = el.querySelector<HTMLElement>('img, .lv-contain, .hp-photo');
-        gsap.set(el, {clipPath: 'inset(100% 0% 0% 0%)', opacity: 1});
-        if (innerImg) gsap.set(innerImg, {scale: 1.12});
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: el,
-            start,
-            once,
-          },
-        });
-        tl.to(el, {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          duration: MOTION_TOKENS.duration.cinematic,
-          ease: MOTION_TOKENS.ease.cinematic,
-          delay,
-        });
-        if (innerImg) {
-          tl.to(
-            innerImg,
-            {
-              scale: 1,
-              duration: MOTION_TOKENS.duration.cinematic,
-              ease: MOTION_TOKENS.ease.smooth,
-            },
-            '-=0.8'
-          );
-        }
-        cleanups.push(() => tl.kill());
-      } else if (animType === 'scale-in') {
-        gsap.set(el, {scale: 0.92, opacity: 0});
-        const tween = gsap.to(el, {
-          scale: 1,
-          opacity: 1,
-          duration: MOTION_TOKENS.duration.reveal,
-          ease: MOTION_TOKENS.ease.enter,
-          delay,
-          scrollTrigger: {
-            trigger: el,
-            start,
-            once,
-          },
-        });
-        cleanups.push(() => tween.kill());
-      } else if (animType === 'fade-up') {
-        gsap.set(el, {y: 32, opacity: 0});
-        const tween = gsap.to(el, {
-          y: 0,
-          opacity: 1,
-          duration: MOTION_TOKENS.duration.reveal,
-          ease: MOTION_TOKENS.ease.enter,
-          delay,
-          scrollTrigger: {
-            trigger: el,
-            start,
-            once,
-          },
-        });
-        cleanups.push(() => tween.kill());
-      } else if (animType === 'fade') {
-        gsap.set(el, {opacity: 0});
-        const tween = gsap.to(el, {
-          opacity: 1,
-          duration: MOTION_TOKENS.duration.slow,
-          ease: MOTION_TOKENS.ease.state,
-          delay,
-          scrollTrigger: {
-            trigger: el,
-            start,
-            once,
-          },
-        });
-        cleanups.push(() => tween.kill());
+    const ctx = gsap.context(() => {
+      // Reading progress (thin amber bar).
+      const progressBar = root.querySelector<HTMLElement>('.gx-progress');
+      if (progressBar) {
+        const setProgress = gsap.quickSetter(progressBar, 'scaleX');
+        ScrollTrigger.create({start: 'top top', end: 'max', onUpdate: self => setProgress(self.progress)});
       }
-    });
 
-    // 2. STAGGERED GRIDS (Cards, Services, Testimonials)
-    const staggerContainers = Array.from(root.querySelectorAll<HTMLElement>('[data-anim-stagger-group]'));
-    staggerContainers.forEach(container => {
-      const items = Array.from(container.children) as HTMLElement[];
-      if (!items.length) return;
-      const staggerTime = Math.min(
-        parseFloat(container.dataset.animStagger || '0.07'),
-        MOTION_TOKENS.stagger.cap / items.length
-      );
-      gsap.set(items, {y: 30, opacity: 0});
-      const tween = gsap.to(items, {
-        y: 0,
-        opacity: 1,
-        duration: MOTION_TOKENS.duration.slow,
-        ease: MOTION_TOKENS.ease.enter,
-        stagger: staggerTime,
-        scrollTrigger: {
-          trigger: container,
-          start: 'top 86%',
-          once: true,
-        },
-      });
-      cleanups.push(() => tween.kill());
-    });
+      // 1. Declarative [data-anim] reveals - below the first viewport only.
+      root.querySelectorAll<HTMLElement>('[data-anim]').forEach(el => {
+        if (el.closest(SKIP_SCOPE) || inFirstView(el)) return;
+        const type = el.dataset.anim || 'fade-up';
+        if (type === 'counter') return;
+        const delay = Math.min(parseFloat(el.dataset.animDelay || '0'), 0.3);
+        const scrollTrigger = {trigger: el, start: el.dataset.animStart || 'top 88%', once: true};
+        const enter = {duration: MOTION_TOKENS.duration.reveal, ease: MOTION_TOKENS.ease.enter, delay, scrollTrigger};
 
-    // 3. PARALLAX EFFECT ([data-parallax])
-    if (!isLowEnd) {
-      const parallaxElements = Array.from(root.querySelectorAll<HTMLElement>('[data-parallax]'));
-      parallaxElements.forEach(el => {
-        const factor = parseFloat(el.dataset.parallax || '0.08');
-        const offset = factor * 160;
-        const trigger = el.parentElement || el;
-
-        const tween = gsap.fromTo(
-          el,
-          {y: -offset},
-          {
-            y: offset,
-            ease: 'none',
-            scrollTrigger: {
-              trigger,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
-            },
-          }
-        );
-        cleanups.push(() => tween.kill());
-      });
-    }
-
-    // 4. SCROLL LAG / VELOCITY TRAIL ([data-lag])
-    if (!isLowEnd && fine) {
-      const lagElements = Array.from(root.querySelectorAll<HTMLElement>('[data-lag]'));
-      if (lagElements.length > 0) {
-        const lagSetters = lagElements.map(el => {
-          const factor = parseFloat(el.dataset.lag || '0.12');
-          const quick = gsap.quickTo(el, 'y', {
-            duration: 0.8,
-            ease: 'power3.out',
+        if (type === 'split-lines' || type === 'split-chars') {
+          const split = splitText(el, type === 'split-chars' ? {chars: true, lines: false} : {lines: true});
+          splits.push(split);
+          const parts = type === 'split-chars' ? split.chars : split.lines;
+          if (!parts.length) return;
+          gsap.fromTo(parts, {yPercent: type === 'split-chars' ? 40 : 100, autoAlpha: 0}, {
+            yPercent: 0, autoAlpha: 1, stagger: type === 'split-chars' ? 0.015 : MOTION_TOKENS.stagger.base,
+            ...enter, clearProps: 'transform,opacity,visibility,willChange',
           });
-          return {factor, quick};
-        });
-
-        const onLenisScroll = ({velocity}: {velocity: number}) => {
-          const v = Math.max(-100, Math.min(100, velocity || 0));
-          lagSetters.forEach(({factor, quick}) => {
-            const offset = Math.max(-MOTION_TOKENS.lag.maxOffsetPx, Math.min(MOTION_TOKENS.lag.maxOffsetPx, -v * factor * 1.5));
-            quick(offset);
-          });
-        };
-
-        /* `lenis` is only assigned inside the dynamic import callback, so the
-           assertion keeps the union instead of control-flow narrowing to null. */
-        const lagScroller = lenis as LenisInstance | null;
-        if (lagScroller) {
-          lagScroller.on('scroll', onLenisScroll as never);
-          cleanups.push(() => lagScroller.off('scroll', onLenisScroll as never));
+        } else if (type === 'clip-up') {
+          gsap.fromTo(el, {clipPath: 'inset(100% 0 0 0)', y: MOTION_TOKENS.distance.xs}, {clipPath: 'inset(0% 0 0 0)', y: 0, ...enter, clearProps: 'clipPath,transform'});
+        } else if (type === 'mask-reveal') {
+          const media = el.querySelector<HTMLElement>('img, .lv-contain, .hp-photo');
+          const tl = gsap.timeline({scrollTrigger, delay});
+          tl.fromTo(el, {clipPath: 'inset(100% 0 0 0)'}, {clipPath: 'inset(0% 0 0 0)', duration: MOTION_TOKENS.duration.cinematic, ease: MOTION_TOKENS.ease.cinematic, clearProps: 'clipPath'});
+          if (media) tl.fromTo(media, {scale: 1.06}, {scale: 1, duration: MOTION_TOKENS.duration.cinematic, ease: MOTION_TOKENS.ease.smooth, clearProps: 'transform'}, 0);
+        } else if (type === 'scale-in') {
+          gsap.fromTo(el, {scale: 0.96, autoAlpha: 0}, {scale: 1, autoAlpha: 1, ...enter, clearProps: 'transform,opacity,visibility'});
+        } else if (type === 'fade') {
+          gsap.fromTo(el, {autoAlpha: 0}, {autoAlpha: 1, ...enter, ease: MOTION_TOKENS.ease.state, clearProps: 'opacity,visibility'});
+        } else {
+          gsap.fromTo(el, {y: MOTION_TOKENS.distance.sm, autoAlpha: 0}, {y: 0, autoAlpha: 1, ...enter, clearProps: 'transform,opacity,visibility'});
         }
+      });
+
+      // 2. Staggered groups.
+      root.querySelectorAll<HTMLElement>('[data-anim-stagger-group]').forEach(container => {
+        if (container.closest(SKIP_SCOPE) || inFirstView(container)) return;
+        const items = Array.from(container.children) as HTMLElement[];
+        if (!items.length) return;
+        const stagger = Math.min(parseFloat(container.dataset.animStagger || '0.06'), MOTION_TOKENS.stagger.cap / items.length);
+        gsap.fromTo(items, {y: MOTION_TOKENS.distance.sm, autoAlpha: 0}, {
+          y: 0, autoAlpha: 1, duration: MOTION_TOKENS.duration.slow, ease: MOTION_TOKENS.ease.enter, stagger,
+          scrollTrigger: {trigger: container, start: 'top 88%', once: true}, clearProps: 'transform,opacity,visibility',
+        });
+      });
+
+      // 3. Parallax on selected media - capable desktops only, small displacement.
+      if (rich) {
+        root.querySelectorAll<HTMLElement>('[data-parallax]').forEach(el => {
+          const offset = Math.min(parseFloat(el.dataset.parallax || '0.06'), 0.1) * 120;
+          gsap.fromTo(el, {y: -offset}, {y: offset, ease: 'none', scrollTrigger: {trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true}});
+        });
       }
-    }
 
-    // 5. VELOCITY SKEW ON MEDIA ONLY ([data-skew="true"])
-    if (!isLowEnd && fine) {
-      const skewElements = Array.from(root.querySelectorAll<HTMLElement>('[data-skew="true"]'));
-      const safeSkewMedia = skewElements.filter(
-        el => el.tagName === 'FIGURE' || el.tagName === 'IMG' || el.classList.contains('lv-photo')
-      );
-      if (safeSkewMedia.length > 0) {
-        const skewSetters = safeSkewMedia.map(el =>
-          gsap.quickTo(el, 'skewY', {duration: 0.35, ease: 'power2.out'})
-        );
+      // 4. Number counters (below the fold; the server text stays until the trigger fires).
+      root.querySelectorAll<HTMLElement>(COUNT_SELECTOR).forEach(el => {
+        if (inFirstView(el)) return;
+        const match = (el.textContent || '').trim().match(/^(\$?)(\d[\d,]*)(.*)$/);
+        if (!match) return;
+        const [, prefix = '', digits, suffix = ''] = match;
+        const target = Number(digits.replaceAll(',', ''));
+        if (target <= 1 && !suffix) return;
+        const counter = {value: 0};
+        gsap.to(counter, {
+          value: target, duration: 1.1, ease: 'power3.out',
+          scrollTrigger: {trigger: el, start: 'top 88%', once: true},
+          onUpdate: () => {el.textContent = prefix + Math.round(counter.value).toLocaleString('en-US') + suffix;},
+        });
+      });
 
-        const onSkewScroll = ({velocity}: {velocity: number}) => {
-          const raw = -(velocity || 0) * 0.18;
-          const clamped = Math.max(-MOTION_TOKENS.skew.maxDeg, Math.min(MOTION_TOKENS.skew.maxDeg, raw));
-          skewSetters.forEach(quick => quick(clamped));
-        };
-
-        const skewScroller = lenis as LenisInstance | null;
-        if (skewScroller) {
-          skewScroller.on('scroll', onSkewScroll as never);
-          cleanups.push(() => skewScroller.off('scroll', onSkewScroll as never));
-        }
+      // 5. Pinned storytelling (desktop only).
+      if (desktop && rich) {
+        root.querySelectorAll<HTMLElement>('[data-pin="section"]').forEach(section => {
+          ScrollTrigger.create({trigger: section, pin: section.querySelector<HTMLElement>('.lv-pin-inner') || section, start: 'top 80px', end: '+=100%', pinSpacing: true, anticipatePin: 1});
+        });
       }
-    }
 
-    // 6. NUMERIC SCROLL COUNTERS ([data-anim="counter"], .lv-stats dd, [data-mo-count])
-    const countElements = Array.from(root.querySelectorAll<HTMLElement>(COUNT_SELECTOR));
-    countElements.forEach(el => {
-      const text = (el.textContent || '').trim();
-      const match = text.match(/^(\$?)(\d[\d,]*)(.*)$/);
-      if (!match) return;
-
-      const prefix = match[1] || '';
-      const rawNum = Number(match[2].replaceAll(',', ''));
-      const suffix = match[3] || '';
-      if (rawNum <= 1 && !suffix) return;
-
-      const counterObj = {value: 0};
-      const tween = gsap.to(counterObj, {
-        value: rawNum,
-        duration: 1.2,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 88%',
-          once: true,
-        },
-        onUpdate: () => {
-          el.textContent = `${prefix}${Math.round(counterObj.value).toLocaleString('en-US')}${suffix}`;
-        },
-      });
-      cleanups.push(() => tween.kill());
-    });
-
-    // 7. PINNED STORYTELLING EXPERIENCES ([data-pin="section"])
-    if (isDesktop && !isLowEnd) {
-      const pinSections = Array.from(root.querySelectorAll<HTMLElement>('[data-pin="section"]'));
-      pinSections.forEach(section => {
-        const pinInner = section.querySelector<HTMLElement>('.lv-pin-inner') || section;
-        const trigger = ScrollTrigger.create({
-          trigger: section,
-          pin: pinInner,
-          start: 'top 80px',
-          end: '+=100%',
-          pinSpacing: true,
-          anticipatePin: 1,
+      // 6. Restrained 3D tilt - explicit [data-tilt] decorative cards only, capped at 3deg.
+      if (rich) {
+        root.querySelectorAll<HTMLElement>('[data-tilt]').forEach(card => {
+          if (card.closest('form, dialog')) return;
+          const max = Math.min(parseFloat(card.dataset.tilt || '3'), MOTION_TOKENS.tilt.maxDeg);
+          gsap.set(card, {transformPerspective: MOTION_TOKENS.tilt.perspective});
+          const rx = gsap.quickTo(card, 'rotateX', {duration: 0.4, ease: 'power2.out'});
+          const ry = gsap.quickTo(card, 'rotateY', {duration: 0.4, ease: 'power2.out'});
+          const move = (e: PointerEvent) => {
+            const r = card.getBoundingClientRect();
+            ry(((e.clientX - r.left) / r.width - 0.5) * 2 * max);
+            rx(-((e.clientY - r.top) / r.height - 0.5) * 2 * max);
+          };
+          const leave = () => {rx(0); ry(0);};
+          card.addEventListener('pointermove', move);
+          card.addEventListener('pointerleave', leave);
+          cleanups.push(() => {card.removeEventListener('pointermove', move); card.removeEventListener('pointerleave', leave);});
         });
-        cleanups.push(() => trigger.kill());
-      });
-    }
+      }
 
-    // 8. 3D CARD TILT ([data-tilt] or .price-card, .lv-service, .hp-service-card, .uc-card)
-    if (fine && !isLowEnd) {
-      const tiltCards = Array.from(
-        root.querySelectorAll<HTMLElement>('[data-tilt], .price-card, .hp-service-card, .lv-service.has-text, .uc-card')
-      );
-
-      tiltCards.forEach(card => {
-        let isHovered = false;
-        const maxDeg = parseFloat(card.dataset.tilt || String(MOTION_TOKENS.tilt.maxDeg));
-
-        const onMouseEnter = () => {
-          isHovered = true;
-          gsap.to(card, {
-            scale: MOTION_TOKENS.tilt.scale,
-            duration: MOTION_TOKENS.duration.base,
-            ease: MOTION_TOKENS.ease.state,
-          });
-        };
-
-        const onMouseMove = (e: MouseEvent) => {
-          if (!isHovered) return;
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const xPct = (x / rect.width - 0.5) * 2;
-          const yPct = (y / rect.height - 0.5) * 2;
-
-          gsap.to(card, {
-            rotateY: xPct * maxDeg,
-            rotateX: -yPct * maxDeg,
-            transformPerspective: MOTION_TOKENS.tilt.perspective,
-            duration: 0.25,
-            ease: 'power1.out',
-            overwrite: 'auto',
-          });
-        };
-
-        const onMouseLeave = () => {
-          isHovered = false;
-          gsap.to(card, {
-            rotateX: 0,
-            rotateY: 0,
-            scale: 1,
-            duration: MOTION_TOKENS.duration.slow,
-            ease: MOTION_TOKENS.ease.spring,
-            overwrite: 'auto',
-          });
-        };
-
-        card.addEventListener('mouseenter', onMouseEnter);
-        card.addEventListener('mousemove', onMouseMove);
-        card.addEventListener('mouseleave', onMouseLeave);
-
-        cleanups.push(() => {
-          card.removeEventListener('mouseenter', onMouseEnter);
-          card.removeEventListener('mousemove', onMouseMove);
-          card.removeEventListener('mouseleave', onMouseLeave);
+      // 7. Magnetic primary CTAs. Writes CSS custom properties consumed by the `translate`
+      //    property, so it composes with the shared hover lift instead of fighting it.
+      if (rich) {
+        root.querySelectorAll<HTMLElement>(MAGNETIC_SELECTOR).forEach(btn => {
+          if (btn.closest('form, dialog, [role="dialog"]')) return;
+          const factor = Math.min(parseFloat(btn.dataset.magnetic || '0.2'), 0.3);
+          const max = MOTION_TOKENS.magnetic.maxOffsetPx;
+          let frame = 0;
+          const move = (e: PointerEvent) => {
+            if (frame) return;
+            frame = requestAnimationFrame(() => {
+              frame = 0;
+              const r = btn.getBoundingClientRect();
+              const clamp = (v: number) => Math.max(-max, Math.min(max, v));
+              btn.style.setProperty('--mag-x', clamp((e.clientX - r.left - r.width / 2) * factor).toFixed(1) + 'px');
+              btn.style.setProperty('--mag-y', clamp((e.clientY - r.top - r.height / 2) * factor).toFixed(1) + 'px');
+            });
+          };
+          const leave = () => {cancelAnimationFrame(frame); frame = 0; btn.style.removeProperty('--mag-x'); btn.style.removeProperty('--mag-y');};
+          btn.dataset.magneticActive = '';
+          btn.addEventListener('pointermove', move);
+          btn.addEventListener('pointerleave', leave);
+          cleanups.push(() => {leave(); delete btn.dataset.magneticActive; btn.removeEventListener('pointermove', move); btn.removeEventListener('pointerleave', leave);});
         });
-      });
-    }
+      }
+    }, root);
 
-    // 9. MAGNETIC BUTTONS ([data-magnetic] or .btn-primary, .lv-pill, .wj-button-yellow)
-    if (fine && !isLowEnd) {
-      const magneticButtons = Array.from(
-        root.querySelectorAll<HTMLElement>('[data-magnetic], .lv-pill, .wj-button-yellow, .btn-primary:not(.no-magnetic)')
-      );
-
-      magneticButtons.forEach(btn => {
-        const factor = parseFloat(btn.dataset.magnetic || String(MOTION_TOKENS.magnetic.factor));
-        const maxPx = MOTION_TOKENS.magnetic.maxOffsetPx;
-
-        const onMouseMove = (e: MouseEvent) => {
-          const rect = btn.getBoundingClientRect();
-          const x = (e.clientX - (rect.left + rect.width / 2)) * factor;
-          const y = (e.clientY - (rect.top + rect.height / 2)) * factor;
-          const clampedX = Math.max(-maxPx, Math.min(maxPx, x));
-          const clampedY = Math.max(-maxPx, Math.min(maxPx, y));
-
-          gsap.to(btn, {
-            x: clampedX,
-            y: clampedY,
-            duration: 0.2,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          });
-        };
-
-        const onMouseLeave = () => {
-          gsap.to(btn, {
-            x: 0,
-            y: 0,
-            duration: MOTION_TOKENS.duration.slow,
-            ease: MOTION_TOKENS.ease.elastic,
-            overwrite: 'auto',
-          });
-        };
-
-        btn.addEventListener('mousemove', onMouseMove);
-        btn.addEventListener('mouseleave', onMouseLeave);
-
-        cleanups.push(() => {
-          btn.removeEventListener('mousemove', onMouseMove);
-          btn.removeEventListener('mouseleave', onMouseLeave);
-        });
-      });
-    }
-
-    // 10. FALLBACK FOR LEGACY REVEAL SELECTORS
-    const legacyCandidates = Array.from(root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
+    // 8. Shared CSS reveal contract for card grids and section heads (IntersectionObserver).
     const siblingIndex = new Map<Element, number>();
-    const pendingList: HTMLElement[] = [];
-
-    for (const el of legacyCandidates) {
-      if (
-        el.dataset.anim ||
-        el.closest('[data-mo-static], dialog, [role="dialog"], .wj-header, .wj-footer') ||
-        el.parentElement?.closest('[data-mo-reveal]')
-      ) {
-        continue;
-      }
+    const pending: HTMLElement[] = [];
+    root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach(el => {
+      if (el.dataset.anim || el.closest(SKIP_SCOPE) || el.parentElement?.closest('[data-mo-reveal]')) return;
       el.dataset.moReveal = '';
-      if (el.getBoundingClientRect().top <= window.innerHeight * 1.05) {
-        el.classList.add('is-revealed');
-        continue;
-      }
+      if (inFirstView(el)) {el.classList.add('is-revealed'); return;}
       const parent = el.parentElement || root;
       const index = siblingIndex.get(parent) || 0;
       siblingIndex.set(parent, index + 1);
-      el.style.setProperty('--mo-delay', Math.min(index * 70, 630) + 'ms');
+      el.style.setProperty('--mo-delay', Math.min(index * 60, 360) + 'ms');
       el.dataset.moPending = '';
-      pendingList.push(el);
+      pending.push(el);
+    });
+    if (pending.length) {
+      const observer = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const target = entry.target as HTMLElement;
+          target.classList.add('is-revealed');
+          target.removeAttribute('data-mo-pending');
+          observer.unobserve(target);
+        }
+      }, {rootMargin: '0px 0px 8% 0px', threshold: 0.01});
+      pending.forEach(el => observer.observe(el));
+      timers.push(window.setTimeout(revealAll, 4000)); // never leave content hidden
+      cleanups.push(() => observer.disconnect());
     }
 
-    if (pendingList.length > 0) {
-      const revealObserver = new IntersectionObserver(
-        entries => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            const target = entry.target as HTMLElement;
-            target.classList.add('is-revealed');
-            target.removeAttribute('data-mo-pending');
-            revealObserver.unobserve(target);
-          }
-        },
-        {rootMargin: '0px 0px 10% 0px', threshold: 0.01}
-      );
-      pendingList.forEach(el => revealObserver.observe(el));
-      timers.push(window.setTimeout(revealAll, 3200));
-      cleanups.push(() => {
-        revealObserver.disconnect();
-        revealAll();
-      });
-    }
-
-    // Images fade-in handling
-    root.querySelectorAll<HTMLImageElement>(IMAGE_SELECTOR).forEach(img => {
-      if (img.complete) {
-        img.classList.add('is-mo-loaded');
-        return;
-      }
+    // 9. Below-fold images fade in once decoded; the LCP/eager images are never touched.
+    root.querySelectorAll<HTMLImageElement>('main img:not([data-mo-static]):not([loading="eager"]):not([fetchpriority="high"])').forEach(img => {
+      if (img.complete || inFirstView(img)) return;
       img.dataset.moImage = '';
       const ready = () => img.classList.add('is-mo-loaded');
       img.addEventListener('load', ready, {once: true});
       img.addEventListener('error', ready, {once: true});
-      timers.push(window.setTimeout(ready, 1800));
+      timers.push(window.setTimeout(ready, 2000));
     });
 
-    // Cleanup everything on route change / unmount
+    // Layout settles after fonts/images: one refresh, not one per trigger.
+    const refresh = () => ScrollTrigger.refresh();
+    if (document.readyState === 'complete') requestAnimationFrame(refresh);
+    else window.addEventListener('load', refresh, {once: true});
+    cleanups.push(() => window.removeEventListener('load', refresh));
+
     return () => {
       timers.forEach(timer => window.clearTimeout(timer));
       cleanups.reverse().forEach(clean => clean());
-      splits.forEach(s => s.revert());
-      ScrollTrigger.getAll().forEach(st => st.kill());
-      gsap.killTweensOf('*');
+      splits.forEach(split => split.revert());
+      ctx.revert();
+      revealAll();
     };
-  }, [pathname]);
+  }, [pathname, reduced]);
 
-  return (
-    <>
-      <div className="gx-progress" aria-hidden="true" />
-      <div className="wj-curtain-wipe" aria-hidden="true" />
-    </>
-  );
+  return <div className="gx-progress" aria-hidden="true" />;
 }

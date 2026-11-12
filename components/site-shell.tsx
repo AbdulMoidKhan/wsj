@@ -56,7 +56,17 @@ export function SiteShell(props:SiteShellProps) {
   // Navigation owns transient menu state; route changes remount only the public shell.
   // The account area keeps one shell instance across its sections so the sidebar and session state do not remount.
   const shellKey = pathname.startsWith('/account/') ? '/account/' : pathname;
-  return (pathname === '/admin' || pathname.startsWith('/admin/')) ? props.children : <PublicSiteShell key={shellKey} {...props} pathname={pathname}/>;
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) return props.children;
+  // Backdrops, the booking launcher and the motion orchestrator hold no route state, so they sit
+  // OUTSIDE the keyed subtree. (PublicLayout renders per page, so the WebGL world and Lenis are
+  // additionally kept as module-level singletons in scene-backdrop.tsx / gsap-motion.tsx.)
+  return <div className="wj-platform">
+    <a className="wj-skip" href="#main">Skip to content</a>
+    <AmbientBackdrop/>
+    <SceneBackdrop/>
+    <PublicSiteShell key={shellKey} {...props} pathname={pathname}/>
+    <BookingLauncher/><CampaignLoader/><GsapMotion/>
+  </div>;
 }
 
 function PublicSiteShell({children, links, logo, footerLogo, business, pathname}:SiteShellProps & {pathname:string}) {
@@ -190,10 +200,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
   ));
   const brand = <>{logoSrc ? <Image src={logoSrc} alt="Workspace Junction" width={220} height={67} preload className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
 
-  return <div className="wj-platform">
-    <a className="wj-skip" href="#main">Skip to content</a>
-    <AmbientBackdrop/>
-    <SceneBackdrop/>
+  return <>
     <header className="wj-header lv-header">
       <div className="container lv-head-row">
         <Link prefetch={false} href="/" className="wj-brand" aria-label="Workspace Junction home">{brand}</Link>
@@ -274,6 +281,5 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
     <div className="wj-route-stage" key={pathname}>{children}</div>
     {pathname !== '/' && <section className="wj-closing amb-local" aria-labelledby="wj-closing-title" data-anim="fade-up"><div className="container wj-closing-inner"><div><p className="eyebrow" data-anim="fade-up">Your next chapter starts here</p><h2 id="wj-closing-title" aria-label="Good things happen at the Junction." data-anim="split-lines">Good things happen{' '}<br/>at the Junction.</h2><p data-anim="fade-up" data-anim-delay="0.1">Work. Connect. Grow.</p></div><div className="wj-closing-actions" data-anim="fade-up" data-anim-delay="0.15"><BookingButton service="Workspace Junction tour" variant="yellow" className="wj-button wj-button-yellow" data-magnetic="0.25">Come see for yourself <ArrowUpRight size={19} aria-hidden="true"/></BookingButton>{isCurrent(contactHref) ? <a href={'tel:' + b.phoneHref} className="text-link" data-magnetic="0.25">Call our team {b.phone} <ArrowUpRight size={17} aria-hidden="true"/></a> : <Link prefetch={false} href={contactHref} className="text-link" data-magnetic="0.25">Talk to our team <ArrowUpRight size={17} aria-hidden="true"/></Link>}</div></div></section>}
     <SiteFooter business={b} footerLogo={footerLogoSrc} groups={groups}/>
-    <BookingLauncher/><CampaignLoader/><GsapMotion/>
-  </div>;
+  </>;
 }

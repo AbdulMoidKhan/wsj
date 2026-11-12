@@ -15,7 +15,6 @@ import {CommunityNetworkView} from '../../components/community-network-view';
 import {fetchCommunityPlans} from '../../lib/community-pricing';
 import {fetchCatalogService} from '../../lib/catalog';
 import {ServicePricingSection} from '../../components/service-pricing-section';
-import {CoworkingView} from '../../components/coworking-view';
 import {LibraryView} from '../../components/library-view';
 import {EcommercePageView} from '../../components/ecommerce-page-view';
 import {CreativeDesignersPageView} from '../../components/creative-designers-view';
@@ -28,8 +27,6 @@ import {VisitPagesView} from '../../components/visit-pages-view';
 import {ContactView} from '../../components/contact-view';
 import {CreativeServicesView} from '../../components/creative-services-view';
 import {InformationPagesView} from '../../components/information-pages-view';
-import {DynamicPageView} from '../../components/dynamic-page-view';
-import {DYNAMIC_PAGES} from '../../lib/dynamic-pages-config';
 import {TestimonialsSection} from '../../components/testimonials-section';
 import {FigmaPageView} from '../../components/figma-page/figma-page-view';
 import {FigmaPostView} from '../../components/figma-page/figma-post-view';
@@ -86,8 +83,6 @@ export default async function Page({params,searchParams}:Props){
  if(source.slug==='creative-designers-agencies')return <PublicLayout><CreativeDesignersPageView/></PublicLayout>;
  if(source.slug==='e-commerce-online-business')return <PublicLayout><EcommercePageView/></PublicLayout>;
  if(source.slug==='library')return <PublicLayout><LibraryView/></PublicLayout>;
- if(source.slug==='coworking')return <PublicLayout><CoworkingView/></PublicLayout>;
- if(DYNAMIC_PAGES[source.slug])return <PublicLayout><DynamicPageView slug={source.slug}/></PublicLayout>;
  const p=source,title=text(p.title),isPost=p.type==='post'||s.posts.some(post=>post.path===p.path),isContact=/contact/.test(p.slug),isWorkflow=/membership-checkout|membership-confirmation|book-an-appointment|schedule-a-tour|face-linkup|^shop$/.test(p.slug),isDirectory=/^(services|use-cases|our-partners|partners|community)$/.test(p.slug),legal=/terms|privacy/.test(p.slug),image=pagePhoto(p,isPost);
  if(isPost){const cat=s.categories.find(c=>String(c.id)!=='1'&&p.categories?.some(id=>String(id)===String(c.id)));return <PublicLayout><FigmaPostView p={p} category={cat?termName(cat.name):undefined} related={relatedPosts(s.posts,p)}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd({'@context':'https://schema.org','@type':'BlogPosting',headline:title,datePublished:p.date,dateModified:p.modified||p.date,image:image?(image.startsWith('http')?image:'https://workspacejunction.com'+image):undefined,author:{'@type':'Organization',name:p.author||'Workspace Junction'},publisher:{'@type':'Organization',name:'Workspace Junction'},mainEntityOfPage:'https://workspacejunction.com'+p.path})}}/></PublicLayout>}
  const structured=!isPost&&!legal&&!isContact&&!isWorkflow&&!isDirectory&&isServicePage(p);const organized=!isPost&&!legal?organizeServiceContent(p.content,{informational:!structured}):null;
