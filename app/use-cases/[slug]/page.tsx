@@ -9,6 +9,8 @@ import {TestimonialsSection} from '@/components/testimonials-section';
 import {jsonLd, safeContent, text} from '@/lib/site';
 import {fetchUseCase, fetchUseCases} from '@/lib/use-cases';
 import '@/components/use-cases-view.css';
+import {FigmaPageView} from '@/components/figma-page/figma-page-view';
+import {figmaPageFor} from '@/lib/figma-pages';
 
 export const revalidate = 60;
 
@@ -16,6 +18,8 @@ type Props = {params: Promise<{slug: string}>};
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params;
+  const figma = figmaPageFor('/use-cases/' + slug + '/');
+  if (figma) return {title: {absolute: figma.title + ' | Workspace Junction'}, description: figma.description, alternates: {canonical: '/use-cases/' + slug + '/'}, openGraph: {title: figma.title, description: figma.description, type: 'website'}};
   const item = await fetchUseCase(slug);
   if (!item) return {title: 'Use case not found', robots: {index: false}};
   const description = item.description || ('How ' + item.title.toLowerCase() + ' work at Workspace Junction in Oakbrook Terrace.');
@@ -29,6 +33,9 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function UseCaseDetailPage({params}: Props) {
   const {slug} = await params;
+  /* Industry pages redesigned in Figma render from lib/figma-pages; other use cases stay CMS-driven. */
+  const figma = figmaPageFor('/use-cases/' + slug + '/');
+  if (figma) return <PublicLayout><FigmaPageView page={figma} /></PublicLayout>;
   const item = await fetchUseCase(slug);
   if (!item) notFound();
 
@@ -75,7 +82,7 @@ export default async function UseCaseDetailPage({params}: Props) {
         </header>
 
         {item.image && <figure className="uc-feature uc-detail-feature">
-          <Image src={item.image} alt={item.alt} width={1170} height={520} priority sizes="(max-width: 700px) 100vw, 1200px"/>
+          <Image src={item.image} alt={item.alt} width={1170} height={520} preload sizes="(max-width: 700px) 100vw, 1200px"/>
         </figure>}
 
         <section className="uc-detail-body" aria-label="About this use case">

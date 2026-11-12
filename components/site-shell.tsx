@@ -13,6 +13,7 @@ import {CampaignLoader} from './campaign-loader';
 import {AmbientBackdrop} from './ambient';
 import {SceneBackdrop} from './scene-backdrop';
 import {GsapMotion} from './gsap-motion';
+import {AccountNav, MobileAccountNav} from './account-nav';
 
 export type NavLink = {label:string; href:string};
 type LinkGroup = {title:string; items:NavLink[]};
@@ -53,7 +54,9 @@ type SiteShellProps = {children:ReactNode; links:NavLink[]; logo?:string; footer
 export function SiteShell(props:SiteShellProps) {
   const pathname = usePathname();
   // Navigation owns transient menu state; route changes remount only the public shell.
-  return (pathname === '/admin' || pathname.startsWith('/admin/')) ? props.children : <PublicSiteShell key={pathname} {...props} pathname={pathname}/>;
+  // The account area keeps one shell instance across its sections so the sidebar and session state do not remount.
+  const shellKey = pathname.startsWith('/account/') ? '/account/' : pathname;
+  return (pathname === '/admin' || pathname.startsWith('/admin/')) ? props.children : <PublicSiteShell key={shellKey} {...props} pathname={pathname}/>;
 }
 
 function PublicSiteShell({children, links, logo, footerLogo, business, pathname}:SiteShellProps & {pathname:string}) {
@@ -185,7 +188,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
       <span>{link.label}</span>
     </Link>
   ));
-  const brand = <>{logoSrc ? <Image src={logoSrc} alt="Workspace Junction" width={220} height={67} priority className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
+  const brand = <>{logoSrc ? <Image src={logoSrc} alt="Workspace Junction" width={220} height={67} preload className="wj-logo"/> : <span className="wj-wordmark">Workspace<span>Junction<span className="wj-brand-dot">.</span></span></span>}</>;
 
   return <div className="wj-platform">
     <a className="wj-skip" href="#main">Skip to content</a>
@@ -206,6 +209,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
             {aboutHref && <Link prefetch={false} href={aboutHref} aria-current={isCurrent(aboutHref) ? 'page' : undefined}><span>About Us</span></Link>}
             <Link prefetch={false} href={contactHref} aria-current={isCurrent(contactHref) ? 'page' : undefined}><span>Contact</span></Link>
           </nav>
+          <AccountNav/>
           <button type="button" className="wj-menu-toggle lv-burger" ref={mobileTrigger} aria-label="Open menu" aria-expanded={mobileMounted} aria-controls={mobileMounted ? 'wj-mobile-menu' : undefined} onClick={openMobile}><Menu size={24} aria-hidden="true"/></button>
         </div>
       </div>
@@ -220,6 +224,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
           <span className="wj-mega-brand">Workspace Junction</span>
           <button type="button" className="wj-mega-close" aria-label="Close menu" onClick={closeMobile}><X size={25} aria-hidden="true"/></button>
         </div>
+        <MobileAccountNav onNavigate={closeMobile}/>
         <div className="wj-mega-feature-heading"><span>Featured services</span><i aria-hidden="true"/></div>
         <div className="wj-mega-spaces">
           {[
@@ -267,7 +272,7 @@ function PublicSiteShell({children, links, logo, footerLogo, business, pathname}
       </div>
     </>}
     <div className="wj-route-stage" key={pathname}>{children}</div>
-    {pathname !== '/' && <section className="wj-closing amb-local" aria-labelledby="wj-closing-title" data-anim="fade-up"><div className="container wj-closing-inner"><div><p className="eyebrow" data-anim="fade-up">Your next chapter starts here</p><h2 id="wj-closing-title" aria-label="Good things happen at the Junction." data-anim="split-lines">Good things happen<br/>at the Junction.</h2><p data-anim="fade-up" data-anim-delay="0.1">Work. Connect. Grow.</p></div><div className="wj-closing-actions" data-anim="fade-up" data-anim-delay="0.15"><BookingButton service="Workspace Junction tour" variant="yellow" className="wj-button wj-button-yellow" data-magnetic="0.25">Come see for yourself <ArrowUpRight size={19} aria-hidden="true"/></BookingButton>{isCurrent(contactHref) ? <a href={'tel:' + b.phoneHref} className="text-link" data-magnetic="0.25">Call our team {b.phone} <ArrowUpRight size={17} aria-hidden="true"/></a> : <Link prefetch={false} href={contactHref} className="text-link" data-magnetic="0.25">Talk to our team <ArrowUpRight size={17} aria-hidden="true"/></Link>}</div></div></section>}
+    {pathname !== '/' && <section className="wj-closing amb-local" aria-labelledby="wj-closing-title" data-anim="fade-up"><div className="container wj-closing-inner"><div><p className="eyebrow" data-anim="fade-up">Your next chapter starts here</p><h2 id="wj-closing-title" aria-label="Good things happen at the Junction." data-anim="split-lines">Good things happen{' '}<br/>at the Junction.</h2><p data-anim="fade-up" data-anim-delay="0.1">Work. Connect. Grow.</p></div><div className="wj-closing-actions" data-anim="fade-up" data-anim-delay="0.15"><BookingButton service="Workspace Junction tour" variant="yellow" className="wj-button wj-button-yellow" data-magnetic="0.25">Come see for yourself <ArrowUpRight size={19} aria-hidden="true"/></BookingButton>{isCurrent(contactHref) ? <a href={'tel:' + b.phoneHref} className="text-link" data-magnetic="0.25">Call our team {b.phone} <ArrowUpRight size={17} aria-hidden="true"/></a> : <Link prefetch={false} href={contactHref} className="text-link" data-magnetic="0.25">Talk to our team <ArrowUpRight size={17} aria-hidden="true"/></Link>}</div></div></section>}
     <SiteFooter business={b} footerLogo={footerLogoSrc} groups={groups}/>
     <BookingLauncher/><CampaignLoader/><GsapMotion/>
   </div>;

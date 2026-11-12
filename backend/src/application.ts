@@ -16,8 +16,13 @@ import {UsersController,OperationsController,ContentController} from './admin';
 import {MediaController} from './media';
 import {PaymentClient} from './payments';
 import {BookingController,BookingAdminController,PublicBookingController,StripeWebhookController} from './booking';
-import {BillingService,BillingWebhookService,PublicBillingController,CustomerPortalController,PlanAdminController,BillingAdminController} from './billing';
+import {BillingService,BillingWebhookService,PublicBillingController,RetiredPortalController,PlanAdminController,BillingAdminController} from './billing';
 import {CatalogService,PublicCatalogController,CatalogAdminController} from './catalog';
+import {MailService,OutboxService} from './mail';
+import {CustomerAuthService,CustomerGuard,AccountAuthController} from './account-auth';
+import {CardService,AccountLifecycle} from './account-cards';
+import {PlanChangeService} from './account-plans';
+import {AccountService,AccountController,AccountAdminController} from './account';
 @Module({imports:[ThrottlerModule.forRoot([{ttl:60000,limit:120}])],// PublicBookingController's literal 'public/booking-catalog' route must be
    // registered before PublicController's wildcard 'public/:resource', or the
    // wildcard would match first and this route would be unreachable.
@@ -28,7 +33,9 @@ import {CatalogService,PublicCatalogController,CatalogAdminController} from './c
    // matched by PublicController's 'public/:resource/:slug', and
    // CatalogAdminController's 'admin/catalog/*' routes by ContentController's
    // 'admin/:resource/:id', so both are registered ahead of those wildcards.
-   controllers:[AuthController,PublicBookingController,PublicBillingController,PublicCatalogController,PublicController,UsersController,OperationsController,MediaController,BookingController,BookingAdminController,StripeWebhookController,CustomerPortalController,PlanAdminController,BillingAdminController,CatalogAdminController,ContentController],providers:[Db,AuthGuard,PaymentClient,BillingService,BillingWebhookService,CatalogService,{provide:APP_GUARD,useClass:ThrottlerGuard}]})
+   // Customer account routes (account/*, admin/accounts/*) are literal prefixes and are
+   // registered ahead of the admin/:resource wildcard for the same reason.
+   controllers:[AuthController,AccountAuthController,AccountController,AccountAdminController,PublicBookingController,PublicBillingController,PublicCatalogController,PublicController,UsersController,OperationsController,MediaController,BookingController,BookingAdminController,StripeWebhookController,RetiredPortalController,PlanAdminController,BillingAdminController,CatalogAdminController,ContentController],providers:[Db,AuthGuard,PaymentClient,MailService,OutboxService,CustomerAuthService,CustomerGuard,CardService,AccountLifecycle,PlanChangeService,AccountService,BillingService,BillingWebhookService,CatalogService,{provide:APP_GUARD,useClass:ThrottlerGuard}]})
 export class AppModule{}
 export async function createApplication(moduleType:any=AppModule){if(!process.env.JWT_SECRET||process.env.JWT_SECRET.length<32)throw new Error('JWT_SECRET must contain at least 32 characters');
 // Required billing configuration is reported once at startup. Missing values are

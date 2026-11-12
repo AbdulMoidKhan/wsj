@@ -54,8 +54,9 @@ test('scene teardown cancels pending startup and disposes shared buffers once', 
 
 test('current carousel uses prebuilt responsive LCP image and low-priority secondary slides', () => {
  const carousel = source('components/home-live.tsx'), hero = source('components/home-hero-image.tsx');
- assert.match(carousel, /<HomeHeroImage alt=\{s\.alt\} sizes="100vw" className="lv-slide-img"/);
- assert.match(carousel, /fetchPriority="low"/);
+ // The Figma redesign swapped the first slide's artwork, so the carousel preloads it via next/image.
+ assert.match(carousel, /preload=\{i === 0\} fetchPriority=\{i === 0 \? 'high' : 'low'\}/);
+ assert.doesNotMatch(carousel, /\spriority[=\s>]/);
  assert.match(hero, /imageSrcSet=\{srcSet\('webp'\)\}/);
  assert.match(hero, /imageSizes=\{sizes\}/);
  assert.match(hero, /loading="eager" fetchPriority="high"/);

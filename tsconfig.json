@@ -38,7 +38,15 @@
     ".next-qa/types/**/*.ts",
     ".next-qa/dev/types/**/*.ts",
     ".next-redesign/types/**/*.ts",
-    ".next-redesign/dev/types/**/*.ts"
+    ".next-redesign/dev/types/**/*.ts",
+    ".next-account-preview/types/**/*.ts",
+    ".next-account-preview/dev/types/**/*.ts",
+    ".next-account-build/types/**/*.ts",
+    ".next-account-build/dev/types/**/*.ts",
+    ".next-audit/types/**/*.ts",
+    ".next-audit/dev/types/**/*.ts",
+    ".next-figma/types/**/*.ts",
+    ".next-figma/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

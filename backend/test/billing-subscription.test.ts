@@ -1,7 +1,11 @@
 import 'reflect-metadata';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {BillingService, BillingWebhookService, PublicBillingController, CustomerPortalController, BillingAdminController, PlanAdminController} from '../src/billing';
+import {BillingService, BillingWebhookService, PublicBillingController, BillingAdminController, PlanAdminController} from '../src/billing';
+import {OutboxService, MailService} from '../src/mail';
+import {AccountLifecycle, CardService} from '../src/account-cards';
+import {PlanChangeService} from '../src/account-plans';
+import {AccountService} from '../src/account';
 import {fakeDb, makeEvent, makeStripeSubscription, stripeFixture} from './billing-fixture';
 
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-jwt-secret-value-that-is-long-enough-123456';
@@ -36,21 +40,36 @@ async function harness(plans: Array<Record<string, unknown>> = [MONTHLY, ANNUAL,
   const db = fakeDb();
   const stripe = stripeFixture();
   for (const plan of plans) await db.plan.create({data: plan});
-  const billing = new BillingService(db, stripe as never);
-  const webhooks = new BillingWebhookService(db, billing);
+  /* No mail adapter is configured, so the outbox records intent and delivers nothing. */
+  const outbox = new OutboxService(db, {mode: () => 'none'} as unknown as MailService);
+  const cards = new CardService(db, stripe as never, outbox);
+  const lifecycle = new AccountLifecycle(db, cards, outbox);
+  const billing = new BillingService(db, stripe as never, outbox, lifecycle);
+  const webhooks = new BillingWebhookService(db, billing, lifecycle);
+  const planChanges = new PlanChangeService(db, stripe as never, billing, cards);
   return {
     db,
     stripe,
     billing,
     webhooks,
+    outbox,
+    cards,
+    planChanges,
+    account: new AccountService(db, stripe as never, billing, cards, planChanges),
     publicApi: new PublicBillingController(db, billing),
-    portal: new CustomerPortalController(db, billing),
     admin: new BillingAdminController(db, billing),
     plansAdmin: new PlanAdminController(db, billing),
   };
 }
 
-const buyer = {customerName: 'Dana Buyer', customerEmail: 'dana@example.invalid'};
+/** A card payment includes an account and a saved card, so the buyer consents to that. */
+const buyer = {customerName: 'Dana Buyer', customerEmail: 'dana@example.invalid', acceptAccountTerms: true};
+
+/** The customer finishes account setup, then acts through a session principal. */
+async function signedIn(h: Awaited<ReturnType<typeof harness>>, customer: {id: string; email: string; name?: string}) {
+  await h.db.customer.update({where: {id: customer.id}, data: {accountStatus: 'ACTIVE', emailVerifiedAt: new Date(), passwordHash: 'x'}});
+  return {id: customer.id, email: customer.email, name: customer.name ?? '', sessionId: 'session-' + customer.id, method: 'PASSWORD', reauthAt: new Date()};
+}
 /** Nest exceptions carry their detail in response.message, not message. */
 const rejectsWith = (fn: () => Promise<unknown>, pattern: RegExp) =>
   assert.rejects(fn, (error: any) => {
@@ -206,9 +225,12 @@ test('a customer who closes the browser still gets the purchase completed by web
   assert.ok(stored.paidAt);
   assert.equal(subscription.accessStatus, 'ACTIVE');
   assert.equal(subscription.stripeStatus, 'active');
-  const status = await h.publicApi.orderStatus(order.id);
+  const status = await h.publicApi.orderStatus(order.id) as Record<string, unknown>;
   assert.equal(status.processing, false);
-  assert.ok(status.manageToken, 'a management link is only issued once Stripe confirmed payment');
+  assert.equal(status.account, 'check_email', 'the buyer is told to finish setup from their email');
+  assert.equal('manageToken' in status, false, 'no account-wide credential is ever returned from a public status');
+  assert.equal(status.detail, false, 'an order id alone shows payment state only');
+  assert.equal(h.db.emailOutbox.rows.filter((row: any) => row.template === 'account_setup').length, 1, 'exactly one setup email is queued');
 });
 
 test('duplicate and out-of-order webhooks never duplicate orders, subscriptions or credits', async () => {
@@ -315,13 +337,12 @@ test('a failing webhook is journaled and rethrown so Stripe retries', async () =
 test('customer period-end cancellation calls Stripe and keeps access until the period ends', async () => {
   const h = await harness();
   const {subscription, customer} = await buyMonthly(h);
-  const token = h.billing.portalToken(customer.id);
-  const request = {headers: {authorization: 'Bearer ' + token}} as never;
-  const preview = await h.portal.preview(request, subscription.id, 'PERIOD_END');
+  const me = await signedIn(h, customer);
+  const preview = await h.account.cancellationPreview(me.id, subscription.id);
   assert.equal(preview.willRenewAgain, false);
   assert.equal(preview.refundIssued, false);
 
-  const result = await h.portal.cancel(request, subscription.id, {} as never);
+  const result = await h.account.cancel(me, subscription.id);
   assert.equal(result.cancelAtPeriodEnd, true);
   assert.ok(result.cancellationRequestedAt);
   assert.equal(result.accessStatus, 'ACTIVE', 'the customer keeps access until the paid period ends');
@@ -336,25 +357,25 @@ test('customer period-end cancellation calls Stripe and keeps access until the p
 test('a scheduled cancellation can be withdrawn before it takes effect, an ended one cannot', async () => {
   const h = await harness();
   const {subscription, customer, stripeSub} = await buyMonthly(h);
-  const request = {headers: {authorization: 'Bearer ' + h.billing.portalToken(customer.id)}} as never;
-  await h.portal.cancel(request, subscription.id, {} as never);
-  const resumed = await h.portal.resume(request, subscription.id);
+  const me = await signedIn(h, customer);
+  await h.account.cancel(me, subscription.id);
+  const resumed = await h.account.resume(me, subscription.id);
   assert.equal(resumed.cancelAtPeriodEnd, false);
-  assert.equal(resumed.cancellationRequestedAt, null);
   assert.ok(h.db.billingEvent.rows.some((row: any) => row.action === 'CANCELLATION_WITHDRAWN'));
 
   stripeSub.status = 'canceled';
   await h.db.subscription.update({where: {id: subscription.id}, data: {stripeStatus: 'canceled', accessStatus: 'ENDED'}});
-  await assert.rejects(() => h.portal.resume(request, subscription.id), /already ended/);
+  await rejectsWith(() => h.account.resume(me, subscription.id), /already ended/);
 });
 
 test('one customer cannot see or cancel another customer subscription', async () => {
   const h = await harness();
   const {subscription} = await buyMonthly(h);
-  const intruder = await h.db.customer.create({data: {email: 'intruder@example.invalid', name: 'Intruder'}});
-  const request = {headers: {authorization: 'Bearer ' + h.billing.portalToken(intruder.id)}} as never;
-  await rejectsWith(() => h.portal.cancel(request, subscription.id, {} as never), /Not Found/);
-  await rejectsWith(() => h.portal.overview({headers: {authorization: 'Bearer not-a-token'}} as never), /expired|Sign-in/);
+  const intruder = await h.db.customer.create({data: {email: 'intruder@example.invalid', emailKey: 'intruder@example.invalid', name: 'Intruder'}});
+  const them = await signedIn(h, intruder);
+  await rejectsWith(() => h.account.cancel(them, subscription.id), /Not Found/);
+  await rejectsWith(() => h.account.subscription(them.id, subscription.id), /Not Found/);
+  assert.equal((await h.account.subscriptions(them.id)).items.length, 0);
 });
 
 test('admin period-end cancellation is recorded against the admin who made it', async () => {
@@ -461,20 +482,20 @@ test('admin subscription search, detail and reconciliation use real Stripe state
   assert.ok(h.db.billingEvent.rows.some((row: any) => row.action === 'RECONCILED'));
 });
 
-test('the customer portal shows the plan, renewal date and cancellation state', async () => {
+test('the account dashboard shows the plan, renewal date and cancellation state', async () => {
   const h = await harness();
   const {customer, subscription} = await buyMonthly(h);
-  const request = {headers: {authorization: 'Bearer ' + h.billing.portalToken(customer.id)}} as never;
-  const view = await h.portal.overview(request);
+  const me = await signedIn(h, customer);
+  const view = await h.account.overview(me);
   assert.equal(view.customer.email, 'dana@example.invalid');
   assert.equal(view.subscriptions.length, 1);
   assert.equal(view.subscriptions[0].planName, 'Community Membership');
   assert.equal(view.subscriptions[0].intervalDescription, 'every month');
   assert.ok(view.subscriptions[0].renewsAt, 'the next renewal date is shown');
-  assert.equal(view.orders.length, 1);
-  assert.equal(view.entitlements.balances[0].balance, 5);
-  await h.portal.cancel(request, subscription.id, {} as never);
-  const after = await h.portal.overview(request);
+  assert.equal(view.counts.purchases, 1);
+  assert.equal(view.benefits[0].available, 5);
+  await h.account.cancel(me, subscription.id);
+  const after = await h.account.overview(me);
   assert.equal(after.subscriptions[0].cancelAtPeriodEnd, true);
   assert.equal(after.subscriptions[0].accessStatus, 'ACTIVE');
 });

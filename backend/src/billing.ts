@@ -7,18 +7,21 @@
  * state: nothing is reported as cancelled, paid or active until Stripe (webhook
  * or a direct retrieve) confirms it.
  */
-import {Controller, Get, Post, Patch, Delete, Param, Query, Req, UseGuards, Inject, Injectable, BadRequestException, NotFoundException, ForbiddenException, UnauthorizedException} from '@nestjs/common';
+import {Controller, Get, Post, Patch, Delete, Param, Query, Req, Res, All, HttpCode, Optional, UseGuards, Inject, Injectable, BadRequestException, ConflictException, GoneException, NotFoundException, ForbiddenException} from '@nestjs/common';
 import {ApiBearerAuth} from '@nestjs/swagger';
 import {Throttle} from '@nestjs/throttler';
 import {IsArray, IsBoolean, IsEmail, IsIn, IsInt, IsOptional, IsString, MaxLength, Min, Max, MinLength, ValidateIf, ValidateNested, IsDateString} from 'class-validator';
 import {Type, Transform} from 'class-transformer';
-import jwt from 'jsonwebtoken';
 import Stripe from 'stripe';
 import {Db, AuthGuard, Roles, parsePagination} from './core';
 import {ValidatedBody, ValidatedQuery} from './validation';
 import {PaymentClient} from './payments';
 import {frontendOrigins} from './origins';
 import {clearCatalogCache} from './catalog-cache';
+import {OutboxService, issueToken, tokenLink} from './mail';
+import {AccountLifecycle} from './account-cards';
+import {CustomerAuthService, assertTrustedOrigin} from './account-auth';
+import {ACCOUNT_TERMS_VERSION, displayName, normalizeEmail, signProof, verifyProof} from './account-core';
 import {
   BILLING_TERMS_VERSION,
   DEFAULT_GRACE_DAYS,
@@ -41,8 +44,22 @@ import {
   type Totals,
 } from './billing-core';
 
-const PORTAL_TOKEN_TTL = '2h';
-const PORTAL_PURPOSE = 'billing-portal';
+/** Order-scoped receipt proof: lets the buyer's own browser see that one purchase's details, nothing else. */
+const RECEIPT_PROOF_TTL_MS = 2 * 60 * 60 * 1000;
+const RECEIPT_PURPOSE = 'order-receipt';
+
+/** Who is checking out, decided by the server from the session cookie, never from the form. */
+export interface CheckoutContext {
+  /** Set only when a valid customer session accompanied the request. */
+  accountId?: string | null;
+}
+
+/** Invoice -> subscription id, for both the current API shape and the pre-2025 one. */
+export function invoiceSubscriptionId(invoice: unknown): string | null {
+  const record = invoice as {parent?: {subscription_details?: {subscription?: unknown} | null} | null; subscription?: unknown};
+  const value = record.parent?.subscription_details?.subscription ?? record.subscription;
+  return typeof value === 'string' ? value : value && typeof value === 'object' && 'id' in value ? String((value as {id: unknown}).id) : null;
+}
 
 /** Checkout-time JSON only: never resolve current catalog benefits on renewal. */
 function catalogPlanSnapshot(metadata: unknown): Record<string, unknown> | null {
@@ -74,6 +91,12 @@ export class CheckoutDto {
   /** Render Stripe Checkout inside our own dialog instead of redirecting away. */
   @IsOptional() @IsBoolean() embedded?: boolean;
   @IsOptional() @IsString() @MaxLength(200) website?: string;
+  /** Card payments create a customer account and save the card to it; this records that consent. */
+  @IsOptional() @IsBoolean() acceptAccountTerms?: boolean;
+  /** Separate and optional. Never implied by any other checkbox. */
+  @IsOptional() @IsBoolean() marketingOptIn?: boolean;
+  /** Signed-in buyer confirming they want a second subscription to a plan they already hold. */
+  @IsOptional() @IsBoolean() confirmAdditionalSubscription?: boolean;
 }
 
 export class PlanDto {
@@ -160,7 +183,12 @@ export interface PricedBundle {
 
 @Injectable()
 export class BillingService {
-  constructor(@Inject(Db) private db: Db, @Inject(PaymentClient) private payments: PaymentClient = new PaymentClient()) {}
+  constructor(
+    @Inject(Db) private db: Db,
+    @Inject(PaymentClient) private payments: PaymentClient = new PaymentClient(),
+    @Optional() @Inject(OutboxService) private outbox?: OutboxService,
+    @Optional() @Inject(AccountLifecycle) private lifecycle?: AccountLifecycle,
+  ) {}
 
   private stripe(): Stripe {
     return this.payments.client();
@@ -191,13 +219,60 @@ export class BillingService {
     });
   }
 
+  /**
+   * Decide which customer record a checkout belongs to.
+   *
+   * - ACCOUNT: a valid customer session accompanied the request. The account and
+   *   its Stripe customer come from the session; the form's email and any id in
+   *   the body are ignored for identity and never overwrite the profile.
+   * - GUEST: no session, and the email is new or belongs to a record that has
+   *   never been activated. The one record per address is reused so retries and
+   *   concurrent submissions cannot create duplicate identities or Stripe
+   *   customers. Only blank profile fields are filled; nothing is overwritten.
+   * - SHADOW: no session, but the email belongs to an ACTIVATED account. A typed
+   *   email proves nothing, so the purchase goes to a separate unverified record
+   *   with its own Stripe customer. It is invisible to the account and its card
+   *   never touches the account's billing profile until the verified owner
+   *   claims it. The buyer sees exactly the same checkout either way.
+   */
+  async resolveCheckoutCustomer(input: {email: string; name: string; phone?: string | null}, context: CheckoutContext = {}) {
+    if (context.accountId) {
+      const account = await this.db.customer.findUnique({where: {id: context.accountId}});
+      if (!account || account.accountStatus !== 'ACTIVE' || account.shadowState) throw new ForbiddenException('Please sign in again to continue.');
+      return {customer: account, mode: 'ACCOUNT' as const};
+    }
+    const email = normalizeEmail(input.email);
+    const name = input.name?.trim() || email;
+    const phone = input.phone?.trim() || null;
+    let existing = await this.db.customer.findUnique({where: {emailKey: email}});
+    if (!existing) {
+      try {
+        return {customer: await this.db.customer.create({data: {email, emailKey: email, name, phone}}), mode: 'GUEST' as const};
+      } catch {
+        /* A concurrent checkout with the same email won the unique emailKey: use its row. */
+        existing = await this.db.customer.findUnique({where: {emailKey: email}});
+        if (!existing) throw new BadRequestException('Unable to start checkout. Please try again.');
+      }
+    }
+    if (existing.accountStatus === 'ACTIVE' || existing.passwordHash) {
+      return {customer: await this.db.customer.create({data: {email, emailKey: null, shadowState: 'PENDING_CLAIM', name, phone}}), mode: 'SHADOW' as const};
+    }
+    const fill = {...(!existing.name || existing.name === existing.email ? {name} : {}), ...(!existing.phone && phone ? {phone} : {})};
+    return {customer: Object.keys(fill).length ? await this.db.customer.update({where: {id: existing.id}, data: fill}) : existing, mode: 'GUEST' as const};
+  }
+
+  /** Kept for callers that only need the guest path. */
   async customerFor(email: string, name: string, phone?: string) {
-    const normalised = email.trim().toLowerCase();
-    return this.db.customer.upsert({
-      where: {email: normalised},
-      update: {...(name ? {name} : {}), ...(phone ? {phone} : {})},
-      create: {email: normalised, name: name || normalised, phone: phone ?? null},
-    });
+    return (await this.resolveCheckoutCustomer({email, name, phone})).customer;
+  }
+
+  /** Short-lived proof scoped to one order; it is not a session and opens nothing else. */
+  receiptProof(orderId: string): string {
+    return signProof(RECEIPT_PURPOSE, {o: orderId}, process.env.JWT_SECRET!, RECEIPT_PROOF_TTL_MS);
+  }
+
+  receiptProofMatches(orderId: string, proof: unknown): boolean {
+    return verifyProof<{o: string}>(RECEIPT_PURPOSE, proof, process.env.JWT_SECRET!)?.o === orderId;
   }
 
   /** Reuse the Stripe customer across purchases so subscriptions stay on one profile. */
@@ -302,16 +377,21 @@ export class BillingService {
    * Persist the checkout attempt first, then contact Stripe. A browser that
    * disappears after paying still has a durable order the webhook can complete.
    */
-  async createCheckout(dto: CheckoutDto, pricedOverride?: PricedBundle) {
+  async createCheckout(dto: CheckoutDto, pricedOverride?: PricedBundle, context: CheckoutContext = {}) {
     if (dto.website) throw new BadRequestException('Invalid submission');
     const priced = pricedOverride ?? (await this.priceCheckout(dto));
     if (priced.hasRecurring && dto.acceptRecurringTerms !== true) throw new BadRequestException('You must accept the recurring billing terms to continue');
 
-    const customer = await this.customerFor(dto.customerEmail, dto.customerName, dto.customerPhone);
     const outcome = paymentOutcome(priced.totals.dueNowAmount);
     if (outcome === 'BELOW_MINIMUM') throw new BadRequestException('The amount due is below the minimum card payment. Please contact our team to complete this purchase.');
-
     const manual = dto.paymentMethod === 'MANUAL';
+    /* A card payment provisions an account and saves the card to it. That needs explicit consent. */
+    const cardPayment = !manual && outcome === 'CHARGEABLE';
+    if (cardPayment && dto.acceptAccountTerms !== true) throw new BadRequestException('Please confirm that a customer account will be created and your card saved to it.');
+
+    const {customer, mode: identity} = await this.resolveCheckoutCustomer({email: dto.customerEmail, name: dto.customerName, phone: dto.customerPhone}, context);
+    if (identity === 'ACCOUNT' && priced.hasRecurring && dto.confirmAdditionalSubscription !== true) await this.assertNotDuplicateSubscription(customer.id, priced.lines);
+    const now = new Date();
     const order = await this.db.order.create({
       data: {
         customerId: customer.id,
@@ -328,9 +408,23 @@ export class BillingService {
         couponCode: dto.couponCode ?? null,
         paymentMethod: manual ? 'MANUAL' : 'STRIPE',
         termsVersion: priced.hasRecurring ? BILLING_TERMS_VERSION : null,
-        termsAcceptedAt: priced.hasRecurring ? new Date() : null,
+        termsAcceptedAt: priced.hasRecurring || dto.acceptAccountTerms === true ? now : null,
+        /* What the buyer typed, kept on the order. The customer profile is not rewritten from it. */
+        contactName: dto.customerName?.trim() || null,
+        contactEmail: normalizeEmail(dto.customerEmail) || null,
+        contactPhone: dto.customerPhone?.trim() || null,
         notes: dto.notes ?? null,
-        metadata: {...(dto.membershipCircle ? {membershipCircle: dto.membershipCircle} : {}), ...(dto.items.some(i => i.startAt) ? {schedule: dto.items.map(i => ({planSlug: i.planSlug, startAt: i.startAt ?? null}))} : {})},
+        metadata: {
+          ...(dto.membershipCircle ? {membershipCircle: dto.membershipCircle} : {}),
+          ...(dto.items.some(i => i.startAt) ? {schedule: dto.items.map(i => ({planSlug: i.planSlug, startAt: i.startAt ?? null}))} : {}),
+          identity,
+          consents: {
+            ...(dto.acceptAccountTerms === true ? {accountTermsVersion: ACCOUNT_TERMS_VERSION, saveCard: cardPayment} : {}),
+            /* Marketing is recorded only when its own box was ticked. */
+            marketing: dto.marketingOptIn === true,
+            at: now.toISOString(),
+          },
+        },
         expiresAt: new Date(Date.now() + 60 * 60 * 1000),
         items: {
           create: priced.lines.map(line => ({
@@ -347,16 +441,20 @@ export class BillingService {
       },
       include: {items: true},
     });
-    await this.record({orderId: order.id, customerId: customer.id, actorType: 'CUSTOMER', actorLabel: customer.email, action: 'CHECKOUT_CREATED', toState: 'PENDING', data: {dueNow: order.dueNowAmount, recurring: order.recurringAmount, mode: order.mode}});
+    await this.record({orderId: order.id, customerId: customer.id, actorType: 'CUSTOMER', actorLabel: customer.email, action: 'CHECKOUT_CREATED', toState: 'PENDING', data: {dueNow: order.dueNowAmount, recurring: order.recurringAmount, mode: order.mode, identity}});
+    const receiptProof = this.receiptProof(order.id);
 
-    /* Manual payment never activates access; it stays an unpaid order for staff. */
+    /* Manual payment never activates access; it stays an unpaid order for staff and provisions no account. */
     if (manual) {
-      return {orderId: order.id, status: 'pending_manual_payment' as const, checkoutUrl: null, summary: this.orderSummary(order)};
+      return {orderId: order.id, status: 'pending_manual_payment' as const, checkoutUrl: null, receiptProof, summary: this.orderSummary(order)};
     }
     if (outcome === 'FREE') {
+      /* Zero total from server-side pricing: no charge exists and none is invented. No card was
+         collected either, so the account starts in the add-a-card remediation state. */
       const paid = await this.db.order.update({where: {id: order.id}, data: {status: 'PAID', paidAt: new Date()}, include: {items: true}});
       await this.record({orderId: order.id, customerId: customer.id, actorType: 'SYSTEM', action: 'ORDER_PAID', fromState: 'PENDING', toState: 'PAID', data: {reason: 'zero total from server pricing'}});
-      return {orderId: paid.id, status: 'paid' as const, checkoutUrl: null, summary: this.orderSummary(paid)};
+      await this.lifecycle?.onOrderPaid(order.id).catch(() => undefined);
+      return {orderId: paid.id, status: 'paid' as const, checkoutUrl: null, receiptProof, summary: this.orderSummary(paid)};
     }
 
     const stripeCustomerId = await this.stripeCustomerFor(customer);
@@ -386,9 +484,14 @@ export class BillingService {
       metadata: {orderId: order.id, customerId: customer.id},
       /* In subscription mode the one-time lines ride along on the first invoice. */
       line_items: mode === 'subscription' ? [...lineItems, ...oneTimeItems] : oneTimeItems,
+      /* The card is saved to this Stripe customer for renewals and later purchases. A subscription
+         always keeps its card; a one-time payment needs setup_future_usage and gets an invoice. */
       ...(mode === 'subscription'
         ? {subscription_data: {metadata: {orderId: order.id, customerId: customer.id}}}
-        : {payment_intent_data: {metadata: {orderId: order.id, customerId: customer.id}}}),
+        : {payment_intent_data: {metadata: {orderId: order.id, customerId: customer.id}, setup_future_usage: 'off_session' as const}, invoice_creation: {enabled: true, invoice_data: {metadata: {orderId: order.id}}}}),
+      /* Only a signed-in owner is offered the cards saved on their own profile. Removal inside
+         Checkout stays off so it cannot bypass the minimum-one-card rule. */
+      ...(identity === 'ACCOUNT' ? {saved_payment_method_options: {allow_redisplay_filters: ['always', 'limited', 'unspecified'] as Array<'always' | 'limited' | 'unspecified'>, payment_method_save: 'enabled' as const, payment_method_remove: 'disabled' as const}} : {}),
       ...(priced.coupon ? {discounts: [{promotion_code: priced.coupon.promotionCodeId}]} : {}),
       /* Embedded Checkout renders Stripe's own payment UI in an iframe we host, and
          redirects the top window to return_url once the payment completes. */
@@ -416,8 +519,30 @@ export class BillingService {
       checkoutUrl: session.url,
       /* Only the publishable key ever reaches the browser. */
       ...(dto.embedded ? {clientSecret: session.client_secret, publishableKey: (process.env.STRIPE_PUBLISHABLE_KEY || '').trim()} : {}),
+      receiptProof,
       summary: this.orderSummary(saved),
     };
+  }
+
+  /**
+   * A signed-in customer buying a plan they already subscribe to must say so
+   * explicitly: this purchase adds a second, separately billed subscription; it
+   * does not change the existing one (that is a plan change in the account area).
+   */
+  private async assertNotDuplicateSubscription(accountId: string, lines: PricedLine[]) {
+    const claimed = await this.db.customer.findMany({where: {mergedIntoId: accountId, shadowState: 'CLAIMED'}});
+    const subscriptions = await this.db.subscription.findMany({where: {customerId: {in: [accountId, ...claimed.map(entry => entry.id)]}, accessStatus: {in: ['PENDING', 'ACTIVE', 'PAST_DUE', 'SUSPENDED']}}, include: {plan: true}});
+    for (const line of lines.filter(entry => entry.billingType === 'RECURRING')) {
+      const match = subscriptions.find(sub => (sub.plan?.slug ?? catalogPlanSnapshot(sub.metadata)?.slug) === line.slug);
+      if (match) {
+        throw new ConflictException({
+          statusCode: 409,
+          code: 'DUPLICATE_SUBSCRIPTION',
+          subscriptionId: match.id,
+          message: 'You already have an active ' + line.name + ' subscription. Continuing buys an additional, separately billed subscription. To change your existing one instead, use My subscriptions in your account.',
+        });
+      }
+    }
   }
 
   orderSummary(order: {currency: string; subtotalAmount: number; discountAmount: number; taxAmount: number; dueNowAmount: number; recurringAmount: number; recurringInterval: string | null; status: string; mode: string; items?: Array<{description: string; quantity: number; amount: number; billingType: string; interval: string | null}>}) {
@@ -441,7 +566,8 @@ export class BillingService {
   /** Persist a Stripe subscription object as the authoritative local state. */
   async syncSubscription(sub: Stripe.Subscription, context: {orderId?: string | null; customerId?: string | null} = {}) {
     const existing = await this.db.subscription.findUnique({where: {stripeSubscriptionId: sub.id}});
-    const item = sub.items?.data?.[0];
+    /* The plan item is the one we recorded; other items (recurring add-ons) are left alone. */
+    const item = sub.items?.data?.find(entry => existing?.stripeItemId && entry.id === existing.stripeItemId) ?? sub.items?.data?.[0];
     const price = item?.price;
     const interval: BillingIntervalValue = price?.recurring?.interval === 'year' ? 'YEAR' : 'MONTH';
     const stripeCustomerId = typeof sub.customer === 'string' ? sub.customer : sub.customer?.id;
@@ -501,11 +627,16 @@ export class BillingService {
       endedAt: fromStripeTimestamp(sub.ended_at),
       graceEndsAt: grace,
       latestInvoiceId: typeof sub.latest_invoice === 'string' ? sub.latest_invoice : sub.latest_invoice?.id ?? existing?.latestInvoiceId ?? null,
+      defaultPaymentMethodId: typeof sub.default_payment_method === 'string' ? sub.default_payment_method : sub.default_payment_method?.id ?? null,
+      stripeScheduleId: typeof sub.schedule === 'string' ? sub.schedule : sub.schedule?.id ?? null,
+      /* A pending update means a plan change is waiting on payment: the old plan is still in force. */
+      pendingUpdate: Boolean(sub.pending_update),
     };
 
     const saved = existing
       ? await this.db.subscription.update({where: {id: existing.id}, data})
       : await this.db.subscription.create({data: {...data, stripeSubscriptionId: sub.id, cancellationRequestedAt: sub.cancel_at_period_end ? new Date() : null}});
+    await this.applyPlanChanges(saved, sub, price?.id ?? null);
 
     if (!existing || existing.stripeStatus !== sub.status || existing.cancelAtPeriodEnd !== saved.cancelAtPeriodEnd) {
       await this.record({
@@ -521,6 +652,69 @@ export class BillingService {
       });
     }
     return saved;
+  }
+
+  /**
+   * Settle requested plan changes against what Stripe now reports. Benefits and
+   * the local plan snapshot move only when Stripe shows the target price in
+   * force with no pending update: never on request, never on a browser return.
+   */
+  private async applyPlanChanges(saved: {id: string; customerId: string; metadata: unknown}, sub: Stripe.Subscription, priceId: string | null) {
+    const changes = this.db.subscriptionChange;
+    if (!changes) return;
+    const open = await changes.findMany({where: {subscriptionId: saved.id, status: {in: ['PENDING_PAYMENT', 'SCHEDULED']}}});
+    for (const change of open) {
+      const reached = Boolean(priceId && change.targetPriceId === priceId && !sub.pending_update);
+      if (reached) {
+        const to = (change.toSnapshot ?? {}) as {catalogPlan?: Record<string, unknown>; legacyPlanId?: string | null; name?: string; includedCredits?: unknown};
+        const from = (change.fromSnapshot ?? {}) as {name?: string; includedCredits?: unknown};
+        const metadata = {...(saved.metadata && typeof saved.metadata === 'object' && !Array.isArray(saved.metadata) ? (saved.metadata as Record<string, unknown>) : {})};
+        if (to.catalogPlan) metadata.catalogPlan = to.catalogPlan;
+        else delete metadata.catalogPlan;
+        await this.db.subscription.update({where: {id: saved.id}, data: {planId: to.legacyPlanId ?? null, metadata: metadata as object}});
+        const settled = await changes.updateMany({where: {id: change.id, status: change.status}, data: {status: 'APPLIED', appliedAt: new Date()}});
+        if (settled.count !== 1) continue;
+        await this.record({subscriptionId: saved.id, customerId: saved.customerId, actorType: 'STRIPE', action: 'PLAN_CHANGE_APPLIED', fromState: from.name ?? null, toState: to.name ?? null, stripeRef: sub.id, data: {kind: change.kind}});
+        if (change.kind === 'UPGRADE') await this.grantUpgradeDifference(saved.id, change.id, from, to);
+        await this.notify(saved.customerId, 'plan_change', {summary: 'Your plan is now ' + (to.name ?? 'updated') + '.'}, 'plan-applied:' + change.id);
+      } else if (change.status === 'PENDING_PAYMENT' && !sub.pending_update && Date.now() - new Date(change.createdAt).getTime() > 2 * 60000) {
+        /* The payment was never completed and Stripe dropped the pending update: the previous plan stands. */
+        const settled = await changes.updateMany({where: {id: change.id, status: 'PENDING_PAYMENT'}, data: {status: 'FAILED'}});
+        if (settled.count === 1) await this.record({subscriptionId: saved.id, customerId: saved.customerId, actorType: 'STRIPE', action: 'PLAN_CHANGE_FAILED', reason: 'Payment for the upgrade was not completed', stripeRef: sub.id});
+      } else if (change.status === 'SCHEDULED' && !sub.schedule && Date.now() - new Date(change.createdAt).getTime() > 2 * 60000) {
+        /* The schedule was released outside this app before it took effect. */
+        const settled = await changes.updateMany({where: {id: change.id, status: 'SCHEDULED'}, data: {status: 'WITHDRAWN'}});
+        if (settled.count === 1) await this.record({subscriptionId: saved.id, customerId: saved.customerId, actorType: 'STRIPE', action: 'PLAN_CHANGE_WITHDRAWN', reason: 'Schedule released', stripeRef: sub.id});
+      }
+    }
+  }
+
+  /**
+   * An upgrade keeps what the period already granted and adds only the
+   * difference, once. The periodic grant is skipped for the proration invoice.
+   */
+  private async grantUpgradeDifference(subscriptionId: string, changeId: string, from: {includedCredits?: unknown}, to: {includedCredits?: unknown; catalogPlan?: Record<string, unknown>}) {
+    const sub = await this.db.subscription.findUnique({where: {id: subscriptionId}});
+    if (!sub) return;
+    const before = new Map(creditGrantsFor({name: '', billingType: 'RECURRING', unitAmount: 0, includedCredits: from.includedCredits}).map(grant => [grant.kind, grant]));
+    for (const grant of creditGrantsFor({name: '', billingType: 'RECURRING', unitAmount: 0, includedCredits: to.includedCredits ?? to.catalogPlan?.includedCredits})) {
+      const previous = before.get(grant.kind);
+      const delta = grant.unlimited ? 0 : grant.amount - (previous && !previous.unlimited ? previous.amount : 0);
+      if (!grant.unlimited && delta <= 0) continue;
+      const sourceRef = 'upgrade:' + changeId + ':' + grant.kind;
+      if (await this.db.entitlementEntry.findUnique({where: {sourceRef}})) continue;
+      await this.db.entitlementEntry.create({data: {customerId: sub.customerId, subscriptionId: sub.id, kind: grant.kind, delta, reason: grant.unlimited ? 'Unlimited benefit from plan upgrade' : 'Additional benefit from plan upgrade', sourceRef, periodStart: sub.currentPeriodStart, periodEnd: sub.currentPeriodEnd}}).catch(() => undefined);
+    }
+  }
+
+  /** Transactional notice through the outbox. A missing mail service never fails a billing operation. */
+  async notify(customerId: string, template: 'plan_change' | 'cancellation_scheduled' | 'cancellation_withdrawn' | 'payment_failed', payload: Record<string, unknown>, dedupeKey?: string) {
+    if (!this.outbox) return;
+    const customer = await this.db.customer.findUnique({where: {id: customerId}});
+    if (!customer) return;
+    /* A claimed purchase reports to the account that owns it. */
+    const owner = customer.mergedIntoId && customer.shadowState === 'CLAIMED' ? ((await this.db.customer.findUnique({where: {id: customer.mergedIntoId}})) ?? customer) : customer;
+    await this.outbox.enqueue({customerId: owner.id, to: owner.email, template, payload: {name: displayName(owner), ...payload}, dedupeKey: dedupeKey ?? null}).catch(() => undefined);
   }
 
   /**
@@ -570,6 +764,18 @@ export class BillingService {
     if (!sub) throw new NotFoundException('Subscription not found');
     if (sub.accessStatus === 'ENDED' || sub.stripeStatus === 'canceled') throw new BadRequestException('This subscription has already ended. Start a new purchase to reactivate.');
 
+    /* A scheduled plan change cannot outlive the subscription: release it first so the
+       cancellation is the only thing left pending. */
+    if (sub.stripeScheduleId && this.db.subscriptionChange) {
+      try {
+        await this.stripe().subscriptionSchedules.release(sub.stripeScheduleId);
+      } catch {
+        throw new BadRequestException('Stripe did not confirm the cancellation. Nothing was changed; please retry.');
+      }
+      await this.db.subscriptionChange.updateMany({where: {subscriptionId: sub.id, status: 'SCHEDULED'}, data: {status: 'WITHDRAWN'}});
+      await this.db.subscription.update({where: {id: sub.id}, data: {stripeScheduleId: null}});
+    }
+
     let updated: Stripe.Subscription;
     try {
       updated =
@@ -605,7 +811,18 @@ export class BillingService {
       stripeRef: updated.id,
       data: {requestedAt: new Date().toISOString(), effectiveAt: (saved.cancelAt ?? saved.currentPeriodEnd ?? saved.endedAt)?.toISOString() ?? null, refundIssued: false},
     });
+    if (mode === 'PERIOD_END') {
+      const lastAccess = saved.cancelAt ?? saved.currentPeriodEnd;
+      await this.notify(sub.customerId, 'cancellation_scheduled', {planName: await this.planNameOf(sub), lastAccess: lastAccess ? new Intl.DateTimeFormat('en-US', {dateStyle: 'long', timeZone: 'America/Chicago'}).format(lastAccess) : 'the end of the paid period'});
+    }
     return saved;
+  }
+
+  private async planNameOf(sub: {planId: string | null; metadata: unknown}): Promise<string> {
+    const snapshot = catalogPlanSnapshot(sub.metadata);
+    if (typeof snapshot?.name === 'string') return snapshot.name;
+    const plan = sub.planId ? await this.db.plan.findUnique({where: {id: sub.planId}}) : null;
+    return plan?.name ?? 'your subscription';
   }
 
   async withdrawCancellation(subscriptionId: string, actor: {type: 'CUSTOMER' | 'ADMIN'; id?: string | null; label?: string | null}) {
@@ -622,6 +839,7 @@ export class BillingService {
     await this.syncSubscription(updated);
     const saved = await this.db.subscription.update({where: {id: sub.id}, data: {cancellationRequestedAt: null, cancelReason: null, canceledByType: null, canceledById: null}});
     await this.record({subscriptionId: sub.id, customerId: sub.customerId, actorType: actor.type, actorId: actor.id ?? null, actorLabel: actor.label ?? null, action: 'CANCELLATION_WITHDRAWN', fromState: 'cancel_at_period_end', toState: updated.status, stripeRef: updated.id});
+    await this.notify(sub.customerId, 'cancellation_withdrawn', {planName: await this.planNameOf(sub)});
     return saved;
   }
 
@@ -643,39 +861,51 @@ export class BillingService {
     return overdue.length;
   }
 
-  /* ── Portal tokens ── */
+  /* The legacy multi-use management JWT (portalToken / customerFromToken) was removed.
+     Customers authenticate with a server-side session (account-auth.ts); emailed access
+     is a single-use, short-lived link exchanged for that session. Any JWT still in
+     circulation is no longer accepted by any endpoint. */
 
-  portalToken(customerId: string): string {
-    return jwt.sign({sub: customerId, purpose: PORTAL_PURPOSE}, process.env.JWT_SECRET!, {expiresIn: PORTAL_TOKEN_TTL});
-  }
-
-  customerFromToken(token?: string): string {
-    if (!token) throw new UnauthorizedException('Sign-in link required');
-    try {
-      const payload = jwt.verify(token, process.env.JWT_SECRET!) as jwt.JwtPayload;
-      if (payload.purpose !== PORTAL_PURPOSE || !payload.sub) throw new Error('bad token');
-      return String(payload.sub);
-    } catch {
-      throw new UnauthorizedException('This management link has expired. Request a new one.');
-    }
-  }
-
-  async customerView(customerId: string) {
-    const customer = await this.db.customer.findUnique({where: {id: customerId}});
-    if (!customer) throw new NotFoundException('Customer not found');
-    const [subscriptions, orders, invoices, entitlements] = await Promise.all([
-      this.db.subscription.findMany({where: {customerId}, include: {plan: true}, orderBy: {createdAt: 'desc'}}),
-      this.db.order.findMany({where: {customerId}, include: {items: true}, orderBy: {createdAt: 'desc'}, take: 20}),
-      this.db.invoice.findMany({where: {customerId}, orderBy: {createdAt: 'desc'}, take: 20}),
-      this.entitlementSummary(customerId),
-    ]);
-    return {
-      customer: {id: customer.id, email: customer.email, name: customer.name},
-      subscriptions: subscriptions.map(sub => this.subscriptionView(sub)),
-      orders: orders.map(order => ({...this.orderSummary(order), id: order.id, status: order.status, createdAt: order.createdAt})),
-      invoices,
-      entitlements,
+  /** Store a Stripe invoice with the detail the account's billing history shows. */
+  async upsertInvoice(invoice: Stripe.Invoice, link: {orderId?: string | null} = {}) {
+    if (!invoice.id) return null;
+    const subscriptionId = invoiceSubscriptionId(invoice);
+    const stripeCustomerId = typeof invoice.customer === 'string' ? invoice.customer : invoice.customer?.id;
+    const local = subscriptionId ? await this.db.subscription.findUnique({where: {stripeSubscriptionId: subscriptionId}}) : null;
+    const customer = stripeCustomerId ? await this.db.customer.findUnique({where: {stripeCustomerId}}) : null;
+    const record = invoice as unknown as {total_taxes?: Array<{amount?: number}> | null; total_discount_amounts?: Array<{amount?: number}> | null; tax?: number | null; metadata?: Record<string, string> | null; lines?: {data?: Array<Record<string, unknown>>}};
+    const sum = (rows: Array<{amount?: number}> | null | undefined) => (rows ?? []).reduce((total, row) => total + (row.amount ?? 0), 0);
+    const orderId = link.orderId ?? record.metadata?.orderId ?? null;
+    const detail = {
+      amountDue: invoice.amount_due ?? 0,
+      amountPaid: invoice.amount_paid ?? 0,
+      amountRemaining: invoice.amount_remaining ?? 0,
+      subtotal: invoice.subtotal ?? 0,
+      total: invoice.total ?? 0,
+      taxAmount: record.total_taxes ? sum(record.total_taxes) : record.tax ?? 0,
+      discountAmount: sum(record.total_discount_amounts),
+      number: invoice.number ?? null,
+      status: invoice.status ?? 'draft',
+      hostedUrl: invoice.hosted_invoice_url ?? null,
+      pdfUrl: invoice.invoice_pdf ?? null,
+      dueDate: fromStripeTimestamp(invoice.due_date),
+      /* A bounded, display-only snapshot. Never the full provider object. */
+      lines: (record.lines?.data ?? []).slice(0, 40).map(line => ({description: String(line.description ?? '').slice(0, 200), amount: Number(line.amount ?? 0), quantity: Number(line.quantity ?? 1)})) as object,
     };
+    return this.db.invoice.upsert({
+      where: {stripeInvoiceId: invoice.id},
+      update: {...detail, ...(orderId ? {orderId} : {})},
+      create: {
+        ...detail,
+        stripeInvoiceId: invoice.id,
+        subscriptionId: local?.id ?? null,
+        customerId: local?.customerId ?? customer?.id ?? null,
+        orderId,
+        currency: invoice.currency ?? 'usd',
+        periodStart: fromStripeTimestamp(invoice.period_start),
+        periodEnd: fromStripeTimestamp(invoice.period_end),
+      },
+    });
   }
 
   subscriptionView(sub: Record<string, unknown> & {plan?: {name?: string; serviceType?: string} | null}) {
@@ -711,11 +941,14 @@ export class BillingService {
 
 @Injectable()
 export class BillingWebhookService {
-  constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService) {}
+  constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService, @Optional() @Inject(AccountLifecycle) private lifecycle?: AccountLifecycle) {}
 
   /** True when this event belongs to the billing module rather than legacy bookings. */
   static handles(event: Stripe.Event): boolean {
     if (event.type.startsWith('customer.subscription.') || event.type.startsWith('invoice.')) return true;
+    /* Card and plan-schedule state. These events update billing state only: a payment or
+       setup event never authenticates a person or opens an account. */
+    if (event.type.startsWith('setup_intent.') || event.type.startsWith('payment_method.') || event.type.startsWith('subscription_schedule.') || event.type === 'customer.updated') return true;
     if (event.type.startsWith('checkout.session.')) {
       const session = event.data.object as Stripe.Checkout.Session;
       return Boolean(session.metadata?.orderId);
@@ -764,9 +997,60 @@ export class BillingWebhookService {
         return this.onInvoicePaid(event.data.object as Stripe.Invoice);
       case 'invoice.payment_failed':
         return this.onInvoiceFailed(event.data.object as Stripe.Invoice);
+      case 'invoice.finalized':
+      case 'invoice.updated':
+      case 'invoice.voided':
+      case 'invoice.marked_uncollectible':
+      case 'invoice.payment_action_required':
+        return this.onInvoiceChanged(event.data.object as Stripe.Invoice);
+      case 'payment_method.attached':
+      case 'payment_method.detached':
+      case 'payment_method.updated':
+      case 'payment_method.automatically_updated':
+        return this.onPaymentMethodEvent(event);
+      case 'setup_intent.succeeded':
+      case 'setup_intent.setup_failed':
+        return this.onCustomerCards(event.data.object as {customer?: unknown});
+      case 'customer.updated':
+        return this.onCustomerCards({customer: (event.data.object as {id?: string}).id});
+      case 'subscription_schedule.updated':
+      case 'subscription_schedule.released':
+      case 'subscription_schedule.canceled':
+      case 'subscription_schedule.completed':
+        return this.onScheduleEvent(event.data.object as {subscription?: unknown; released_subscription?: unknown});
       default:
         return undefined;
     }
+  }
+
+  private static ref(value: unknown): string | null {
+    return typeof value === 'string' ? value : value && typeof value === 'object' && 'id' in value ? String((value as {id: unknown}).id) : null;
+  }
+
+  /** Reconcile cards from Stripe's own list rather than trusting the event's order or content. */
+  private async onCustomerCards(object: {customer?: unknown}) {
+    await this.lifecycle?.['cards'].onStripeCustomer(BillingWebhookService.ref(object.customer));
+  }
+
+  private async onPaymentMethodEvent(event: Stripe.Event) {
+    const object = event.data.object as {customer?: unknown};
+    /* After a detach the object no longer names its customer; the previous value does. */
+    const previous = (event.data as {previous_attributes?: {customer?: unknown}}).previous_attributes?.customer;
+    await this.lifecycle?.['cards'].onStripeCustomer(BillingWebhookService.ref(object.customer) ?? BillingWebhookService.ref(previous));
+  }
+
+  /** A schedule moved: re-read the subscription so out-of-order events converge on Stripe's state. */
+  private async onScheduleEvent(schedule: {subscription?: unknown; released_subscription?: unknown}) {
+    const subscriptionId = BillingWebhookService.ref(schedule.subscription) ?? BillingWebhookService.ref(schedule.released_subscription);
+    if (!subscriptionId) return;
+    const local = await this.db.subscription.findUnique({where: {stripeSubscriptionId: subscriptionId}});
+    if (!local) return;
+    const fresh = (await this.billing['stripe']().subscriptions.retrieve(subscriptionId)) as Stripe.Subscription;
+    await this.billing.syncSubscription(fresh);
+  }
+
+  private async onInvoiceChanged(invoice: Stripe.Invoice) {
+    await this.billing.upsertInvoice(invoice);
   }
 
   private async onCheckoutCompleted(session: Stripe.Checkout.Session) {
@@ -789,6 +1073,17 @@ export class BillingWebhookService {
       const saved = await this.billing.syncSubscription(sub as Stripe.Subscription, {orderId: order.id, customerId: order.customerId});
       if (saved) await this.billing.grantEntitlements(saved.id, saved.currentPeriodStart?.toISOString() ?? session.id);
     }
+    /* One-time purchases get a Stripe invoice (invoice_creation); tie it to the order. */
+    const invoiceId = typeof session.invoice === 'string' ? session.invoice : session.invoice?.id;
+    if (invoiceId && this.db.invoice) {
+      const existing = await this.db.invoice.findUnique({where: {stripeInvoiceId: invoiceId}});
+      if (existing && !existing.orderId) await this.db.invoice.update({where: {id: existing.id}, data: {orderId: order.id}});
+      else if (!existing) await this.db.invoice.create({data: {stripeInvoiceId: invoiceId, customerId: order.customerId, orderId: order.id, currency: order.currency, status: 'paid', amountDue: order.dueNowAmount, amountPaid: order.dueNowAmount, total: order.dueNowAmount}}).catch(() => undefined);
+    }
+    /* Verified payment is the only trigger for account provisioning. Idempotent: a
+       replayed or duplicated event provisions nothing twice. A failure here must not
+       fail the payment record, so setup stays a separate recoverable state. */
+    await this.lifecycle?.onOrderPaid(order.id).catch(() => console.error('[billing] account provisioning deferred for order ' + order.id));
   }
 
   private async onCheckoutExpired(session: Stripe.Checkout.Session) {
@@ -814,29 +1109,8 @@ export class BillingWebhookService {
   }
 
   private async onInvoicePaid(invoice: Stripe.Invoice) {
-    const record = invoice as unknown as Record<string, unknown>;
-    const subscriptionId = typeof record.subscription === 'string' ? (record.subscription as string) : (record.subscription as {id?: string} | undefined)?.id;
-    const customerStripeId = typeof invoice.customer === 'string' ? invoice.customer : invoice.customer?.id;
-    const local = subscriptionId ? await this.db.subscription.findUnique({where: {stripeSubscriptionId: subscriptionId}}) : null;
-    const customer = customerStripeId ? await this.db.customer.findUnique({where: {stripeCustomerId: customerStripeId}}) : null;
-
-    await this.db.invoice.upsert({
-      where: {stripeInvoiceId: invoice.id! },
-      update: {amountDue: invoice.amount_due ?? 0, amountPaid: invoice.amount_paid ?? 0, status: invoice.status ?? 'paid', hostedUrl: invoice.hosted_invoice_url ?? null, pdfUrl: invoice.invoice_pdf ?? null},
-      create: {
-        stripeInvoiceId: invoice.id!,
-        subscriptionId: local?.id ?? null,
-        customerId: local?.customerId ?? customer?.id ?? null,
-        amountDue: invoice.amount_due ?? 0,
-        amountPaid: invoice.amount_paid ?? 0,
-        currency: invoice.currency ?? 'usd',
-        status: invoice.status ?? 'paid',
-        hostedUrl: invoice.hosted_invoice_url ?? null,
-        pdfUrl: invoice.invoice_pdf ?? null,
-        periodStart: fromStripeTimestamp(invoice.period_start),
-        periodEnd: fromStripeTimestamp(invoice.period_end),
-      },
-    });
+    const subscriptionId = invoiceSubscriptionId(invoice);
+    await this.billing.upsertInvoice({...invoice, status: invoice.status ?? 'paid'} as Stripe.Invoice);
 
     if (!subscriptionId) return;
     /* Retrieve the subscription so the paid period comes from Stripe, not arithmetic. */
@@ -844,13 +1118,14 @@ export class BillingWebhookService {
     const saved = await this.billing.syncSubscription(fresh);
     if (!saved) return;
     await this.db.subscription.update({where: {id: saved.id}, data: {paymentFailedAt: null, graceEndsAt: null, latestInvoiceId: invoice.id ?? null, latestInvoiceUrl: invoice.hosted_invoice_url ?? null, accessStatus: accessStatusFor(fresh.status, {graceEndsAt: null})}});
-    await this.billing.grantEntitlements(saved.id, String(invoice.id ?? saved.currentPeriodStart?.toISOString() ?? ''));
+    /* A proration invoice for a plan change is not a new period: the upgrade path grants only the difference. */
+    if ((invoice as {billing_reason?: string | null}).billing_reason !== 'subscription_update') await this.billing.grantEntitlements(saved.id, String(invoice.id ?? saved.currentPeriodStart?.toISOString() ?? ''));
     await this.billing.record({subscriptionId: saved.id, customerId: saved.customerId, actorType: 'STRIPE', action: 'INVOICE_PAID', toState: fresh.status, stripeRef: invoice.id ?? null, data: {amountPaid: invoice.amount_paid, periodEnd: saved.currentPeriodEnd?.toISOString() ?? null}});
   }
 
   private async onInvoiceFailed(invoice: Stripe.Invoice) {
-    const record = invoice as unknown as Record<string, unknown>;
-    const subscriptionId = typeof record.subscription === 'string' ? (record.subscription as string) : (record.subscription as {id?: string} | undefined)?.id;
+    const subscriptionId = invoiceSubscriptionId(invoice);
+    await this.billing.upsertInvoice(invoice);
     if (!subscriptionId) return;
     const local = await this.db.subscription.findUnique({where: {stripeSubscriptionId: subscriptionId}});
     if (!local) return;
@@ -863,6 +1138,8 @@ export class BillingWebhookService {
       data: {paymentFailedAt: failedAt, graceEndsAt: grace, stripeStatus: fresh.status, accessStatus: accessStatusFor(fresh.status, {graceEndsAt: grace}), latestInvoiceId: invoice.id ?? null, latestInvoiceUrl: invoice.hosted_invoice_url ?? null},
     });
     await this.billing.record({subscriptionId: local.id, customerId: local.customerId, actorType: 'STRIPE', action: 'INVOICE_PAYMENT_FAILED', fromState: local.stripeStatus, toState: fresh.status, stripeRef: invoice.id ?? null, data: {graceEndsAt: grace.toISOString()}});
+    /* One notice per failed invoice, however many times Stripe retries or redelivers. */
+    await this.billing.notify(local.customerId, 'payment_failed', {planName: await this.billing['planNameOf'](local)}, 'payment-failed:' + (invoice.id ?? local.id));
   }
 }
 
@@ -887,7 +1164,7 @@ export class PublicBillingController {
     clearCatalogCache();
   }
 
-  constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService) {}
+  constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService, @Optional() @Inject(CustomerAuthService) private auth?: CustomerAuthService) {}
 
   @Get('public/plans') @Throttle({default: {limit: 600, ttl: 60000}})
   async plans(@Query('serviceType') serviceType?: string) {
@@ -951,107 +1228,84 @@ export class PublicBillingController {
   }
 
   @Post('billing/checkout') @Throttle({default: {limit: 5, ttl: 60000}})
-  async checkout(@ValidatedBody(CheckoutDto) dto: CheckoutDto) {
-    return this.billing.createCheckout(dto);
+  async checkout(@ValidatedBody(CheckoutDto) dto: CheckoutDto, @Req() req?: CheckoutRequest) {
+    return this.billing.createCheckout(dto, undefined, await checkoutContext(this.auth, req));
   }
 
-  /** Success page polls this; access is reported only once Stripe confirmed payment. */
+  /**
+   * Success page polls this. An order id (or a payment return URL) is not a
+   * credential, so by default the answer is only the payment state. Itemised
+   * detail needs proof tied to this one purchase: the buyer's own order-scoped
+   * receipt proof, or a signed-in session that owns the order. It never returns
+   * a token, and never reveals whether the email already had an account.
+   */
   @Get('billing/orders/:id/status') @Throttle({default: {limit: 240, ttl: 60000}})
-  async orderStatus(@Param('id') id: string) {
-    const order = await this.db.order.findUnique({where: {id}, include: {items: true, subscriptions: true}});
+  async orderStatus(@Param('id') id: string, @Req() req?: CheckoutRequest, @Res({passthrough: true}) res?: {setHeader: (name: string, value: string) => void}) {
+    res?.setHeader('Cache-Control', 'no-store, private');
+    const order = await this.db.order.findUnique({where: {id}, include: {items: true, subscriptions: true, customer: true}});
     if (!order) throw new NotFoundException();
-    const paid = order.status === 'PAID';
-    return {
-      ...this.billing.orderSummary(order),
+    const principal = this.auth && req ? await this.auth.resolve(req) : null;
+    const owned = Boolean(principal && (order.customerId === principal.id || (order.customer?.mergedIntoId === principal.id && order.customer?.shadowState === 'CLAIMED')));
+    const minimal = {
       id: order.id,
       status: order.status,
       paymentMethod: order.paymentMethod,
       processing: order.status === 'PENDING',
-      subscriptions: order.subscriptions.map(sub => ({id: sub.id, accessStatus: sub.accessStatus, stripeStatus: sub.stripeStatus, currentPeriodEnd: sub.currentPeriodEnd})),
-      /* The management token is only issued once Stripe confirmed the payment. */
-      manageToken: paid ? this.billing.portalToken(order.customerId) : null,
+      /* ready: the signed-in owner. check_email: everyone else, identically, whether the
+         address is new, awaiting setup or belongs to an existing account. */
+      account: order.status !== 'PAID' ? null : owned ? ('ready' as const) : ('check_email' as const),
+      detail: false,
+    };
+    if (!owned && !this.billing.receiptProofMatches(order.id, req?.headers?.['x-order-proof'])) return minimal;
+    return {
+      ...this.billing.orderSummary(order),
+      ...minimal,
+      detail: true,
+      subscriptions: order.subscriptions.map(sub => ({accessStatus: sub.accessStatus, currentPeriodEnd: sub.currentPeriodEnd})),
     };
   }
 
-  @Post('billing/portal/request-link') @Throttle({default: {limit: 3, ttl: 60000}})
+  /** Legacy path kept for old pages: now sends a single-use link, with the same generic answer. */
+  @Post('billing/portal/request-link') @HttpCode(201) @Throttle({default: {limit: 3, ttl: 60000}})
   async requestLink(@ValidatedBody(PortalLinkDto) dto: PortalLinkDto) {
-    const customer = await this.db.customer.findUnique({where: {email: dto.email}});
-    /* Always the same answer, so this cannot be used to probe for customers. */
-    if (customer) {
-      const token = this.billing.portalToken(customer.id);
-      await this.billing.record({customerId: customer.id, actorType: 'CUSTOMER', actorLabel: customer.email, action: 'PORTAL_LINK_REQUESTED', data: {delivered: Boolean(process.env.SMTP_HOST)}});
-      if (!process.env.SMTP_HOST) {
-        /* Without SMTP configured the link cannot be emailed; staff can issue it from admin. */
-        console.warn('[billing] portal link requested but SMTP is not configured');
-      } else {
-        await sendPortalEmail(customer.email, frontendOrigins()[0] + '/account/?token=' + token).catch(() => undefined);
-      }
-    }
+    if (this.auth) await this.auth.requestLink(dto.email);
     return {requested: true};
   }
 }
 
-async function sendPortalEmail(to: string, link: string) {
-  const nodemailer = await import('nodemailer');
-  if (!(process.env.SMTP_HOST && process.env.SMTP_FROM)) return;
-  const mail = nodemailer.default.createTransport({host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 587), secure: process.env.SMTP_PORT === '465', ...(process.env.SMTP_USER ? {auth: {user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD}} : {})});
-  await mail.sendMail({from: process.env.SMTP_FROM, to, subject: 'Manage your Workspace Junction subscription', text: 'Use this link within 2 hours to manage your subscription:\n\n' + link});
+export type CheckoutRequest = {method?: string; headers: Record<string, string | string[] | undefined>; cookies?: Record<string, unknown>; ip?: string};
+
+/**
+ * The buyer's identity for a checkout comes from the session cookie alone. A
+ * cookie-authenticated checkout is a state-changing request, so it must also
+ * come from our own origin.
+ */
+export async function checkoutContext(auth: CustomerAuthService | undefined, req: CheckoutRequest | undefined): Promise<CheckoutContext> {
+  if (!auth || !req) return {};
+  const principal = await auth.resolve(req);
+  if (!principal) return {};
+  assertTrustedOrigin(req);
+  return {accountId: principal.id};
 }
 
-/* ───────────────────────────── Customer portal ───────────────────────────── */
+/* ───────────────────────────── Retired customer portal ─────────────────────────────
+   The token-authenticated portal (GET /billing/portal, its cancel/resume routes and the
+   Stripe Billing Portal hand-off) is gone. Account management lives under /account/*
+   behind a customer session, and no endpoint creates a Stripe Billing Portal session
+   for a customer any more, so the hosted portal cannot be used to remove a last card
+   or to bypass the cancellation and plan-change rules.
+   ─────────────────────────────────────────────────────────────────────────────────── */
 
 @Controller('billing/portal')
-export class CustomerPortalController {
-  constructor(@Inject(Db) private db: Db, @Inject(BillingService) private billing: BillingService) {}
-
-  private customerId(req: {headers: Record<string, string | undefined>; query?: Record<string, unknown>}): string {
-    const header = req.headers?.authorization;
-    const token = header?.startsWith('Bearer ') ? header.slice(7) : undefined;
-    return this.billing.customerFromToken(token);
+export class RetiredPortalController {
+  @All() @Throttle({default: {limit: 60, ttl: 60000}})
+  root() {
+    throw new GoneException('This link is no longer supported. Sign in at /login/ to manage your account.');
   }
 
-  @Get() @Throttle({default: {limit: 120, ttl: 60000}})
-  async overview(@Req() req: never) {
-    return this.billing.customerView(this.customerId(req));
-  }
-
-  @Get('subscriptions/:id/cancellation-preview') @Throttle({default: {limit: 120, ttl: 60000}})
-  async preview(@Req() req: never, @Param('id') id: string, @Query('mode') mode?: string) {
-    const customerId = this.customerId(req);
-    const sub = await this.db.subscription.findUnique({where: {id}});
-    if (!sub || sub.customerId !== customerId) throw new NotFoundException();
-    return cancellationPreview(sub, mode === 'IMMEDIATE' ? 'IMMEDIATE' : 'PERIOD_END');
-  }
-
-  /** Self-service cancellation always stops renewal at the end of the paid period. */
-  @Post('subscriptions/:id/cancel') @Throttle({default: {limit: 10, ttl: 60000}})
-  async cancel(@Req() req: never, @Param('id') id: string, @ValidatedBody(CancelDto) dto: CancelDto) {
-    const customerId = this.customerId(req);
-    const sub = await this.db.subscription.findUnique({where: {id}});
-    if (!sub || sub.customerId !== customerId) throw new NotFoundException();
-    const customer = await this.db.customer.findUnique({where: {id: customerId}});
-    const saved = await this.billing.cancelSubscription(id, 'PERIOD_END', {type: 'CUSTOMER', id: customerId, label: customer?.email}, dto.reason);
-    return this.billing.subscriptionView(saved as never);
-  }
-
-  @Post('subscriptions/:id/resume') @Throttle({default: {limit: 10, ttl: 60000}})
-  async resume(@Req() req: never, @Param('id') id: string) {
-    const customerId = this.customerId(req);
-    const sub = await this.db.subscription.findUnique({where: {id}});
-    if (!sub || sub.customerId !== customerId) throw new NotFoundException();
-    const customer = await this.db.customer.findUnique({where: {id: customerId}});
-    const saved = await this.billing.withdrawCancellation(id, {type: 'CUSTOMER', id: customerId, label: customer?.email});
-    return this.billing.subscriptionView(saved as never);
-  }
-
-  /** Stripe Billing Portal for payment-method updates and invoice history. */
-  @Post('stripe-session') @Throttle({default: {limit: 10, ttl: 60000}})
-  async stripePortal(@Req() req: never) {
-    const customerId = this.customerId(req);
-    const customer = await this.db.customer.findUnique({where: {id: customerId}});
-    if (!customer?.stripeCustomerId) throw new BadRequestException('No billing profile yet');
-    const session = await this.billing['stripe']().billingPortal.sessions.create({customer: customer.stripeCustomerId, return_url: frontendOrigins()[0] + '/account/'});
-    return {url: session.url};
+  @All('*rest') @Throttle({default: {limit: 60, ttl: 60000}})
+  rest() {
+    throw new GoneException('This link is no longer supported. Sign in at /login/ to manage your account.');
   }
 }
 
@@ -1305,7 +1559,12 @@ export class BillingAdminController {
   async portalLink(@Param('id') id: string, @Req() req: {user: {id: string; email: string}}) {
     const customer = await this.db.customer.findUnique({where: {id}});
     if (!customer) throw new NotFoundException();
-    await this.billing.record({customerId: id, actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'PORTAL_LINK_ISSUED'});
-    return {url: frontendOrigins()[0] + '/account/?token=' + this.billing.portalToken(id)};
+    if (customer.shadowState || !customer.emailKey) throw new BadRequestException('This record is not a sign-in identity. Resolve its claim or collision first.');
+    const active = customer.accountStatus === 'ACTIVE';
+    /* Single-use and short-lived. For a customer who has not set a password yet this is an
+       activation link; it never bypasses password setup. Every issue is audited. */
+    const token = await issueToken(this.db, id, active ? 'LOGIN_LINK' : 'ACCOUNT_SETUP');
+    await this.billing.record({customerId: id, actorType: 'ADMIN', actorId: req.user.id, actorLabel: req.user.email, action: 'PORTAL_LINK_ISSUED', data: {kind: active ? 'login' : 'setup'}});
+    return {url: tokenLink(active ? 'login' : 'setup', token), singleUse: true, expiresInMinutes: active ? 15 : 24 * 60};
   }
 }

@@ -123,10 +123,14 @@ model Booking {
  stripeResponse Json?
  emailStatus String @default("NOT_CONFIGURED")
  status BookingStatus @default(PENDING)
+ /// Set only by a verified claim from an activated account; never inferred from customerEmail.
+ customerId String?
+ claimedAt DateTime?
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
  @@index([serviceType, status])
  @@index([customerEmail])
+ @@index([customerId])
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -209,19 +213,194 @@ model Plan {
  subscriptions Subscription[]
  @@index([serviceType, active])
 }
+/// Customer identity and primary billing profile.
+/// - email is the address as entered (lower-cased); it is NOT unique on its own.
+/// - emailKey is the login identity: lower(email) for exactly one primary row per
+///   address, NULL for shadow rows (unverified guest purchases made with the email
+///   of an already-activated account, awaiting a verified claim) and for rows that
+///   lost a case-insensitive collision during migration 20261111000000.
+/// - A customer is never a staff User: there is no role column and no shared guard.
 model Customer {
  id String @id @default(uuid())
- email String @unique
+ email String
+ emailKey String? @unique
  name String @default("")
  phone String?
+ company String?
+ billingAddress Json?
  stripeCustomerId String? @unique
  metadata Json @default("{}")
+ accountStatus CustomerAccountStatus @default(GUEST)
+ /// NULL for a primary row; PENDING_CLAIM | CLAIMED | DECLINED | COLLISION otherwise.
+ shadowState String?
+ mergedIntoId String?
+ mergedInto Customer? @relation("CustomerClaims", fields: [mergedIntoId], references: [id])
+ claimedProfiles Customer[] @relation("CustomerClaims")
+ passwordHash String?
+ passwordChangedAt DateTime?
+ emailVerifiedAt DateTime?
+ pendingEmail String?
+ failedLoginCount Int @default(0)
+ lockedUntil DateTime?
+ lastLoginAt DateTime?
+ accountTermsVersion String?
+ accountTermsAcceptedAt DateTime?
+ cardConsentAt DateTime?
+ marketingOptIn Boolean @default(false)
+ marketingConsentAt DateTime?
+ notificationPrefs Json @default("{}")
+ /// OK | MISSING | EXPIRED | UNKNOWN: last reconciled state of the minimum-one-card invariant.
+ cardStatus String @default("UNKNOWN")
+ cardCheckedAt DateTime?
+ closureRequestedAt DateTime?
+ /// Lease-based mutex serialising card/subscription mutations across instances.
+ mutationLockToken String?
+ mutationLockUntil DateTime?
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
  orders Order[]
  subscriptions Subscription[]
  entitlements EntitlementEntry[]
  invoices Invoice[]
+ sessions CustomerSession[]
+ tokens CustomerToken[]
+ cards CustomerCard[]
+ @@index([email])
+ @@index([mergedIntoId])
+}
+enum CustomerAccountStatus {
+ GUEST
+ PENDING_SETUP
+ ACTIVE
+}
+/// Opaque server-side session. Only sha256(token) is stored; the token itself
+/// lives in an HttpOnly cookie scoped to /api.
+model CustomerSession {
+ id String @id @default(uuid())
+ customerId String
+ customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+ tokenHash String @unique
+ /// PASSWORD sessions may perform sensitive changes; LINK sessions must reauthenticate.
+ method String @default("PASSWORD")
+ userAgent String?
+ ipHint String?
+ createdAt DateTime @default(now())
+ lastSeenAt DateTime @default(now())
+ reauthAt DateTime?
+ expiresAt DateTime
+ revokedAt DateTime?
+ @@index([customerId, revokedAt])
+}
+/// Single-use, purpose-bound token. Only the hash is stored.
+model CustomerToken {
+ id String @id @default(uuid())
+ customerId String
+ customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+ /// ACCOUNT_SETUP | PASSWORD_RESET | EMAIL_CHANGE | LOGIN_LINK
+ purpose String
+ tokenHash String @unique
+ data Json @default("{}")
+ expiresAt DateTime
+ usedAt DateTime?
+ createdAt DateTime @default(now())
+ @@index([customerId, purpose])
+}
+/// Transactional outbox. The body is rendered at delivery time, so no secret
+/// link or token is ever stored here; retries mint a fresh single-use token.
+model EmailOutbox {
+ id String @id @default(uuid())
+ customerId String?
+ toEmail String
+ template String
+ payload Json @default("{}")
+ dedupeKey String? @unique
+ /// PENDING | SENDING | SENT | FAILED (retryable) | DEAD
+ status String @default("PENDING")
+ attempts Int @default(0)
+ nextAttemptAt DateTime @default(now())
+ lockedUntil DateTime?
+ lastError String?
+ sentAt DateTime?
+ createdAt DateTime @default(now())
+ @@index([status, nextAttemptAt])
+ @@index([customerId])
+}
+/// Mirror of Stripe card metadata. Stripe stays authoritative; this never holds PAN/CVC.
+model CustomerCard {
+ id String @id @default(uuid())
+ customerId String
+ customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+ stripePaymentMethodId String @unique
+ brand String @default("card")
+ last4 String @default("")
+ expMonth Int @default(0)
+ expYear Int @default(0)
+ isDefault Boolean @default(false)
+ detachedAt DateTime?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([customerId, detachedAt])
+}
+/// Idempotency + recovery record for a customer-initiated provider mutation.
+model CustomerOperation {
+ id String @id @default(uuid())
+ customerId String
+ kind String
+ idempotencyKey String
+ /// STARTED | SUCCEEDED | FAILED
+ status String @default("STARTED")
+ request Json @default("{}")
+ result Json @default("{}")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@unique([customerId, kind, idempotencyKey])
+ @@index([status, createdAt])
+}
+/// A requested plan change for one subscription. Benefits change only when Stripe confirms.
+model SubscriptionChange {
+ id String @id @default(uuid())
+ subscriptionId String
+ subscription Subscription @relation(fields: [subscriptionId], references: [id])
+ customerId String
+ /// UPGRADE | DOWNGRADE | INTERVAL_CHANGE
+ kind String
+ /// PENDING_PAYMENT | SCHEDULED | APPLIED | WITHDRAWN | FAILED
+ status String
+ fromSnapshot Json @default("{}")
+ toSnapshot Json @default("{}")
+ targetPriceId String?
+ stripeScheduleId String?
+ stripeInvoiceId String?
+ amountDueNow Int @default(0)
+ currency String @default("usd")
+ effectiveAt DateTime?
+ appliedAt DateTime?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([subscriptionId, status])
+ @@index([customerId])
+}
+/// Stripe Price created for a catalog/legacy plan so a subscription item can be swapped.
+model StripePriceRef {
+ id String @id @default(uuid())
+ key String @unique
+ stripePriceId String
+ createdAt DateTime @default(now())
+}
+/// Customer request that needs staff review: support, refund, reschedule, booking
+/// cancellation, account closure, purchase-claim dispute.
+model SupportRequest {
+ id String @id @default(uuid())
+ customerId String
+ type String
+ subject String
+ message String
+ reference String?
+ status String @default("OPEN")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([customerId, createdAt])
+ @@index([status, createdAt])
 }
 model Order {
  id String @id @default(uuid())
@@ -243,6 +422,10 @@ model Order {
  stripePaymentIntentId String?
  termsVersion String?
  termsAcceptedAt DateTime?
+ /// Contact details as entered at checkout. A snapshot, never an authorization input.
+ contactName String?
+ contactEmail String?
+ contactPhone String?
  notes String?
  metadata Json @default("{}")
  paidAt DateTime?
@@ -306,9 +489,14 @@ model Subscription {
  metadata Json @default("{}")
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
+ /// Stripe-side default card and schedule, mirrored for diagnostics.
+ defaultPaymentMethodId String?
+ stripeScheduleId String?
+ pendingUpdate Boolean @default(false)
  invoices Invoice[]
  entitlements EntitlementEntry[]
  events BillingEvent[]
+ changes SubscriptionChange[]
  @@index([customerId])
  @@index([stripeStatus])
  @@index([accessStatus])
@@ -324,6 +512,15 @@ model Invoice {
  customer Customer? @relation(fields: [customerId], references: [id])
  amountDue Int @default(0)
  amountPaid Int @default(0)
+ amountRemaining Int @default(0)
+ subtotal Int @default(0)
+ total Int @default(0)
+ taxAmount Int @default(0)
+ discountAmount Int @default(0)
+ number String?
+ orderId String?
+ lines Json @default("[]")
+ dueDate DateTime?
  currency String @default("usd")
  status String @default("draft")
  hostedUrl String?
@@ -332,6 +529,7 @@ model Invoice {
  periodEnd DateTime?
  createdAt DateTime @default(now())
  @@index([subscriptionId])
+ @@index([customerId, createdAt])
 }
 model BillingEvent {
  id String @id @default(uuid())

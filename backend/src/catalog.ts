@@ -14,7 +14,7 @@
  * table into the same shape, so the public site and booking dialog keep
  * working on a database that has no catalog rows yet.
  */
-import {Controller, Get, Post, Patch, Delete, Param, Query, Req, UseGuards, Inject, Injectable, BadRequestException, NotFoundException} from '@nestjs/common';
+import {Controller, Get, Post, Patch, Delete, Param, Query, Req, UseGuards, Inject, Injectable, Optional, BadRequestException, NotFoundException} from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {Throttle} from '@nestjs/throttler';
 import {IsArray, IsBoolean, IsEmail, IsIn, IsInt, IsOptional, IsString, IsUUID, Matches, MaxLength, Min, Max, MinLength, ValidateNested, IsDateString} from 'class-validator';
@@ -43,7 +43,8 @@ import {
   type FlowStep,
   type QuoteLine,
 } from './catalog-core';
-import {BillingService, type PricedLine} from './billing';
+import {BillingService, checkoutContext, type CheckoutContext, type CheckoutRequest, type PricedLine} from './billing';
+import {CustomerAuthService} from './account-auth';
 import {cachedCatalog as cached, clearCatalogCache} from './catalog-cache';
 export {clearCatalogCache} from './catalog-cache';
 
@@ -342,6 +343,9 @@ export class CatalogCheckoutDto extends CatalogQuoteDto {
   @IsOptional() @IsBoolean() acceptRecurringTerms?: boolean;
   @IsOptional() @IsBoolean() embedded?: boolean;
   @IsOptional() @IsString() @MaxLength(200) website?: string;
+  @IsOptional() @IsBoolean() acceptAccountTerms?: boolean;
+  @IsOptional() @IsBoolean() marketingOptIn?: boolean;
+  @IsOptional() @IsBoolean() confirmAdditionalSubscription?: boolean;
 }
 
 /* ───────────────────────────── Public views ───────────────────────────── */
@@ -459,6 +463,14 @@ interface ResolvedPlan {
   requiresSchedule: boolean;
   legacyPlan?: PlanLike;
   includedCredits?: unknown[];
+  /** Customers cannot end the subscription before this many months have been paid for. */
+  minimumTermMonths?: number;
+}
+
+/** A package's minimum term in whole months, or undefined when it has none. */
+function minimumTermMonthsOf(metadata: unknown): number | undefined {
+  const value = metadata && typeof metadata === 'object' ? Number((metadata as Record<string, unknown>).minimumTermMonths) : NaN;
+  return Number.isInteger(value) && value > 1 && value <= 60 ? value : undefined;
 }
 
 /** Legacy pricing units map onto the richer catalog billing units. */
@@ -786,6 +798,7 @@ export class CatalogService {
           intervalCount: 1,
           requiresSchedule: requiresSchedule(row.billingUnit),
           includedCredits: Array.isArray(row.metadata?.includedCredits) ? row.metadata.includedCredits : [],
+          minimumTermMonths: minimumTermMonthsOf(row.metadata),
         },
         addOns: new Map(views.map(view => [view.slug, view])),
       };
@@ -900,7 +913,7 @@ export class CatalogService {
         intervalCount: legacy?.intervalCount || plan.intervalCount,
         metadata: {
           slug: line.slug, kind: line.kind, serviceType: plan.serviceSlug, billingUnit: line.billingUnit, units: line.units, source: plan.source,
-          ...(plan.source === 'CATALOG' && line.kind === 'PLAN' ? {catalogPlan: {id: plan.planId, slug: plan.slug, name: plan.name, serviceType: plan.serviceSlug, includedCredits: plan.includedCredits ?? []}} : {}),
+          ...(plan.source === 'CATALOG' && line.kind === 'PLAN' ? {catalogPlan: {id: plan.planId, slug: plan.slug, name: plan.name, serviceType: plan.serviceSlug, includedCredits: plan.includedCredits ?? [], ...(plan.minimumTermMonths ? {minimumTermMonths: plan.minimumTermMonths} : {})}} : {}),
         },
       });
     }
@@ -927,7 +940,7 @@ export class CatalogService {
 
   /** Checkout reuses the billing service, so orders, subscriptions, webhooks
       and the audit trail behave exactly as they do for legacy packages. */
-  async checkout(dto: CatalogCheckoutDto) {
+  async checkout(dto: CatalogCheckoutDto, context: CheckoutContext = {}) {
     if (dto.website) throw new BadRequestException('Invalid submission');
     const {plan, priced, legacySelections} = await this.priceSelection(dto);
     const schedule = plan.requiresSchedule;
@@ -951,8 +964,12 @@ export class CatalogService {
         notes: dto.notes,
         membershipCircle: dto.membershipCircle,
         embedded: dto.embedded,
+        acceptAccountTerms: dto.acceptAccountTerms,
+        marketingOptIn: dto.marketingOptIn,
+        confirmAdditionalSubscription: dto.confirmAdditionalSubscription,
       },
       priced,
+      context,
     );
   }
 }
@@ -964,7 +981,7 @@ export class CatalogService {
 
 @ApiTags('Catalog') @Controller('public/catalog')
 export class PublicCatalogController {
-  constructor(@Inject(CatalogService) private catalog: CatalogService) {}
+  constructor(@Inject(CatalogService) private catalog: CatalogService, @Optional() @Inject(CustomerAuthService) private auth?: CustomerAuthService) {}
 
   @Get('services') @Throttle({default: {limit: 600, ttl: 60000}})
   services() {
@@ -988,8 +1005,9 @@ export class PublicCatalogController {
   }
 
   @Post('checkout') @Throttle({default: {limit: 5, ttl: 60000}})
-  checkout(@ValidatedBody(CatalogCheckoutDto) dto: CatalogCheckoutDto) {
-    return this.catalog.checkout(dto);
+  async checkout(@ValidatedBody(CatalogCheckoutDto) dto: CatalogCheckoutDto, @Req() req?: CheckoutRequest) {
+    /* Identity comes from the session cookie, never from the form. */
+    return this.catalog.checkout(dto, await checkoutContext(this.auth, req));
   }
 }
 
@@ -1200,6 +1218,17 @@ export class CatalogAdminController {
     return item;
   }
 
+  /** Detach an add-on from one service or one package. The library entry stays. */
+  /* Declared before addons/:id so "unassign" is not captured as an add-on id. */
+  @Delete('addons/unassign') @Roles('ADMIN', 'EDITOR')
+  async unassignAddOn(@ValidatedBody(AssignAddOnDto) dto: AssignAddOnDto, @Req() req: unknown) {
+    if (!dto.serviceId && !dto.planId) throw new BadRequestException('Provide serviceId or planId');
+    if (dto.serviceId) await this.t.serviceAddOns.deleteMany({where: {serviceId: dto.serviceId, addOnId: dto.addOnId}});
+    if (dto.planId) await this.t.planAddOns.deleteMany({where: {planId: dto.planId, addOnId: dto.addOnId}});
+    await this.touched(req, 'UNASSIGN', 'catalog/addons', dto.addOnId);
+    return {unassigned: true};
+  }
+
   @Delete('addons/:id') @Roles('ADMIN')
   async archiveAddOn(@Param('id') id: string, @Req() req: unknown) {
     const existing = await this.t.addOns.findUnique<AddOnRow>({where: {id}});
@@ -1237,16 +1266,6 @@ export class CatalogAdminController {
     });
     await this.touched(req, 'ASSIGN', 'catalog/addons', dto.addOnId);
     return item;
-  }
-
-  /** Detach an add-on from one service or one package. The library entry stays. */
-  @Delete('addons/unassign') @Roles('ADMIN', 'EDITOR')
-  async unassignAddOn(@ValidatedBody(AssignAddOnDto) dto: AssignAddOnDto, @Req() req: unknown) {
-    if (!dto.serviceId && !dto.planId) throw new BadRequestException('Provide serviceId or planId');
-    if (dto.serviceId) await this.t.serviceAddOns.deleteMany({where: {serviceId: dto.serviceId, addOnId: dto.addOnId}});
-    if (dto.planId) await this.t.planAddOns.deleteMany({where: {planId: dto.planId, addOnId: dto.addOnId}});
-    await this.touched(req, 'UNASSIGN', 'catalog/addons', dto.addOnId);
-    return {unassigned: true};
   }
 
   /* ── Amenities ── */

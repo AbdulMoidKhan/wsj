@@ -1,8 +1,11 @@
 import {Suspense} from 'react';
 import type {Metadata} from 'next';
 import {PublicLayout} from '@/components/public-layout';
-import {AccountPortal} from '@/components/account-portal';
+import {AccountArea} from '@/components/account-area';
 
+/* The page shell is static. Account data is fetched in the browser with the
+   customer's own session cookie, so nothing customer-specific is ever rendered
+   on the server or cached for someone else. */
 export const metadata: Metadata = {
   title: 'Your account',
   robots: {index: false, follow: false},
@@ -11,15 +14,9 @@ export const metadata: Metadata = {
 export default function AccountPage() {
   return (
     <PublicLayout>
-      <main id="main" className="wj-policy">
-        <header className="wj-policy-header">
-          <div className="container">
-            <p className="eyebrow">MEMBERSHIP</p>
-            <h1>Your account.</h1>
-          </div>
-        </header>
-        <Suspense fallback={<div className="container"><p>Loading your account&hellip;</p></div>}>
-          <AccountPortal />
+      <main id="main" className="aa-page">
+        <Suspense fallback={null}>
+          <AccountArea section="overview" />
         </Suspense>
       </main>
     </PublicLayout>

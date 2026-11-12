@@ -17,12 +17,14 @@
  * request behaviour and never implies a payment was taken.
  */
 import {PUBLIC_API_URL} from '@/lib/public-api';
+import {accountFetch, useCustomerSession} from '@/lib/account-client';
 import {findCatalogServiceHint} from '@/lib/catalog-service-hint';
 import {blocksSameDayBooking} from '@/lib/booking-policy';
 import './booking-dialog.css';
 import {sendInquiry} from './forms';
 import {useCallback, useEffect, useMemo, useReducer, useState, useRef, useId} from 'react';
 import {useRouter} from 'next/navigation';
+import Link from 'next/link';
 import {
   AlertTriangle,
   Archive,
@@ -297,6 +299,13 @@ interface S {
   notes: string;
   circle: string;
   terms: boolean;
+  /** Card purchases include a customer account and a saved card; this is that consent. */
+  accountTerms: boolean;
+  /** Separate, optional, never pre-ticked. */
+  marketing: boolean;
+  /** Signed-in buyer confirmed a second subscription to a plan they already have. */
+  confirmExtra: boolean;
+  duplicate: boolean;
   submitting: boolean;
   error: string;
 }
@@ -311,7 +320,7 @@ type A =
   | {t: 'ERROR'; v: string};
 
 function init(): S {
-  return {stepIndex: 0, serviceSlug: '', planSlug: '', units: 1, addOns: {}, date: '', time: '', email: '', firstName: '', lastName: '', phone: '', coupon: '', notes: '', circle: '', terms: false, submitting: false, error: ''};
+  return {stepIndex: 0, serviceSlug: '', planSlug: '', units: 1, addOns: {}, date: '', time: '', email: '', firstName: '', lastName: '', phone: '', coupon: '', notes: '', circle: '', terms: false, accountTerms: false, marketing: false, confirmExtra: false, duplicate: false, submitting: false, error: ''};
 }
 function reducer(s: S, a: A): S {
   switch (a.t) {
@@ -430,6 +439,25 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
   const embeddedRef = useRef<EmbeddedCheckout | null>(null);
   const [s, dispatch] = useReducer(reducer, undefined, init);
   const router = useRouter();
+  const session = useCustomerSession();
+  const signedIn = session.status === 'authenticated';
+
+  /* A signed-in buyer starts from their own saved details. They stay editable as order contact
+     details, but the server attaches the purchase to the signed-in account regardless. */
+  const prefilled = useRef(false);
+  useEffect(() => {
+    if (!signedIn || prefilled.current) return;
+    prefilled.current = true;
+    accountFetch<{name?: string; email?: string; phone?: string | null}>('/account/profile')
+      .then(profile => {
+        const [first, ...rest] = String(profile.name ?? '').trim().split(/\s+/);
+        if (profile.email) dispatch({t: 'SET_FIELD', k: 'email', v: profile.email});
+        if (first) dispatch({t: 'SET_FIELD', k: 'firstName', v: first});
+        if (rest.length) dispatch({t: 'SET_FIELD', k: 'lastName', v: rest.join(' ')});
+        if (profile.phone) dispatch({t: 'SET_FIELD', k: 'phone', v: profile.phone});
+      })
+      .catch(() => undefined);
+  }, [signedIn]);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -715,6 +743,10 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
       dispatch({t: 'ERROR', v: recurringPlan ? 'Please accept the terms and the recurring billing notice to continue.' : 'Please accept the Terms of Use to continue.'});
       return;
     }
+    if (plan && !signedIn && !s.accountTerms) {
+      dispatch({t: 'ERROR', v: 'Please confirm the customer account and saved card to continue.'});
+      return;
+    }
     if (plan?.requiresSchedule) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -749,7 +781,9 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
       const startAt = plan?.requiresSchedule && s.date && s.time ? new Date(s.date + 'T' + to24(s.time) + ':00').toISOString() : undefined;
       const response = await fetch(PUBLIC_API_URL + '/public/catalog/checkout', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
+        /* The header lets a signed-in checkout pass the API's cross-site request check. */
+        headers: {'Content-Type': 'application/json', 'X-WSJ-CSRF': '1'},
         body: JSON.stringify({
           ...selectionBody(),
           customerName,
@@ -759,11 +793,27 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
           ...(s.circle.trim() ? {membershipCircle: s.circle.trim()} : {}),
           ...(s.notes.trim() ? {notes: s.notes.trim()} : {}),
           ...(recurringPlan ? {acceptRecurringTerms: true} : {}),
+          /* A signed-in account already agreed to the account terms when it was created. */
+          acceptAccountTerms: signedIn || s.accountTerms,
+          marketingOptIn: s.marketing,
+          ...(s.confirmExtra ? {confirmAdditionalSubscription: true} : {}),
           embedded: true,
         }),
       });
       const body = await response.json();
+      if (response.status === 409 && body?.code === 'DUPLICATE_SUBSCRIPTION') {
+        dispatch({t: 'SET_FIELD', k: 'duplicate', v: true});
+        dispatch({t: 'ERROR', v: body.message});
+        submittingRef.current = false;
+        return;
+      }
       if (!response.ok) throw new Error(Array.isArray(body?.message) ? body.message.join(' ') : body?.message || 'Checkout could not be started. Please try again.');
+      /* Lets this browser, and only this one, see the itemised receipt for this one order. */
+      try {
+        if (body.receiptProof && body.orderId) sessionStorage.setItem('wsj-receipt:' + body.orderId, body.receiptProof);
+      } catch {
+        /* Storage blocked: the confirmation page still shows the payment state. */
+      }
       /* Preferred path: Stripe's payment form opens inside this dialog. */
       if (body.clientSecret) {
         setPay({clientSecret: body.clientSecret, publishableKey: body.publishableKey || ''});
@@ -1337,6 +1387,30 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
                       )}
                     </span>
                   </label>
+                  {plan && (signedIn ? (
+                    <p className="bk-account-note">
+                      Purchasing as <strong>{session.status === 'authenticated' ? session.customer.displayName : ''}</strong>. This purchase is added to your account, and you can pay with a saved card or a new one.
+                    </p>
+                  ) : (
+                    <label className="bk-terms">
+                      <input type="checkbox" required disabled={s.submitting} checked={s.accountTerms} onChange={e => dispatch({t: 'SET_FIELD', k: 'accountTerms', v: e.target.checked})} />
+                      <span className="bk-terms-copy">
+                        I understand a Workspace Junction customer account is created with this purchase, and my card is saved securely with Stripe for renewals and future purchases. I can manage or replace it from my account. We email you a link to set your password.
+                      </span>
+                    </label>
+                  ))}
+                  {plan && (
+                    <label className="bk-terms">
+                      <input type="checkbox" disabled={s.submitting} checked={s.marketing} onChange={e => dispatch({t: 'SET_FIELD', k: 'marketing', v: e.target.checked})} />
+                      <span className="bk-terms-copy">Send me occasional news and offers (optional).</span>
+                    </label>
+                  )}
+                  {s.duplicate && (
+                    <label className="bk-terms">
+                      <input type="checkbox" disabled={s.submitting} checked={s.confirmExtra} onChange={e => dispatch({t: 'SET_FIELD', k: 'confirmExtra', v: e.target.checked})} />
+                      <span className="bk-terms-copy">Yes, buy an additional, separately billed subscription. To change my existing plan instead I will use <Link href="/account/subscriptions/" onClick={() => closeRef.current()}>My subscriptions</Link>.</span>
+                    </label>
+                  )}
                   {s.error && (
                     <p className="bk-error-msg" role="alert">
                       {s.error}

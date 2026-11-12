@@ -25,21 +25,26 @@ import {MembershipsPageView} from '../../components/memberships-page-view';
 import {ServicesDirectoryView} from '../../components/services-directory-view';
 import {UseCasesView} from '../../components/use-cases-view';
 import {VisitPagesView} from '../../components/visit-pages-view';
+import {ContactView} from '../../components/contact-view';
 import {CreativeServicesView} from '../../components/creative-services-view';
 import {InformationPagesView} from '../../components/information-pages-view';
 import {DynamicPageView} from '../../components/dynamic-page-view';
 import {DYNAMIC_PAGES} from '../../lib/dynamic-pages-config';
 import {TestimonialsSection} from '../../components/testimonials-section';
+import {FigmaPageView} from '../../components/figma-page/figma-page-view';
+import {FigmaPostView} from '../../components/figma-page/figma-post-view';
+import {figmaPageFor,FIGMA_ONLY_PATHS} from '../../lib/figma-pages';
 export const revalidate=60;
 type Props={params:Promise<{slug:string[]}>;searchParams?:Promise<{q?:string;page?:string;category?:string}>};
 function pathOf(slug:string[]){return '/'+slug.join('/')+'/'}
 async function matching(slug:string[]){const s=await loadSite(),p=pathOf(slug).replace(/\/$/,'');return [...s.pages,...s.posts].find(e=>e.path.replace(/\/$/,'')===p)}
-export async function generateMetadata({params}:Props):Promise<Metadata>{const {slug}=await params;const blogPage=['blogs','blog'].includes(slug[0])&&slug.length===3&&slug[1]==='page'?slug[2]:null;const p=await matching(blogPage?[slug[0]]:slug);const category=(slug[0]==='tag'?(await loadSite()).tags||[]:(await loadSite()).categories).find(c=>['category','tag'].includes(slug[0])&&c.slug===slug[1]);if(!p&&!category)return {title:'Page not found',robots:{index:false}};const rawTitle=text(p?.seo?.title||p?.title||category?.name||'Journal').replace(/^\s*[a-z]/,m=>m.toUpperCase());const title=blogPage?rawTitle+' – Page '+blogPage:rawTitle;return {title:{absolute:title.includes('Workspace')?title:title+' | Workspace Junction'},description:text(p?.seo?.description||p?.excerpt||p?.content||'').slice(0,160)||('Explore '+title+' at Workspace Junction in Oakbrook Terrace.'),alternates:{canonical:blogPage?pathOf(slug):p?.path||pathOf(slug)},openGraph:{title,description:text(p?.seo?.description||p?.excerpt||'').slice(0,160)||('Explore '+title+' at Workspace Junction in Oakbrook Terrace.'),images:p?.featuredImage?[p.featuredImage]:[],type:p?.type==='post'?'article':'website'}}}
+export async function generateMetadata({params}:Props):Promise<Metadata>{const {slug}=await params;const blogPage=['blogs','blog'].includes(slug[0])&&slug.length===3&&slug[1]==='page'?slug[2]:null;const p=await matching(blogPage?[slug[0]]:slug);const category=(slug[0]==='tag'?(await loadSite()).tags||[]:(await loadSite()).categories).find(c=>['category','tag'].includes(slug[0])&&c.slug===slug[1]);if(!p&&!category){const fx=figmaPageFor(pathOf(slug));if(fx)return {title:{absolute:fx.title+' | Workspace Junction'},description:fx.description,alternates:{canonical:pathOf(slug)},openGraph:{title:fx.title,description:fx.description,type:'website'}};return {title:'Page not found',robots:{index:false}}}const rawTitle=text(p?.seo?.title||p?.title||category?.name||'Journal').replace(/^\s*[a-z]/,m=>m.toUpperCase());const title=blogPage?rawTitle+' – Page '+blogPage:rawTitle;return {title:{absolute:title.includes('Workspace')?title:title+' | Workspace Junction'},description:text(p?.seo?.description||p?.excerpt||p?.content||'').slice(0,160)||('Explore '+title+' at Workspace Junction in Oakbrook Terrace.'),alternates:{canonical:blogPage?pathOf(slug):p?.path||pathOf(slug)},openGraph:{title,description:text(p?.seo?.description||p?.excerpt||'').slice(0,160)||('Explore '+title+' at Workspace Junction in Oakbrook Terrace.'),images:p?.featuredImage?[p.featuredImage]:[],type:p?.type==='post'?'article':'website'}}}
 export function generateStaticParams(){const d=site(),paths=new Set([...d.pages,...d.posts].filter(p=>p.path!=='/').map(p=>p.path));
  /* archive pagination uses /…/page/N/ paths (static-export friendly, matches canonicals), so pre-render every page of every archive */
  const pagesFor=(base:string,count:number)=>{for(let n=2;n<=Math.ceil(count/ARCHIVE_PAGE_SIZE);n++)paths.add(base+'page/'+n+'/')};
  pagesFor('/blogs/',d.posts.length);
  for(const c of d.categories){const count=d.posts.filter(p=>p.categories?.some(id=>String(id)===String(c.id))).length;if(count){paths.add('/category/'+c.slug+'/');pagesFor('/category/'+c.slug+'/',count)}}
+ for(const path of FIGMA_ONLY_PATHS)paths.add(path);
  return [...paths].map(path=>({slug:path.split('/').filter(Boolean)}))}
 const ARCHIVE_PAGE_SIZE=9;
 /** Category/tag display name: fixes the migrated "bussiness" slug typo and title-cases each word. */
@@ -57,6 +62,9 @@ export default async function Page({params,searchParams}:Props){
  let source=await matching(slug);
  const isBlogIndex=['blogs','blog'].includes(slug[0])&&(slug.length===1||slug.length===3&&slug[1]==='page');
  if(category||isBlogIndex)return <Archive category={category} isTag={isTag} query={{q:(await searchParams)?.q,page:category?(slug[2]==='page'?slug[3]:undefined):(slug[1]==='page'?slug[2]:undefined)}}/>;
+ /* Pages redesigned in Figma ("REDESIGN / … — Homepage Style") render from lib/figma-pages. */
+ const figma=figmaPageFor(pathOf(slug));
+ if(figma)return <PublicLayout><FigmaPageView page={figma}/></PublicLayout>;
  if(!source)notFound();source={...source,content:safeContent(source.content)};
  if(source.slug==='community-network'){
    const communityPlans = await fetchCommunityPlans();
@@ -73,13 +81,15 @@ export default async function Page({params,searchParams}:Props){
  if(['partners','about-us'].includes(source.slug))return <PublicLayout><InformationPagesView slug={source.slug}/></PublicLayout>;
  if(source.slug==='trade-shows')return <PublicLayout><TradeShowsPageView/></PublicLayout>;
  if(['webinars','photo-studio'].includes(source.slug))return <PublicLayout><CreativeServicesView slug={source.slug}/></PublicLayout>;
- if(['contact-us','gallery'].includes(source.slug))return <PublicLayout><VisitPagesView slug={source.slug}/></PublicLayout>;
+ if(source.slug==='contact-us')return <PublicLayout><ContactView/></PublicLayout>;
+ if(source.slug==='gallery')return <PublicLayout><VisitPagesView slug={source.slug}/></PublicLayout>;
  if(source.slug==='creative-designers-agencies')return <PublicLayout><CreativeDesignersPageView/></PublicLayout>;
  if(source.slug==='e-commerce-online-business')return <PublicLayout><EcommercePageView/></PublicLayout>;
  if(source.slug==='library')return <PublicLayout><LibraryView/></PublicLayout>;
  if(source.slug==='coworking')return <PublicLayout><CoworkingView/></PublicLayout>;
  if(DYNAMIC_PAGES[source.slug])return <PublicLayout><DynamicPageView slug={source.slug}/></PublicLayout>;
  const p=source,title=text(p.title),isPost=p.type==='post'||s.posts.some(post=>post.path===p.path),isContact=/contact/.test(p.slug),isWorkflow=/membership-checkout|membership-confirmation|book-an-appointment|schedule-a-tour|face-linkup|^shop$/.test(p.slug),isDirectory=/^(services|use-cases|our-partners|partners|community)$/.test(p.slug),legal=/terms|privacy/.test(p.slug),image=pagePhoto(p,isPost);
+ if(isPost){const cat=s.categories.find(c=>String(c.id)!=='1'&&p.categories?.some(id=>String(id)===String(c.id)));return <PublicLayout><FigmaPostView p={p} category={cat?termName(cat.name):undefined} related={relatedPosts(s.posts,p)}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd({'@context':'https://schema.org','@type':'BlogPosting',headline:title,datePublished:p.date,dateModified:p.modified||p.date,image:image?(image.startsWith('http')?image:'https://workspacejunction.com'+image):undefined,author:{'@type':'Organization',name:p.author||'Workspace Junction'},publisher:{'@type':'Organization',name:'Workspace Junction'},mainEntityOfPage:'https://workspacejunction.com'+p.path})}}/></PublicLayout>}
  const structured=!isPost&&!legal&&!isContact&&!isWorkflow&&!isDirectory&&isServicePage(p);const organized=!isPost&&!legal?organizeServiceContent(p.content,{informational:!structured}):null;
  const live=!isPost&&!legal&&!isWorkflow?liveSectionsFor(p.path):null;
  /* render the plans wrapper only when the reviewed catalog actually has plans for this page */

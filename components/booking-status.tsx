@@ -81,7 +81,13 @@ export function BookingStatus({id}:{id:string}) {
 }
 
 
-type OrderStatusBody = {id:string;status:string;mode:string;processing:boolean;paymentMethod:string;currency:string;dueNowAmount:number;recurringAmount:number;recurringDescription:string|null;manageToken:string|null;items:Array<{description:string;quantity:number;amount:number;billingType:string}>;subscriptions:Array<{id:string;accessStatus:string;currentPeriodEnd:string|null}>};
+/* Without the buyer's own receipt proof the API returns payment state only (detail:false). */
+type OrderStatusBody = {id:string;status:string;processing:boolean;paymentMethod:string;account:'ready'|'check_email'|null;detail:boolean;mode?:string;currency?:string;dueNowAmount?:number;recurringAmount?:number;recurringDescription?:string|null;items?:Array<{description:string;quantity:number;amount:number;billingType:string}>;subscriptions?:Array<{accessStatus:string;currentPeriodEnd:string|null}>};
+
+/** The order-scoped proof checkout returned to this browser. It opens this one receipt and nothing else. */
+function receiptProof(orderId:string):string {
+ try { return sessionStorage.getItem('wsj-receipt:' + orderId) || ''; } catch { return ''; }
+}
 
 /**
  * Checkout result for the billing catalog. Access is never claimed from the
@@ -99,7 +105,8 @@ export function OrderStatus({id}:{id:string}) {
   let timer: ReturnType<typeof setTimeout>;
   async function poll() {
    try {
-    const res = await fetch(PUBLIC_API_URL + '/billing/orders/' + encodeURIComponent(id) + '/status', {cache:'no-store'});
+    const proof = receiptProof(id);
+    const res = await fetch(PUBLIC_API_URL + '/billing/orders/' + encodeURIComponent(id) + '/status', {cache:'no-store', credentials:'same-origin', headers: proof ? {'X-Order-Proof': proof} : undefined});
     if (cancelled) return;
     if (res.status === 404) { setNotFound(true); return; }
     if (!res.ok) throw new Error('request failed');
@@ -125,16 +132,19 @@ export function OrderStatus({id}:{id:string}) {
 
  if (!data) return <p role="status">Checking your payment status&hellip;</p>;
 
- const amount = (minor:number) => money(minor/100, data.currency);
+ const amount = (minor:number) => money(minor/100, data.currency || 'usd');
 
  if (data.status === 'PAID') return <>
-  <p role="status"><strong>Payment confirmed.</strong> We received {amount(data.dueNowAmount)} for {data.items.map(item=>item.description).join(', ')}.</p>
-  {data.recurringAmount > 0 && <p>Your subscription renews automatically at {amount(data.recurringAmount)} {data.recurringDescription}. You can stop automatic renewal at any time.</p>}
-  {data.subscriptions[0]?.currentPeriodEnd && <p>Your current paid period runs until {new Date(data.subscriptions[0].currentPeriodEnd).toLocaleDateString(undefined,{dateStyle:'medium'})}.</p>}
+  <p role="status"><strong>Payment confirmed.</strong>{data.detail && data.items ? <> We received {amount(data.dueNowAmount ?? 0)} for {data.items.map(item=>item.description).join(', ')}.</> : <> Your purchase is complete.</>}</p>
+  {data.detail && (data.recurringAmount ?? 0) > 0 && <p>Your subscription renews automatically at {amount(data.recurringAmount ?? 0)} {data.recurringDescription}. You can stop automatic renewal at any time from your account.</p>}
+  {data.detail && data.subscriptions?.[0]?.currentPeriodEnd && <p>Your current paid period runs until {new Date(data.subscriptions[0].currentPeriodEnd).toLocaleDateString(undefined,{dateStyle:'medium'})}.</p>}
   <p>Reference: <code>{data.id}</code></p>
-  {data.manageToken
-   ? <p><Link href={'/account/?token=' + encodeURIComponent(data.manageToken)}>Manage your subscription</Link></p>
-   : <p><Link href="/account/">Manage your subscription</Link></p>}
+  {data.account === 'ready'
+   ? <p><strong>Your account is ready.</strong> <Link href="/account/">Go to your dashboard</Link> to manage this purchase.</p>
+   : <>
+      <p><strong>Next: set up your account.</strong> We are emailing you a receipt and a secure link to set your password, if you have not set one already. The link works once and expires in 24 hours.</p>
+      <p>Already have an account? <Link href="/login/">Sign in</Link> to see this purchase. Didn&apos;t get the email? <Link href="/login/">Request a new link</Link>.</p>
+     </>}
  </>;
 
  if (data.paymentMethod === 'MANUAL') return <>

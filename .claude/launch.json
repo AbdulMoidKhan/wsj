@@ -6,6 +6,27 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "wsj-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:dev"],
+      "cwd": "backend",
+      "port": 4000
+    },
+    {
+      "name": "account-preview-api",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--import", "tsx", "scripts/qa-account-preview.ts"],
+      "cwd": "backend",
+      "port": 4100
+    },
+    {
+      "name": "account-preview-web",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["node_modules/next/dist/bin/next", "dev", "--port", "3100"],
+      "env": {"API_URL": "http://localhost:4100/api", "NEXT_DIST_DIR": ".next-account-preview"},
+      "port": 3100
     }
   ]
 }

@@ -224,7 +224,7 @@ export function DynamicPageView({slug}: {slug: string}) {
           </div>
         </div>
         <div className={`cn-hero-media ${cx('hero-media')}`}>
-          <Image src={hero.image} alt={hero.imageAlt} width={580} height={430} priority unoptimized className={`cn-hero-img ${cx('hero-img')}`} />
+          <Image src={hero.image} alt={hero.imageAlt} width={580} height={430} preload className={`cn-hero-img ${cx('hero-img')}`} />
         </div>
       </section>
 
@@ -241,7 +241,7 @@ export function DynamicPageView({slug}: {slug: string}) {
         >
           <div className="cn-container cn-about-grid">
             <motion.div className="cn-about-media" variants={fadeUp}>
-              <Image src={about.image} alt={about.imageAlt} width={554} height={340} unoptimized className="cn-about-img" />
+              <Image src={about.image} alt={about.imageAlt} width={554} height={340} className="cn-about-img" />
             </motion.div>
             <div className="cn-about-content">
               <motion.span className="cn-eyebrow" variants={fadeUp}>{about.eyebrow}</motion.span>
@@ -279,13 +279,13 @@ export function DynamicPageView({slug}: {slug: string}) {
                 </a>
               </motion.div>
               <motion.div variants={fadeUp}>
-                <Image src={works.topImage} alt={works.topImageAlt} width={600} height={290} unoptimized className="cn-works-top-img" />
+                <Image src={works.topImage} alt={works.topImageAlt} width={600} height={290} className="cn-works-top-img" />
               </motion.div>
             </motion.div>
 
             <motion.div className="cn-works-bottom" variants={stagger} initial="hidden" whileInView="show" viewport={{once: true, amount: 0.25}}>
               <motion.div variants={fadeUp}>
-                <Image src={works.bottomImage} alt={works.bottomImageAlt} width={550} height={290} unoptimized className="cn-works-bottom-img" />
+                <Image src={works.bottomImage} alt={works.bottomImageAlt} width={550} height={290} className="cn-works-bottom-img" />
               </motion.div>
               <motion.div className="cn-works-features" variants={fadeUp}>
                 {works.features.map(f => (
@@ -358,7 +358,7 @@ export function DynamicPageView({slug}: {slug: string}) {
                 </ul>
               </div>
               <div>
-                <Image src={benefits.image} alt={benefits.imageAlt} width={550} height={310} unoptimized loading="eager" className="cn-benefits-img" />
+                <Image src={benefits.image} alt={benefits.imageAlt} width={550} height={310} loading="eager" className="cn-benefits-img" />
               </div>
             </div>
           </div>
@@ -395,7 +395,7 @@ export function DynamicPageView({slug}: {slug: string}) {
               </div>
             </div>
             <div>
-              <Image src={banner.image} alt={banner.imageAlt} width={450} height={260} unoptimized loading="eager" className="cn-banner-img" />
+              <Image src={banner.image} alt={banner.imageAlt} width={450} height={260} loading="eager" className="cn-banner-img" />
             </div>
           </div>
         </div>

@@ -2,20 +2,19 @@
 
 import Image from '@/components/consistent-image';
 import {useEffect, useMemo, useState, useRef} from 'react';
-import {ArrowUpRight, Sparkles, ShieldCheck, Clock, MapPin, ChevronLeft, ChevronRight} from 'lucide-react';
+import {ArrowUpRight, ArrowRight} from 'lucide-react';
 import {BookingButton} from './booking';
-import {HomeHeroImage} from './home-hero-image';
 
 /* Content in this file is taken from the live workspacejunction.com homepage (Oct 2026). */
 
 const SLIDES = [
   {
-    src: '/media/3675f6dc28-slide-1.png',
-    alt: 'Team meeting in the Workspace Junction boardroom with a video call on screen',
+    src: '/media/dfcf491571-image.png',
+    alt: 'Four professionals meeting around a table at Workspace Junction',
     badge: 'Executive Suites & Private Boardrooms',
     title: 'Where Leaders Work.',
     sub: 'Your premier business headquarters in Oakbrook Terrace — from executive boardroom strategy sessions to high-impact broadcasts.',
-    tags: ['High-Speed Fiber', 'Dual 4K Displays', 'Full AV Support'],
+    tags: ['24/7 Access Option', 'Curated Member Network', 'Private Phone Booths'],
     ctaService: 'Meeting rooms',
     ctaLabel: 'Book a Private Tour',
   },
@@ -78,113 +77,49 @@ export function HeroSlides() {
         if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
       }}
     >
-      {SLIDES.map((s, i) => (
-        <figure key={s.src} className={'lv-slide' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
-          {i === 0
-            ? <HomeHeroImage alt={s.alt} sizes="100vw" className="lv-slide-img"/>
-            : <Image src={s.src} alt={s.alt} fill fetchPriority="low" sizes="100vw" className="lv-slide-img" />}
-        </figure>
-      ))}
-
-      <div className="lv-hero-shade" aria-hidden="true" />
-      <div className="lv-hero-radial-glow" aria-hidden="true" />
-
       <div className="lv-hero-copy">
-        <h1 id="hp-title" className="lv-sr">{SLIDES[0].title}</h1>
-
         <div className="lv-hero-content-wrap">
-          <div className="lv-hero-badge-row">
-            <span className="lv-hero-badge">
-              <Sparkles size={13} className="lv-badge-icon" aria-hidden="true" />
-              <span>{slide.badge}</span>
-            </span>
-          </div>
-
-          <div className="lv-hero-titles" aria-live="off">
-            {SLIDES.map((s, i) => (
-              <div key={s.title} className={'lv-hero-title' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
-                <p className="lv-h1" aria-hidden={i === 0 ? true : undefined}>{s.title}</p>
-                <p className="lv-hero-sub">{s.sub}</p>
-              </div>
-            ))}
-          </div>
-
+          <p className="lv-hero-badge">{slide.badge}</p>
+          <h1 id="hp-title" className="lv-h1">{slide.title}</h1>
+          <p className="lv-hero-sub">{slide.sub}</p>
           <div className="lv-hero-tags" aria-label="Key features">
             {slide.tags.map(tag => (
-              <span key={tag} className="lv-hero-tag">
-                <span className="lv-tag-dot" aria-hidden="true" />
-                {tag}
-              </span>
+              <span key={tag} className="lv-hero-tag">• {tag}</span>
             ))}
           </div>
-
           <div className="lv-hero-actions">
             <BookingButton className="btn btn-primary lv-pill lv-hero-primary-cta" service={slide.ctaService}>
               {slide.ctaLabel} <ArrowUpRight size={17} aria-hidden="true" />
             </BookingButton>
-            <BookingButton className="lv-pill lv-pill-ghost lv-hero-secondary-cta">
+            <a className="lv-pill lv-pill-ghost lv-hero-secondary-cta" href="#home-pricing">
               Plans &amp; Pricing <ArrowUpRight size={17} aria-hidden="true" />
-            </BookingButton>
+            </a>
           </div>
+          <p className="lv-hero-location">Oakbrook Terrace, IL <span>·</span> 24/7 Access</p>
         </div>
-
-        <div className="lv-hero-bottom-bar">
-          <div className="lv-hero-meta-strip">
-            <span className="lv-meta-item">
-              <MapPin size={14} className="lv-meta-icon" aria-hidden="true" />
-              <span>Oakbrook Terrace, IL</span>
-            </span>
-            <span className="lv-meta-divider" aria-hidden="true">/</span>
-            <span className="lv-meta-item">
-              <Clock size={14} className="lv-meta-icon" aria-hidden="true" />
-              <span>24/7 Access</span>
-            </span>
-            <span className="lv-meta-divider" aria-hidden="true">/</span>
-            <span className="lv-meta-item">
-              <ShieldCheck size={14} className="lv-meta-icon" aria-hidden="true" />
-              <span>Verified Enterprise Standard</span>
-            </span>
-          </div>
-
-          <div className="lv-controls-cluster">
-            <div className="lv-arrow-nav">
-              <button
-                type="button"
-                className="lv-nav-arrow"
-                aria-label="Previous slide"
-                onClick={() => {
-                  setIndex((index - 1 + SLIDES.length) % SLIDES.length);
-                }}
-              >
-                <ChevronLeft size={18} aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="lv-nav-arrow"
-                aria-label="Next slide"
-                onClick={() => {
-                  setIndex((index + 1) % SLIDES.length);
-                }}
-              >
-                <ChevronRight size={18} aria-hidden="true" />
-              </button>
-            </div>
-
-            <div className="lv-dots" role="group" aria-label="Choose slide">
-              {SLIDES.map((s, i) => (
-                <button
-                  key={s.title}
-                  className={'lv-slide-dot' + (i === index ? ' is-active' : '')}
-                  type="button"
-                  aria-label={`Show slide ${i + 1}: ${s.title}`}
-                  aria-pressed={i === index}
-                  onClick={() => {
-                    setIndex(i);
-                  }}
-                />
-              ))}
-            </div>
-          </div>
+      </div>
+      <div className="lv-hero-media">
+        {SLIDES.map((s, i) => (
+          <figure key={s.src} className={'lv-slide' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
+            <Image src={s.src} alt={s.alt} fill preload={i === 0} fetchPriority={i === 0 ? 'high' : 'low'} sizes="(max-width: 767px) 100vw, 50vw" className="lv-slide-img" />
+          </figure>
+        ))}
+      </div>
+      <div className="lv-hero-bottom-bar">
+        <span className="lv-hero-motto">WORK. CONNECT. GROW.</span>
+        <p>Flexible spaces for every way of working.</p>
+        <div className="lv-controls-cluster">
+          <span>{String(index + 1).padStart(2, '0')} / 03</span>
+          <button
+            type="button"
+            className="lv-nav-arrow"
+            aria-label="Next slide"
+            onClick={() => {
+              setIndex((index + 1) % SLIDES.length);
+            }}
+          >
+            <ArrowRight size={18} aria-hidden="true" />
+          </button>
         </div>
       </div>
     </div>

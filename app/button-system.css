@@ -14,7 +14,9 @@
   }
   /* All text and icon controls share the same palette, radius and focus states.
      Choice cards keep their layout; selected choices use the yellow variant. */
-  body:has(.wj-platform) :where(button:not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button):not(.bk-type-card):not(.bk-plan-card):not(.bk-addon):not(.lv-slide-dot):not(.lx-vdot),input[type="submit"],input[type="button"],.wj-button) {
+  /* .wj-control opts a component-styled control (text link button, segmented option,
+     icon toggle, menu item, selectable row) out of the CTA contract below. */
+  body:has(.wj-platform) :where(button:not(.wj-control):not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button):not(.bk-type-card):not(.bk-plan-card):not(.bk-addon):not(.lv-slide-dot):not(.lx-vdot),input[type="submit"],input[type="button"],.wj-button) {
     background-color:var(--wj-button-green)!important;
     background-image:none!important;
     color:#fff!important;
@@ -90,7 +92,7 @@
     white-space:nowrap!important;
     border-radius:5px!important;
   }
-  body:has(.wj-platform) :where(button:not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button),.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn,.ecom-button,.cd-button,.sv-button,.sv-card-book-btn,.ws-button,.ts-button,.ts-plan-btn,.mem-button,.mem-plan-btn,.uc-button):hover:not(:disabled):not([aria-disabled="true"]) {
+  body:has(.wj-platform) :where(button:not(.wj-control):not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button),.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn,.ecom-button,.cd-button,.sv-button,.sv-card-book-btn,.ws-button,.ts-button,.ts-plan-btn,.mem-button,.mem-plan-btn,.uc-button):hover:not(:disabled):not([aria-disabled="true"]) {
     background-color:var(--wj-button-green-hover)!important;
     border-color:var(--wj-button-green-hover)!important;
     color:#fff!important;
@@ -118,7 +120,7 @@
     box-shadow:var(--wj-button-shadow)!important;
   }
   body:has(.wj-platform) button:is(.bk-type-card,.bk-plan-card,.bk-addon) {border-radius:10px!important}
-  body:has(.wj-platform) :where(button:not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button),.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn):focus-visible {
+  body:has(.wj-platform) :where(button:not(.wj-control):not(.visit-photo-button):not(.vg-photo-button):not(.vg-image-button),.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn):focus-visible {
     outline:3px solid #d9910b!important;
     outline-offset:4px!important;
   }

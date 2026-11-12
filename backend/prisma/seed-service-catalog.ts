@@ -17,6 +17,7 @@ const dollars = (value: number) => Math.round(value * 100);
 
 const COWORKING_RULE = 'All packages are valid for 30 days. Unused days expire at the end of the monthly validity period and do not roll over.';
 const LLC_NOTICE = 'The listed price covers our service and filing fees. Any additional government or state fees will be charged separately by the respective state.';
+const FOUNDERS_NOTICE = 'The approximately $150 Illinois state filing fee is paid separately to Illinois, may change, and is not included in the package price. Domain registration is not included.';
 
 type Flow = 'STANDARD' | 'NO_EXTRAS' | 'MEMBERSHIP' | 'CUSTOM';
 type Unit =
@@ -51,6 +52,8 @@ interface PlanSeed {
   rulesNotice?: string;
   governmentNotice?: string;
   adminFlagNote?: string;
+  /** Extra commercial terms stored on the package, e.g. minimumTermMonths or memberUnitAmountCents. */
+  metadata?: Record<string, unknown>;
   includedCredits?: Array<{kind: 'COWORKING_DAY'; amount?: number; unlimited?: boolean; resetInterval: 'MONTH'}>;
   amenities?: string[];
   addOns?: Array<{slug: string; priceOverride?: number; isRequired?: boolean}>;
@@ -129,9 +132,9 @@ const ADDONS: Array<{slug: string; name: string; description: string; price: num
     slug: 'addon-llc-registered-agent',
     name: 'Registered Agent Service',
     description: 'Statutory registered agent for service of process.',
-    price: 150,
+    /* $120 / year, as published on workspacejunction.com/llc-setup/ (checked Nov 2026). */
+    price: 120,
     billingUnit: 'PER_YEAR',
-    adminFlagNote: 'Registered Agent Service is configured at $150/year. Historical notes mention a conflicting $120/year figure. Confirm or adjust the rate.',
   },
   {slug: 'addon-llc-expedited-filing', name: 'Expedited Filing', description: 'Priority handling with the state.', price: 75, billingUnit: 'ONE_TIME'},
   {slug: 'addon-llc-same-day-filing', name: 'Same-Day Filing', description: 'Immediate same-business-day submission.', price: 150, billingUnit: 'ONE_TIME'},
@@ -139,6 +142,10 @@ const ADDONS: Array<{slug: string; name: string; description: string; price: num
   {slug: 'addon-llc-license-research', name: 'Business License Research', description: 'Municipal and state permit research for your activity.', price: 125, billingUnit: 'ONE_TIME'},
   {slug: 'addon-llc-website-starter', name: 'Business Website Starter', description: 'Launch-ready landing page for your new entity.', price: 499, billingUnit: 'ONE_TIME'},
   {slug: 'addon-llc-branding-starter', name: 'Website Logo & Branding Starter', description: 'Logo and core brand identity assets.', price: 199, billingUnit: 'ONE_TIME'},
+  /* Published on /llc-setup/ (workspacejunction.com, checked Nov 2026). */
+  {slug: 'addon-llc-operating-agreement', name: 'Operating Agreement Customization', description: 'Customized operating agreement based on your business structure.', price: 100, billingUnit: 'ONE_TIME'},
+  {slug: 'addon-llc-annual-report', name: 'Annual Report Filing', description: 'Preparation and filing of your annual report with the Secretary of State. State fee not included.', price: 99, billingUnit: 'ONE_TIME'},
+  {slug: 'addon-llc-compliance-monitoring', name: 'Compliance Monitoring', description: 'Reminders and document preparation for annual and biennial obligations.', price: 149, billingUnit: 'PER_YEAR'},
 ];
 
 const WORKSPACE_AMENITIES = ['high-speed-wifi', 'sit-stand-desks', 'printer-scanner', 'wellness-room', 'huddle-room-access', 'complimentary-refreshments', 'partner-discounts', 'builders-library'];
@@ -202,9 +209,21 @@ const SERVICES: ServiceSeed[] = [
         billingUnit: 'PER_HOUR',
         maxQuantity: 24,
         durationMinutes: 60,
-        adminFlagNote: 'Studio capacity was never documented and is intentionally left unconstrained. Set the guest capacity before promoting this package.',
+        /* "Up to 4–5 People" / capacity "Up to 5" on workspacejunction.com/podcast-studio/ (checked Nov 2026). */
+        capacityText: 'Up to 5 people',
+        capacityMin: 1,
+        capacityMax: 5,
         sortOrder: 4,
       },
+      /* Standard (2 hours) and Premium Production (3 hours) sessions, priced per booking as published on /podcast-studio/ (workspacejunction.com, checked Nov 2026). */
+      {slug: 'podcast-solo-standard', name: 'Solo Creator Studio — Standard Session', description: 'Two-hour standard podcast session with camera production, studio lighting and raw files included.', price: 140, billingUnit: 'PER_BOOKING', durationMinutes: 120, capacityText: '1–2 people', capacityMin: 1, capacityMax: 2, sortOrder: 5},
+      {slug: 'podcast-interview-standard', name: 'Interview Studio — Standard Session', description: 'Two-hour standard podcast session with camera production, studio lighting and raw files included.', price: 180, billingUnit: 'PER_BOOKING', durationMinutes: 120, capacityText: '2–3 people', capacityMin: 2, capacityMax: 3, sortOrder: 6},
+      {slug: 'podcast-panel-standard', name: 'Panel Podcast Studio — Standard Session', description: 'Two-hour standard podcast session with camera production, studio lighting and raw files included.', price: 220, billingUnit: 'PER_BOOKING', durationMinutes: 120, capacityText: 'Up to 4 people', capacityMin: 1, capacityMax: 4, sortOrder: 7},
+      {slug: 'podcast-premium-standard', name: 'Premium Video Podcast Studio — Standard Session', description: 'Two-hour standard podcast session with camera production, studio lighting and raw files included.', price: 280, billingUnit: 'PER_BOOKING', durationMinutes: 120, capacityText: 'Up to 5 people', capacityMin: 1, capacityMax: 5, sortOrder: 8},
+      {slug: 'podcast-solo-production', name: 'Solo Creator Studio — Premium Production', description: 'Three-hour premium production with audio enhancement, an edited episode and social clips.', price: 260, billingUnit: 'PER_BOOKING', durationMinutes: 180, capacityText: '1–2 people', capacityMin: 1, capacityMax: 2, sortOrder: 9},
+      {slug: 'podcast-interview-production', name: 'Interview Studio — Premium Production', description: 'Three-hour premium production with audio enhancement, an edited episode and social clips.', price: 320, billingUnit: 'PER_BOOKING', durationMinutes: 180, capacityText: '2–3 people', capacityMin: 2, capacityMax: 3, sortOrder: 10},
+      {slug: 'podcast-panel-production', name: 'Panel Podcast Studio — Premium Production', description: 'Three-hour premium production with audio enhancement, an edited episode and social clips.', price: 380, billingUnit: 'PER_BOOKING', durationMinutes: 180, capacityText: 'Up to 4 people', capacityMin: 1, capacityMax: 4, sortOrder: 11},
+      {slug: 'podcast-premium-production', name: 'Premium Video Podcast Studio — Premium Production', description: 'Three-hour premium production with audio enhancement, an edited episode and social clips.', price: 480, billingUnit: 'PER_BOOKING', durationMinutes: 180, capacityText: 'Up to 5 people', capacityMin: 1, capacityMax: 5, sortOrder: 12},
     ],
   },
   {
@@ -257,7 +276,16 @@ const SERVICES: ServiceSeed[] = [
     flowType: 'NO_EXTRAS',
     displayOrder: 6,
     amenities: ['mail-handling', 'commercial-address'],
-    plans: [{slug: 'mailbox-rental-30-days', name: 'Mailbox Rental', description: 'Locked mailbox with professional mailing address. Valid for 30 days.', price: 35, billingUnit: 'PER_MONTH', durationDays: 30, sortOrder: 1}],
+    /* $35 per month with a 3-month minimum, plus the two prepay specials published on /mail-box/ (workspacejunction.com, checked Nov 2026). */
+    plans: [
+      {slug: 'mailbox-rental-30-days', name: 'Mailbox Rental', description: 'Locked mailbox with professional mailing address, billed monthly.', price: 35, billingUnit: 'PER_MONTH', durationDays: 30, rulesNotice: 'Minimum rental term: 3 months.', metadata: {minimumTermMonths: 3}, sortOrder: 1},
+      {slug: 'mailbox-prepay-7-months', name: 'Mailbox Rental — Prepay 6 Months, 7th Free', description: 'Seven months of mailbox rental for the price of six, paid up front.', price: 210, billingUnit: 'ONE_TIME', durationDays: 210, rulesNotice: 'Prepay special for new rentals or renewals that are current on payment. Only one special can be used at a time.', sortOrder: 2},
+      {slug: 'mailbox-prepay-12-months', name: 'Mailbox Rental — Prepay 10 Months, 11th and 12th Free', description: 'Twelve months of mailbox rental for the price of ten, paid up front.', price: 350, billingUnit: 'ONE_TIME', durationDays: 365, rulesNotice: 'Prepay special for new rentals or renewals that are current on payment. Only one special can be used at a time.', featured: true, sortOrder: 3},
+      /* Sold from the /m/mailbox.html and /m/mailbox-privacy.html landing pages: $29/month, billed $348 a year. */
+      /* The landing pages promise "Billed every month. Cancel anytime.", so this one has no minimum term. */
+      {slug: 'mailbox-rental-monthly-flex', name: 'Mailbox Rental — Monthly, Cancel Anytime', description: 'Real street address with a secure private mailbox, 24/7 access and mail and package receiving. Billed every month.', price: 35, billingUnit: 'PER_MONTH', durationDays: 30, rulesNotice: 'Cancel anytime. Business mailing address for mail and package receiving. Not a registered agent service.', sortOrder: 5},
+      {slug: 'mailbox-rental-annual', name: 'Mailbox Rental — Annual', description: 'Real street address with a secure private mailbox, 24/7 access and mail and package receiving. $29 per month, billed annually.', price: 348, billingUnit: 'PER_YEAR', durationDays: 365, rulesNotice: 'Business mailing address for mail and package receiving. Not a registered agent service.', sortOrder: 4},
+    ],
   },
   {
     slug: 'llc-setup',
@@ -279,11 +307,19 @@ const SERVICES: ServiceSeed[] = [
       {slug: 'addon-llc-website-starter'},
       {slug: 'addon-llc-branding-starter'},
       {slug: 'addon-mailbox'},
+      {slug: 'addon-llc-operating-agreement'},
+      {slug: 'addon-llc-annual-report'},
+      {slug: 'addon-llc-compliance-monitoring'},
     ],
     plans: [
-      {slug: 'llc-basic-package', name: 'Basic Package', description: 'Articles of Organization, name availability search and initial formation documents.', price: 200, billingUnit: 'ONE_TIME', governmentNotice: LLC_NOTICE, sortOrder: 1},
-      {slug: 'llc-professional-package', name: 'Professional Package', description: 'Basic package plus custom Operating Agreement, banking resolution and compliance guide.', price: 400, billingUnit: 'ONE_TIME', governmentNotice: LLC_NOTICE, featured: true, sortOrder: 2},
+      {slug: 'llc-basic-package', name: 'Basic Package', description: 'Articles of Organization, name availability search and initial formation documents.', price: 199, billingUnit: 'ONE_TIME', governmentNotice: LLC_NOTICE, sortOrder: 1},
+      {slug: 'llc-professional-package', name: 'Professional Package', description: 'Basic package plus custom Operating Agreement, banking resolution and compliance guide.', price: 399, billingUnit: 'ONE_TIME', governmentNotice: LLC_NOTICE, featured: true, sortOrder: 2},
       {slug: 'llc-premium-package', name: 'Premium Package', description: 'Complete enterprise formation, corporate binder, expedited compliance and priority filing.', price: 699, billingUnit: 'ONE_TIME', governmentNotice: LLC_NOTICE, sortOrder: 3},
+      {slug: 'llc-startup-essentials-bundle', name: 'Startup Essentials Bundle', description: 'LLC setup, EIN registration, business address for 6 months, logo concept with brand colors and a 1-page business website.', price: 899, billingUnit: 'ONE_TIME', governmentNotice: LLC_NOTICE, sortOrder: 4},
+      {slug: 'llc-entrepreneur-launch-bundle', name: 'Entrepreneur Launch Bundle', description: 'LLC setup with EIN, premium business address for 12 months, logo and full branding kit, business website up to 3 pages and 2 coworking day passes monthly.', price: 1499, billingUnit: 'ONE_TIME', governmentNotice: LLC_NOTICE, sortOrder: 5},
+      /* Sold from the /m/founders*.html landing pages. Annual packages that renew each year. */
+      {slug: 'founders-package', name: 'Founders Package', description: 'LLC formation, one year of registered agent service, business address with mailbox, a 5-page website with hosting and management, meeting room and coworking hours, and member discounts. $41.42 per month, billed annually.', price: 497, billingUnit: 'PER_YEAR', governmentNotice: FOUNDERS_NOTICE, sortOrder: 6},
+      {slug: 'founders-pro-package', name: 'Founders Pro Package', description: 'Everything in the Founders Package plus a done-for-you CRM with pipelines, lead capture, automated email and SMS follow-up, appointment scheduling and reporting. $325 per month, billed annually.', price: 3900, billingUnit: 'PER_YEAR', governmentNotice: FOUNDERS_NOTICE, sortOrder: 7},
     ],
   },
   {
@@ -329,10 +365,14 @@ const SERVICES: ServiceSeed[] = [
     iconName: 'PartyPopper',
     flowType: 'STANDARD',
     displayOrder: 10,
-    metadata: {adminReview: 'Tier names and rates are pending administrator configuration. Add packages in Admin → Packages & Pricing.'},
     amenities: ['modular-seating', 'catering-kitchen', 'presentation-screen', 'high-speed-wifi'],
     addOns: [{slug: 'addon-photo-photographer'}, {slug: 'addon-photo-videographer'}],
-    plans: [],
+    /* Non-member rates are charged; member rates are recorded for staff. Published on /events/ (workspacejunction.com, checked Nov 2026). */
+    plans: [
+      {slug: 'events-community-package', name: 'Community Package', description: 'Event space for small meetups, workshops and community gatherings, up to 2 hours.', price: 180, billingUnit: 'PER_BOOKING', durationMinutes: 120, capacityText: 'Up to 30 guests', capacityMax: 30, rulesNotice: 'Members pay $120. The member rate is applied by our team after membership is verified.', metadata: {memberUnitAmountCents: 12000}, sortOrder: 1},
+      {slug: 'events-professional-package', name: 'Professional Package', description: 'Structured workshops, training sessions and networking events, up to 4 hours.', price: 400, billingUnit: 'PER_BOOKING', durationMinutes: 240, capacityText: 'Up to 50 guests', capacityMax: 50, rulesNotice: 'Members pay $280. The member rate is applied by our team after membership is verified.', metadata: {memberUnitAmountCents: 28000}, featured: true, sortOrder: 2},
+      {slug: 'events-premium-package', name: 'Premium Event Package', description: 'Full events, panels and special gatherings with dedicated event support, up to 8 hours.', price: 720, billingUnit: 'PER_BOOKING', durationMinutes: 480, capacityText: 'Up to 50 guests', capacityMax: 50, rulesNotice: 'Members pay $520. The member rate is applied by our team after membership is verified.', metadata: {memberUnitAmountCents: 52000}, sortOrder: 3},
+    ],
   },
   {
     slug: 'workshops',
@@ -341,9 +381,19 @@ const SERVICES: ServiceSeed[] = [
     iconName: 'Wrench',
     flowType: 'STANDARD',
     displayOrder: 11,
-    metadata: {adminReview: 'Tier names and rates are pending administrator configuration. Add packages in Admin → Packages & Pricing.'},
     amenities: ['presentation-screen', 'whiteboard', 'modular-seating', 'complimentary-refreshments'],
-    plans: [],
+    /* Hourly, half-day and full-day rates published on /workshops/ (workspacejunction.com, checked Nov 2026). */
+    plans: [
+      {slug: 'workshops-community-hourly', name: 'Community Workshop — Hourly', description: 'Small classes and study groups, booked by the hour.', price: 75, billingUnit: 'PER_HOUR', maxQuantity: 3, durationMinutes: 60, capacityText: '10–15 people', capacityMin: 10, capacityMax: 15, sortOrder: 1},
+      {slug: 'workshops-community-half-day', name: 'Community Workshop — Half Day', description: 'Small classes and study groups, four hours.', price: 250, billingUnit: 'PER_BOOKING', durationMinutes: 240, capacityText: '10–15 people', capacityMin: 10, capacityMax: 15, sortOrder: 2},
+      {slug: 'workshops-community-full-day', name: 'Community Workshop — Full Day', description: 'Small classes and study groups, full day.', price: 450, billingUnit: 'PER_BOOKING', durationMinutes: 480, capacityText: '10–15 people', capacityMin: 10, capacityMax: 15, sortOrder: 3},
+      {slug: 'workshops-professional-hourly', name: 'Professional Workshop — Hourly', description: 'Structured training sessions, booked by the hour.', price: 125, billingUnit: 'PER_HOUR', maxQuantity: 3, durationMinutes: 60, capacityText: '20–25 people', capacityMin: 20, capacityMax: 25, sortOrder: 4},
+      {slug: 'workshops-professional-half-day', name: 'Professional Workshop — Half Day', description: 'Structured training sessions, four hours.', price: 450, billingUnit: 'PER_BOOKING', durationMinutes: 240, capacityText: '20–25 people', capacityMin: 20, capacityMax: 25, sortOrder: 5},
+      {slug: 'workshops-professional-full-day', name: 'Professional Workshop — Full Day', description: 'Structured training sessions, full day.', price: 800, billingUnit: 'PER_BOOKING', durationMinutes: 480, capacityText: '20–25 people', capacityMin: 20, capacityMax: 25, sortOrder: 6},
+      {slug: 'workshops-signature-hourly', name: 'Signature Workshop Event — Hourly', description: 'Larger events and premium experiences, booked by the hour.', price: 200, billingUnit: 'PER_HOUR', maxQuantity: 3, durationMinutes: 60, capacityText: '30–40 people', capacityMin: 30, capacityMax: 40, sortOrder: 7},
+      {slug: 'workshops-signature-half-day', name: 'Signature Workshop Event — Half Day', description: 'Larger events and premium experiences, four hours.', price: 700, billingUnit: 'PER_BOOKING', durationMinutes: 240, capacityText: '30–40 people', capacityMin: 30, capacityMax: 40, sortOrder: 8},
+      {slug: 'workshops-signature-full-day', name: 'Signature Workshop Event — Full Day', description: 'Larger events and premium experiences, full day.', price: 1200, billingUnit: 'PER_BOOKING', durationMinutes: 480, capacityText: '30–40 people', capacityMin: 30, capacityMax: 40, sortOrder: 9},
+    ],
   },
   {
     slug: 'webinars',
@@ -352,10 +402,16 @@ const SERVICES: ServiceSeed[] = [
     iconName: 'Radio',
     flowType: 'STANDARD',
     displayOrder: 12,
-    metadata: {adminReview: 'Tier names and rates are pending administrator configuration. Add packages in Admin → Packages & Pricing.'},
     amenities: ['multi-angle-cameras', 'studio-lighting', 'teleprompter', 'live-multistream'],
     addOns: [{slug: 'addon-podcast-full-video-editing'}, {slug: 'addon-podcast-social-clips'}],
-    plans: [],
+    /* Half-day and full-day rates published on /webinars/ (workspacejunction.com, checked Nov 2026). */
+    plans: [
+      {slug: 'webinars-virtual-half-day', name: 'Virtual Webinar (Remote Only) — Half Day', description: 'Webinar hosting setup with Zoom or StreamYard support for online sessions, four hours.', price: 249, billingUnit: 'PER_BOOKING', durationMinutes: 240, sortOrder: 1},
+      {slug: 'webinars-hybrid-half-day', name: 'Hybrid Webinar (In-Person + Online) — Half Day', description: 'Live audience plus remote attendees with livestream, camera and audio setup, four hours.', price: 499, billingUnit: 'PER_BOOKING', durationMinutes: 240, featured: true, sortOrder: 2},
+      {slug: 'webinars-hybrid-full-day', name: 'Hybrid Webinar (In-Person + Online) — Full Day', description: 'Live audience plus remote attendees with livestream, camera and audio setup, full day.', price: 899, billingUnit: 'PER_BOOKING', durationMinutes: 480, sortOrder: 3},
+      {slug: 'webinars-studio-half-day', name: 'Studio Webinar Production (Premium) — Half Day', description: 'High-quality recorded or broadcast webinar production, four hours.', price: 799, billingUnit: 'PER_BOOKING', durationMinutes: 240, sortOrder: 4},
+      {slug: 'webinars-studio-full-day', name: 'Studio Webinar Production (Premium) — Full Day', description: 'High-quality recorded or broadcast webinar production, full day.', price: 1400, billingUnit: 'PER_BOOKING', durationMinutes: 480, sortOrder: 5},
+    ],
   },
   {
     slug: 'memberships',
@@ -368,7 +424,6 @@ const SERVICES: ServiceSeed[] = [
     displayOrder: 13,
     metadata: {
       requiresCircle: true,
-      adminReview: 'Monthly and yearly tier rates are pending administrator configuration.',
       circles: [
         'Community Circles',
         'Founder Circle',
@@ -381,7 +436,15 @@ const SERVICES: ServiceSeed[] = [
       ],
     },
     amenities: ['partner-discounts', 'builders-library', 'complimentary-refreshments'],
-    plans: [],
+    /* Monthly and yearly rates published on /community-network/ (workspacejunction.com, checked Nov 2026). */
+    plans: [
+      {slug: 'membership-community-monthly', name: 'Community Membership', description: 'Join one Circle, networking event invitations, community discussions and discounted workshops.', price: 29, billingUnit: 'PER_MONTH', sortOrder: 1},
+      {slug: 'membership-community-yearly', name: 'Community Membership — Yearly', description: 'Join one Circle, networking event invitations, community discussions and discounted workshops. Billed yearly.', price: 299, billingUnit: 'PER_YEAR', sortOrder: 2},
+      {slug: 'membership-professional-monthly', name: 'Professional Membership', description: 'Everything in Community plus one coworking day pass per month, discounted meeting rooms and priority event registration.', price: 79, billingUnit: 'PER_MONTH', includedCredits: [{kind: 'COWORKING_DAY', amount: 1, resetInterval: 'MONTH'}], featured: true, sortOrder: 3},
+      {slug: 'membership-professional-yearly', name: 'Professional Membership — Yearly', description: 'Everything in Community plus one coworking day pass per month, discounted meeting rooms and priority event registration. Billed yearly.', price: 799, billingUnit: 'PER_YEAR', includedCredits: [{kind: 'COWORKING_DAY', amount: 1, resetInterval: 'MONTH'}], sortOrder: 4},
+      {slug: 'membership-founder-pro-monthly', name: 'Founder Pro Membership', description: 'Everything in Professional plus mastermind group access, member spotlight promotion and partner introductions.', price: 149, billingUnit: 'PER_MONTH', adminFlagNote: 'The live site promises "multiple coworking day passes per month" without a number. Set the included day passes before promoting this package.', sortOrder: 5},
+      {slug: 'membership-founder-pro-yearly', name: 'Founder Pro Membership — Yearly', description: 'Everything in Professional plus mastermind group access, member spotlight promotion and partner introductions. Billed yearly.', price: 1499, billingUnit: 'PER_YEAR', adminFlagNote: 'The live site promises "multiple coworking day passes per month" without a number. Set the included day passes before promoting this package.', sortOrder: 6},
+    ],
   },
 ];
 
@@ -458,7 +521,7 @@ async function main() {
     }
 
     for (const plan of service.plans) {
-      const previous = plan.includedCredits ? await prisma.catalogPlan.findUnique({where: {slug: plan.slug}, select: {metadata: true}}) : null;
+      const previous = plan.includedCredits || plan.metadata ? await prisma.catalogPlan.findUnique({where: {slug: plan.slug}, select: {metadata: true}}) : null;
       const previousMetadata = previous?.metadata && typeof previous.metadata === 'object' && !Array.isArray(previous.metadata) ? previous.metadata : {};
       const planData = {
         serviceId: row.id,
@@ -478,7 +541,7 @@ async function main() {
         rulesNotice: plan.rulesNotice ?? null,
         governmentNotice: plan.governmentNotice ?? null,
         adminFlagNote: plan.adminFlagNote ?? null,
-        ...(plan.includedCredits ? {metadata: {...previousMetadata, includedCredits: plan.includedCredits} as never} : {}),
+        ...(plan.includedCredits || plan.metadata ? {metadata: {...previousMetadata, ...(plan.metadata ?? {}), ...(plan.includedCredits ? {includedCredits: plan.includedCredits} : {})} as never} : {}),
         active: true,
         archivedAt: null,
       };
@@ -501,7 +564,7 @@ async function main() {
   }
 
   console.log('Done. ' + SERVICES.length + ' services, ' + planCount + ' packages, ' + addOnIds.size + ' add-ons, ' + amenityIds.size + ' amenities.');
-  console.log('Flagged for admin review: podcast-premium-starter capacity, addon-llc-registered-agent rate, and tiers for events / workshops / webinars / memberships.');
+  console.log('Flagged for admin review: included day passes for the Founder Pro memberships.');
 }
 
 main()

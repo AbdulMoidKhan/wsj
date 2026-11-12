@@ -9,10 +9,9 @@ import {HeroSlides, StudioTabs} from '@/components/home-live';
 import {fetchHomepageUseCases} from '@/lib/use-cases';
 import {fetchCatalogService} from '@/lib/catalog';
 import {TestimonialsSection} from '@/components/testimonials-section';
-import {SectionMotif} from '@/components/decorative-visual';
 import homeFaqs from '@/lib/home-faqs.json';
 
-/* Homepage content mirrors the live workspacejunction.com homepage (captured 28 Oct 2026). */
+/* Homepage layout follows Figma frame 6178:1012; catalog data and booking stay live. */
 export const metadata = {alternates: {canonical: '/'}};
 
 const defaultStats = [
@@ -60,91 +59,92 @@ export default async function Home() {
   })).filter(s => s.img);
   const services = cmsServices.length > 0 ? cmsServices : defaultServices;
 
+  const referenceImages: Record<string, string> = {
+    'creative-designers-agencies': '/media/figma-home/creative.webp',
+    'e-commerce-online-business': '/media/figma-home/commerce.webp',
+    'independent-professionals': '/media/figma-home/independent.webp',
+    'remote-teams-collaborators': '/media/dfcf491571-image.png',
+    'creators-storytellers': '/media/figma-home/creators.webp',
+    'founders-growing-businesses': '/media/figma-home/meeting.webp',
+  };
   const stats: Array<{value: string; label: string}> = Array.isArray(statsItem?.metadata?.items)
     ? (statsItem.metadata.items as Array<{value: string; label: string}>)
     : defaultStats;
 
   return <PublicLayout>
-    <main id="main" className="home-page hp-home lv-home">
+    <main id="main" className="home-page hp-home lv-home figma-home">
       <section className="lv-hero" aria-labelledby="hp-title"><HeroSlides/></section>
 
-      <section className="hp-section lv-intro wj-motif-section" aria-labelledby="lv-intro-title"><SectionMotif variant="network"/><div className="hp-shell lv-intro-grid">
-        <div>
-          <p className="eyebrow hp-eyebrow" data-anim="fade-up">MORE THAN A WORKSPACE</p>
-          <h2 id="lv-intro-title" className="hp-heading" data-anim="split-lines">At The Junction, we go beyond providing workspaces</h2>
-          <p className="lv-lead" data-anim="fade-up" data-anim-delay="0.15">We create flexible environments that adapt to the way you work. Thoughtfully designed to inspire creativity and elevate productivity, our space encourage meaningful collaboration and turns ideas into real impact.</p>
-        </div>
-        <div className="lv-think" data-parallax="0.08" data-lag="0.1">
-          <span className="lv-think-word" data-anim="fade-up">Think</span>
-          <Image src="/media/8acf93fa71-workspace-logo.png" alt="Workspace Junction emblem: Collaborate boldly, grow endlessly" width={302} height={313} className="lv-emblem"/>
-          <span className="lv-think-word" data-anim="fade-up" data-anim-delay="0.1">Build</span>
-        </div>
+      <section className="hp-section lv-intro" aria-labelledby="lv-intro-title"><div className="hp-shell"><div className="lv-intro-grid">
+        <div><p className="eyebrow hp-eyebrow">MORE THAN A WORKSPACE</p><h2 id="lv-intro-title" className="hp-heading">At The Junction, we go beyond providing workspaces</h2></div>
+        <div><p className="lv-lead">We create flexible environments that adapt to the way you work. Thoughtfully designed to inspire creativity and elevate productivity, our space encourage meaningful collaboration and turns ideas into real impact.</p><p className="lv-intro-signoff">THINK / BUILD / GROW</p></div>
+      </div>
+      <dl className="lv-stats">{stats.map(s => <div key={s.label}><dt>{s.label}</dt><dd>{s.value}</dd></div>)}</dl>
       </div></section>
 
-      <section className="hp-section lv-events wj-motif-section" aria-labelledby="lv-events-title"><SectionMotif variant="route"/><div className="hp-shell">
-        <dl className="lv-stats" data-anim-stagger-group="true" data-anim-stagger="0.08">{stats.map(s => <div key={s.label} data-anim="counter"><dt>{s.label}</dt><dd>{s.value}</dd></div>)}</dl>
+      <section className="hp-section lv-events wj-motif-section" aria-labelledby="lv-events-title"><div className="hp-shell">
         <div className="lv-split">
-          <figure className="lv-photo" data-anim="mask-reveal" data-lag="0.08" data-skew="true"><Image src="/media/2b124bae06-Rectangle-5527.png" alt="A workshop audience seated in the Workspace Junction event space" fill sizes="(max-width: 900px) calc(100vw - 40px), 560px" className="hp-photo"/></figure>
-          <div className="lv-copy" data-anim="fade-up">
+          <figure className="lv-photo"><Image src="/media/2b124bae06-Rectangle-5527.png" alt="A workshop audience seated in the Workspace Junction event space" fill sizes="(max-width: 900px) calc(100vw - 40px), 560px" className="hp-photo"/></figure>
+          <div className="lv-copy">
             <p className="eyebrow hp-eyebrow">EVENTS &amp; WORKSHOPS</p>
-            <h2 id="lv-events-title" className="hp-heading" data-anim="split-lines">Event &amp; Workshop Space Rental in Oakbrook Terrace / Lombard / Villa Park</h2>
+            <h2 id="lv-events-title" className="hp-heading">Event &amp; Workshop Space Rental in Oakbrook Terrace / Lombard / Villa Park</h2>
             <p>Host corporate events, workshops, seminars, networking gatherings, and training sessions in a modern, presentation-ready venue accommodating up to 50 guests.</p>
             <p>With access to breakout boardrooms, kitchen facilities for catering, and a professional environment designed for productive engagement, Workspace Junction makes hosting seamless and elevated.</p>
-            <div className="hp-actions"><BookingButton className="btn btn-primary lv-pill" service="Event space" data-magnetic="0.25">Host Event <ArrowUpRight size={18}/></BookingButton><a href={routeFor('events', '/events/')} className="text-link hp-link">Reserve for Event <ArrowUpRight size={18}/></a></div>
+            <div className="hp-actions"><BookingButton className="btn btn-primary lv-pill" service="Event space">Host Event <ArrowUpRight size={18}/></BookingButton><a href={routeFor('events', '/events/')} className="text-link hp-link">Reserve for Event <ArrowUpRight size={18}/></a></div>
           </div>
         </div>
       </div></section>
 
-      {useCases.length > 0 && <section className="hp-section lv-services lv-usecases wj-motif-section" aria-labelledby="lv-usecases-title"><SectionMotif variant="network"/><div className="hp-shell">
+      {useCases.length > 0 && <section className="hp-section lv-services lv-usecases wj-motif-section" aria-labelledby="lv-usecases-title"><div className="hp-shell">
         <div className="hp-section-head">
           <div>
-            <p className="eyebrow hp-eyebrow" data-anim="fade-up">MADE FOR THE WAY YOU WORK</p>
-            <h2 id="lv-usecases-title" className="hp-heading" data-anim="split-lines">One space. Many possibilities.</h2>
+            <p className="eyebrow hp-eyebrow">MADE FOR THE WAY YOU WORK</p>
+            <h2 id="lv-usecases-title" className="hp-heading">One space. Many possibilities.</h2>
           </div>
-          <div className="lv-services-head-side" data-anim="fade-up" data-anim-delay="0.1">
+          <div className="lv-services-head-side">
             <p className="lv-services-lead">Whether you are building a business, making something new, or bringing a team together, find the space and support that fit your next move.</p>
             <Link href="/use-cases/" className="text-link hp-link">Explore all use cases <ArrowUpRight size={18}/></Link>
           </div>
         </div>
-        <div className="lv-service-grid" data-anim-stagger-group="true" data-anim-stagger="0.06">{useCases.map(item => <a key={item.id} href={item.href} className="lv-service has-text" data-tilt="5">
-          <span className={'lv-service-img' + (item.image ? '' : ' lv-service-img-empty')}>{item.image && <Image src={item.image} alt={item.alt} fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 400px" className="hp-photo"/>}</span>
+        <div className="lv-service-grid">{useCases.map(item => <a key={item.id} href={item.href} className="lv-service has-text">
+          <span className={'lv-service-img' + (item.image ? '' : ' lv-service-img-empty')}>{item.image && <Image src={referenceImages[item.slug] || item.image} alt={item.alt} fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 400px" className="hp-photo"/>}</span>
           <span className="lv-service-body"><span className="lv-service-title">{item.title}</span>{item.description && <span className="lv-service-text">{item.description}</span>}<ArrowUpRight size={18} aria-hidden="true"/></span>
         </a>)}</div>
       </div></section>}
 
-      <div className="hp-pricing lv-pricing"><Pricing eyebrow="MEMBERSHIPS" title="Workspace on Your Terms" intro="Why adjust your workday to an office when your workspace can adjust to you? Workspace Junction offers flexible, on-demand shared and private workspaces — available when you need them, with no long-term commitments. An environment where entrepreneurs stay focused and move faster."/></div>
+      <div id="home-pricing" className="hp-pricing lv-pricing"><Pricing eyebrow="MEMBERSHIPS" title="Workspace on Your Terms" intro="Why adjust your workday to an office when your workspace can adjust to you? Workspace Junction offers flexible, on-demand shared and private workspaces — available when you need them, with no long-term commitments. An environment where entrepreneurs stay focused and move faster."/></div>
 
-      <section className="hp-section lv-meeting wj-motif-section" aria-labelledby="lv-meeting-title"><SectionMotif variant="meeting"/><div className="hp-shell lv-split lv-split-rev">
-        <div className="lv-copy" data-anim="fade-up">
+      <section className="hp-section lv-meeting wj-motif-section" aria-labelledby="lv-meeting-title"><div className="hp-shell lv-split lv-split-rev">
+        <div className="lv-copy">
           <p className="eyebrow hp-eyebrow">MEETING ROOMS</p>
-          <h2 id="lv-meeting-title" className="hp-heading" data-anim="split-lines">Meeting &amp; Conference Room Rental in Oakbrook / Lombard / Villa Park</h2>
+          <h2 id="lv-meeting-title" className="hp-heading">Meeting &amp; Conference Room Rental in Oakbrook / Lombard / Villa Park</h2>
           <p>Fully furnished huddle rooms, private boardrooms, and modern conference suites designed for serious, distraction-free work. Ideal for strategy sessions, client meetings, team collaborations, and private gatherings — all within a professional, executive setting.</p>
           <p>Available by the hour or day, with flexible booking and no long-term commitments. When your work demands focus, the space is ready.</p>
-          <div className="hp-actions"><BookingButton className="btn btn-primary lv-pill" service="Meeting rooms" data-magnetic="0.25">Reserve Your Room <ArrowUpRight size={18}/></BookingButton><a href={routeFor('meeting-rooms', '/meeting-rooms/')} className="text-link hp-link">Details <ArrowUpRight size={18}/></a></div>
+          <div className="hp-actions"><BookingButton className="btn btn-primary lv-pill" service="Meeting rooms">Reserve Your Room <ArrowUpRight size={18}/></BookingButton><a href={routeFor('meeting-rooms', '/meeting-rooms/')} className="text-link hp-link">Details <ArrowUpRight size={18}/></a></div>
         </div>
-        <figure className="lv-photo lv-photo-free" data-parallax="0.08" data-lag="0.1" data-anim="mask-reveal" data-skew="true"><Image src="/media/17c10c9bf6-Group-1597885688.png" alt="A client presentation in a conference room, with a boardroom video call inset" fill sizes="(max-width: 900px) calc(100vw - 40px), 560px" className="lv-contain"/></figure>
+        <div className="lv-meeting-collage"><figure className="lv-photo"><Image src="/media/figma-home/boardroom.webp" alt="Private boardroom with a large conference table and wall display" fill sizes="(max-width: 767px) 100vw, 592px" className="hp-photo"/></figure><figure className="lv-photo"><Image src="/media/dfcf491571-image.png" alt="Team meeting at Workspace Junction" fill sizes="(max-width: 767px) 50vw, 288px" className="hp-photo"/></figure><figure className="lv-photo"><Image src="/media/figma-home/meeting.webp" alt="Private meeting room" fill sizes="(max-width: 767px) 50vw, 288px" className="hp-photo"/></figure></div>
       </div></section>
 
-      <section className="hp-section lv-podcast amb-local wj-motif-section" aria-labelledby="lv-podcast-title"><SectionMotif variant="studio"/><div className="hp-shell">
-        <div className="lv-podcast-head" data-anim="fade-up">
+      <section className="hp-section lv-podcast amb-local wj-motif-section" aria-labelledby="lv-podcast-title"><div className="hp-shell">
+        <div className="lv-podcast-head">
           <Image src="/media/chicagoland-podcast-studio-white.png" alt="Chicagoland Podcast Studio" width={260} height={74} className="lv-podcast-logo"/>
-          <div><p className="eyebrow hp-eyebrow">CREATE &amp; BROADCAST</p><h2 id="lv-podcast-title" className="hp-heading" data-anim="split-lines">Chicagoland Podcast Studio</h2></div>
+          <div><p className="eyebrow hp-eyebrow">CREATE &amp; BROADCAST</p><h2 id="lv-podcast-title" className="hp-heading">Chicagoland Podcast Studio</h2></div>
           <a href="https://chicagolandpodcaststudio.com" target="_blank" rel="noreferrer" className="text-link hp-link">Visit Site <ArrowUpRight size={18}/></a>
         </div>
         <div className="lv-podcast-photos">
-          <figure className="lv-photo" data-parallax="0.06" data-skew="true"><Image src="/media/d978fc3d1e-abd1.jpg" alt="Three people recording a podcast at the studio desk" fill sizes="(max-width: 900px) calc(100vw - 40px), 760px" className="hp-photo"/></figure>
-          <figure className="lv-photo" data-parallax="0.09" data-skew="true"><Image src="/media/80ce3cafcc-ezgif-553327e8e003b6e3.png" alt="An interview podcast recorded at a round table" fill sizes="(max-width: 900px) calc(100vw - 40px), 400px" className="hp-photo"/></figure>
+          <figure className="lv-photo"><Image src="/media/figma-home/podcast-studio-wide.webp" alt="Four people recording a podcast at the studio desk" fill sizes="(max-width: 900px) calc(100vw - 40px), 808px" className="hp-photo"/></figure>
+          <figure className="lv-photo"><Image src="/media/figma-home/podcast-studio-round.webp" alt="An interview podcast recorded at a round table" fill sizes="(max-width: 900px) calc(100vw - 40px), 416px" className="hp-photo"/></figure>
         </div>
         <StudioTabs rates={studioRates}/>
       </div></section>
 
-      <section className="hp-section lv-services wj-motif-section" aria-labelledby="lv-services-title"><SectionMotif variant="route"/><div className="hp-shell">
+      <section className="hp-section lv-services wj-motif-section" aria-labelledby="lv-services-title"><div className="hp-shell">
         <div className="hp-section-head">
           <div>
-            <p className="eyebrow hp-eyebrow" data-anim="fade-up">BEYOND THE DESK</p>
-            <h2 id="lv-services-title" className="hp-heading" data-anim="split-lines">When working from home isn’t working anymore, we’ve got you covered</h2>
+            <p className="eyebrow hp-eyebrow">BEYOND THE DESK</p>
+            <h2 id="lv-services-title" className="hp-heading">When working from home isn’t working anymore, we’ve got you covered</h2>
           </div>
-          <div className="lv-services-head-side" data-anim="fade-up" data-anim-delay="0.1">
+          <div className="lv-services-head-side">
             <p className="lv-services-lead">
               Break out of kitchen-table fatigue with a complete workspace and business ecosystem in Oakbrook Terrace. From ergonomic sit-stand desks and wellness rooms to turnkey corporate filing and digital services.
             </p>
@@ -155,7 +155,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-        <div className="lv-service-grid" data-anim-stagger-group="true" data-anim-stagger="0.04">{services.map(s => <a key={s.title} href={s.href} className={'lv-service' + (s.text ? ' has-text' : '')} data-tilt="5">
+        <div className="lv-service-grid">{services.map((s, index) => <a key={s.title} href={s.href} className={'lv-service' + (s.text ? ' has-text' : '') + (index > 3 ? ' lv-service-compact' : '')}>
           <span className="lv-service-img"><Image src={s.img} alt={s.title} fill sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 400px" className="hp-photo"/></span>
           <span className="lv-service-body"><span className="lv-service-title">{s.title}</span>{s.text && <span className="lv-service-text">{s.text}</span>}<ArrowUpRight size={18} aria-hidden="true"/></span>
         </a>)}</div>
@@ -163,15 +163,15 @@ export default async function Home() {
 
       <TestimonialsSection/>
 
-      <section className="hp-section hp-faq lv-faq wj-motif-section" aria-labelledby="hp-faq-title"><SectionMotif variant="mail"/><div className="hp-shell hp-faq-grid">
-        <div className="lv-faq-side" data-anim="fade-up">
+      <section className="hp-section hp-faq lv-faq wj-motif-section" aria-labelledby="hp-faq-title"><div className="hp-shell hp-faq-grid">
+        <div className="lv-faq-side">
           <p className="eyebrow hp-eyebrow">FAQ &amp; CONTACT</p>
-          <h2 id="hp-faq-title" className="hp-heading" data-anim="split-lines">Got questions? We’ve got you covered!</h2>
+          <h2 id="hp-faq-title" className="hp-heading">Got questions? We’ve got you covered!</h2>
           <p>From memberships to meeting rooms — find quick answers to all your coworking queries right here. No confusion, just clarity.</p>
-          <figure className="lv-photo lv-faq-photo" data-anim="mask-reveal" data-lag="0.08"><Image src="/media/dfcf491571-image.png" alt="Members working together at a table beneath the Workspace Junction sign" fill sizes="(max-width: 900px) calc(100vw - 40px), 420px" className="hp-photo"/></figure>
           <p>Find answers to common questions or get in touch with us for more information!</p>
-          <div className="hp-actions"><a href={routeFor('contact', '/contact-us/')} className="btn btn-primary lv-pill" data-magnetic="0.25">Contact Us <ArrowUpRight size={18}/></a></div>
+          <div className="hp-actions"><a href={routeFor('contact', '/contact-us/')} className="btn btn-primary lv-pill">Contact Us <ArrowUpRight size={18}/></a></div>
         </div>
+        <figure className="lv-photo lv-faq-photo"><Image src="/media/dfcf491571-image.png" alt="Members working together at a table beneath the Workspace Junction sign" fill sizes="(max-width: 900px) calc(100vw - 40px), 420px" className="hp-photo"/></figure>
         <div className="hp-faq-list">{faqs.map(({q, a}) => <details key={q}><summary>{q}<Plus size={19}/></summary><p>{a}</p></details>)}</div>
       </div></section>
     </main>

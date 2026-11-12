@@ -1,0 +1,139 @@
+/* Contact page, built from the Figma frame "REDESIGN / Contact Us" (node 6157:2031).
+   Wrapped in the shared layer so its rules outrank the legacy page sheets, and scoped to
+   #main.figma-contact so no other route is affected. */
+@layer wj-consistency {
+html body .wj-platform #main.figma-contact {
+  --fc-cream:#f8f7f2; --fc-sage:#ebeee6; --fc-green:#103624; --fc-amber:#d99024;
+  --fc-muted:#687a70; --fc-line:#dde2d9;
+  background:#fff!important;color:var(--fc-green)!important;
+  font-family:var(--font-sans),Arial,sans-serif!important;
+
+  & :is(.wj-section-motif,.amb-shape,.amb-glow) {display:none!important}
+  & [data-anim], & .split-line {opacity:1!important;transform:none!important}
+  & .fc-shell {width:calc(100% - 64px)!important;max-width:1248px!important;margin-inline:auto!important}
+  & p {font-size:16px!important;line-height:1.55!important;color:var(--fc-muted)!important;margin:0!important}
+
+  & .fc-eyebrow {font:600 11px/1.5 var(--font-sans),Arial,sans-serif!important;letter-spacing:.15em!important;text-transform:uppercase!important;color:var(--fc-green)!important;margin:0 0 18px!important}
+  & .fc-eyebrow::before, & .fc-eyebrow::after {display:none!important;content:none!important}
+  & .fc-eyebrow-amber {color:#e0a33c!important}
+  & .fc-display {font-family:var(--font-display),Georgia,serif!important;font-weight:400!important;font-size:64px!important;line-height:1.2!important;letter-spacing:-.02em!important;color:#fff!important;margin:0!important}
+  & .fc-display-ink {color:var(--fc-green)!important;font-size:46px!important;line-height:1.18!important}
+  & .fc-heading {font-family:var(--font-display),Georgia,serif!important;font-weight:400!important;font-size:42px!important;line-height:1.15!important;letter-spacing:-.02em!important;color:var(--fc-green)!important;margin:0!important}
+  & .fc-heading-lg {font-size:48px!important}
+  & .fc-lead {font-size:16px!important;line-height:1.55!important;color:var(--fc-muted)!important}
+
+  & .fc-chip {display:grid!important;place-items:center!important;width:52px!important;height:52px!important;border-radius:10px!important;background:var(--fc-green)!important;color:var(--fc-amber)!important;flex:none!important}
+  & .fc-chip-light {position:absolute!important;top:28px;right:28px;width:44px!important;height:44px!important;background:#f2f1ea!important;color:var(--fc-green)!important}
+
+  & .fc-link {display:inline-flex!important;align-items:center!important;gap:8px!important;font:600 14px/1.4 var(--font-sans),Arial,sans-serif!important;color:var(--fc-green)!important;text-decoration:none!important;background:none!important;border:0!important;padding:0!important;min-height:0!important}
+  & .fc-btn {display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;min-height:50px!important;padding:14px 26px!important;border-radius:7px!important;background:var(--fc-amber)!important;color:var(--fc-green)!important;font:600 14px/1.4 var(--font-sans),Arial,sans-serif!important;border:0!important;box-shadow:none!important;text-decoration:none!important;transform:none!important}
+  & .fc-btn::before, & .fc-btn::after {display:none!important}
+  & .fc-btn-ghost {background:#fff!important;border:1px solid var(--fc-line)!important;color:var(--fc-green)!important}
+
+  /* Hero */
+  & .fc-hero {background:var(--fc-green)!important;padding:40px 0 0!important}
+  & .fc-crumbs {display:flex!important;gap:10px!important;align-items:center!important;font-size:13px!important;color:#c3d2c6!important;margin-bottom:34px!important}
+  & .fc-crumbs a {color:#c3d2c6!important;text-decoration:none!important}
+  & .fc-hero-grid {display:grid!important;grid-template-columns:1fr 520px!important;gap:64px!important;align-items:start!important;padding-bottom:52px!important;border-bottom:1px solid rgba(255,255,255,.16)!important}
+  & .fc-hero-side {display:grid!important;gap:22px!important;padding-top:10px!important}
+  & .fc-hero-side p {color:#d6e0d6!important}
+  & .fc-hero + * {margin-top:0!important}
+  & .fc-hero .fc-shell {padding-bottom:40px!important}
+
+  /* Contact cards */
+  & .fc-details {background:var(--fc-sage)!important;padding:72px 0!important}
+  & .fc-section-head {display:grid!important;grid-template-columns:1fr 1fr!important;gap:48px!important;align-items:end!important;margin-bottom:36px!important}
+  & .fc-cards {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:24px!important}
+  & .fc-card {background:#fff!important;border:1px solid #e3e7dd!important;border-radius:12px!important;padding:28px!important;display:grid!important;gap:14px!important;align-content:start!important;box-shadow:none!important}
+  & .fc-card h3 {font-family:var(--font-display),Georgia,serif!important;font-weight:400!important;font-size:26px!important;line-height:1.2!important;color:var(--fc-green)!important;margin:10px 0 0!important}
+  & .fc-card .fc-link {margin-top:6px!important}
+
+  /* Message + gallery */
+  & .fc-message {background:var(--fc-cream)!important;padding:72px 0!important}
+  & .fc-message-grid {display:grid!important;grid-template-columns:480px minmax(0,1fr)!important;gap:72px!important;align-items:start!important}
+  & .fc-gallery {display:grid!important;gap:20px!important}
+  & .fc-photo {position:relative!important;margin:0!important;border-radius:12px!important;overflow:hidden!important;aspect-ratio:480/328!important;background:#e4e6df!important}
+  & .fc-cover {object-fit:cover!important;width:100%!important;height:100%!important}
+  & .fc-gallery-note {display:flex!important;align-items:center!important;gap:12px!important;font:600 11px/1.5 var(--font-sans),Arial,sans-serif!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:var(--fc-green)!important}
+  & .fc-gallery-note .fc-link {letter-spacing:0!important;text-transform:none!important;font-size:14px!important}
+
+  & .fc-form-card {position:relative!important;background:#fff!important;border:1px solid #e6e8e0!important;border-radius:14px!important;padding:40px!important;box-shadow:none!important}
+  & .fc-form-card .fc-heading {margin:0 0 12px!important}
+  & .fc-form-card .fc-lead {margin:0 0 28px!important}
+
+  /* Shared inquiry form inside the card */
+  & .wj-form {display:grid!important;gap:20px!important;background:none!important;border:0!important;padding:0!important;box-shadow:none!important}
+  & .wj-field {display:grid!important;gap:8px!important}
+  & .wj-field-row {display:grid!important;grid-template-columns:1fr!important;gap:20px!important}
+  & .wj-form label {font:600 13px/1.4 var(--font-sans),Arial,sans-serif!important;color:var(--fc-green)!important;letter-spacing:0!important;text-transform:none!important}
+  & .wj-form :is(input,select,textarea) {width:100%!important;min-height:52px!important;padding:14px 16px!important;border:1px solid #dcdfd6!important;border-radius:8px!important;background:#fff!important;color:var(--fc-green)!important;font:400 15px/1.5 var(--font-sans),Arial,sans-serif!important;box-shadow:none!important}
+  & .wj-form textarea {min-height:120px!important;resize:vertical!important}
+  & .wj-form :is(input,select,textarea):focus-visible {outline:2px solid var(--fc-amber)!important;outline-offset:1px!important}
+  & .wj-consent {display:flex!important;align-items:flex-start!important;gap:12px!important;font:400 14px/1.5 var(--font-sans),Arial,sans-serif!important;color:var(--fc-muted)!important}
+  & .wj-consent input {width:18px!important;height:18px!important;min-height:0!important;padding:0!important;flex:none!important;margin-top:2px!important;accent-color:var(--fc-green)!important}
+  & .wj-form-actions {display:flex!important;gap:12px!important;flex-wrap:wrap!important}
+  & .wj-form .wj-button {display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;min-height:52px!important;padding:14px 28px!important;border-radius:7px!important;background:var(--fc-amber)!important;color:var(--fc-green)!important;border:0!important;font:600 14px/1.4 var(--font-sans),Arial,sans-serif!important;box-shadow:none!important;transform:none!important}
+  & .wj-form .wj-button:disabled {opacity:.7!important}
+  & .wj-small {font-size:13px!important;color:var(--fc-muted)!important}
+  & .wj-error {font-size:13px!important;color:#9a3412!important}
+  & .wj-success {display:grid!important;gap:12px!important;justify-items:start!important;padding:8px 0!important;color:var(--fc-green)!important}
+  & .wj-success h3 {font-family:var(--font-display),Georgia,serif!important;font-weight:400!important;font-size:28px!important;color:var(--fc-green)!important;margin:0!important}
+  & .wj-review dl {display:grid!important;grid-template-columns:160px 1fr!important;gap:8px 16px!important;margin:0!important}
+  & .wj-review dt {font-weight:600!important;color:var(--fc-green)!important}
+  & .wj-review dd {margin:0!important;color:var(--fc-muted)!important}
+
+  /* Place band */
+  & .fc-place {background:#fff!important;padding:72px 0!important}
+  & .fc-place-grid {display:grid!important;grid-template-columns:640px minmax(0,1fr)!important;gap:64px!important;align-items:center!important}
+  & .fc-photo-wide {aspect-ratio:640/348!important}
+  & .fc-place-copy {display:grid!important;gap:22px!important;justify-items:start!important}
+  & .fc-pin {display:inline-flex!important;align-items:center!important;gap:8px!important;font:600 11px/1.5 var(--font-sans),Arial,sans-serif!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:var(--fc-green)!important}
+
+  /* Closing band */
+  & .fc-closing {background:var(--fc-sage)!important;padding:80px 0!important;text-align:center!important}
+  & .fc-closing .fc-eyebrow {margin-bottom:22px!important}
+  & .fc-closing .fc-lead {margin-top:18px!important}
+  & .fc-closing-actions {display:flex!important;justify-content:center!important;gap:14px!important;flex-wrap:wrap!important;margin-top:30px!important}
+}
+
+/* The shared pre-footer band is reused as the closing section of this design. */
+html body:has(#main.figma-contact) .wj-platform .wj-closing {
+  background:#ebeee6!important;color:#103624!important;padding:80px 0!important;border:0!important;
+  & .wj-closing-inner {display:grid!important;justify-items:center!important;text-align:center!important;gap:18px!important;grid-template-columns:1fr!important;width:calc(100% - 64px)!important;max-width:1248px!important;margin-inline:auto!important}
+  & .eyebrow {font:600 11px/1.5 var(--font-sans),Arial,sans-serif!important;letter-spacing:.15em!important;text-transform:uppercase!important;color:#103624!important;margin:0 0 6px!important}
+  & .eyebrow::before, & .eyebrow::after {display:none!important;content:none!important}
+  & h2 {font-family:var(--font-display),Georgia,serif!important;font-weight:400!important;font-size:48px!important;line-height:1.15!important;color:#103624!important;margin:0!important}
+  & h2 br {display:none!important}
+  & p {font-size:16px!important;color:#687a70!important;margin:0!important}
+  & .wj-closing-actions {display:flex!important;flex-direction:row!important;justify-content:center!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;margin-top:12px!important;width:auto!important}
+  & :is(.wj-button,.text-link) {display:inline-flex!important;align-items:center!important;gap:10px!important;min-height:50px!important;padding:14px 26px!important;border-radius:7px!important;font:600 14px/1.4 var(--font-sans),Arial,sans-serif!important;box-shadow:none!important;transform:none!important}
+  & .wj-button {background:#d99024!important;color:#103624!important;border:0!important}
+  & .text-link {background:#fff!important;border:1px solid #dde2d9!important;color:#103624!important}
+  & ::before, & ::after {display:none!important}
+}
+@media(max-width:767px) {html body:has(#main.figma-contact) .wj-platform .wj-closing h2 {font-size:34px!important}}
+
+@media(max-width:1100px) {
+  html body .wj-platform #main.figma-contact {
+    & .fc-hero-grid {grid-template-columns:1fr!important;gap:32px!important}
+    & .fc-display {font-size:52px!important}
+    & .fc-message-grid {grid-template-columns:1fr!important;gap:40px!important}
+    & .fc-place-grid {grid-template-columns:1fr!important;gap:32px!important}
+    & .fc-photo-wide {aspect-ratio:16/9!important}
+  }
+}
+
+@media(max-width:767px) {
+  html body .wj-platform #main.figma-contact {
+    & .fc-shell {width:calc(100% - 40px)!important}
+    & .fc-display {font-size:38px!important}
+    & .fc-display-ink, & .fc-heading {font-size:32px!important}
+    & .fc-heading-lg {font-size:34px!important}
+    & .fc-section-head {grid-template-columns:1fr!important;gap:20px!important}
+    & .fc-cards {grid-template-columns:1fr!important}
+    & .fc-form-card {padding:24px!important}
+    & .fc-chip-light {display:none!important}
+    & :is(.fc-details,.fc-message,.fc-place,.fc-closing) {padding:52px 0!important}
+  }
+}
+}

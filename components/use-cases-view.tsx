@@ -63,7 +63,7 @@ export async function UseCasesView(){
           </div>
         </header>
         <figure className="uc-feature" data-parallax="0.08" data-lag="0.1" data-skew="true">
-          <Image src="/media/af55bc8a2b-image-17-1.png" alt="Flexible shared workspace at Workspace Junction" width={1170} height={406} priority sizes="(max-width: 700px) 100vw, 1200px"/>
+          <Image src="/media/af55bc8a2b-image-17-1.png" alt="Flexible shared workspace at Workspace Junction" width={1170} height={406} preload sizes="(max-width: 700px) 100vw, 1200px"/>
         </figure>
         <section id="explore-cases" className="uc-section" aria-labelledby="uc-title">
           <div className="uc-intro" data-anim="fade-up">
