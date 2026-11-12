@@ -40,7 +40,10 @@
     "profile:office-models": "node scripts/qa/office-model-profile.cjs",
     "test:paint-timeline": "node --test scripts/qa/paint-timeline.test.mjs",
     "test:service-content": "node --import ./backend/node_modules/tsx/dist/loader.mjs --test scripts/qa/service-content.test.ts",
-    "test:redesign-ui": "node --import ./backend/node_modules/tsx/dist/loader.mjs scripts/qa/redesign-ui.ts"
+    "test:redesign-ui": "node --import ./backend/node_modules/tsx/dist/loader.mjs scripts/qa/redesign-ui.ts",
+    "test:plan-hint": "node --import ./backend/node_modules/tsx/dist/loader.mjs --test scripts/qa/plan-hint.test.ts",
+    "test:mission-perf": "node scripts/qa/mission-perf.mjs",
+    "test:mission-responsive": "node scripts/qa/mission-responsive.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^6.0.1",

@@ -298,11 +298,23 @@ export function SceneBackdrop() {
     // Start after the page has painted so the scene never competes with LCP.
     const w = window as Window & {requestIdleCallback?: (cb: () => void, o?: {timeout: number}) => number; cancelIdleCallback?: (id: number) => void};
     const kick = () => {if (!disposed) start().catch(() => {/* CSS ambient layer remains */});};
-    const maybeStart = () => {
-      if (started || disposed || document.documentElement.dataset.sceneOff !== undefined) return;
+    // Decoration never competes with loading: build the world after the first user interaction
+    // (or a quiet 7s), then in an idle period. Real users see it fade in as they start reading.
+    const INTERACTIONS = ['pointermove', 'pointerdown', 'keydown', 'wheel', 'scroll'] as const;
+    let armed = false;
+    const disarm = () => {INTERACTIONS.forEach(type => window.removeEventListener(type, onFirstInteraction)); window.clearTimeout(timer);};
+    function onFirstInteraction() {
+      disarm();
+      if (disposed || started || document.documentElement.dataset.sceneOff !== undefined) {armed = false; return;}
       started = true;
-      idle = w.requestIdleCallback?.(kick, {timeout: 2500});
-      if (idle === undefined) timer = window.setTimeout(kick, 1200);
+      idle = w.requestIdleCallback?.(kick, {timeout: 2000});
+      if (idle === undefined) timer = window.setTimeout(kick, 300);
+    }
+    const maybeStart = () => {
+      if (started || armed || disposed || document.documentElement.dataset.sceneOff !== undefined) return;
+      armed = true;
+      INTERACTIONS.forEach(type => window.addEventListener(type, onFirstInteraction, {passive: true, once: true}));
+      timer = window.setTimeout(onFirstInteraction, 7000);
     };
     window.addEventListener(SCENE_CHECK, maybeStart);
     maybeStart();
@@ -310,6 +322,7 @@ export function SceneBackdrop() {
     return () => {
       disposed = true;
       window.removeEventListener(SCENE_CHECK, maybeStart);
+      disarm();
       if (idle !== undefined) w.cancelIdleCallback?.(idle);
       if (timer !== undefined) window.clearTimeout(timer);
       worldDisposeTimer = window.setTimeout(() => {world?.dispose(); world = null;}, 4000);

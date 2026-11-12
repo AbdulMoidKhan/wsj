@@ -21,9 +21,9 @@ import './requested-pages-polish.css';
 import './mega-menu.css';
 import './motion-system.css';
 import './decorative-system.css';
-import './figma-home.css';
-import './contact-page.css';
 import './figma-pages.css';
+// Route-scoped sheets load with their route (still last in the cascade):
+//   figma-home.css -> app/page.tsx, contact-page.css -> components/contact-view.tsx
 
 // Classic editorial pairing: Playfair Display for display type, Inter for reading text.
 const display = Playfair_Display({subsets:['latin'], variable:'--font-display', display:'swap', style:['normal','italic']});

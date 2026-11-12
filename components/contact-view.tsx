@@ -3,6 +3,8 @@ import Link from 'next/link';
 import {ArrowUpRight, Mail, MapPin, MessageSquare, Phone, Send} from 'lucide-react';
 import {InquiryForm} from '@/components/forms';
 import {address, loadBusiness} from '@/lib/site';
+// Contact-only sheet (scoped to #main.figma-contact); kept off other routes.
+import '@/app/contact-page.css';
 
 /* Contact page built from the Figma frame "REDESIGN / Contact Us — Homepage Style" (node 6157:2031).
    The form is the shared InquiryForm, so every message is stored through POST /api/inquiries and

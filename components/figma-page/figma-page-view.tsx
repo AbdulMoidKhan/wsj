@@ -103,7 +103,9 @@ function Act({action, tone, service, wide}: {action: Action; tone: Tone; service
 function Media({img, sizes, priority, className}: {img: Img; sizes: string; priority?: boolean; className?: string}) {
   return (
     <div className={'fx-media ' + (className || '')}>
-      <Image src={img.src} alt={img.alt} fill sizes={sizes} preload={priority} className="fx-cover" />
+      {/* The first hero image is the LCP element: preloaded AND fetched at high priority so it
+          is not starved by font/CSS preloads on slow mobile connections. */}
+      <Image src={img.src} alt={img.alt} fill sizes={sizes} preload={priority} fetchPriority={priority ? 'high' : undefined} className="fx-cover" />
     </div>
   );
 }

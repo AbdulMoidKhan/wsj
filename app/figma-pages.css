@@ -14,6 +14,8 @@
   --fx-forest: #0e3421;
   --fx-muted: #636e63;
   --fx-amber: #d7902a;
+  /* Amber for small text on light grounds: #d7902a is 2.3-2.7:1 there; this shade is >= 4.6:1 (WCAG AA). */
+  --fx-amber-text: #90601c;
   --fx-line: #dce2d9;
   --fx-rule: #cfd4c9;
   --fx-light: #f8f7f2;
@@ -42,10 +44,12 @@ html body:has(#main.fx-page) .wj-platform .wj-closing { display: none !important
 /* ---------- type ---------- */
 #main.fx-page p { margin: 0!important; }
 #main.fx-page :is(h1, h2, h3, h4) { margin: 0!important; color: var(--fx-ink)!important; text-wrap: balance!important; letter-spacing: 0!important; }
-#main.fx-page .fx-eyebrow { font: 600 11px/1.5 var(--fx-sans)!important; letter-spacing: .08em!important; text-transform: uppercase!important; color: var(--fx-amber)!important; margin: 0!important; }
+#main.fx-page .fx-eyebrow { font: 600 11px/1.5 var(--fx-sans)!important; letter-spacing: .08em!important; text-transform: uppercase!important; color: var(--fx-amber-text)!important; margin: 0!important; }
 #main.fx-page .fx-eyebrow::before, #main.fx-page .fx-eyebrow::after { content: none!important; display: none!important; }
 #main.fx-page .fx-eyebrow-ink { color: var(--fx-ink)!important; letter-spacing: .145em!important; }
-#main.fx-page .fx-eyebrow-amber { color: var(--fx-amber)!important; }
+/* Amber labels: accessible dark amber on light cards; the bright brand amber stays on dark grounds. */
+#main.fx-page .fx-eyebrow-amber { color: var(--fx-amber-text)!important; }
+#main.fx-page :is(.fx-plan-dark, .fx-band) :is(.fx-eyebrow-amber, .fx-num) { color: var(--fx-amber)!important; }
 #main.fx-page .fx-display { font-family: var(--fx-display)!important; font-weight: 400!important; color: var(--fx-ink)!important; letter-spacing: -.01em!important; }
 #main.fx-page .fx-display-xl { font-size: clamp(40px, 4.45vw, 64px)!important; line-height: 1.17!important; }
 #main.fx-page .fx-display-lg { font-size: clamp(38px, 4.1vw, 58px)!important; line-height: 1.18!important; }
@@ -147,7 +151,7 @@ html body:has(#main.fx-page) .wj-platform .wj-closing { display: none !important
 #main.fx-page .fx-card-photo .fx-card-body { display: grid!important; gap: 12px!important; padding: 24px!important; justify-items: start!important; }
 #main.fx-page .fx-card-photo .fx-h3 { font-size: 28px!important; }
 #main.fx-page .fx-card-value { gap: 10px!important; min-height: 218px!important; }
-#main.fx-page .fx-num { font: 400 20px/1 var(--fx-display)!important; color: var(--fx-amber)!important; margin-bottom: 18px!important; }
+#main.fx-page .fx-num { font: 400 20px/1 var(--fx-display)!important; color: var(--fx-amber-text)!important; margin-bottom: 18px!important; }
 #main.fx-page .fx-tiles { display: grid!important; grid-template-columns: repeat(5, minmax(0, 1fr))!important; gap: 16px!important; margin-top: 24px!important; }
 #main.fx-page .fx-tile { display: grid!important; gap: 10px!important; padding: 22px 20px!important; border-radius: 8px!important; background: #fff!important; color: var(--fx-ink)!important; text-decoration: none!important; }
 #main.fx-page .fx-tile-title { font: 400 20px/1.2 var(--fx-display)!important; }

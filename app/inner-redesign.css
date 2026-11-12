@@ -392,7 +392,7 @@ html body .wj-platform .lx-page .lx-sec.lx-sec-intro + .lx-sec{padding-top:clamp
 
 /* touch targets: 44px hit areas, visuals unchanged */
 html body .wj-platform :is(.lx-vdot,.lx-blueprint-dot){position:relative}
-html body .wj-platform :is(.lx-vdot,.lx-blueprint-dot)::before{content:"";position:absolute;inset:-18px -6px}
+html body .wj-platform :is(.lx-vdot,.lx-blueprint-dot)::before{content:"";position:absolute;inset:-18px -8px} /* >=24px target (WCAG 2.5.8) */
 html body .wj-platform .lx-vslider-arrow{width:44px!important;height:44px!important}
 html body .wj-platform .lx-crumbs a{display:inline-flex;align-items:center;min-height:44px}
 html body .wj-platform .lx-crumbs{padding-block:4px!important}

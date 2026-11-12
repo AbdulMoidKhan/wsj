@@ -60,8 +60,6 @@ let sharedLenis: {lenis: LenisInstance; destroy: () => void} | null = null;
 let lenisDisposeTimer: number | undefined;
 const disposeLenis = () => {sharedLenis?.destroy(); sharedLenis = null;};
 
-/** Element starts inside (or just below) the first viewport: render it as-is, never hide it. */
-const inFirstView = (el: Element) => el.getBoundingClientRect().top < window.innerHeight * 0.98;
 
 export function GsapMotion() {
   const pathname = usePathname();
@@ -207,6 +205,15 @@ export function GsapMotion() {
 
     const rich = canRunRichEffects();
     const desktop = window.matchMedia('(min-width: 1024px)').matches;
+
+    // Measure every candidate in ONE read pass before any DOM write below; interleaving
+    // getBoundingClientRect with writes would force a style+layout pass per element.
+    // Anything starting inside the first viewport is rendered as-is and never hidden.
+    const fold = window.innerHeight * 0.98;
+    const tops = new Map<Element, number>();
+    root.querySelectorAll('[data-anim],[data-anim-stagger-group],' + COUNT_SELECTOR + ',' + REVEAL_SELECTOR + ',main img')
+      .forEach(el => tops.set(el, el.getBoundingClientRect().top));
+    const inFirstView = (el: Element) => (tops.get(el) ?? el.getBoundingClientRect().top) < fold;
 
     // In-page anchors glide with Lenis, offset by the live header height.
     const onAnchorClick = (event: MouseEvent) => {

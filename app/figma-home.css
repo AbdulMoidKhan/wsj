@@ -2,7 +2,7 @@
 @layer wj-consistency {
 html body:has(#main.figma-home) .wj-platform {
   --fh-cream:#f8f7f2; --fh-green:#103624; --fh-amber:#d99024;
-  --fh-muted:#687a70; --fh-line:#d9dfd5;
+  --fh-muted:#5d6d64; /* AA on #f8f7f2 (was #687a70, 4.25:1) */ --fh-line:#d9dfd5;
   --ds-max:1248px; --ds-gutter:32px;
   background:#fff!important;
 }
@@ -66,7 +66,7 @@ html body .wj-platform #main.figma-home {
   & .lv-intro-grid {display:grid!important;grid-template-columns:1fr 1fr!important;column-gap:76px!important;row-gap:32px!important;align-items:start!important}
   & .lv-intro .hp-heading {font-size:42px!important;line-height:1.15!important}
   & .lv-intro-grid .lv-lead {font-size:16px!important;line-height:1.5!important;margin:0!important;max-width:none!important}
-  & .lv-intro-signoff {font:600 11px/1.5 var(--font-sans),Arial,sans-serif!important;letter-spacing:.15em!important;text-transform:uppercase!important;color:#ce8219!important;margin-top:16px!important}
+  & .lv-intro-signoff {font:600 11px/1.5 var(--font-sans),Arial,sans-serif!important;letter-spacing:.15em!important;text-transform:uppercase!important;color:#90601c!important;margin-top:16px!important}
   & .lv-stats {grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;border-top:1px solid var(--fh-line)!important;padding:32px 0 0!important;margin:0!important;gap:32px!important}
   & .lv-stats>div {padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;gap:4px!important}
   & .lv-stats dd {font:400 44px/1.15 var(--font-display),Georgia,serif!important;color:var(--fh-green)!important}
@@ -289,4 +289,10 @@ html body .wj-platform {
 }
 @media(max-width:767px) {html body .wj-platform #main.figma-home .lv-service-compact {grid-column:span 3!important}}
 @media(max-width:479px) {html body .wj-platform #main.figma-home .lv-service-compact {grid-column:1/-1!important}}
+}
+
+/* Home testimonials sit on a light band (#edf1e8); the shared dark-band rule painted the rating
+   line near-white (1.2:1). Brand forest green restores AA contrast. */
+@layer wj-consistency{ /* same layer as the dark-band rule, higher specificity */
+  html body:has(#main.figma-home) .wj-testimonials-sec .lx-vslider-score{color:#103624!important}
 }

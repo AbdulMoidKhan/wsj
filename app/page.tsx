@@ -10,6 +10,8 @@ import {fetchHomepageUseCases} from '@/lib/use-cases';
 import {fetchCatalogService} from '@/lib/catalog';
 import {TestimonialsSection} from '@/components/testimonials-section';
 import homeFaqs from '@/lib/home-faqs.json';
+// Homepage-only sheet (every rule is scoped to #main.figma-home); kept off other routes.
+import './figma-home.css';
 
 /* Homepage layout follows Figma frame 6178:1012; catalog data and booking stay live. */
 export const metadata = {alternates: {canonical: '/'}};

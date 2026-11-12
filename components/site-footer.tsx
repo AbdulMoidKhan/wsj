@@ -26,7 +26,8 @@ export function SiteFooter({business, footerLogo, groups}: SiteFooterProps) {
         {/* Top Info Bar: Brand, Address, Contact */}
         <div className="wj-footer-top">
           <div>
-            <Link prefetch={false} href="/" className="wj-footer-brand" aria-label="Workspace Junction home">
+            {/* Accessible name = visible logo text + tagline (WCAG 2.5.3 label-in-name). */}
+            <Link prefetch={false} href="/" className="wj-footer-brand">
               {footerLogoSrc ? (
                 <Image
                   src={footerLogoSrc}

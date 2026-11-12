@@ -4,7 +4,7 @@
 @layer wj-consistency {
 html body .wj-platform #main.figma-contact {
   --fc-cream:#f8f7f2; --fc-sage:#ebeee6; --fc-green:#103624; --fc-amber:#d99024;
-  --fc-muted:#687a70; --fc-line:#dde2d9;
+  --fc-muted:#5d6d64; /* AA on #ebeee6 (was #687a70, 3.88:1) */ --fc-line:#dde2d9;
   background:#fff!important;color:var(--fc-green)!important;
   font-family:var(--font-sans),Arial,sans-serif!important;
 
@@ -104,7 +104,7 @@ html body:has(#main.figma-contact) .wj-platform .wj-closing {
   & .eyebrow::before, & .eyebrow::after {display:none!important;content:none!important}
   & h2 {font-family:var(--font-display),Georgia,serif!important;font-weight:400!important;font-size:48px!important;line-height:1.15!important;color:#103624!important;margin:0!important}
   & h2 br {display:none!important}
-  & p {font-size:16px!important;color:#687a70!important;margin:0!important}
+  & p {font-size:16px!important;color:var(--fc-muted)!important;margin:0!important}
   & .wj-closing-actions {display:flex!important;flex-direction:row!important;justify-content:center!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;margin-top:12px!important;width:auto!important}
   & :is(.wj-button,.text-link) {display:inline-flex!important;align-items:center!important;gap:10px!important;min-height:50px!important;padding:14px 26px!important;border-radius:7px!important;font:600 14px/1.4 var(--font-sans),Arial,sans-serif!important;box-shadow:none!important;transform:none!important}
   & .wj-button {background:#d99024!important;color:#103624!important;border:0!important}
