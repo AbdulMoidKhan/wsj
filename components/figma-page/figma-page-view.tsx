@@ -8,7 +8,7 @@ import {
   Printer, Scale, ScanLine, Send, ShieldCheck, Users, Wifi, Workflow, type LucideIcon,
 } from 'lucide-react';
 import {BookingButton} from '@/components/booking';
-import {InquiryForm} from '@/components/forms';
+import {InquiryForm} from '@/components/lazy-client';
 import {fetchCatalogService, findPlan, money} from '@/lib/catalog';
 import {approvedPricingRecords, pricingAmount, publishedPricing} from '@/lib/community-pricing';
 import {address, loadBusiness} from '@/lib/site';
@@ -104,8 +104,10 @@ function Media({img, sizes, priority, className}: {img: Img; sizes: string; prio
   return (
     <div className={'fx-media ' + (className || '')}>
       {/* The first hero image is the LCP element: preloaded AND fetched at high priority so it
-          is not starved by font/CSS preloads on slow mobile connections. */}
-      <Image src={img.src} alt={img.alt} fill sizes={sizes} preload={priority} fetchPriority={priority ? 'high' : undefined} className="fx-cover" />
+          is not starved by font/CSS preloads on slow mobile connections. It is decoded in sync so
+          it paints in the same frame as the text: with the default async decode the already-
+          downloaded image waited for a later frame, i.e. until hydration's long tasks finished. */}
+      <Image src={img.src} alt={img.alt} fill sizes={sizes} preload={priority} fetchPriority={priority ? 'high' : undefined} decoding={priority ? 'sync' : undefined} className="fx-cover" />
     </div>
   );
 }

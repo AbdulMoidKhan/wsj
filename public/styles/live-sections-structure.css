@@ -1,0 +1,251 @@
+/* Live-sections (legacy CMS layout) rules whose :has() argument depends on sibling structure.
+   Loaded only by components/live-sections.tsx. Kept out of the global sheets because Chrome
+   re-styles the whole document on EVERY DOM insertion while such selectors exist (~45 ms per
+   insertion on desktop, ~4x that on a mid-range phone). Generated in FU-01; edit here. */
+/* ---- from app/design-system.css ---- */
+html body .wj-platform .lx-card-col:has(> .lx-stack > .lx-h:only-child){padding:0;background:transparent;border:0;box-shadow:none}
+html body .wj-platform .lx-card-col:has(> .lx-stack > .lx-h:only-child) > .lx-stack{position:sticky;top:140px;height:auto}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-stack > .lx-h:only-child){display:flex;flex-wrap:wrap;align-items:stretch}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-stack > .lx-h:only-child) > .lx-col{flex:1 1 260px}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-stack > .lx-h:only-child) > .lx-col:has(> .lx-stack > .lx-h:only-child){flex-basis:100%}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-stack > .lx-h:only-child) > .lx-col:has(> .lx-stack > .lx-h:only-child) > .lx-stack{position:static}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-stack > .lx-h:only-child) > .lx-col:has(> .lx-stack > .lx-actions:only-child){flex-basis:100%;order:9}
+html body .wj-platform .lx-card-col:has(> .lx-bg:only-child),
+html body .wj-platform .lx-card-col:has(> .lx-stack > .lx-bg:only-child){padding:0;background:transparent;border:0;box-shadow:none}
+html body .wj-platform .lx-card-col:has(> .lx-bg:only-child) > .lx-bg,
+html body .wj-platform .lx-card-col:has(> .lx-stack > .lx-bg:only-child) .lx-bg{height:100%;min-height:360px}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-stack > .lx-img-sm:only-child){display:flex;flex-wrap:wrap;align-items:center;gap:12px;width:auto}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child){display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px}
+html body .wj-platform .lx-col:has(> .lx-stack > .lx-img-sm:only-child){flex:0 0 auto;width:auto}
+html body .wj-platform .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child) > .lx-col{flex:0 1 auto;width:auto}
+html body .wj-platform .lx-stack:has(> img + img + img):not(:has(> :is(p,h1,h2,h3,h4,h5,h6,div,a,span,button,ul,ol,table,section,figure,blockquote,details,iframe,small,form,picture,video,svg))){flex-direction:row;flex-wrap:wrap;align-items:center;gap:20px 28px}
+html body .wj-platform .lx-stack:has(> img + img + img):not(:has(> :is(p,h1,h2,h3,h4,h5,h6,div,a,span,button,ul,ol,table,section,figure,blockquote,details,iframe,small,form,picture,video,svg))) > img{width:auto;max-width:150px;max-height:64px;height:auto;object-fit:contain;border-radius:0;box-shadow:none}
+html body .wj-platform .lx-cols:not(:has(> .lx-col > .lx-stack > .lx-img-sm:only-child)):not(:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child)) > .lx-col:not(:has(> .lx-stack > .lx-actions:only-child)){container-type:inline-size}
+@media (max-width:900px){html body .wj-platform .lx-cols:not(.lx-cards):not(:has(> .lx-col > .lx-stack > .lx-img-sm:only-child)){grid-template-columns:1fr}}
+html body .wj-platform .lx-card-col .lx-stack:has(> .lx-actions:last-child){flex:1 1 auto;display:flex;flex-direction:column}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: clamp(36px, 5vw, 64px) !important;
+  align-items: stretch !important;
+}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack:has(> .lx-h2 + .lx-img) {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  gap: 20px !important;
+  position: static !important;
+}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack:has(> .lx-h2 + .lx-img) > .lx-img {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  min-height: 340px !important;
+  aspect-ratio: auto !important;
+  object-fit: cover !important;
+  border-radius: var(--ds-r-xl, 18px) !important;
+  box-shadow: 0 14px 36px -10px rgba(12, 31, 27, 0.12), 0 2px 6px rgba(12, 31, 27, 0.04) !important;
+  border: 1px solid rgba(19, 46, 41, 0.08) !important;
+}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:last-child > .lx-stack:has(> .lx-card + .lx-card) {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+  gap: 0 !important;
+}
+@media (max-width: 900px){html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card) {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }}
+@media (max-width: 900px){html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack:has(> .lx-h2 + .lx-img) > .lx-img {
+    aspect-ratio: 16 / 10 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }}
+html body .wj-platform .lx-page .lx-cols.lx-cards:has(.lx-col > .lx-stack > .lx-img + .lx-h.lx-h2) {
+  display: grid !important;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)) !important;
+  gap: 24px !important;
+  align-items: stretch !important;
+}
+@media (max-width: 1024px){html body .wj-platform .lx-page .lx-cols.lx-cards:has(.lx-col > .lx-stack > .lx-img + .lx-h.lx-h2) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }}
+@media (max-width: 600px){html body .wj-platform .lx-page .lx-cols.lx-cards:has(.lx-col > .lx-stack > .lx-img + .lx-h.lx-h2) {
+    grid-template-columns: 1fr !important;
+  }}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col .lx-h.lx-h2 {
+  font-family: var(--ff-display) !important;
+  font-size: 19px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ds-ink, #0c1f1b) !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  gap: 14px !important;
+}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack > .lx-img:first-child {
+  width: 100% !important;
+  aspect-ratio: 16 / 10 !important;
+  height: auto !important;
+  object-fit: cover !important;
+  border-radius: var(--ds-r-lg, 14px) !important;
+  box-shadow: 0 8px 22px -8px rgba(12, 31, 27, 0.12) !important;
+  border: 1px solid rgba(19, 46, 41, 0.08) !important;
+}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col .lx-actions {
+  margin-top: auto !important;
+  padding-top: 12px !important;
+}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col .lx-btn-ghost {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 8px 16px !important;
+  border-radius: 999px !important;
+  background: rgba(19, 46, 41, 0.06) !important;
+  border: 1px solid rgba(19, 46, 41, 0.14) !important;
+  color: var(--ds-ink, #0c1f1b) !important;
+  font-family: var(--ff-text) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  transition: all 0.25s ease !important;
+}
+html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col .lx-btn-ghost:hover {
+  background: var(--ds-amber-500, #d9910b) !important;
+  border-color: var(--ds-amber-500, #d9910b) !important;
+  color: #0c1f1b !important;
+  transform: translateY(-2px) !important;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)) !important;
+  gap: 32px clamp(24px, 3vw, 40px) !important;
+  align-items: stretch !important;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > :not(.lx-card) {
+  grid-column: 1 / -1;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card,
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card:hover {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 22px 0 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--ed-line, rgba(17, 48, 42, 0.12)) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  height: 100% !important;
+  transition: border-color .25s ease !important;
+  text-align: left !important;
+  align-items: flex-start !important;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card:hover {
+  border-top-color: var(--ed-amber, #d9910b) !important;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card .lx-card-img {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  align-self: flex-start !important;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card :is(.lx-h.lx-h3,.lx-h.lx-h4) {
+  font-family: var(--ff-display) !important;
+  font-size: 19px !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  color: var(--ds-ink, #0c1f1b) !important;
+  margin: 0 !important;
+  hyphens: manual !important;
+  overflow-wrap: normal !important;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card .lx-text {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  color: var(--ed-text, #4c5a54) !important;
+  margin: 0 !important;
+}
+html body .wj-platform .lx-page .lx-sec:has(.lx-card) .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card > :is(.lx-h,.lx-text,.lx-rich) {
+  align-self: stretch !important;
+}
+html body .wj-platform .lx-page .lx-bg-copy .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card {
+  border-top-color: var(--ds-line-dark, rgba(245, 241, 232, .14)) !important;
+}
+html body .wj-platform .lx-page .lx-bg-copy .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card :is(.lx-h,.lx-h.lx-h4) { color: #fff !important; }
+html body .wj-platform .lx-page .lx-bg-copy .lx-stack:has(> .lx-card + .lx-card + .lx-card) > .lx-card .lx-text { color: var(--ds-on-dark-soft, #c9d4ce) !important; }
+/* ---- from app/inner-redesign.css ---- */
+html body .wj-platform .lx-page .lx-card-col > .lx-stack:has(> .lx-bg + :is(.lx-rich,.lx-text)){gap:16px!important}
+html body .wj-platform .lx-page .lx-col > .lx-stack:has(> .lx-card + .lx-card) > .lx-card ~ .lx-img-sm{display:none!important}
+html body .wj-platform .lx-page .lx-split > .lx-col:has(> .lx-stack > .lx-img:only-child){position:sticky;top:150px;align-self:center}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card){grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)!important;gap:clamp(36px,5vw,80px)!important}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack:has(> .lx-h2 + .lx-img){position:sticky;top:150px;gap:28px}
+@media (max-width:1024px){html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col:nth-child(4)){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:860px){html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card){grid-template-columns:1fr!important}}
+html body .wj-platform .lx-page .lx-col .lx-stack > .lx-h.lx-h2:has(+ .lx-card){margin-bottom:12px!important}
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col {
+  border-top: 1px solid var(--ed-line, rgba(17, 48, 42, 0.12)) !important;
+  padding-top: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  gap: 14px !important;
+}
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack > .lx-img:first-child {
+  width: 100% !important;
+  aspect-ratio: 16 / 10 !important;
+  height: auto !important;
+  object-fit: cover !important;
+  border-radius: var(--ed-radius, 14px) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col .lx-actions {
+  margin-top: auto !important;
+  padding-top: 10px !important;
+}
+html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){display:grid!important;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr))!important;gap:20px!important;align-items:stretch!important}
+@media (max-width:1024px){html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:600px){html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:1fr!important}}
+@media (max-width:600px){html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:minmax(0,1fr)!important}}
+@media (min-width:861px){html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)){display:grid!important;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(36px,5vw,80px)!important;align-items:center}}
+@media (min-width:861px){html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)) > :is(.lx-img,.lx-crop,.lx-img-link){grid-column:2;grid-row:1;width:100%!important;max-width:none!important;aspect-ratio:4/3;height:auto!important;object-fit:cover}}
+@media (min-width:861px){html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)) > :not(.lx-img,.lx-crop,.lx-img-link){grid-column:1}}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(> .lx-col > .lx-stack > :where(p,h1,h2,h3,h4,h5,h6,div,a,span,button,ul,ol,table,section,figure,blockquote,details,iframe,small,form,picture,video,svg,img):not(.lx-img-sm))){display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:16px!important;grid-template-columns:none!important}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))){display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:16px!important;grid-template-columns:none!important}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))) > .lx-col{display:contents}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(> .lx-col > .lx-stack > :where(p,h1,h2,h3,h4,h5,h6,div,a,span,button,ul,ol,table,section,figure,blockquote,details,iframe,small,form,picture,video,svg,img):not(.lx-img-sm))) > .lx-col{grid-column:auto!important;flex:0 0 auto;width:auto}
+html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))) > .lx-col > .lx-cols{display:contents!important}
+@media (min-width:861px){html body .wj-platform .lx-page .lx-cols.lx-cards.lx-cards:has(> .lx-photo-cell:first-child):has(> .lx-col:nth-child(3):last-child){grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (min-width:861px){html body .wj-platform .lx-page .lx-cols.lx-cards:has(> .lx-photo-cell:first-child):has(> .lx-col:nth-child(3):last-child) > .lx-photo-cell{grid-column:1/-1!important;aspect-ratio:21/8!important}}
+html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-stack:first-child:has(> .lx-h.lx-h2:only-child){text-align:center;align-items:center}
+@media (min-width:1025px){html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > .lx-stack:has(> .lx-img:only-child){height:100%}}
+html body .wj-platform .lx-page .lx-sec:has(> .ip-wrap > .elementor-section .elementor-column:nth-child(2)){
+  container-type:inline-size
+}

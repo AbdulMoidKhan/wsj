@@ -3,12 +3,9 @@
 import {useEffect, useRef} from 'react';
 import {usePathname} from 'next/navigation';
 import gsap from 'gsap';
-import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {MOTION_TOKENS} from '@/lib/motion-tokens';
 import {splitText} from '@/lib/split-text';
 import {canRunRichEffects, useReducedMotion} from '@/lib/use-reduced-motion';
-
-if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
 /*
   One motion orchestrator for every public page.
@@ -16,8 +13,12 @@ if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
   Contract:
   - Server HTML is always fully visible. JS only adds temporary "pending" states to content
     that is BELOW the first viewport, so the hero, H1 and LCP image are never hidden.
+  - One-shot entrances ("play once when it scrolls into view") run off a single
+    IntersectionObserver. ScrollTrigger is loaded on demand only for scrubbed parallax and
+    pinned sections on capable desktops: registering and refreshing it forces several
+    full-document style recalcs during startup (~160 ms each on a mid-range phone).
   - Lenis (desktop, fine pointer, capable device, no reduced motion) shares gsap.ticker with
-    ScrollTrigger and the WebGL backdrop: a single animation loop.
+    the WebGL backdrop: a single animation loop.
   - Per-route work lives in one gsap.context(), reverted on navigation, so timelines,
     ScrollTriggers and inline styles never leak between routes.
   - Reduced motion is observed live; switching it on reveals everything and stops Lenis.
@@ -95,7 +96,8 @@ export function GsapMotion() {
       const lenis = new Lenis({lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, syncTouch: false}) as unknown as LenisInstance;
       lenisRef.current = lenis;
       document.documentElement.classList.add('has-lenis');
-      lenis.on('scroll', ScrollTrigger.update as never);
+      // Lenis drives native window scrolling, so scroll listeners (and ScrollTrigger, when a
+      // page loads it) observe its position without an explicit bridge.
       const tick = (time: number) => lenis.raf(time * 1000);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
@@ -231,45 +233,71 @@ export function GsapMotion() {
     document.addEventListener('click', onAnchorClick);
     cleanups.push(() => document.removeEventListener('click', onAnchorClick));
 
-    const ctx = gsap.context(() => {
-      // Reading progress (thin amber bar).
-      const progressBar = root.querySelector<HTMLElement>('.gx-progress');
-      if (progressBar) {
-        const setProgress = gsap.quickSetter(progressBar, 'scaleX');
-        ScrollTrigger.create({start: 'top top', end: 'max', onUpdate: self => setProgress(self.progress)});
+    // Play-once entrances: the tween is built paused (its "from" state applies immediately,
+    // below the fold) and restarts when the element's top crosses 88% of the viewport.
+    const entries = new Map<Element, gsap.core.Animation>();
+    const enterObserver = new IntersectionObserver(list => {
+      for (const entry of list) {
+        if (!entry.isIntersecting && entry.boundingClientRect.top > 0) continue;
+        entries.get(entry.target)?.restart(true);
+        entries.delete(entry.target);
+        enterObserver.unobserve(entry.target);
       }
+    }, {rootMargin: '0px 0px -12% 0px', threshold: 0});
+    const onEnter = (trigger: Element, animation: gsap.core.Animation) => {
+      entries.set(trigger, animation);
+      enterObserver.observe(trigger);
+    };
+    cleanups.push(() => enterObserver.disconnect());
 
+    // Reading progress (thin amber bar): one passive listener, written once per frame.
+    const progressBar = root.querySelector<HTMLElement>('.gx-progress');
+    if (progressBar) {
+      let frame = 0;
+      const paint = () => {
+        frame = 0;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0).toFixed(4) + ')';
+      };
+      const onScroll = () => {if (!frame) frame = requestAnimationFrame(paint);};
+      window.addEventListener('scroll', onScroll, {passive: true});
+      if (window.scrollY > 0) onScroll(); // restored scroll position
+      cleanups.push(() => {window.removeEventListener('scroll', onScroll); cancelAnimationFrame(frame); progressBar.style.removeProperty('transform');});
+    }
+
+    const ctx = gsap.context(() => {
       // 1. Declarative [data-anim] reveals - below the first viewport only.
       root.querySelectorAll<HTMLElement>('[data-anim]').forEach(el => {
         if (el.closest(SKIP_SCOPE) || inFirstView(el)) return;
         const type = el.dataset.anim || 'fade-up';
         if (type === 'counter') return;
         const delay = Math.min(parseFloat(el.dataset.animDelay || '0'), 0.3);
-        const scrollTrigger = {trigger: el, start: el.dataset.animStart || 'top 88%', once: true};
-        const enter = {duration: MOTION_TOKENS.duration.reveal, ease: MOTION_TOKENS.ease.enter, delay, scrollTrigger};
+        const enter = {duration: MOTION_TOKENS.duration.reveal, ease: MOTION_TOKENS.ease.enter, delay, paused: true};
+        const play = (animation: gsap.core.Animation) => onEnter(el, animation);
 
         if (type === 'split-lines' || type === 'split-chars') {
           const split = splitText(el, type === 'split-chars' ? {chars: true, lines: false} : {lines: true});
           splits.push(split);
           const parts = type === 'split-chars' ? split.chars : split.lines;
           if (!parts.length) return;
-          gsap.fromTo(parts, {yPercent: type === 'split-chars' ? 40 : 100, autoAlpha: 0}, {
+          play(gsap.fromTo(parts, {yPercent: type === 'split-chars' ? 40 : 100, autoAlpha: 0}, {
             yPercent: 0, autoAlpha: 1, stagger: type === 'split-chars' ? 0.015 : MOTION_TOKENS.stagger.base,
             ...enter, clearProps: 'transform,opacity,visibility,willChange',
-          });
+          }));
         } else if (type === 'clip-up') {
-          gsap.fromTo(el, {clipPath: 'inset(100% 0 0 0)', y: MOTION_TOKENS.distance.xs}, {clipPath: 'inset(0% 0 0 0)', y: 0, ...enter, clearProps: 'clipPath,transform'});
+          play(gsap.fromTo(el, {clipPath: 'inset(100% 0 0 0)', y: MOTION_TOKENS.distance.xs}, {clipPath: 'inset(0% 0 0 0)', y: 0, ...enter, clearProps: 'clipPath,transform'}));
         } else if (type === 'mask-reveal') {
           const media = el.querySelector<HTMLElement>('img, .lv-contain, .hp-photo');
-          const tl = gsap.timeline({scrollTrigger, delay});
+          const tl = gsap.timeline({paused: true, delay});
           tl.fromTo(el, {clipPath: 'inset(100% 0 0 0)'}, {clipPath: 'inset(0% 0 0 0)', duration: MOTION_TOKENS.duration.cinematic, ease: MOTION_TOKENS.ease.cinematic, clearProps: 'clipPath'});
           if (media) tl.fromTo(media, {scale: 1.06}, {scale: 1, duration: MOTION_TOKENS.duration.cinematic, ease: MOTION_TOKENS.ease.smooth, clearProps: 'transform'}, 0);
+          play(tl);
         } else if (type === 'scale-in') {
-          gsap.fromTo(el, {scale: 0.96, autoAlpha: 0}, {scale: 1, autoAlpha: 1, ...enter, clearProps: 'transform,opacity,visibility'});
+          play(gsap.fromTo(el, {scale: 0.96, autoAlpha: 0}, {scale: 1, autoAlpha: 1, ...enter, clearProps: 'transform,opacity,visibility'}));
         } else if (type === 'fade') {
-          gsap.fromTo(el, {autoAlpha: 0}, {autoAlpha: 1, ...enter, ease: MOTION_TOKENS.ease.state, clearProps: 'opacity,visibility'});
+          play(gsap.fromTo(el, {autoAlpha: 0}, {autoAlpha: 1, ...enter, ease: MOTION_TOKENS.ease.state, clearProps: 'opacity,visibility'}));
         } else {
-          gsap.fromTo(el, {y: MOTION_TOKENS.distance.sm, autoAlpha: 0}, {y: 0, autoAlpha: 1, ...enter, clearProps: 'transform,opacity,visibility'});
+          play(gsap.fromTo(el, {y: MOTION_TOKENS.distance.sm, autoAlpha: 0}, {y: 0, autoAlpha: 1, ...enter, clearProps: 'transform,opacity,visibility'}));
         }
       });
 
@@ -279,21 +307,13 @@ export function GsapMotion() {
         const items = Array.from(container.children) as HTMLElement[];
         if (!items.length) return;
         const stagger = Math.min(parseFloat(container.dataset.animStagger || '0.06'), MOTION_TOKENS.stagger.cap / items.length);
-        gsap.fromTo(items, {y: MOTION_TOKENS.distance.sm, autoAlpha: 0}, {
+        onEnter(container, gsap.fromTo(items, {y: MOTION_TOKENS.distance.sm, autoAlpha: 0}, {
           y: 0, autoAlpha: 1, duration: MOTION_TOKENS.duration.slow, ease: MOTION_TOKENS.ease.enter, stagger,
-          scrollTrigger: {trigger: container, start: 'top 88%', once: true}, clearProps: 'transform,opacity,visibility',
-        });
+          paused: true, clearProps: 'transform,opacity,visibility',
+        }));
       });
 
-      // 3. Parallax on selected media - capable desktops only, small displacement.
-      if (rich) {
-        root.querySelectorAll<HTMLElement>('[data-parallax]').forEach(el => {
-          const offset = Math.min(parseFloat(el.dataset.parallax || '0.06'), 0.1) * 120;
-          gsap.fromTo(el, {y: -offset}, {y: offset, ease: 'none', scrollTrigger: {trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true}});
-        });
-      }
-
-      // 4. Number counters (below the fold; the server text stays until the trigger fires).
+      // 3. Number counters (below the fold; the server text stays until the trigger fires).
       root.querySelectorAll<HTMLElement>(COUNT_SELECTOR).forEach(el => {
         if (inFirstView(el)) return;
         const match = (el.textContent || '').trim().match(/^(\$?)(\d[\d,]*)(.*)$/);
@@ -302,21 +322,13 @@ export function GsapMotion() {
         const target = Number(digits.replaceAll(',', ''));
         if (target <= 1 && !suffix) return;
         const counter = {value: 0};
-        gsap.to(counter, {
-          value: target, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: {trigger: el, start: 'top 88%', once: true},
+        onEnter(el, gsap.to(counter, {
+          value: target, duration: 1.1, ease: 'power3.out', paused: true,
           onUpdate: () => {el.textContent = prefix + Math.round(counter.value).toLocaleString('en-US') + suffix;},
-        });
+        }));
       });
 
-      // 5. Pinned storytelling (desktop only).
-      if (desktop && rich) {
-        root.querySelectorAll<HTMLElement>('[data-pin="section"]').forEach(section => {
-          ScrollTrigger.create({trigger: section, pin: section.querySelector<HTMLElement>('.lv-pin-inner') || section, start: 'top 80px', end: '+=100%', pinSpacing: true, anticipatePin: 1});
-        });
-      }
-
-      // 6. Restrained 3D tilt - explicit [data-tilt] decorative cards only, capped at 3deg.
+      // 4. Restrained 3D tilt - explicit [data-tilt] decorative cards only, capped at 3deg.
       if (rich) {
         root.querySelectorAll<HTMLElement>('[data-tilt]').forEach(card => {
           if (card.closest('form, dialog')) return;
@@ -336,7 +348,7 @@ export function GsapMotion() {
         });
       }
 
-      // 7. Magnetic primary CTAs. Writes CSS custom properties consumed by the `translate`
+      // 5. Magnetic primary CTAs. Writes CSS custom properties consumed by the `translate`
       //    property, so it composes with the shared hover lift instead of fighting it.
       if (rich) {
         root.querySelectorAll<HTMLElement>(MAGNETIC_SELECTOR).forEach(btn => {
@@ -363,7 +375,34 @@ export function GsapMotion() {
       }
     }, root);
 
-    // 8. Shared CSS reveal contract for card grids and section heads (IntersectionObserver).
+    // 6. Scrubbed parallax and pinned storytelling: capable desktops only, and the only users
+    //    of ScrollTrigger, which is fetched on demand so phones never pay its startup cost.
+    const parallax = rich ? root.querySelectorAll<HTMLElement>('[data-parallax]') : [];
+    const pins = desktop && rich ? root.querySelectorAll<HTMLElement>('[data-pin="section"]') : [];
+    let disposed = false;
+    if (parallax.length || pins.length) {
+      import('gsap/ScrollTrigger').then(({ScrollTrigger}) => {
+        if (disposed) return;
+        gsap.registerPlugin(ScrollTrigger);
+        ctx.add(() => {
+          parallax.forEach(el => {
+            const offset = Math.min(parseFloat(el.dataset.parallax || '0.06'), 0.1) * 120;
+            gsap.fromTo(el, {y: -offset}, {y: offset, ease: 'none', scrollTrigger: {trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true}});
+          });
+          pins.forEach(section => {
+            ScrollTrigger.create({trigger: section, pin: section.querySelector<HTMLElement>('.lv-pin-inner') || section, start: 'top 80px', end: '+=100%', pinSpacing: true, anticipatePin: 1});
+          });
+        });
+        // Layout settles after fonts/images: one refresh, not one per trigger.
+        const refresh = () => {if (!disposed) ScrollTrigger.refresh();};
+        if (document.readyState === 'complete') requestAnimationFrame(refresh);
+        else window.addEventListener('load', refresh, {once: true});
+        cleanups.push(() => window.removeEventListener('load', refresh));
+      }).catch(() => {/* static layout remains */});
+    }
+    cleanups.push(() => {disposed = true;});
+
+    // 7. Shared CSS reveal contract for card grids and section heads (IntersectionObserver).
     const siblingIndex = new Map<Element, number>();
     const pending: HTMLElement[] = [];
     root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach(el => {
@@ -392,7 +431,7 @@ export function GsapMotion() {
       cleanups.push(() => observer.disconnect());
     }
 
-    // 9. Below-fold images fade in once decoded; the LCP/eager images are never touched.
+    // 8. Below-fold images fade in once decoded; the LCP/eager images are never touched.
     root.querySelectorAll<HTMLImageElement>('main img:not([data-mo-static]):not([loading="eager"]):not([fetchpriority="high"])').forEach(img => {
       if (img.complete || inFirstView(img)) return;
       img.dataset.moImage = '';
@@ -401,12 +440,6 @@ export function GsapMotion() {
       img.addEventListener('error', ready, {once: true});
       timers.push(window.setTimeout(ready, 2000));
     });
-
-    // Layout settles after fonts/images: one refresh, not one per trigger.
-    const refresh = () => ScrollTrigger.refresh();
-    if (document.readyState === 'complete') requestAnimationFrame(refresh);
-    else window.addEventListener('load', refresh, {once: true});
-    cleanups.push(() => window.removeEventListener('load', refresh));
 
     return () => {
       timers.forEach(timer => window.clearTimeout(timer));

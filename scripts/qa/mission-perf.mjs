@@ -36,7 +36,10 @@ try {
         scriptKB: Math.round(bytesBy(l, 'script').transferSize / 1024), cssKB: Math.round(bytesBy(l, 'stylesheet').transferSize / 1024),
         imageKB: Math.round(bytesBy(l, 'image').transferSize / 1024), fontKB: Math.round(bytesBy(l, 'font').transferSize / 1024),
         consoleErrors: (l.audits['errors-in-console']?.details?.items || []).map(i => String(i.description || '').slice(0, 160)),
-        lcpElement: String(l.audits['largest-contentful-paint-element']?.details?.items?.[0]?.items?.[0]?.node?.snippet || '').slice(0, 160),
+        lcpElement: String(JSON.stringify(l.audits['lcp-breakdown-insight']?.details?.items?.find(i => i.type === 'node') || l.audits['largest-contentful-paint-element']?.details?.items?.[0]?.items?.[0]?.node || '').match(/"snippet":"((?:[^"\\]|\\.)*)"/)?.[1] || '').slice(0, 160),
+        // LCP phases (TTFB / load delay / load duration / render delay), in ms.
+        lcpBreakdown: Object.fromEntries((l.audits['lcp-breakdown-insight']?.details?.items?.find(i => i.type === 'table')?.items || []).map(i => [i.subpart, Math.round(i.duration)])),
+        renderBlocking: (l.audits['render-blocking-insight']?.details?.items || []).map(i => ({url: String(i.url || '').replace(base, '').slice(-60), kb: Math.round((i.totalBytes || 0) / 1024), ms: Math.round(i.wastedMs || 0)})),
         failing: Object.values(l.audits).filter(x => x.score !== null && x.score < 0.9 && ['binary', 'numeric', 'metricSavings'].includes(x.scoreDisplayMode)).map(x => x.id),
         runtimeError: l.runtimeError?.code || null,
       };

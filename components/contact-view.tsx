@@ -1,7 +1,7 @@
 import Image from '@/components/consistent-image';
 import Link from 'next/link';
 import {ArrowUpRight, Mail, MapPin, MessageSquare, Phone, Send} from 'lucide-react';
-import {InquiryForm} from '@/components/forms';
+import {InquiryForm} from '@/components/lazy-client';
 import {address, loadBusiness} from '@/lib/site';
 // Contact-only sheet (scoped to #main.figma-contact); kept off other routes.
 import '@/app/contact-page.css';

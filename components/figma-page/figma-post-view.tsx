@@ -51,16 +51,16 @@ export function FigmaPostView({p, category, related}: {p: Entry; category?: stri
           {variant === 'split' && cover ? (
             <div className="fx-article-split">
               {header}
-              <div className="fx-media fx-article-square"><Image src={cover} alt="" fill preload sizes="(max-width:1023px) 100vw, 554px" className="fx-cover" /></div>
+              <div className="fx-media fx-article-square"><Image src={cover} alt="" fill preload fetchPriority="high" decoding="sync" sizes="(max-width:1023px) 100vw, 554px" className="fx-cover" /></div>
             </div>
           ) : header}
         </div>
       </header>
       {variant === 'wide' && cover && (
-        <div className="fx-media fx-article-cover-wide"><Image src={cover} alt="" fill preload sizes="100vw" className="fx-cover" /></div>
+        <div className="fx-media fx-article-cover-wide"><Image src={cover} alt="" fill preload fetchPriority="high" decoding="sync" sizes="100vw" className="fx-cover" /></div>
       )}
       {variant === 'dark' && cover && (
-        <div className="fx-bg-sage fx-article-inset"><div className="fx-shell"><div className="fx-media fx-article-cover-inset"><Image src={cover} alt="" fill preload sizes="(max-width:1279px) 100vw, 1248px" className="fx-cover" /></div></div></div>
+        <div className="fx-bg-sage fx-article-inset"><div className="fx-shell"><div className="fx-media fx-article-cover-inset"><Image src={cover} alt="" fill preload fetchPriority="high" decoding="sync" sizes="(max-width:1279px) 100vw, 1248px" className="fx-cover" /></div></div></div>
       )}
       <article className="fx-article-body" aria-labelledby="fx-title">
         <div className="fx-article-col">

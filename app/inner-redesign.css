@@ -71,7 +71,6 @@ html body .wj-platform .lx-page .lx-card-col .lx-actions{margin-top:auto!importa
 
 /* photo columns: image + caption, no frame around them */
 html body .wj-platform .lx-page .lx-card-col:has(> .lx-stack > .lx-bg){border-top:0!important;padding-top:0!important}
-html body .wj-platform .lx-page .lx-card-col > .lx-stack:has(> .lx-bg + :is(.lx-rich,.lx-text)){gap:16px!important}
 html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg{border-radius:var(--ed-radius)!important;border:0!important;box-shadow:none!important;min-height:0!important;height:auto!important;aspect-ratio:4/3;display:flex!important;align-items:flex-end!important;overflow:hidden}
 html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg::after{background:linear-gradient(180deg,rgba(9,24,20,0) 35%,rgba(9,24,20,.82) 100%)!important}
 html body .wj-platform .lx-page .lx-card-col > .lx-stack > .lx-bg .lx-bg-copy{padding:18px 20px!important;gap:10px!important;position:relative;z-index:2}
@@ -102,16 +101,12 @@ html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > 
   border-bottom:0!important;border-top:1px solid var(--ed-line)!important;padding:24px 0 0!important}
 html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > .lx-card:only-child .lx-h{align-self:start}
 html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards){gap:clamp(24px,3vw,40px)!important;align-items:start!important}
-html body .wj-platform .lx-page .lx-col > .lx-stack:has(> .lx-card + .lx-card) > .lx-card ~ .lx-img-sm{display:none!important}
 
 /* ---------- 7. Splits ----------------------------------------------------- */
 html body .wj-platform .lx-page .lx-cols.lx-split{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(36px,5vw,80px)!important;align-items:center!important}
 html body .wj-platform .lx-page .lx-split > .lx-col > .lx-stack > .lx-img:only-child,html body .wj-platform .lx-page .lx-split > .lx-col > .lx-stack > .lx-crop:only-child{
   width:100%!important;max-width:none!important;height:auto!important;aspect-ratio:4/3.2!important;max-height:none!important;object-fit:cover!important}
-html body .wj-platform .lx-page .lx-split > .lx-col:has(> .lx-stack > .lx-img:only-child){position:sticky;top:150px;align-self:center}
 /* how-it-works: heading + image left, steps right */
-html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card){grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)!important;gap:clamp(36px,5vw,80px)!important}
-html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack:has(> .lx-h2 + .lx-img){position:sticky;top:150px;gap:28px}
 html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards) > .lx-col:first-child > .lx-stack > .lx-h2 + .lx-img{width:100%!important;aspect-ratio:4/3.2!important;height:auto!important;object-fit:cover!important}
 
 /* ---------- 8. Galleries -------------------------------------------------- */
@@ -141,13 +136,11 @@ html body .wj-platform .lx-page .lx-faq{background:transparent!important;border:
 /* ---------- 12. Responsive ------------------------------------------------- */
 @media (max-width:1024px){
   html body .wj-platform .lx-page .lx-cols.lx-cards:where([style*="--cols:4"],[style*="--cols: 4"]){grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col:nth-child(4)){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 @media (max-width:860px){
   html body .wj-platform .lx-page .lx-hero-split{grid-template-columns:1fr!important}
   html body .wj-platform .lx-page .lx-hero-split-media{order:-1}
-  html body .wj-platform .lx-page .lx-cols.lx-split,
-  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card + .lx-card + .lx-card){grid-template-columns:1fr!important}
+  html body .wj-platform .lx-page .lx-cols.lx-split{grid-template-columns:1fr!important}
   html body .wj-platform .lx-page .lx-split > .lx-col,html body .wj-platform .lx-page .lx-col > .lx-stack{position:static!important}
   html body .wj-platform .lx-page .lx-cols.lx-cards:where([style*="--cols:3"],[style*="--cols: 3"]){grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
@@ -158,7 +151,6 @@ html body .wj-platform .lx-page .lx-faq{background:transparent!important;border:
 
 /* ---------- 13. Heading-to-content spacing ------------------------------- */
 html body .wj-platform .lx-page .lx-stack > .lx-h.lx-h2 + :is(.lx-cols,.lx-gallery,.lx-photo-grid){margin-top:clamp(20px,2.5vw,32px)}
-html body .wj-platform .lx-page .lx-col .lx-stack > .lx-h.lx-h2:has(+ .lx-card){margin-bottom:12px!important}
 
 /* headings on dark panels stay light (beats the section heading colour rule) */
 html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-bg-copy .lx-h,
@@ -175,36 +167,6 @@ html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-card-col > .lx-stack 
   max-width: none !important;
   text-wrap: balance !important;
   margin: 0 !important;
-}
-
-html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col {
-  border-top: 1px solid var(--ed-line, rgba(17, 48, 42, 0.12)) !important;
-  padding-top: 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
-}
-
-html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
-  gap: 14px !important;
-}
-
-html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col > .lx-stack > .lx-img:first-child {
-  width: 100% !important;
-  aspect-ratio: 16 / 10 !important;
-  height: auto !important;
-  object-fit: cover !important;
-  border-radius: var(--ed-radius, 14px) !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-html body .wj-platform .lx-page .lx-sec:not(.lx-first) .lx-cols.lx-cards:has(.lx-card-col > .lx-stack > .lx-img + .lx-h.lx-h2) .lx-card-col .lx-actions {
-  margin-top: auto !important;
-  padding-top: 10px !important;
 }
 
 html body .wj-platform .lx-page .lx-card-col .lx-btn-ghost{min-height:44px;padding:0 18px!important;font-size:14px}
@@ -253,7 +215,6 @@ html body .wj-platform .lx-page .lx-card-col .lx-actions{margin-top:auto!importa
 /* single card per column ("who this is for"): same open column with a top hairline */
 html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > .lx-card:only-child{border:0!important;border-top:1px solid var(--ed-line)!important;border-radius:0!important;padding:24px 0 0!important;height:100%;background:transparent!important;box-shadow:none!important}
 html body .wj-platform .lx-page .lx-cols:not(.lx-split) > .lx-col > .lx-stack > .lx-card:only-child:hover{border-top-color:var(--ed-amber)!important}
-html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){display:grid!important;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr))!important;gap:20px!important;align-items:stretch!important}
 
 /* STEP 4 - guide / blog cards */
 html body .wj-platform .lx-page .lx-post-card{padding:0!important;overflow:visible}
@@ -271,8 +232,7 @@ html body .wj-platform .lx-page .lx-marquee-frame{border-radius:14px!important;o
 
 /* responsive collapse */
 @media (max-width:1024px){
-  html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols:4"],[style*="--cols: 4"]),
-  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols:4"],[style*="--cols: 4"]){grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 @media (max-width:860px){
   html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols:3"],[style*="--cols: 3"]){grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -280,8 +240,7 @@ html body .wj-platform .lx-page .lx-marquee-frame{border-radius:14px!important;o
   html body .wj-platform .lx-page .lx-hero-split-frame{aspect-ratio:16/11}
 }
 @media (max-width:600px){
-  html body .wj-platform .lx-page .lx-cols.lx-cards,
-  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:1fr!important}
+  html body .wj-platform .lx-page .lx-cols.lx-cards{grid-template-columns:1fr!important}
   html body .wj-platform .lx-page .lx-card-col:not(:has(> .lx-stack > .lx-bg)){padding:20px 0 0!important}
 }
 
@@ -313,7 +272,9 @@ html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell .lx-crop .lx-
 html body .wj-platform .lx-page .lx-feature-pairs .lx-card-col :is(.lx-text,.lx-rich p),
 html body .wj-platform .lx-page .lx-card-col > .lx-h + .lx-text:not(.lx-price){font-family:var(--ff-text)!important;font-size:15px!important;line-height:1.65!important;color:var(--ed-text)!important;font-weight:400!important}
 /* numbered item labels ("01") */
-html body .wj-platform .lx-page .lx-col .lx-stack > .lx-h:is(.lx-h4,.lx-h5,.lx-h6):not(:has(*)){letter-spacing:.02em}
+/* live-sections renders headings as plain text, so the former :not(:has(*)) was always true;
+   it also forced a whole-document restyle on every DOM insertion. Specificity unchanged. */
+html body .wj-platform .lx-page .lx-col .lx-stack > .lx-h:is(.lx-h4,.lx-h5,.lx-h6){letter-spacing:.02em}
 
 html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{aspect-ratio:auto!important;width:auto!important;max-width:none!important;grid-column:auto!important;flex:none!important;padding:0!important;border:0!important;background:none!important}
 
@@ -340,8 +301,7 @@ html body .wj-platform .lx-page .lx-blueprint-section .lx-blueprint-lead strong{
 
 /* phones: every card grid is a single column (beats the tablet attribute selectors) */
 @media (max-width:600px){
-  html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols"],:not([style])),
-  html body .wj-platform .lx-page .lx-cols:not(.lx-split):not(.lx-cards):has(> .lx-col > .lx-stack > .lx-card:only-child){grid-template-columns:minmax(0,1fr)!important}
+  html body .wj-platform .lx-page .lx-cols.lx-cards:is([style*="--cols"],:not([style])){grid-template-columns:minmax(0,1fr)!important}
   html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{min-height:220px}
 }
 
@@ -462,11 +422,6 @@ html body .wj-platform .lx-page .lx-blueprint-section{padding:clamp(36px,5vw,72p
 html body .wj-platform .lx-page .lx-bg-copy .lx-blueprint-section{padding:0!important}
 
 /* uneven callouts (heading + photo): heading beside the photo instead of a half-empty row */
-@media (min-width:861px){
-  html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)){display:grid!important;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(36px,5vw,80px)!important;align-items:center}
-  html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)) > :is(.lx-img,.lx-crop,.lx-img-link){grid-column:2;grid-row:1;width:100%!important;max-width:none!important;aspect-ratio:4/3;height:auto!important;object-fit:cover}
-  html body .wj-platform .lx-page .lx-uneven > .lx-callout > .lx-stack:has(> .lx-h + :is(.lx-img,.lx-crop,.lx-img-link)) > :not(.lx-img,.lx-crop,.lx-img-link){grid-column:1}
-}
 
 @media (max-width:480px){
   html body .wj-platform .archive-pagination,html body .wj-platform .archive-pagination .pagination-pages{gap:4px}
@@ -478,12 +433,9 @@ html body .wj-platform .lx-page .lx-bg-copy .lx-blueprint-section{padding:0!impo
   html body .wj-platform .archive-pagination .pagination-item:has(.pagination-gap){display:none}
 }
 
-/* avatar clusters (columns holding only a small round image): one centred, wrapping row at every width */
-html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(> .lx-col > .lx-stack > :not(.lx-img-sm))){display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:16px!important;grid-template-columns:none!important}
-html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))){display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:16px!important;grid-template-columns:none!important}
-html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))) > .lx-col{display:contents}
-html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(> .lx-col > .lx-stack > :not(.lx-img-sm))) > .lx-col{grid-column:auto!important;flex:0 0 auto;width:auto}
-html body .wj-platform .lx-page .lx-cols:has(> .lx-col > .lx-cols > .lx-col > .lx-stack > .lx-img-sm:only-child):not(:has(:is(p,h1,h2,h3,h4,.lx-rich,.lx-text))) > .lx-col > .lx-cols{display:contents!important}
+/* avatar clusters (columns holding only a small round image): one centred, wrapping row at every width.
+   "Any non-.lx-img-sm child" is spelled as the element types live-sections renders: a negated
+   universal inside :has() re-styles the whole document on every DOM insertion. Specificity unchanged. */
 
 /* card grids whose columns are themselves mini-grids (e.g. "Member Benefits"): flatten into one even grid */
 html body .wj-platform .lx-page .lx-cols.lx-cards:has(> .lx-col > .lx-mini-grid){grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))!important;gap:32px clamp(24px,3vw,40px)!important}
@@ -523,10 +475,6 @@ html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack 
 html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col > .lx-stack > .lx-stack > .lx-h.lx-h2,html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col .lx-h.lx-h2{font-size:clamp(20px,1.6vw,24px)!important;line-height:1.25!important;max-width:none!important;margin:0!important}
 html body .wj-platform .lx-page .lx-cols.lx-cards > .lx-photo-cell{align-self:start;aspect-ratio:16/10!important;min-height:0!important;height:auto!important}
 /* intro photo + two content cards: photo becomes a wide banner over a balanced 2-up row */
-@media (min-width:861px){
-  html body .wj-platform .lx-page .lx-cols.lx-cards.lx-cards:has(> .lx-photo-cell:first-child):has(> .lx-col:nth-child(3):last-child){grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  html body .wj-platform .lx-page .lx-cols.lx-cards:has(> .lx-photo-cell:first-child):has(> .lx-col:nth-child(3):last-child) > .lx-photo-cell{grid-column:1/-1!important;aspect-ratio:21/8!important}
-}
 /* inside cards, only the first heading is a title; following headings (prices, "OR", "Includes:") are compact */
 html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col .lx-stack > .lx-h ~ .lx-h{font-size:19px!important;line-height:1.35!important;margin:0!important;letter-spacing:0!important}
 html body .wj-platform .lx-page .lx-sec .lx-cols.lx-cards > .lx-col .lx-stack > .lx-img-sm + .lx-h + .lx-h,
@@ -589,7 +537,6 @@ html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:last-of-t
 html body .wj-platform .lx-page[data-page="community-network"] :is(.lx-img,.lx-crop img){border-radius:2px!important}
 html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell{border:8px solid var(--cn-paper)!important;box-shadow:var(--cn-shadow)!important;background:var(--cn-paper)!important}
 html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell :is(.lx-img,.lx-crop){border:0!important;box-shadow:none!important}
-html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-stack:first-child:has(> .lx-h.lx-h2:only-child){text-align:center;align-items:center}
 html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:not(.lx-first) .ip-wrap > .lx-stack > .lx-stack:first-child > .lx-h.lx-h2:only-child{font-size:clamp(34px,3.6vw,52px)!important;max-width:none!important}
 @media (min-width:861px){
   html body .wj-platform .lx-page[data-page="community-network"] .lx-sec:nth-of-type(2) .ip-wrap > .lx-stack{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,5vw,80px)!important;align-items:center}
@@ -636,7 +583,6 @@ html body .wj-platform .lx-page[data-page="community-network"] .lx-photo-cell :i
   html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > *{grid-column:2}
   html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > :is(.lx-img,.lx-crop),html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > .lx-stack:has(> :is(.lx-img,.lx-crop):only-child){grid-column:1!important;grid-row:1 / span 8;align-self:stretch}
   html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack .lx-img:not(.lx-img-sm){aspect-ratio:auto!important;height:100%!important;max-height:none!important;min-height:260px;object-fit:cover!important}
-  html body .wj-platform .lx-page[data-page="community-network"] .lx-cols.lx-cards > .lx-col:has(.lx-list):has(.lx-img:not(.lx-img-sm)):not(:has(.lx-mini-grid)) > .lx-stack > .lx-stack:has(> .lx-img:only-child){height:100%}
 }
 
 html body .wj-platform .lx-page[data-page="community-network"] .lx-sec .ip-wrap .lx-cols.lx-cards.lx-cards > .lx-col.lx-card-col:not(.lx-photo-cell){background:var(--cn-paper)!important;border:1px solid var(--cn-ink)!important;border-radius:4px!important;box-shadow:5px 5px 0 var(--cn-ink)!important;padding:16px!important;height:auto!important}
@@ -946,8 +892,7 @@ html body .wj-platform .lx-page .lx-sec details > p{
 }
 
 /* --- Split content sections (text + image side by side) --- */
-html body .wj-platform .lx-page .lx-split,
-html body .wj-platform .lx-page .lx-sec:has(> .ip-wrap > .elementor-section .elementor-column:nth-child(2)){
+html body .wj-platform .lx-page .lx-split{
   container-type:inline-size
 }
 html body .wj-platform .lx-page .lx-split .ip-wrap{

@@ -5,28 +5,16 @@ import type {Metadata} from 'next';
 import {ArrowUpRight,Search} from 'lucide-react';
 import {site,text,safeContent,routeFor,address,Entry,loadSite,Category,jsonLd} from '@/lib/site';
 import {PublicLayout} from '@/components/public-layout';
-import {InquiryForm} from '@/components/forms';
 import {Pricing} from '@/components/pricing';
 import {InnerHero,Highlights,SourceContent,ServiceExplore,pagePhoto,isServicePage,ServiceNav,ServiceOverview,ServiceDetails,InformationalContent} from '@/components/service-page';
 import {organizeServiceContent} from '@/lib/service-content';
-import {VenueGallery} from '@/components/venue-gallery';
 import {LiveSections,liveSectionsFor} from '@/components/live-sections';
-import {CommunityNetworkView} from '../../components/community-network-view';
 import {fetchCommunityPlans} from '../../lib/community-pricing';
 import {fetchCatalogService} from '../../lib/catalog';
-import {ServicePricingSection} from '../../components/service-pricing-section';
-import {LibraryView} from '../../components/library-view';
-import {EcommercePageView} from '../../components/ecommerce-page-view';
-import {CreativeDesignersPageView} from '../../components/creative-designers-view';
-import {WorkshopsPageView} from '../../components/workshops-page-view';
-import {TradeShowsPageView} from '../../components/trade-shows-view';
 import {MembershipsPageView} from '../../components/memberships-page-view';
-import {ServicesDirectoryView} from '../../components/services-directory-view';
-import {UseCasesView} from '../../components/use-cases-view';
-import {VisitPagesView} from '../../components/visit-pages-view';
+// Client views rendered on few routes are code-split (see components/lazy-client.tsx).
+import {InquiryForm,VenueGallery,ServicePricingSection,VisitPagesView} from '../../components/lazy-client';
 import {ContactView} from '../../components/contact-view';
-import {CreativeServicesView} from '../../components/creative-services-view';
-import {InformationPagesView} from '../../components/information-pages-view';
 import {TestimonialsSection} from '../../components/testimonials-section';
 import {FigmaPageView} from '../../components/figma-page/figma-page-view';
 import {FigmaPostView} from '../../components/figma-page/figma-post-view';
@@ -61,28 +49,17 @@ export default async function Page({params,searchParams}:Props){
  if(category||isBlogIndex)return <Archive category={category} isTag={isTag} query={{q:(await searchParams)?.q,page:category?(slug[2]==='page'?slug[3]:undefined):(slug[1]==='page'?slug[2]:undefined)}}/>;
  /* Pages redesigned in Figma ("REDESIGN / … — Homepage Style") render from lib/figma-pages. */
  const figma=figmaPageFor(pathOf(slug));
+ // Figma pages win over the old bespoke views (community-network, workshops, library, ...).
+ // Those views were unreachable yet their stylesheets loaded on every page, so they were removed.
  if(figma)return <PublicLayout><FigmaPageView page={figma}/></PublicLayout>;
  if(!source)notFound();source={...source,content:safeContent(source.content)};
- if(source.slug==='community-network'){
-   const communityPlans = await fetchCommunityPlans();
-   return <PublicLayout><CommunityNetworkView plans={communityPlans}/></PublicLayout>;
- }
  if(source.slug==='memberships') {
    /* Pass prices come from the coworking service in the dynamic catalog. */
    const [communityPlans,coworking] = await Promise.all([fetchCommunityPlans(),fetchCatalogService('coworking')]);
    return <PublicLayout><MembershipsPageView communityPlans={communityPlans} coworking={coworking}/></PublicLayout>;
  }
- if(source.slug==='workshops')return <PublicLayout><WorkshopsPageView/></PublicLayout>;
- if(source.slug==='services')return <PublicLayout><ServicesDirectoryView/></PublicLayout>;
- if(source.slug==='use-cases')return <PublicLayout><UseCasesView/></PublicLayout>;
- if(['partners','about-us'].includes(source.slug))return <PublicLayout><InformationPagesView slug={source.slug}/></PublicLayout>;
- if(source.slug==='trade-shows')return <PublicLayout><TradeShowsPageView/></PublicLayout>;
- if(['webinars','photo-studio'].includes(source.slug))return <PublicLayout><CreativeServicesView slug={source.slug}/></PublicLayout>;
  if(source.slug==='contact-us')return <PublicLayout><ContactView/></PublicLayout>;
  if(source.slug==='gallery')return <PublicLayout><VisitPagesView slug={source.slug}/></PublicLayout>;
- if(source.slug==='creative-designers-agencies')return <PublicLayout><CreativeDesignersPageView/></PublicLayout>;
- if(source.slug==='e-commerce-online-business')return <PublicLayout><EcommercePageView/></PublicLayout>;
- if(source.slug==='library')return <PublicLayout><LibraryView/></PublicLayout>;
  const p=source,title=text(p.title),isPost=p.type==='post'||s.posts.some(post=>post.path===p.path),isContact=/contact/.test(p.slug),isWorkflow=/membership-checkout|membership-confirmation|book-an-appointment|schedule-a-tour|face-linkup|^shop$/.test(p.slug),isDirectory=/^(services|use-cases|our-partners|partners|community)$/.test(p.slug),legal=/terms|privacy/.test(p.slug),image=pagePhoto(p,isPost);
  if(isPost){const cat=s.categories.find(c=>String(c.id)!=='1'&&p.categories?.some(id=>String(id)===String(c.id)));return <PublicLayout><FigmaPostView p={p} category={cat?termName(cat.name):undefined} related={relatedPosts(s.posts,p)}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd({'@context':'https://schema.org','@type':'BlogPosting',headline:title,datePublished:p.date,dateModified:p.modified||p.date,image:image?(image.startsWith('http')?image:'https://workspacejunction.com'+image):undefined,author:{'@type':'Organization',name:p.author||'Workspace Junction'},publisher:{'@type':'Organization',name:'Workspace Junction'},mainEntityOfPage:'https://workspacejunction.com'+p.path})}}/></PublicLayout>}
  const structured=!isPost&&!legal&&!isContact&&!isWorkflow&&!isDirectory&&isServicePage(p);const organized=!isPost&&!legal?organizeServiceContent(p.content,{informational:!structured}):null;
