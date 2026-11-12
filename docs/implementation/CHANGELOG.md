@@ -41,3 +41,40 @@ committed as found so mission changes diff and roll back independently.
 - `scripts/qa/mission-responsive.mjs`, npm scripts `test:plan-hint`, `test:mission-perf`,
   `test:mission-responsive`.
 - `docs/implementation/*` mission control files and evidence.
+
+## Commit feddb78 (+ follow-up docs commit) — FU-01: CSS cost, startup recalcs, route-only JS
+Diagnosis came first (traces in this commit's evidence): the inner-page mobile LCP was not CSS
+download time. The hero image finished loading in ~50 ms but painted 1.2-2.4 s later, behind
+startup main-thread work, and Lighthouse's simulation then charged every early request to LCP.
+- **Catch-all route bundles.** `app/[...slug]/page.tsx` statically imported ten bespoke views
+  that Figma pages shadow on every path they handle (community-network, library, workshops,
+  trade-shows, services directory, use-cases, partners/about-us, webinars/photo-studio,
+  creative-designers, e-commerce). Their nine stylesheets and JS shipped on all ~150 catch-all
+  URLs. Removed the branches, the components and the sheets (`use-cases-view.css` stays: the
+  use-case detail route still imports it). Proof of no visual impact: none of their rules matched
+  any element on 11 live routes at 390/1440 px (positive control: memberships/testimonial sheets
+  matched 81/36 rules).
+- **Route-only client components** are code-split through `components/lazy-client.tsx`
+  (`InquiryForm`, `VisitPagesView`, `ServicePricingSection`, `VenueGallery`): the form library
+  (~44 KB gz) and the gallery chunk with the pricing dataset (~20 KB gz) no longer load on every
+  Figma page. Their CSS stays statically imported there so server HTML is styled.
+  (`next/dynamic` inside the *server* page was tried first and rejected: Next emitted every
+  view's stylesheet as render-blocking.)
+- **`:has()` hot spots.** Inserting any element into the document cost ~44 ms of style
+  recalculation on desktop (~4x on a phone). Bisection pinned it to `:has()` arguments that can
+  match anything (`:not(:has(*))`, `:not(:has(> :not(img)))`) and to sibling-structure arguments
+  (`:only-child`, `:nth-child`, `+`). Fixed by: dropping an always-true `:not(:has(*))`; spelling
+  "only images" as an explicit element list from the live-sections renderer (same specificity);
+  `PricingGrid` `data-count` replacing `:has(> .price-card:nth-child(4):last-child)` (same
+  specificity via repeated attribute); moving 77 live-sections structure rules to
+  `public/styles/live-sections-structure.css`, loaded by `LiveSections` as a React stylesheet
+  resource only on pages that render it. Plain-node insertion: 44 ms -> 0.2 ms.
+- **ScrollTrigger off the startup path.** Registering + refreshing it forced four full-document
+  recalcs on every page. Play-once reveals/counters now run off one IntersectionObserver and the
+  progress bar off a passive scroll listener; ScrollTrigger is imported on demand only for
+  parallax/pins on capable desktops.
+- LCP hero/cover images: `decoding="sync"` (and `fetchPriority="high"` on post covers).
+- `scripts/qa/mission-perf.mjs`: LCP phase breakdown, LCP element and render-blocking list.
+- Regression evidence: computed styles of 14,048 elements on 12 routes x 2 widths, baseline
+  build vs FU-01 build: 0 CSS differences (3 header-width deltas come from the account slot's
+  session state, not CSS).

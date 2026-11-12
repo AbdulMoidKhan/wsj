@@ -1,0 +1,843 @@
+{
+  "time": "2026-11-12T13:27:01.276Z",
+  "base": "http://localhost:3001",
+  "tool": "lighthouse 13.6.0 (lab, simulated throttling)",
+  "rows": [
+    {
+      "form": "mobile",
+      "route": "/",
+      "scores": {
+        "performance": 70,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 1804.0964999999997,
+      "lcpMs": 1804.0964999999997,
+      "cls": 0,
+      "tbtMs": 1455.5,
+      "siMs": 4816.318436545089,
+      "ttfbMs": 18,
+      "mainThreadMs": 5686.599999999982,
+      "bootupMs": 1663.7719999999863,
+      "longTasks": 12,
+      "totalKB": 599,
+      "requests": 36,
+      "scriptKB": 263,
+      "cssKB": 107,
+      "imageKB": 66,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<h1 id=\\\"hp-title\\\" class=\\\"lv-h1\\\">",
+      "lcpBreakdown": {
+        "timeToFirstByte": 28,
+        "elementRenderDelay": 2276
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/2avob48o6pk8n.css",
+          "kb": 5,
+          "ms": 301
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 151
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 151
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 451
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 751
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 901
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 901
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 751
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 751
+        }
+      ],
+      "failing": [
+        "first-contentful-paint",
+        "speed-index",
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    },
+    {
+      "form": "mobile",
+      "route": "/about-us/",
+      "scores": {
+        "performance": 62,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 1668.0024,
+      "lcpMs": 5669.0048,
+      "cls": 0,
+      "tbtMs": 627.5,
+      "siMs": 3336.504388152617,
+      "ttfbMs": 12,
+      "mainThreadMs": 7531.235999999983,
+      "bootupMs": 4967.559999999978,
+      "longTasks": 9,
+      "totalKB": 594,
+      "requests": 37,
+      "scriptKB": 276,
+      "cssKB": 109,
+      "imageKB": 66,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<img alt=\\\"Members collaborating at Workspace Junction\\\" fetchpriority=\\\"high\\\" decoding=\\\"sync\\\" data-nimg=\\\"fill\\\" class=\\\"fx-cover\\\" style=\\\"position: absolu",
+      "lcpBreakdown": {
+        "timeToFirstByte": 16,
+        "resourceLoadDelay": 19,
+        "resourceLoadDuration": 10,
+        "elementRenderDelay": 1435
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/1_nvb5l6gb-n3.css",
+          "kb": 5,
+          "ms": 306
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/0r1vvr0apgq-w.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/28kd03_36ycj9.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 456
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 906
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 906
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 756
+        }
+      ],
+      "failing": [
+        "largest-contentful-paint",
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    },
+    {
+      "form": "mobile",
+      "route": "/coworking/",
+      "scores": {
+        "performance": 54,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 2288.73525,
+      "lcpMs": 6032.129349999999,
+      "cls": 0,
+      "tbtMs": 784,
+      "siMs": 4552.729693931164,
+      "ttfbMs": 8,
+      "mainThreadMs": 3455.159999999984,
+      "bootupMs": 1409.2599999999968,
+      "longTasks": 9,
+      "totalKB": 651,
+      "requests": 39,
+      "scriptKB": 276,
+      "cssKB": 109,
+      "imageKB": 122,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<img alt=\\\"Two members working at a shared table in the coworking space\\\" fetchpriority=\\\"high\\\" decoding=\\\"sync\\\" data-nimg=\\\"fill\\\" class=\\\"fx-cover\\\" style=\\",
+      "lcpBreakdown": {
+        "timeToFirstByte": 12,
+        "resourceLoadDelay": 22,
+        "resourceLoadDuration": 10,
+        "elementRenderDelay": 2238
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/1_nvb5l6gb-n3.css",
+          "kb": 5,
+          "ms": 306
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/0r1vvr0apgq-w.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/28kd03_36ycj9.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 456
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 906
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 906
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 756
+        }
+      ],
+      "failing": [
+        "first-contentful-paint",
+        "largest-contentful-paint",
+        "speed-index",
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    },
+    {
+      "form": "mobile",
+      "route": "/podcast-studio/",
+      "scores": {
+        "performance": 58,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 1671.6682499999997,
+      "lcpMs": 5867.05925,
+      "cls": 0,
+      "tbtMs": 770.5,
+      "siMs": 3242.1026829079224,
+      "ttfbMs": 14,
+      "mainThreadMs": 3453.5119999999906,
+      "bootupMs": 1311.156,
+      "longTasks": 8,
+      "totalKB": 604,
+      "requests": 37,
+      "scriptKB": 276,
+      "cssKB": 109,
+      "imageKB": 77,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<img alt=\\\"Podcast studio with microphones and cameras\\\" fetchpriority=\\\"high\\\" decoding=\\\"sync\\\" data-nimg=\\\"fill\\\" class=\\\"fx-cover\\\" style=\\\"position: absolu",
+      "lcpBreakdown": {
+        "timeToFirstByte": 19,
+        "resourceLoadDelay": 21,
+        "resourceLoadDuration": 14,
+        "elementRenderDelay": 1193
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/1_nvb5l6gb-n3.css",
+          "kb": 5,
+          "ms": 307
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 157
+        },
+        {
+          "url": "/_next/static/chunks/0r1vvr0apgq-w.css",
+          "kb": 3,
+          "ms": 157
+        },
+        {
+          "url": "/_next/static/chunks/28kd03_36ycj9.css",
+          "kb": 3,
+          "ms": 157
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 157
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 457
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 757
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 907
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 757
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 907
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 757
+        }
+      ],
+      "failing": [
+        "largest-contentful-paint",
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    },
+    {
+      "form": "mobile",
+      "route": "/virtual-office/",
+      "scores": {
+        "performance": 53,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 2380.6375000000003,
+      "lcpMs": 5652.764999999999,
+      "cls": 0,
+      "tbtMs": 867.4999999999995,
+      "siMs": 4773.135797539326,
+      "ttfbMs": 7,
+      "mainThreadMs": 3258.295999999996,
+      "bootupMs": 1333.1559999999995,
+      "longTasks": 8,
+      "totalKB": 572,
+      "requests": 36,
+      "scriptKB": 276,
+      "cssKB": 109,
+      "imageKB": 45,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<img alt=\\\"Reception area of Workspace Junction\\\" fetchpriority=\\\"high\\\" decoding=\\\"sync\\\" data-nimg=\\\"fill\\\" class=\\\"fx-cover\\\" style=\\\"position: absolute; hei",
+      "lcpBreakdown": {
+        "timeToFirstByte": 10,
+        "resourceLoadDelay": 19,
+        "resourceLoadDuration": 8,
+        "elementRenderDelay": 2246
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/1_nvb5l6gb-n3.css",
+          "kb": 5,
+          "ms": 305
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/0r1vvr0apgq-w.css",
+          "kb": 3,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/28kd03_36ycj9.css",
+          "kb": 3,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 455
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 755
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 755
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 905
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 905
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 755
+        }
+      ],
+      "failing": [
+        "first-contentful-paint",
+        "largest-contentful-paint",
+        "speed-index",
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    },
+    {
+      "form": "mobile",
+      "route": "/meeting-rooms/",
+      "scores": {
+        "performance": 60,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 1664.931,
+      "lcpMs": 5738.839,
+      "cls": 0,
+      "tbtMs": 734,
+      "siMs": 2826.5884400236537,
+      "ttfbMs": 7,
+      "mainThreadMs": 3269.8599999999824,
+      "bootupMs": 1286.2319999999988,
+      "longTasks": 8,
+      "totalKB": 592,
+      "requests": 37,
+      "scriptKB": 276,
+      "cssKB": 109,
+      "imageKB": 64,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<img alt=\\\"Boardroom table ready for a meeting\\\" fetchpriority=\\\"high\\\" decoding=\\\"sync\\\" data-nimg=\\\"fill\\\" class=\\\"fx-cover\\\" style=\\\"position: absolute; heig",
+      "lcpBreakdown": {
+        "timeToFirstByte": 10,
+        "resourceLoadDelay": 22,
+        "resourceLoadDuration": 32,
+        "elementRenderDelay": 1154
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/1_nvb5l6gb-n3.css",
+          "kb": 5,
+          "ms": 305
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/0r1vvr0apgq-w.css",
+          "kb": 3,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/28kd03_36ycj9.css",
+          "kb": 3,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 155
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 755
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 455
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 755
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 905
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 905
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 755
+        }
+      ],
+      "failing": [
+        "largest-contentful-paint",
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    },
+    {
+      "form": "mobile",
+      "route": "/contact-us/",
+      "scores": {
+        "performance": 75,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 2079.8064999999997,
+      "lcpMs": 2079.8064999999997,
+      "cls": 0,
+      "tbtMs": 759,
+      "siMs": 4947.858879848355,
+      "ttfbMs": 14,
+      "mainThreadMs": 3784.5519999999815,
+      "bootupMs": 1495.2239999999974,
+      "longTasks": 7,
+      "totalKB": 605,
+      "requests": 42,
+      "scriptKB": 289,
+      "cssKB": 114,
+      "imageKB": 43,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<h1 id=\\\"fc-title\\\" class=\\\"fc-display\\\">",
+      "lcpBreakdown": {
+        "timeToFirstByte": 19,
+        "elementRenderDelay": 2468
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/1_nvb5l6gb-n3.css",
+          "kb": 5,
+          "ms": 306
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/0r1vvr0apgq-w.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/28kd03_36ycj9.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 456
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 906
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 906
+        }
+      ],
+      "failing": [
+        "first-contentful-paint",
+        "speed-index",
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    },
+    {
+      "form": "mobile",
+      "route": "/blogs/",
+      "scores": {
+        "performance": 78,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "fcpMs": 1669.1331,
+      "lcpMs": 1669.1331,
+      "cls": 0.0004780055044022361,
+      "tbtMs": 912,
+      "siMs": 2247.386806022252,
+      "ttfbMs": 325,
+      "mainThreadMs": 4495.391999999976,
+      "bootupMs": 1419.115999999996,
+      "longTasks": 10,
+      "totalKB": 650,
+      "requests": 40,
+      "scriptKB": 276,
+      "cssKB": 109,
+      "imageKB": 123,
+      "fontKB": 124,
+      "consoleErrors": [],
+      "lcpElement": "<h1 data-mo-reveal=\\\"\\\" class=\\\"is-revealed\\\">",
+      "lcpBreakdown": {
+        "timeToFirstByte": 329,
+        "elementRenderDelay": 368
+      },
+      "renderBlocking": [
+        {
+          "url": "/_next/static/chunks/1_nvb5l6gb-n3.css",
+          "kb": 5,
+          "ms": 306
+        },
+        {
+          "url": "/_next/static/chunks/2cifv7pjqjqjg.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/0r1vvr0apgq-w.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/28kd03_36ycj9.css",
+          "kb": 3,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/2gh8cpl4fp7o4.css",
+          "kb": 2,
+          "ms": 156
+        },
+        {
+          "url": "/_next/static/chunks/3j24yjzwxhsv0.css",
+          "kb": 6,
+          "ms": 456
+        },
+        {
+          "url": "/_next/static/chunks/1z9nzrc38i1vg.css",
+          "kb": 13,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/077jr5gn9m6ie.css",
+          "kb": 15,
+          "ms": 756
+        },
+        {
+          "url": "/_next/static/chunks/1r2lq7rzv3cdl.css",
+          "kb": 20,
+          "ms": 906
+        },
+        {
+          "url": "/_next/static/chunks/1g1b2wsf4npdu.css",
+          "kb": 21,
+          "ms": 906
+        },
+        {
+          "url": "/_next/static/chunks/000x-7kl0zdff.css",
+          "kb": 20,
+          "ms": 756
+        }
+      ],
+      "failing": [
+        "total-blocking-time",
+        "max-potential-fid",
+        "interactive",
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-css-rules",
+        "unused-javascript",
+        "bf-cache",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "network-dependency-tree-insight",
+        "render-blocking-insight"
+      ],
+      "runtimeError": null
+    }
+  ]
+}

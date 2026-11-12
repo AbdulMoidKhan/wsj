@@ -97,3 +97,18 @@ Lighthouse accessibility (final perf run, taken before the last fixes): 96–100
   tokens changed only for the AA contrast fixes (darker amber text and muted greys).
 - Mega menu, tabs, accordions and forms were not changed (FU-05), so they were not re-tested
   beyond the route sweep.
+
+## FU-01 verification (commit feddb78)
+| Check | Result |
+|---|---|
+| `npm run typecheck`, `npm run lint` | PASS |
+| plan-hint 3/3, content 9/9, service-content 11/11, performance-optimizations 12/12, payment-safety 4/4, pricing-catalog 7/7 | PASS |
+| `test:redirects` (local prod) | 20/20, sitemap 200, robots 200, canonical slash 308 |
+| Computed-style regression: pre-FU-01 build vs FU-01 build, every element in `<body>` (account slot excluded: session-dependent), 12 routes x 390/1440 px, reduced motion | 14,048 elements, **0 CSS differences**. 3 header-width deltas of 1.8 px trace to the account slot rendering login vs placeholder |
+| Live-sections page (/membership-plans/) after moving 77 structure rules to a scoped sheet | 0 computed-style differences; sheet loads only there |
+| Removed view stylesheets matched any element on 11 live routes x 2 widths | 0 rules matched (control: memberships 81, testimonials 36) |
+| Gallery and contact pages after code-splitting their client views | Server HTML still contains the content; their stylesheets are in the server HTML |
+| Responsive + motion sweep, 14 core routes, all widths + reduced motion (`evidence/responsive-fu01.json`) | 148 samples, 0 overflow, 0 console errors, 0 on-screen hidden content, one `<h1>` each |
+
+Not covered: real devices; desktop parallax/pin pages were not exercised visually after ScrollTrigger
+became on-demand (the memberships hero is the only `data-parallax` user on a reachable route).

@@ -31,7 +31,7 @@ Statuses: NOT_STARTED · IN_PROGRESS · IMPLEMENTED · VERIFIED · BLOCKED · DE
 | B-05 | Batch layout reads (no forced reflow) in motion orchestrator | P1 | components/gsap-motion.tsx | IMPLEMENTED | Single read pass before writes |
 | B-06 | Route-scope homepage and contact CSS | P1 | app/layout.tsx, app/page.tsx, components/contact-view.tsx | VERIFIED | Contact page styled (browser); 43 KB off other routes |
 | B-07 | LCP hero image fetchpriority=high | P1 | components/figma-page/figma-page-view.tsx | VERIFIED | lcp-discovery-insight: priority hinted, discoverable, eager |
-| B-08 | Global CSS consolidation (15 render-blocking files, 336 `:has()`) | P0 | app/*.css | NOT_STARTED | Main remaining mobile LCP bottleneck → FU-01 |
+| B-08 | Global CSS cost (catch-all bundle, :has() hot spots, startup recalcs) | P0 | app/*.css, app/[...slug]/page.tsx, components/lazy-client.tsx, components/gsap-motion.tsx | PARTIAL (FU-01, feddb78) | Mobile avg 60.1 -> 63.6 (median of 3), TBT -18%, 0 CSS diffs on 14,048 elements; Figma LCP unchanged -> FU-03/FU-06 |
 | B-09 | Slim RSC payload / server-render static shell | P1 | components/site-shell.tsx, public-layout.tsx | NOT_STARTED | Home 116 KB inline payload → FU-02 |
 | B-10 | Font preload strategy | P2 | app/layout.tsx | NOT_STARTED | Needs visual review → FU-03 |
 
@@ -72,7 +72,8 @@ Statuses: NOT_STARTED · IN_PROGRESS · IMPLEMENTED · VERIFIED · BLOCKED · DE
 ## Follow-ups
 | ID | Item | Why not done here |
 |---|---|---|
-| FU-01 | Consolidate/split global CSS (biggest remaining mobile cost) | Cross-route cascade refactor across 157 routes; needs visual regression review |
+| FU-01 | Consolidate/split global CSS | DONE in part (feddb78): dead views + 9 sheets removed, :has hot spots fixed, ScrollTrigger lazy, route-only client views split. Remaining: body:has(.wj-platform) gate (FU-06) |
+| FU-06 | Server-rendered public-site flag on <body> to replace 55 body:has(.wj-platform) rules; defer GSAP/mega-menu JS past first paint | Root layout change affecting admin/account; needs its own review |
 | FU-02 | Server-render static shell, slim nav payload | Touches every page’s client boundary |
 | FU-03 | Font preload (italic Playfair) | Needs design sign-off |
 | FU-04 | Media library import (WSJ-03) | New import tooling + production data write → approval |

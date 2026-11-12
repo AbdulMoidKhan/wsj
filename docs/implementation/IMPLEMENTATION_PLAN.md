@@ -23,11 +23,10 @@ Ordered by measured impact. Status mirrors TASK_CHECKLIST.md.
 | G Delivery | report, docs, commits | Done for this session |
 
 ## Next actions (in order)
-1. FU-01 CSS consolidation: inventory which global sheets each route needs; move Figma-page-only
-   rules out of legacy sheets; drop `body:has()` scoping in favour of a body class; re-measure
-   mobile LCP (target ≤ 2.5 s).
-2. FU-02 Convert static parts of `SiteShell` (footer, strip nav) to server components; pass only
+1. FU-01 DONE in part (feddb78, see PERFORMANCE_RESULTS "FU-01 results"). Figma-page mobile LCP still ~5.8 s: bandwidth contention in the simulated load, not CSS parse.
+2. FU-03 Font preload review with design (124 KB of preloads compete with the hero image).
+3. FU-06 Public-site flag on <body> (replace body:has(.wj-platform)); defer GSAP / mega-menu JS past first paint.
+4. FU-02 Convert static parts of `SiteShell` (footer, strip nav) to server components; pass only
    the grouped nav links the client needs.
-3. FU-03 Font preload review with design.
-4. FU-05 Motion polish for mega menu, tabs, accordions and forms.
-5. FU-04 Media import tooling (needs approval for any production run).
+5. FU-05 Motion polish for mega menu, tabs, accordions and forms.
+6. FU-04 Media import tooling (needs approval for any production run).

@@ -71,3 +71,65 @@ Raw evidence: evidence/perf-baseline.json, evidence/perf-after-1.json, evidence/
    to server components, slim the nav-link prop (FU-02).
 3. **Fonts:** three high-priority font preloads (124 KB, Playfair normal + italic + Inter) compete with
    the LCP image on slow 4G. Splitting the italic face needs a visual review (FU-03).
+
+---
+
+# FU-01 results (2026-11-12, commit feddb78)
+
+**Method.** Two local production builds measured back to back on the same machine and port:
+the pre-FU-01 build (e3fa2ea, `.next-fu01-base`) and the FU-01 build. Mobile = **median of 3
+Lighthouse runs** per route per build (single runs varied by up to ±5 points); desktop = 1 run.
+Evidence: `evidence/perf-fu01-before-m{1,2,3}.json`, `perf-fu01-after-m{1,2,3}.json`,
+`perf-fu01-before-desktop.json`, `perf-fu01-after-desktop.json`.
+
+## mobile (median of 3)
+
+| Route | Perf | TBT ms | LCP ms | FCP ms | Main-thread ms | JS KB | CSS KB |
+|---|---|---|---|---|---|---|---|
+| / | 64 → **70** | 2364 → 1601 | 2346 → 1890 | 2346 → 1890 | 7528 → 5831 | 280 → 263 | 108 → 107 |
+| /about-us/ | 57 → **61** | 707 → 647 | 5835 → 5698 | 1975 → 1668 | 8161 → 7337 | 302 → 276 | 125 → 109 |
+| /coworking/ | 52 → **59** | 883 → 720 | 5964 → 5990 | 2523 → 1823 | 4329 → 3292 | 302 → 276 | 125 → 109 |
+| /podcast-studio/ | 58 → **59** | 761 → 749 | 5722 → 5858 | 1823 → 1672 | 3910 → 3382 | 302 → 276 | 125 → 109 |
+| /virtual-office/ | 50 → **54** | 938 → 840 | 5668 → 5682 | 2822 → 2381 | 4078 → 3393 | 302 → 276 | 125 → 109 |
+| /meeting-rooms/ | 51 → **53** | 870 → 858 | 5780 → 5818 | 2805 → 2399 | 4042 → 3475 | 302 → 276 | 125 → 109 |
+| /contact-us/ | 74 → **75** | 1081 → 800 | 1831 → 2080 | 1831 → 2080 | 4415 → 3785 | 309 → 289 | 130 → 114 |
+| /blogs/ | 75 → **78** | 1118 → 912 | 1833 → 1665 | 1833 → 1665 | 4755 → 3845 | 302 → 276 | 125 → 109 |
+| **average** | 60.1 → **63.6** | 1090 → 891 (-18%) | 4372 → 4335 | | 5152 → 4293 (-17%) | | |
+
+## desktop (1 run)
+
+| Route | Perf | TBT ms | LCP ms | JS KB |
+|---|---|---|---|---|
+| / | 78 → **89** | 332 → 183 | 1654 → 1450 | 284 → 266 |
+| /about-us/ | 97 → **99** | 73 → 55 | 1130 → 986 | 306 → 280 |
+| /coworking/ | 98 → **99** | 83 → 41 | 1036 → 835 | 306 → 280 |
+| /podcast-studio/ | 99 → **99** | 67 → 45 | 889 → 927 | 306 → 280 |
+| /virtual-office/ | 97 → **99** | 116 → 35 | 1009 → 794 | 306 → 280 |
+| /meeting-rooms/ | 98 → **99** | 115 → 49 | 845 → 933 | 306 → 280 |
+| /contact-us/ | 96 → **97** | 137 → 120 | 583 → 377 | 313 → 292 |
+| /blogs/ | 98 → **100** | 119 → 79 | 421 → 376 | 306 → 280 |
+
+Desktop home scored 95 in one other run of the same build; it sits at the 95 boundary.
+
+## Mechanism-level measurements (fast desktop CPU, unthrottled)
+| Measure | Before | After |
+|---|---|---|
+| Style/layout passes > 15 ms during load (/coworking/) | 6 (402 ms) | 4 (288 ms) |
+| Forced recalcs from ScrollTrigger at startup | 4 | 0 |
+| Recalc cost of inserting one element into the page | ~44 ms | 0.2 ms (unclassed node) |
+| Stylesheets on a Figma page | 14 | 9 |
+
+## What FU-01 did NOT fix (measured)
+- **Mobile LCP on Figma inner pages stays ~5.7-6.0 s.** The LCP breakdown shows TTFB ~15 ms, load
+  delay ~20 ms, load ~10-60 ms and 1.2-2.4 s of *render delay* in the observed trace. Lighthouse
+  simulates an image LCP by replaying every request that started before it on a 1.6 Mbps link;
+  every JS chunk starts in `<head>`, so the hero shares bandwidth with ~276 KB JS + 124 KB fonts +
+  109 KB CSS. Text-LCP pages (home, contact, blogs) do not pay this and score 70-78.
+  `decoding="sync"` on the hero did not change it. Remaining levers, in order of size: font
+  preloads (124 KB, FU-03, needs design sign-off); shared client JS (react-dom + Next runtime
+  ~110 KB gz is fixed; GSAP ~26 KB, header/mega-menu ~15 KB and lucide ~14 KB could load after
+  first paint, FU-02/FU-06).
+- Inserting an element that **carries a class** still costs ~44 ms of recalculation; the remaining
+  cost comes from the 55 `body:has(.wj-platform) ...` rules in button/consistency/motion sheets
+  (removing them in-page drops it to ~9 ms; a child-combinator rewrite did not help). Replacing
+  that gate needs a server-rendered public-site flag on `<body>`, i.e. a layout change (FU-06).

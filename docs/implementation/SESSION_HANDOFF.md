@@ -1,7 +1,7 @@
 # Session Handoff — 2026-11-12
 
 **Branch:** `feature/public-motion-performance-optimization` (local only, not pushed)
-**Last verified commit:** `96f538c` (followed by a docs-only handoff commit)
+**Last verified commit:** `feddb78` (FU-01), followed by a docs commit
 **Phase:** Stage A–F done for this session; Stage B follow-ups open.
 
 ## Commits on this branch
@@ -10,6 +10,7 @@
 | a044b1e | Baseline: pre-existing uncommitted work snapshotted as found |
 | 8a9c370 | Motion runtime rewrite, WebGL gating, WSJ-01/02/04, carousel, dead code + `motion` dep removed |
 | 96f538c | WebGL after first interaction, route-scoped CSS, LCP priority, AA contrast, QA scripts, docs |
+| feddb78 | FU-01: dead catch-all views + 9 sheets removed, :has() hot spots fixed, ScrollTrigger on demand, route-only client views code-split |
 
 ## State
 - Compiles: typecheck and lint clean. All unit/guard suites pass (see PROGRESS_STATE.json).
@@ -37,7 +38,16 @@
 - `next build` with a custom dist dir edits `tsconfig.json`; run `git checkout tsconfig.json` before
   committing.
 
+## FU-01 outcome
+Mobile median average 60.1 -> 63.6, TBT -18%, desktop home 78 -> 89. Figma-page mobile LCP unchanged
+(~5.8 s): Lighthouse replays every early request on a 1.6 Mbps link, so the hero image competes with
+~276 KB JS + 124 KB fonts + 109 KB CSS. See PERFORMANCE_RESULTS "FU-01 results".
+
+## Environment notes (added)
+- With MSYS_NO_PATHCONV=1, pass QA_OUT as a Windows path (cygpath -w); a /c/... path makes Node write to C:c...
+- `.next-fu01-base` holds the pre-FU-01 build used for before/after comparisons.
+
 ## Next precise action
-FU-01: map which global stylesheet rules each route actually needs (start with `inner-redesign.css`
-at 94 KB and `design-system.css`), move route-specific sheets into their views, then re-run
-`npm run test:mission-perf` and compare mobile LCP render delay against `evidence/perf-final.json`.
+FU-03 (font preloads, needs design sign-off) gives the largest remaining mobile LCP lever. FU-06 (server-rendered
+public-site flag on <body> replacing 55 body:has(.wj-platform) rules; GSAP/mega-menu JS after first paint)
+needs a root-layout change reviewed for admin/account.
