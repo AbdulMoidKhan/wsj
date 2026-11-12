@@ -29,6 +29,14 @@ const config: NextConfig = {
             protocol: 'https',
             hostname: 'chicagolandpodcaststudio.com',
           },
+          {
+            protocol: 'https',
+            hostname: 'pub-e4b4ffee7e0747098f49cc9765932cee.r2.dev',
+          },
+          {
+            protocol: 'https',
+            hostname: '*.r2.dev',
+          },
         ],
       },
   turbopack: { rules: { '*.css': { loaders: ['@tailwindcss/turbopack'], as: '*.css' } } },
