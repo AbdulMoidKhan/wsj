@@ -1,0 +1,50 @@
+{
+  "mission": "Workspace Junction Public Website Enhancement",
+  "branch": "feature/public-motion-performance-optimization",
+  "missionStatus": "in_progress",
+  "sessionDate": "2026-11-12",
+  "currentPhase": "Stage B follow-ups (FU-01 CSS consolidation)",
+  "lastCompletedTask": "F-04 accessibility fixes + QA evidence",
+  "currentTask": "",
+  "nextTask": "FU-01 consolidate/split global CSS to cut mobile LCP render delay",
+  "completedTasks": ["A-01", "A-02", "A-03", "A-04", "A-05", "WSJ-01", "WSJ-02", "WSJ-04", "WSJ-05", "B-01", "B-02", "B-03", "B-04", "B-05", "B-06", "B-07", "C-01", "C-02", "C-03", "C-04", "C-05", "C-06", "C-07", "C-08", "C-09", "D-01", "E-01", "E-02", "E-03", "F-01", "F-02", "F-03", "F-04", "F-05", "F-06"],
+  "pendingTasks": ["B-08 / FU-01", "B-09 / FU-02", "B-10 / FU-03", "D-02", "D-03", "D-04", "FU-05"],
+  "blockedTasks": ["WSJ-03 / FU-04 (needs import tooling + approval for production data write)"],
+  "modifiedFiles": [
+    "app/[...slug]/page.tsx", "app/layout.tsx", "app/page.tsx", "app/motion-system.css", "app/figma-home.css", "app/figma-pages.css",
+    "app/contact-page.css", "app/inner-redesign.css", "components/gsap-motion.tsx", "components/scene-backdrop.tsx",
+    "components/ambient.tsx", "components/site-shell.tsx", "components/site-footer.tsx", "components/home-live.tsx",
+    "components/booking-dialog.tsx", "components/pricing-grid.tsx", "components/contact-view.tsx",
+    "components/memberships-page-view.tsx", "components/visit-pages-view.css", "components/figma-page/figma-page-view.tsx",
+    "lib/catalog-service-hint.ts", "lib/motion-tokens.ts", "lib/use-reduced-motion.ts", "data/redirects.json",
+    "package.json", "package-lock.json", "scripts/qa/mission-perf.mjs", "scripts/qa/mission-responsive.mjs", "scripts/qa/plan-hint.test.ts"
+  ],
+  "removedFiles": ["components/coworking-view.tsx", "components/dynamic-page-view.tsx", "lib/dynamic-pages-config.tsx"],
+  "removedDependencies": ["motion"],
+  "lastVerifiedCommit": "96f538c",
+  "lastVerificationResults": {
+    "typecheck": "pass",
+    "lint": "pass",
+    "unitSuites": "plan-hint 3/3, content 9/9, service-content 11/11, performance-optimizations 12/12, payment-safety 4/4, pricing-catalog 7/7, api scenario guards 7/7, safety 5/5",
+    "build": "pass (196 pages)",
+    "redirects": "20/20",
+    "lighthouseMobileAvgPerf": "51 -> 63",
+    "lighthouseDesktopAvgPerf": "82 -> 97",
+    "mobileAvgTbtMs": "3282 -> 1033",
+    "jsPerPageKB": "549 -> 300",
+    "responsiveSweep": "157 routes / 458 samples: 0 overflow, 0 console errors, 1 h1 each; corrected hidden-content metric 0 problems",
+    "axe": "0 violations on 5/8 routes; remaining: one fixed after the build (verified in-page), one axe pseudo-element limitation, one exempt disabled control"
+  },
+  "knownIssues": [
+    "Mobile Lighthouse 51-75 (target 90): ~1.7 s LCP render delay from 15 render-blocking global stylesheets (FU-01)",
+    "Mobile home TBT ~2 s: 116 KB inline RSC payload + large client hydration (FU-02)",
+    "Desktop home 88 (target 95)",
+    "Header retract only applies where the header is sticky; Figma routes use a non-sticky header by design",
+    "Final CSS-only tweak (home rating line) verified by in-page injection, not by a fresh build"
+  ],
+  "requiredApprovals": [
+    "Any production deployment of this branch",
+    "WSJ-03 media import: writing Media rows/uploads in production"
+  ],
+  "resumeInstructions": "See docs/implementation/RESUME_INSTRUCTIONS.md"
+}
