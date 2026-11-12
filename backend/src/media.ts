@@ -66,7 +66,7 @@ export class MediaController {
   return item;
  }
 
- @Post() @Roles('ADMIN','EDITOR') @ApiConsumes('multipart/form-data') @ApiBody({schema:{type:'object',properties:{file:{type:'string',format:'binary'},alt:{type:'string'}}}}) @UseInterceptors(FileInterceptor('file',{limits:{fileSize:25*1024*1024,files:1}}))
+ @Post() @Roles('ADMIN','EDITOR') @ApiConsumes('multipart/form-data') @ApiBody({schema:{type:'object',properties:{file:{type:'string',format:'binary'},alt:{type:'string'}}}}) @UseInterceptors(FileInterceptor('file',{limits:{fileSize:5*1024*1024,files:1}}))
  async upload(@UploadedFile() file:Express.Multer.File,@ValidatedBody(MediaDto) dto:MediaDto,@Req() req:any){
   if(!file)throw new BadRequestException('File required');
   const b=file.buffer;
