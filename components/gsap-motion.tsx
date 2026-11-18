@@ -81,7 +81,10 @@ export function GsapMotion() {
   /* ---- Smooth scroll: created once per preference, survives navigations. ---- */
   useEffect(() => {
     window.clearTimeout(lenisDisposeTimer);
-    if (reduced || !canRunRichEffects()) {
+    // The homepage owns native sticky/pinned scenes and tab scrollTo calls.
+    // A second interpolated scroll controller makes those inputs compete.
+    if (pathname === '/' || reduced || !canRunRichEffects()) {
+      lenisRef.current = null;
       disposeLenis();
       return;
     }
@@ -125,7 +128,7 @@ export function GsapMotion() {
       }};
     }).catch(() => {/* native scrolling remains */});
     return () => {disposed = true; scheduleDispose();};
-  }, [reduced]);
+  }, [reduced, pathname]);
 
   /* ---- Header: elevation + direction-aware retract. Persistent across routes. ---- */
   useEffect(() => {

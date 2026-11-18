@@ -201,12 +201,13 @@ export function JunctionMotion() {
           if (frame) gsap.fromTo(frame.querySelector('img'), {scale: 1.25}, {scale: 1, ease: 'none', scrollTrigger: scrub(frame, 'top bottom', 'bottom 60%')});
 
           const mm = gsap.matchMedia(root);
-          mm.add('(min-width: 1024px) and (min-height: 600px)', () => {
+          mm.add('(min-width: 1024px) and (min-height: 740px)', () => {
             if (hero) gsap.to(one('.h-hero-copy'), {y: -90, autoAlpha: 0.25, ease: 'none', scrollTrigger: scrub(hero, 'top top', 'bottom top')});
 
             /* Spaces: pin and slide the rail by its overflow. */
             const rail = one('.h-rail');
-            if (spaces && rail) {
+            // Deferred motion must not insert a spacer above an already-scrolled visitor.
+            if (spaces && rail && spaces.getBoundingClientRect().bottom > 0) {
               spaces.classList.add('is-pinned');
               /* Slide until the last card ends one gutter (the rail's own inline padding) from the
                  right edge. Measured with layout properties so it is invariant to transform. */
@@ -235,11 +236,13 @@ export function JunctionMotion() {
 
               /* Allow horizontal wheel / trackpad swipe on the rail to advance the gallery */
               const onWheel = (e: WheelEvent) => {
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 2) {
-                  window.scrollBy({ top: e.deltaX });
+                if (tl.scrollTrigger?.isActive && e.cancelable && Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 2) {
+                  e.preventDefault();
+                  const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1;
+                  window.scrollBy({top: e.deltaX * unit, behavior: 'instant'});
                 }
               };
-              spaces.addEventListener('wheel', onWheel, { passive: true });
+              spaces.addEventListener('wheel', onWheel, {passive: false});
 
               return () => {
                 spaces.classList.remove('is-pinned');
@@ -259,16 +262,25 @@ export function JunctionMotion() {
         /* Trigger positions are measured once; content that settles later (images, fonts, banners)
            moves the sections, and a stale start pins the spaces rail part-way off screen. Re-measure
            whenever the page's height changes, ignoring the change a refresh itself causes. */
-        let measuredHeight = 0;
-        const refresh = () => { ScrollTrigger.refresh(); measuredHeight = document.body.scrollHeight; };
+        const layoutKey = () => [document.body.scrollHeight, root.offsetWidth,
+          one('.h-hero')?.offsetHeight, one('.h-intro')?.offsetHeight,
+          one('.h-spaces-head')?.offsetHeight].join(':');
+        let measuredLayout = '';
+        const refresh = () => {
+          if (disposed) return;
+          ScrollTrigger.refresh();
+          measuredLayout = layoutKey();
+        };
+        void document.fonts.ready.then(refresh);
         if (document.readyState !== 'complete') window.addEventListener('load', refresh, {once: true});
         else requestAnimationFrame(refresh);
         let resizeTimer = 0;
         const heightWatch = new ResizeObserver(() => {
           window.clearTimeout(resizeTimer);
-          resizeTimer = window.setTimeout(() => { if (Math.abs(document.body.scrollHeight - measuredHeight) > 1) refresh(); }, 200);
+          resizeTimer = window.setTimeout(() => { if (layoutKey() !== measuredLayout) refresh(); }, 200);
         });
         heightWatch.observe(document.body);
+        for (const el of q('.h-hero, .h-intro, .h-spaces-head')) heightWatch.observe(el);
         cleanups.push(() => {window.removeEventListener('load', refresh); heightWatch.disconnect(); window.clearTimeout(resizeTimer); ctx.revert(); spaces?.classList.remove('is-pinned');});
       }).catch(() => {/* scenes are optional */}); });
       cleanups.push(() => { if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idleHandle); else window.clearTimeout(idleHandle); });

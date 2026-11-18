@@ -30,7 +30,7 @@ export interface ExplorerChapter {
 
    ARIA tabs with roving tabindex throughout. */
 
-const SCROLL_QUERY = '(min-width: 1100px) and (prefers-reduced-motion: no-preference)';
+const SCROLL_QUERY = '(min-width: 1100px) and (min-height: 740px) and (prefers-reduced-motion: no-preference)';
 
 export function EcosystemExplorer({chapters}: {chapters: ExplorerChapter[]}) {
   const [active, setActive] = useState(0);

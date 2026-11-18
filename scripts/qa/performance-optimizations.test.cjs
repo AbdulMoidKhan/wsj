@@ -114,3 +114,29 @@ test('catalog booking preserves coworking same-day restrictions and declared ded
   assert.match(seedLine, /durationDays: 30/);
  }
 });
+
+// Homepage scrolling stays native; optional scenes cannot create a scroll trap.
+test('homepage never runs a second smooth-scroll controller', () => {
+ const motion = source('components/gsap-motion.tsx');
+ assert.match(motion, /pathname === '\/' \|\| reduced \|\| !canRunRichEffects\(\)/);
+ assert.match(motion, /\[reduced, pathname\]/);
+});
+
+test('ecosystem sticky layout is gated by hydration, viewport height and motion preference', () => {
+ const css = source('app/_home/junction-home.css');
+ const explorer = source('components/ecosystem-explorer.tsx');
+ assert.match(explorer, /min-height: 740px/);
+ assert.match(css, /@media \(min-width: 1100px\) and \(min-height: 740px\) and \(prefers-reduced-motion: no-preference\)/);
+ assert.match(css, /\.jx-track\.is-scroll-driven \{ height:/);
+ assert.doesNotMatch(css, /\.jx-track \{ height:/);
+ assert.match(css, /overflow-x: clip; overflow-y: visible/);
+});
+
+test('deferred gallery pin cannot add spacing above a visitor who already passed it', () => {
+ const motion = source('components/junction-motion.tsx');
+ assert.match(motion, /spaces && rail && spaces\.getBoundingClientRect\(\)\.bottom > 0/);
+ assert.match(motion, /tl\.scrollTrigger\?\.isActive && e\.cancelable/);
+ assert.match(motion, /e\.preventDefault\(\)/);
+ assert.match(motion, /deltaMode === 1/);
+ assert.match(motion, /document\.fonts\.ready\.then\(refresh\)/);
+});
