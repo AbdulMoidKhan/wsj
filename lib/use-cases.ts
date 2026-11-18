@@ -87,7 +87,11 @@ export async function fetchUseCase(slug: string): Promise<UseCase | null> {
     const response = await fetch((process.env.API_URL || 'http://localhost:4000/api') + '/public/use-cases/' + encodeURIComponent(slug), {next: {revalidate: 30}, signal: AbortSignal.timeout(2500)});
     if (response.ok) return toUseCase((await response.json()) as Row, 0);
     if (response.status !== 404) return useCaseFallback.find(item => item.slug === slug) || null;
-    return null;
+    // The collection may be served by a different API version than the detail
+    // endpoint. Only resolve entries that are actually exposed by the same
+    // collection (or its existing offline fallback), never invent a record.
+    const {items} = await fetchUseCases();
+    return items.find(item => item.slug === slug) || null;
   } catch {
     return useCaseFallback.find(item => item.slug === slug) || null;
   }

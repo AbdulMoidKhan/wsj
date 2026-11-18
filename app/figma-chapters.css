@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Inner-page chapter compositions (route CSS: imported by figma-page-view only).
+   The shared template renders every service page; this sheet gives each chapter of
+   the ecosystem (main[data-chapter]) its own field colours and section treatments,
+   and replaces the template's generic devices (eyebrows, icon cards, boxed highlights,
+   small photo pairs, boxed CTAs) with the brand's editorial system:
+   - the junction marker: section number + amber pathway line + label;
+   - directories: numbered rows on graphic lines instead of icon cards;
+   - display headings at the homepage scale; photography at cinematic sizes.
+   Selectors carry [data-chapter] so they outrank figma-pages.css inside the same layer.
+   ========================================================================== */
+@layer wj-consistency {
+
+/* ---- Shared editorial system --------------------------------------------- */
+#main.fx-page[data-chapter] { counter-reset: fx-sec; --fx-forest: var(--wj-green); --fx-ink: var(--wj-ink); --fx-amber: var(--wj-amber); --fx-amber-text: var(--wj-amber-ink); --fx-cream: var(--wj-cream); --fx-sage: var(--wj-sage); }
+#main.fx-page[data-chapter] { background: var(--wj-cream) !important; }
+#main.fx-page[data-chapter] .fx-sec { counter-increment: fx-sec; padding-block: clamp(88px, 9vw, 144px) !important; margin: clamp(10px, 1.1vw, 18px) clamp(10px, 1.1vw, 18px) 0 !important; border-radius: 30px !important; overflow: clip; }
+#main.fx-page[data-chapter] .fx-sec:is(.fx-bg-cream) { margin-block: 0 !important; }
+#main.fx-page[data-chapter] .fx-h2 {
+  font: 400 clamp(40px, 4.6vw, 76px)/1.02 var(--font-serif), Georgia, serif !important; font-variation-settings: 'opsz' 72;
+  letter-spacing: -.028em !important; max-width: 18ch !important; text-wrap: balance;
+}
+#main.fx-page[data-chapter] .fx-h2-sm { font-size: clamp(32px, 3.4vw, 54px) !important; }
+#main.fx-page[data-chapter] .fx-lead { font-size: clamp(16.5px, 1.2vw, 18.5px) !important; line-height: 1.65 !important; color: var(--wj-soft) !important; max-width: 52ch !important; }
+
+/* Junction marker: "03 —— What we build". The number is the section's place on the page. */
+#main.fx-page[data-chapter] .fx-eyebrow {
+  display: inline-flex !important; align-items: center !important; gap: 14px !important;
+  font: 600 13px/1.3 var(--font-sans), sans-serif !important; letter-spacing: .06em !important;
+  text-transform: uppercase !important; color: var(--wj-amber-ink) !important; gap: 10px !important;
+}
+#main.fx-page[data-chapter] .fx-eyebrow::first-letter { text-transform: uppercase !important; }
+#main.fx-page[data-chapter] .fx-sec .fx-eyebrow::before {
+  content: '' !important; display: inline-block !important; width: 8px !important; height: 8px !important; padding: 0 !important;
+  border-radius: 50% !important; background: var(--wj-amber) !important; box-shadow: 0 0 0 4px rgba(215, 144, 42, .2) !important;
+}
+
+/* Boxed highlights -> a list hung on an amber pathway line. */
+#main.fx-page[data-chapter] .fx-highlights { background: transparent !important; border-radius: 0 !important; padding: 8px 0 8px 32px !important; box-shadow: inset 3px 0 0 var(--wj-amber) !important; gap: 22px !important; }
+#main.fx-page[data-chapter] .fx-highlights .fx-h3 { font: 400 23px/1.2 var(--font-serif), Georgia, serif !important; }
+#main.fx-page[data-chapter] .fx-highlights li > span:last-child { color: var(--wj-soft) !important; }
+#main.fx-page[data-chapter] .fx-badge { background: transparent !important; color: var(--wj-amber-ink) !important; width: auto !important; height: auto !important; border-radius: 0 !important; box-shadow: none !important; }
+
+/* Icon cards -> numbered directory rows on graphic lines. */
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-grid { counter-reset: fx-item; gap: 0 clamp(32px, 4vw, 72px) !important; }
+#main.fx-page[data-chapter] .fx-grid-kind-card :is(.fx-cols-3, .fx-cols-4) { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-card {
+  counter-increment: fx-item; display: grid !important; grid-template-columns: 56px minmax(0, 1fr) !important; column-gap: 8px !important; row-gap: 8px !important; align-items: start !important;
+  background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: inset 0 2px 0 rgba(16, 39, 28, .12) !important;
+  padding: 28px 44px 30px 0 !important; min-height: 0 !important; box-shadow: inset 0 1px 0 rgba(16, 39, 28, .14) !important; transition: padding .55s var(--wj-ease), box-shadow .4s ease !important;
+}
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-card::before { content: counter(fx-item, decimal-leading-zero); grid-column: 1; grid-row: 1 / span 2; font: 600 13px/2.1 var(--font-sans), sans-serif; letter-spacing: .06em; color: var(--wj-amber-ink); }
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-card .fx-badge { display: none !important; }
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-card :is(.fx-h3, h3) { grid-column: 2 !important; grid-row: 1 !important; font: 400 clamp(23px, 2vw, 30px)/1.12 var(--font-serif), Georgia, serif !important; letter-spacing: -.015em !important; transition: color .3s ease; }
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-card p { grid-column: 2 !important; grid-row: 2 !important; font-size: 16px !important; color: var(--wj-soft) !important; }
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-card-link:hover { box-shadow: inset 0 1px 0 var(--wj-amber) !important; transform: none !important; padding-left: 12px !important; }
+#main.fx-page[data-chapter] .fx-grid-kind-card .fx-card-link:hover :is(.fx-h3, h3) { font-style: italic !important; color: var(--wj-green) !important; text-decoration: none !important; }
+#main.fx-page[data-chapter] .fx-card-arrow { top: 28px !important; right: 0 !important; color: var(--wj-amber-ink) !important; }
+
+/* Photography at editorial scale, square corners. */
+#main.fx-page[data-chapter] :is(.fx-media, .fx-plan, .fx-room, .fx-band, .fx-table-wrap, .fx-closing-panel, .fx-form-card, .fx-help, .fx-notice, .fx-event, .fx-included, .fx-feature) { border-radius: 22px !important; }
+#main.fx-page[data-chapter] .fx-card:not(.fx-grid-kind-card .fx-card) { border-radius: 22px !important; }
+#main.fx-page[data-chapter] .fx-media img { transition: transform 1.2s var(--wj-ease) !important; }
+#main.fx-page[data-chapter] :is(.fx-card-photo, .fx-room, .fx-gallery-sec .fx-media):hover .fx-media img, #main.fx-page[data-chapter] .fx-card-photo:hover img { transform: scale(1.05) !important; }
+#main.fx-page[data-chapter] .fx-pair { gap: 12px !important; }
+#main.fx-page[data-chapter] .fx-pair .fx-media { height: clamp(320px, 38vw, 620px) !important; }
+#main.fx-page[data-chapter] .fx-wide { aspect-ratio: 21 / 9 !important; }
+#main.fx-page[data-chapter] .fx-card-photo { background: transparent !important; border: 0 !important; }
+#main.fx-page[data-chapter] .fx-card-photo .fx-card-img { height: clamp(300px, 30vw, 480px) !important; }
+#main.fx-page[data-chapter] .fx-card-photo .fx-card-body { padding: 20px 0 0 !important; }
+
+/* Closing: the boxed CTA becomes a full green chapter end. */
+#main.fx-page[data-chapter] .fx-sec.fx-closing.fx-closing { background: var(--wj-green) !important; }
+#main.fx-page[data-chapter] .fx-closing .fx-closing-panel { background: transparent !important; padding: 0 !important; border: 0 !important; }
+#main.fx-page[data-chapter] .fx-closing :is(.fx-h2, h2) { color: #fff !important; max-width: 16ch !important; font-size: clamp(42px, 5.2vw, 88px) !important; }
+#main.fx-page[data-chapter] .fx-closing :is(.fx-lead, p) { color: var(--wj-on-dark) !important; }
+#main.fx-page[data-chapter] .fx-closing .fx-eyebrow { color: var(--wj-on-dark) !important; }
+#main.fx-page[data-chapter] .fx-closing .fx-eyebrow::before { color: var(--wj-amber) !important; }
+#main.fx-page[data-chapter] .fx-closing .fx-badge-round { display: none !important; }
+#main.fx-page[data-chapter] .fx-closing .wj-button-green { background-color: var(--wj-amber) !important; border-color: var(--wj-amber) !important; color: var(--wj-deep) !important; }
+#main.fx-page[data-chapter] .fx-sec.fx-closing-centered.fx-closing-centered { background: var(--wj-amber) !important; }
+#main.fx-page[data-chapter] .fx-closing-centered :is(.fx-h2, .fx-lead, .fx-eyebrow) { color: var(--wj-ink) !important; margin-inline: auto !important; }
+
+/* ---- Chapter field sequences ----------------------------------------------- */
+/* Work: architectural calm — cream and ivory, photography does the colour. */
+#main.fx-page[data-chapter="work"] .fx-sec.fx-bg-sage { background: var(--wj-cream) !important; }
+#main.fx-page[data-chapter="work"] .fx-sec:is(.fx-bg-white, .fx-bg-cream) { background: var(--wj-ivory) !important; }
+
+/* Establish: paper — ivory and sage, amber pathway lines. */
+#main.fx-page[data-chapter="establish"] .fx-sec:is(.fx-bg-white, .fx-bg-cream) { background: var(--wj-ivory) !important; }
+#main.fx-page[data-chapter="establish"] .fx-sec.fx-bg-sage { background: var(--wj-sage) !important; }
+
+/* Start + Connect: the sage chapters turn deep green. */
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) { background: var(--wj-green) !important; }
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec:is(.fx-bg-white, .fx-bg-cream) { background: var(--wj-cream) !important; }
+
+/* Grow: an agency rhythm — amber chapters between ivory pages. */
+#main.fx-page[data-chapter="grow"] .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) { background: var(--wj-amber) !important; }
+#main.fx-page[data-chapter="grow"] .fx-sec:is(.fx-bg-white, .fx-bg-cream) { background: var(--wj-ivory) !important; }
+#main.fx-page[data-chapter="grow"] .fx-sec.fx-bg-sage .fx-eyebrow::before { color: var(--wj-ink) !important; background-image: linear-gradient(var(--wj-ink), var(--wj-ink)) !important; }
+#main.fx-page[data-chapter="grow"] .fx-sec.fx-bg-sage .fx-card { box-shadow: inset 0 2px 0 rgba(16, 39, 28, .22) !important; }
+#main.fx-page[data-chapter="grow"] .fx-sec.fx-bg-sage .fx-card::before { color: var(--wj-ink) !important; }
+#main.fx-page[data-chapter="grow"] .fx-sec.fx-bg-sage :is(p, .fx-card p) { color: #2b2615 !important; }
+
+/* Create: a cinematic night throughout (functional pricing and forms keep light surfaces). */
+#main.fx-page[data-chapter="create"] { background: var(--wj-night) !important; }
+#main.fx-page[data-chapter="create"] .fx-sec:not(.fx-pricing):not(:has(form)) { background: var(--wj-night) !important; }
+#main.fx-page[data-chapter="create"] .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) { background: #0b1f15 !important; }
+#main.fx-page[data-chapter="create"] .fx-sec.fx-pricing { background: var(--wj-cream) !important; }
+
+/* Text on the dark fields above. */
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) :is(h2, h3, h4, .fx-h2, .fx-h3, strong),
+#main.fx-page[data-chapter="create"] .fx-sec:not(.fx-pricing):not(:has(form)) :is(h2, h3, h4, .fx-h2, .fx-h3, strong) { color: #fff !important; }
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) :is(p, li, span, .fx-lead, .fx-eyebrow),
+#main.fx-page[data-chapter="create"] .fx-sec:not(.fx-pricing):not(:has(form)) :is(p, li, span, .fx-lead, .fx-eyebrow) { color: var(--wj-on-dark) !important; }
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) :is(.fx-badge, .fx-card-arrow, svg),
+#main.fx-page[data-chapter="create"] .fx-sec:not(.fx-pricing):not(:has(form)) :is(.fx-badge, .fx-card-arrow, svg) { color: var(--wj-amber) !important; }
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) .fx-eyebrow::before,
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) .fx-card::before,
+#main.fx-page[data-chapter="create"] .fx-sec:not(.fx-pricing):not(:has(form)) .fx-eyebrow::before,
+#main.fx-page[data-chapter="create"] .fx-sec:not(.fx-pricing):not(:has(form)) .fx-card::before { color: var(--wj-amber) !important; }
+#main.fx-page:is([data-chapter="start"], [data-chapter="connect"]) .fx-sec.fx-bg-sage:not(.fx-pricing):not(:has(form)) .fx-card,
+#main.fx-page[data-chapter="create"] .fx-sec:not(.fx-pricing):not(:has(form)) .fx-card { box-shadow: inset 0 2px 0 rgba(255, 255, 255, .16) !important; }
+
+/* Contrast: markers inside dark functional surfaces, and headings on the amber field. */
+#main.fx-page[data-chapter] :is(.fx-plan-dark, .fx-band, .fx-perk, .fx-band-quote) .fx-eyebrow { color: var(--wj-amber-hi) !important; }
+#main.fx-page[data-chapter="grow"] .fx-sec.fx-bg-sage :is(h2, h3, h4, .fx-h2, .fx-h3) { color: var(--wj-ink) !important; }
+
+/* ---- Phones -------------------------------------------------------------- */
+@media (max-width: 767px) {
+  #main.fx-page[data-chapter] .fx-sec { padding-block: 72px !important; }
+  #main.fx-page[data-chapter] .fx-grid-kind-card .fx-grid { grid-template-columns: 1fr !important; }
+  #main.fx-page[data-chapter] .fx-grid-kind-card .fx-card { grid-template-columns: 44px minmax(0, 1fr) !important; padding-right: 32px !important; }
+  #main.fx-page[data-chapter] .fx-h2 { font-size: clamp(32px, 9vw, 44px) !important; max-width: none !important; }
+  #main.fx-page[data-chapter] .fx-pair .fx-media { height: 300px !important; }
+  #main.fx-page[data-chapter] .fx-wide { aspect-ratio: 4 / 3 !important; }
+}
+}

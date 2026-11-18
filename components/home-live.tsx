@@ -160,7 +160,6 @@ export function HeroSlides() {
    immediately. Session prices are the catalog hourly rate multiplied by the
    session length, which is why they can never disagree with checkout. */
 type Tier = {name: string; duration: string; hours: number; includes: string[]};
-type Studio = {slug?: string; name: string; blurb: string; capacity: string; tiers: Tier[]};
 
 const SESSION_TIERS: Tier[][] = [
   [
@@ -198,102 +197,110 @@ export interface StudioRate {
   unitAmountCents: number;
   currency: string;
   description: string;
+  durationMinutes?: number | null;
 }
 
-/** Build the tab data from catalog packages, keeping the marketing copy. */
-export function studiosFromCatalog(rates: StudioRate[]): Studio[] {
-  return rates.map((rate, index) => ({
-    slug: rate.slug,
-    name: rate.name,
-    blurb: rate.description || STUDIO_BLURBS[index] || STUDIO_BLURBS[0],
-    capacity: rate.capacityText || 'Capacity confirmed by our team',
-    tiers: SESSION_TIERS[index] || SESSION_TIERS[0],
-  }));
+type TierKind = 0 | 1 | 2; // starter (per hour), standard session, premium production
+type StudioTier = {kind: TierKind; name: string; hours: number; price: string; planSlug: string; includes: string[]};
+type StudioGroup = {name: string; blurb: string; capacity: string; tiers: StudioTier[]};
+
+/* The catalog lists each studio's sessions as separate packages, e.g. "Solo Creator Studio"
+   (starter, per hour), "Solo Creator Studio — Standard Session" and "… — Premium Production".
+   Group them by studio and keep every price exactly as published in the catalog. */
+const tierOf = (name: string): TierKind => /premium\s+(podcast\s+)?production/i.test(name) ? 2 : /standard/i.test(name) ? 1 : 0;
+const studioOf = (name: string) => name
+  .replace(/(starter|standard|premium)\s+podcast\s+(session|production)/gi, '')
+  .replace(/standard\s+session|premium\s+production/gi, '')
+  .replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N})]+$/gu, '')
+  .trim();
+const contentIndex = (studio: string, fallback: number) => {
+  const s = studio.toLowerCase();
+  return s.includes('solo') ? 0 : s.includes('interview') ? 1 : s.includes('panel') ? 2 : s.includes('premium') || s.includes('video') ? 3 : Math.min(fallback, 3);
+};
+const money = (cents: number, currency: string) => (cents / 100).toLocaleString('en-US', {style: 'currency', currency: currency.toUpperCase(), maximumFractionDigits: cents % 100 ? 2 : 0});
+
+/** Build studio tabs from catalog packages, keeping the published marketing copy. */
+export function studiosFromCatalog(rates: StudioRate[]): StudioGroup[] {
+  const groups = new Map<string, StudioRate[]>();
+  for (const rate of rates) {
+    const studio = studioOf(rate.name);
+    if (!studio) continue;
+    groups.set(studio, [...(groups.get(studio) || []), rate]);
+  }
+  return [...groups.entries()].map(([name, plans], index) => {
+    const content = contentIndex(name, index);
+    const tiers = plans
+      .map(plan => {
+        const kind = tierOf(plan.name);
+        const copy = (SESSION_TIERS[content] || SESSION_TIERS[0])[kind];
+        return {kind, name: copy.name, hours: plan.durationMinutes ? Math.max(1, Math.round(plan.durationMinutes / 60)) : copy.hours, price: money(plan.unitAmountCents, plan.currency), planSlug: plan.slug, includes: copy.includes};
+      })
+      .sort((a, b) => a.kind - b.kind)
+      .filter((tier, i, all) => all.findIndex(t => t.kind === tier.kind) === i);
+    const starter = plans.find(plan => tierOf(plan.name) === 0) || plans[0];
+    return {name, blurb: STUDIO_BLURBS[content] || starter.description, capacity: starter.capacityText || plans.find(p => p.capacityText)?.capacityText || 'Confirmed by our team', tiers};
+  }).filter(group => group.tiers.length);
 }
 
 export function StudioTabs({rates = []}: {rates?: StudioRate[]}) {
   const [active, setActive] = useState(0);
-  const STUDIOS = useMemo(() => studiosFromCatalog(rates), [rates]);
-  const studio = STUDIOS[active] as Studio | undefined;
-  const rate = rates[active];
-  const sessionPrice = (hours: number) => (rate ? (rate.unitAmountCents * hours / 100).toLocaleString('en-US', {style: 'currency', currency: rate.currency.toUpperCase(), maximumFractionDigits: 0}) : 'On request');
+  const studios = useMemo(() => studiosFromCatalog(rates), [rates]);
+  const studio = studios[active];
   if (!studio) {
     return (
-      <div className="lv-studios">
-        <p className="lv-studio-empty">Studio packages are confirmed by our team. Ask us about availability and current session rates.</p>
+      <div className="st st-empty">
+        <p>Studio sessions are confirmed by our team. Ask us about availability and current session rates.</p>
       </div>
     );
   }
   const onKey = (e: React.KeyboardEvent) => {
-    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+    if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
-    const next = e.key === 'Home' ? 0 : e.key === 'End' ? STUDIOS.length - 1 : (active + (e.key === 'ArrowRight' ? 1 : STUDIOS.length - 1)) % STUDIOS.length;
+    const n = studios.length;
+    const next = e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : (active + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : n - 1)) % n;
     setActive(next);
-    document.getElementById(`lv-studio-tab-${next}`)?.focus();
+    document.getElementById(`st-tab-${next}`)?.focus();
   };
   return (
-    <div className="lv-studios">
-      <div className="lv-tabs" role="tablist" aria-label="Podcast studios" onKeyDown={onKey}>
-        {STUDIOS.map((s, i) => (
+    <div className="st">
+      <div className="st-studios" role="tablist" aria-label="Podcast studios" onKeyDown={onKey}>
+        {studios.map((s, i) => (
           <button
             key={s.name}
-            id={`lv-studio-tab-${i}`}
+            id={`st-tab-${i}`}
             role="tab"
             type="button"
             aria-selected={i === active}
-            aria-controls="lv-studio-panel"
+            aria-controls="st-panel"
             tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)}
-            className="lv-studio-tab-btn"
+            className="st-studio wj-control"
           >
-            <span className="lv-tab-title">{s.name}</span>
+            <span className="st-studio-name">{s.name}</span>
+            <span className="st-studio-cap">{s.capacity}</span>
           </button>
         ))}
       </div>
 
-      <div id="lv-studio-panel" role="tabpanel" tabIndex={0} aria-labelledby={`lv-studio-tab-${active}`} className="lv-studio-panel" key={studio.name}>
-        <div className="lv-studio-head">
-          <div className="lv-studio-head-left">
-            <h3>{studio.name}</h3>
-            <p>{studio.blurb}</p>
-          </div>
-          <div className="lv-studio-capacity-pill">
-            <span className="lv-capacity-dot" aria-hidden="true" />
-            <span>Capacity: <strong>{studio.capacity}</strong></span>
-          </div>
-        </div>
-
-        <div className="lv-tier-grid">
-          {studio.tiers.map((t, i) => (
-            <article key={t.name} className={'lv-tier' + (i === 1 ? ' is-mid' : '')}>
-              {i === 1 && (
-                <div className="lv-value-badge">
-                  <Image src="/media/aa00b61c5b-value.png" alt="Best value for your money" width={84} height={84} className="lv-value" />
-                </div>
-              )}
-              <div className="lv-tier-header">
+      <div id="st-panel" role="tabpanel" tabIndex={0} aria-labelledby={`st-tab-${active}`} className="st-panel" key={studio.name}>
+        <p className="st-blurb">{studio.blurb}</p>
+        <ol className="st-tiers">
+          {studio.tiers.map(t => (
+            <li key={t.planSlug} className={'st-tier st-tier-' + t.kind}>
+              <div className="st-tier-head">
                 <h4>{t.name}</h4>
-                <p className="lv-tier-dur">Duration: {t.duration}</p>
+                <p className="st-tier-dur">{t.hours} hour{t.hours === 1 ? '' : 's'} in studio</p>
               </div>
-
-              <div className="lv-tier-features">
-                <p className="lv-tier-inc">Includes:</p>
-                <ul>
-                  {t.includes.map(x => (
-                    <li key={x}>{x}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="lv-tier-footer">
-                <BookingButton className="btn btn-primary lv-pill lv-tier-cta" service="podcast-studio" plan={studio.slug}>
-                  {sessionPrice(t.hours)}
-                  <span className="lv-tier-hours"> / {t.hours} hour{t.hours === 1 ? '' : 's'}</span>
-                </BookingButton>
-              </div>
-            </article>
+              <p className="st-price"><span>{t.price}</span> <small>/ {t.hours} hour{t.hours === 1 ? '' : 's'}</small></p>
+              <ul className="st-includes">
+                {t.includes.map(x => <li key={x}>{x}</li>)}
+              </ul>
+              <BookingButton className="st-book wj-control" service="podcast-studio" plan={t.planSlug}>
+                Book {t.name.replace(/ podcast/i, '').toLowerCase()} <ArrowUpRight size={16} aria-hidden="true" />
+              </BookingButton>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </div>
   );

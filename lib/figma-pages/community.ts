@@ -1,7 +1,7 @@
 import type {FigmaPage, HeroSection, IconName, Section} from './types';
 import {closing, img} from './spaces';
 
-/* About, community and business-services pages — Figma "REDESIGN / … — Homepage Style" frames. */
+/* About, community and business-services pages - Figma "REDESIGN / ... - Homepage Style" frames. */
 
 type Chip = [IconName, string];
 const hero = (eyebrow: string, title: string, lead: string, chips: Chip[], primary: HeroSection['actions'][number], stem: string, alt: string, second: HeroSection['actions'][number] = {label: 'Explore Options', href: '/services/'}): HeroSection => ({
@@ -20,33 +20,34 @@ const cards = (items: [IconName, string, string, string?][]) => items.map(([icon
 
 export const communityPages: Record<string, FigmaPage> = {
   '/about-us/': {
-    node: '6157:1055',
-    title: 'About Us',
-    description: 'More than just a shared office — a modern, creative community in Oakbrook Terrace where collaboration, innovation and productivity thrive.',
+    node: '6115:13098',
+    title: 'About Workspace Junction | Oakbrook Terrace Coworking Community',
+    description: 'More than a workspace—a thriving community in Oakbrook Terrace where entrepreneurs, creators, and professionals collaborate, innovate, and grow together.',
     sections: [
       {kind: 'hero', crumbs: 'About us', eyebrow: 'AT THE HEART OF WORKSPACE JUNCTION', title: 'Work feels better\nwhen you belong.', size: 'xl',
-        lead: 'More than just a shared office. A modern, creative community where collaboration, innovation, and productivity thrive.',
+        lead: 'More than just a shared office. A modern, creative community in Oakbrook Terrace where collaboration, innovation, and productivity thrive—designed for entrepreneurs, remote professionals, and growing teams.',
         actions: [{label: 'Come meet us', book: 'Tour'}, {label: 'Visit the space', href: '/gallery/'}],
         image: img('about-hero', 'Members collaborating at Workspace Junction')},
       {kind: 'story', id: 'story', bg: 'cream', eyebrow: 'OUR STORY', title: 'A second home.\nA fresh perspective.',
         body: [
-          'We founded Workspace Junction because we saw a gap in how people work today: traditional offices are rigid, and working from home can feel isolating.',
-          'We imagined a space that’s flexible, vibrant, and inspiring. A place that supports creative energy and collaboration. Our mission is to provide a workspace that feels like a second home, but with all the professionalism and resources of a premium office.',
+          'We founded Workspace Junction because we saw a gap in how people work today: traditional offices are rigid and expensive, and working from home can feel isolating and unproductive.',
+          'We imagined a space that is flexible, vibrant, and inspiring—a place that supports creative energy, meaningful collaboration, and professional growth. Our mission is to provide a workspace that feels like a second home, with all the professionalism, resources, and community of a premium office environment.',
+          'Located in Oakbrook Terrace, just minutes from Lombard and Villa Park, Workspace Junction serves entrepreneurs, freelancers, remote teams, and growing businesses across Chicagoland.',
         ],
         image: img('about-story', 'The open coworking floor at Workspace Junction')},
       {kind: 'band', id: 'vision', bg: 'white', eyebrow: 'OUR VISION', title: '', heading: 'A future where work adapts to life.',
         text: 'To create a future where work adapts to life, puts people first, and removes boundaries where diverse minds connect, collaborate, and achieve meaningful impact.',
-        note: 'Connection isn’t a byproduct for us. It’s central. Real people, real conversations, and real collaboration.'},
+        note: 'Connection is not a byproduct for us. It is central. Real people, real conversations, and real collaboration.'},
       {kind: 'grid', id: 'values', bg: 'sage', eyebrow: 'WHAT WE STAND FOR', title: 'Built around people.', split: true, cols: 4, variant: 'value',
-        lead: 'Whether you’re bouncing ideas off a neighbor or joining one of our events, you’re part of something bigger.',
+        lead: 'Whether you are bouncing ideas off a neighbor or joining one of our events, you are part of something bigger. Our values shape everything we do.',
         items: [
-          {tag: '01', title: 'Creativity & quality', text: 'Powerful ideas and the expertise to bring them to life with excellence.'},
-          {tag: '02', title: 'Trust & respect', text: 'Honesty, collaboration, and mutual respect are the foundation of our community.'},
-          {tag: '03', title: 'Growth & learning', text: 'Workshops, events, and meaningful peer collaboration support continuous development.'},
-          {tag: '04', title: 'Sustainability', text: 'Thoughtful design and mindful practices support a better future.'},
+          {tag: '01', title: 'Creativity & quality', text: 'We believe in powerful ideas and the expertise to bring them to life with excellence. From podcast studios to business services, quality is our standard.'},
+          {tag: '02', title: 'Trust & respect', text: 'Honesty, collaboration, and mutual respect form the foundation of our community. We build lasting relationships, not transactional interactions.'},
+          {tag: '03', title: 'Growth & learning', text: 'Workshops, events, webinars, and meaningful peer collaboration support continuous personal and professional development for every member.'},
+          {tag: '04', title: 'Sustainability & impact', text: 'Thoughtful design, mindful practices, and community-driven initiatives support a better future for our members, our neighborhood, and our planet.'},
         ]},
       {kind: 'banner', id: 'spaces', bg: 'white', eyebrow: 'PERKS, SPACES & EVERYTHING IN BETWEEN', title: 'Your goals.\nRoom to grow.',
-        lead: 'From hot desks to private cabins, our spaces combine comfort, convenience, and community.',
+        lead: 'From hot desks to private cabins, meeting rooms to podcast studios—our 23 integrated services combine comfort, convenience, and community under one roof. Whether you need a desk for the day or a full business ecosystem, we have the space and support to match your ambition.',
         image: img('about-spaces', 'Private cabins and lounge at the Junction'), action: {label: 'Explore our spaces & services', href: '/services/'}},
       {kind: 'faq', id: 'faq', bg: 'cream', eyebrow: 'A LITTLE CLARITY', title: 'Good questions. Clear answers.', lead: 'Our team can help you find the right fit.',
         items: [
@@ -74,7 +75,7 @@ export const communityPages: Record<string, FigmaPage> = {
       {kind: 'grid', id: 'circles', bg: 'sage', eyebrow: 'EXPLORE OUR NETWORK', title: 'Community Circles', split: true, cols: 4, variant: 'card',
         lead: 'Focused groups that bring together people with shared interests, industries, and goals.',
         items: cards([
-          ['briefcase-business', 'Founder’s Circle', 'A space for entrepreneurs to share, learn, and scale.'],
+          ['briefcase-business', 'Founders Circle', 'A space for entrepreneurs to share, learn, and scale.'],
           ['users', 'Healthcare Circle', 'Healthcare, research, and community health professionals.'],
           ['camera', 'Content & Media Circle', 'Creators, podcasters, and media professionals building together.'],
           ['chart-no-axes-combined', 'Business & Growth Circle', 'Strategy, marketing, and operations support.'],
@@ -165,7 +166,7 @@ export const communityPages: Record<string, FigmaPage> = {
   '/services/': {
     node: '6254:143099',
     title: 'Services & Solutions',
-    description: 'Integrated services in one place to work, create, connect and grow in Oakbrook Terrace — workspace, business support and media production.',
+    description: 'Integrated services in one place to work, create, connect and grow in Oakbrook Terrace - workspace, business support and media production.',
     sections: [
       hero('SERVICES / SOLUTIONS', 'An ecosystem built\nfor what’s next.', '23 integrated services. One place to work, create, connect and grow in Oakbrook Terrace.',
         [['users', 'Work & Meet'], ['briefcase-business', 'Business Support'], ['camera', 'Create & Connect']], {label: 'Talk to Our Team', href: '/contact-us/'}, 'services-hero', 'Lounge and workspace at the Junction', {label: 'Explore Options', href: '#work-meet'}),
@@ -215,9 +216,9 @@ export const communityPages: Record<string, FigmaPage> = {
   '/bpo-services/': {
     node: '6254:146462',
     title: 'BPO Services',
-    description: 'Trained back-office and customer support staff who plug directly into your operations — scalable, accountable, and ready when you are.',
+    description: 'Trained back-office and customer support staff who plug directly into your operations - scalable, accountable, and ready when you are.',
     sections: [
-      hero('BPO SERVICES', 'Dedicated support.\nWithout the headcount.', 'Trained back-office and customer support staff who plug directly into your operations — scalable, accountable, and ready when you are.',
+      hero('BPO SERVICES', 'Dedicated support.\nWithout the headcount.', 'Trained back-office and customer support staff who plug directly into your operations - scalable, accountable, and ready when you are.',
         [['headphones', 'Support'], ['file-check', 'Process'], ['chart-no-axes-combined', 'Track']], {label: 'Schedule Assessment', href: '/contact-us/'}, 'bpo-hero', 'Support team at work', {label: 'Explore Options', href: '#pricing'}),
       about('headphones', 'Operations support that scales.', 'From customer support to back-office processing, our dedicated teams handle the operational load so yours can focus on growth.',
         [['headphones', 'Support', 'Customer-facing staff'], ['file-check', 'Process', 'Back-office handling'], ['chart-no-axes-combined', 'Track', 'Daily KPI reporting']]),
@@ -237,9 +238,9 @@ export const communityPages: Record<string, FigmaPage> = {
   '/printed-services/': {
     node: '6254:149664',
     title: 'Printed Services',
-    description: 'From a quick single-page print to large-format marketing collateral — on-demand and commercial printing, handled on-site.',
+    description: 'From a quick single-page print to large-format marketing collateral - on-demand and commercial printing, handled on-site.',
     sections: [
-      hero('PRINTED SERVICES', 'Printing, scanning.\nEverything between.', 'From a quick single-page print to large-format marketing collateral — on-demand and commercial printing, handled on-site.',
+      hero('PRINTED SERVICES', 'Printing, scanning.\nEverything between.', 'From a quick single-page print to large-format marketing collateral - on-demand and commercial printing, handled on-site.',
         [['printer', 'Print'], ['scan-line', 'Scan'], ['palette', 'Produce']], {label: 'Use Print Station', href: '/contact-us/'}, 'printed-hero', 'Print station at Workspace Junction', {label: 'Explore Options', href: '#pricing'}),
       about('printer', 'From a single page to a full campaign.', 'Self-service print stations for everyday needs, plus commercial and large-format printing for marketing materials and trade show collateral.',
         [['printer', 'Print', 'Color & B&W'], ['scan-line', 'Scan', 'High-resolution uploads'], ['palette', 'Produce', 'Commercial runs']]),
@@ -259,9 +260,9 @@ export const communityPages: Record<string, FigmaPage> = {
   '/digital-presence/': {
     node: '6254:152875',
     title: 'Digital Presence',
-    description: 'Local SEO, web presence and reputation management — built to get your business in front of the right people in Chicagoland.',
+    description: 'Local SEO, web presence and reputation management - built to get your business in front of the right people in Chicagoland.',
     sections: [
-      hero('DIGITAL PRESENCE', 'Be found.\nBe remembered.\nBe chosen.', 'Local SEO, web presence and reputation management — built to get your business in front of the right people in Chicagoland.',
+      hero('DIGITAL PRESENCE', 'Be found.\nBe remembered.\nBe chosen.', 'Local SEO, web presence and reputation management - built to get your business in front of the right people in Chicagoland.',
         [['map-pin', 'Get Found'], ['globe', 'Get Seen'], ['users', 'Get Chosen']], {label: 'Book Free Audit', href: '/contact-us/'}, 'dpresence-hero', 'Reviewing website analytics', {label: 'Explore Options', href: '#pricing'}),
       about('globe', 'Visible everywhere it matters.', 'We audit your current online presence and build the local SEO, website and reputation strategy that turns searches into customers.',
         [['map-pin', 'Get Found', 'Local search ranking'], ['globe', 'Get Seen', 'Modern web presence'], ['users', 'Get Chosen', 'Reputation & reviews']]),
@@ -281,9 +282,9 @@ export const communityPages: Record<string, FigmaPage> = {
   '/digital-services/': {
     node: '6254:156077',
     title: 'Digital Services',
-    description: 'Branding, websites, automation and CRM — trusted digital partners supporting your business at every stage.',
+    description: 'Branding, websites, automation and CRM - trusted digital partners supporting your business at every stage.',
     sections: [
-      hero('DIGITAL SERVICES', 'Build. Brand.\nAutomate. Grow.', 'Branding, websites, automation and CRM — trusted digital partners supporting your business at every stage.',
+      hero('DIGITAL SERVICES', 'Build. Brand.\nAutomate. Grow.', 'Branding, websites, automation and CRM - trusted digital partners supporting your business at every stage.',
         [['palette', 'Branding'], ['code-xml', 'Websites'], ['workflow', 'Automation & CRM']], {label: 'Book Strategy Call', href: '/contact-us/'}, 'dservices-hero', 'Designers reviewing a website build', {label: 'Explore Options', href: '#pricing'}),
       about('workflow', 'Less manual work. More growth.', 'One ecosystem, many expert teams. Build your brand, improve your digital presence and connect the systems that power your business.',
         [['file-check', 'Audit', 'Workflow & tech review'], ['workflow', 'Automate', 'Custom integrations'], ['chart-no-axes-combined', 'Report', 'Clear performance data']]),

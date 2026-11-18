@@ -823,7 +823,7 @@ function SupportDialog({reference, subject: initialSubject, type: initialType, o
           <div className="aa-dialog-actions"><button type="button" className="wj-button wj-button-yellow" onClick={onClose}>Done</button></div>
         </>
       ) : (
-        <form className="aa-form" onSubmit={submit}>
+        <form method="post" className="aa-form" onSubmit={submit}>
           <div className="aa-field">
             <label htmlFor={ids.type}>What is it about?</label>
             <select id={ids.type} value={type} onChange={event => setType(event.target.value)}>
@@ -1260,7 +1260,7 @@ function Profile() {
       <Notice message={failure} tone="bad" onClose={() => setFailure('')} />
       {loading && !data ? <Skeleton rows={5} /> : error ? <LoadError message={error} retry={reload} /> : data && form && (
         <>
-          <form className="aa-panel aa-form" onSubmit={save}>
+          <form method="post" className="aa-panel aa-form" onSubmit={save}>
             <h2>Contact details</h2>
             <div className="aa-form-grid">
               <div className="aa-field"><label htmlFor={ids.name}>Name</label><input id={ids.name} required maxLength={200} autoComplete="name" value={form.name} onChange={set('name')} /></div>
@@ -1406,7 +1406,7 @@ function Security() {
       <Notice message={notice} onClose={() => setNotice('')} />
       <Notice message={failure} tone="bad" onClose={() => setFailure('')} />
       {session.status === 'authenticated' && session.method === 'LINK' && <p className="aa-alert aa-alert-warn">You signed in with an email link. Changing your password or email needs your current password.</p>}
-      <form className="aa-panel aa-form" onSubmit={changePassword}>
+      <form method="post" className="aa-panel aa-form" onSubmit={changePassword}>
         <h2>Change password</h2>
         <div className="aa-form-grid">
           <div className="aa-field aa-span-2"><label htmlFor={ids.current}>Current password</label><input id={ids.current} type="password" required autoComplete="current-password" maxLength={72} value={pw.current} onChange={event => setPw({...pw, current: event.target.value})} /></div>
@@ -1415,7 +1415,7 @@ function Security() {
         </div>
         <button className="wj-button wj-button-yellow aa-submit" disabled={busy === 'password'}>{busy === 'password' ? 'Saving…' : 'Change password'}</button>
       </form>
-      <form className="aa-panel aa-form" onSubmit={changeEmail}>
+      <form method="post" className="aa-panel aa-form" onSubmit={changeEmail}>
         <h2>Sign-in email</h2>
         <p className="aa-muted">Currently {profile.data?.email ?? '…'}{profile.data?.pendingEmail ? ' · waiting for confirmation of ' + profile.data.pendingEmail : ''}</p>
         <div className="aa-form-grid">

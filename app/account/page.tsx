@@ -2,6 +2,7 @@ import {Suspense} from 'react';
 import type {Metadata} from 'next';
 import {PublicLayout} from '@/components/public-layout';
 import {AccountArea} from '@/components/account-area';
+import '../legacy-routes.css'; // legacy-template styles (route-scoped; not on the homepage)
 
 /* The page shell is static. Account data is fetched in the browser with the
    customer's own session cookie, so nothing customer-specific is ever rendered

@@ -1,6 +1,7 @@
 import Image from '@/components/consistent-image';
 import Link from 'next/link';
 import {ArrowUpRight, BookOpen, Laptop, Mail} from 'lucide-react';
+import '@/app/figma-pages.css';
 import {SourceContent} from '@/components/service-page';
 import {text, type Entry} from '@/lib/site';
 

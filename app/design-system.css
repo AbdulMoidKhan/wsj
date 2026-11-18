@@ -268,16 +268,6 @@ html body .wj-platform :is(.lv-icon-btn,.lv-burger){width:44px;height:44px;borde
 html body .wj-platform :is(.lv-icon-btn,.lv-burger):hover{background:rgba(17,48,42,.08);color:var(--ds-ink)}
 
 /* service strip: single compact row, icon beside label */
-html body .wj-platform .lv-strip{background:rgba(244,242,236,.88);border-top:1px solid rgba(19,46,41,.08)}
-html body .wj-platform .lv-strip ul{gap:0;justify-content:space-between}
-html body .wj-platform .lv-strip a{
-  flex-direction:row;gap:7px;padding:10px 8px;min-height:44px;
-  font-size:13.5px;font-weight:600;color:var(--ds-text);
-}
-html body .wj-platform .lv-strip a svg{width:19px;height:19px;color:var(--ds-forest-700)}
-html body .wj-platform .lv-strip a:hover,html body .wj-platform .lv-strip a[aria-current=page]{color:var(--ds-ink)}
-html body .wj-platform .lv-strip a:hover svg,html body .wj-platform .lv-strip a[aria-current=page] svg{transform:none;color:var(--ds-amber-600)}
-html body .wj-platform .lv-strip a::after{left:10px;right:10px;height:2.5px}
 
 /* search popover */
 html body .wj-platform .lv-search-form{border-radius:var(--ds-r-md);box-shadow:var(--ds-shadow-2);border:1px solid var(--ds-line);background:#fff}
@@ -1074,25 +1064,18 @@ html body .wj-platform .wj-footer-bottom a{color:var(--ds-on-dark)}
 
 /* 12. DECORATIVE LAYERS ==================================================== */
 /* keep the 3D scene and ambient props in the margins, quietly */
-html body .wj-platform .scene-backdrop{opacity:.55}
-html body .wj-platform .amb-shape{opacity:.5}
 
 /* 13. RESPONSIVE =========================================================== */
 @media (max-width:1240px){
   html body .wj-platform .lv-phone{display:none}
-  html body .wj-platform .lv-strip ul{overflow-x:auto;scrollbar-width:none;justify-content:flex-start;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent)}
-  html body .wj-platform .lv-strip ul::-webkit-scrollbar{display:none}
 }
 @media (max-width:1100px){
-  html body .wj-platform .scene-backdrop,html body .wj-platform .amb-shape{display:none}
   html body .wj-platform .ip-form-section{grid-template-columns:1fr}
 }
 @media (max-width:900px){
   :root{--ds-fs-body:16px}
   html body .wj-platform .lv-head-row{min-height:58px}
   html body .wj-platform .lv-header .wj-logo{width:136px;height:44px}
-  html body .wj-platform .lv-strip a{padding:9px 10px;font-size:13px;gap:6px}
-  html body .wj-platform .lv-strip a svg{width:16px;height:16px}
   html body .wj-platform .lx-first .lx-cols:not(.lx-cards){align-items:start}
   html body .wj-platform .wj-footer-top{grid-template-columns:1fr 1fr}
   html body .wj-platform .ip-section-heading{flex-direction:column;align-items:flex-start}
@@ -1148,73 +1131,10 @@ html body .wj-platform .amb-shape{opacity:.5}
    ========================================================================== */
 
 /* Fixed, non-blocking canvas viewport */
-.amb-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  contain: strict;
-  isolation: isolate;
-}
 
 /* Base Canvas for Champagne Constellation Particles */
-.amb-particles-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.75;
-  mix-blend-mode: screen;
-}
 
 /* 1. LUMINOUS MESH GRADIENTS (Organic, Slow, Elegant Breathing Drift) */
-.amb-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  will-change: transform, opacity;
-  pointer-events: none;
-}
-
-.amb-glow-emerald {
-  top: -12vmax;
-  left: -10vmax;
-  width: 58vmax;
-  height: 58vmax;
-  background: radial-gradient(closest-side, rgba(29, 75, 65, 0.22), rgba(29, 75, 65, 0.05) 60%, transparent 100%);
-  animation: ambMeshEmerald 38s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-  transform: translate3d(calc(var(--mouse-px, 0) * 15px), calc(var(--mouse-py, 0) * 15px), 0);
-}
-
-.amb-glow-amber {
-  top: 35vh;
-  right: -15vmax;
-  width: 52vmax;
-  height: 52vmax;
-  background: radial-gradient(closest-side, rgba(217, 145, 11, 0.16), rgba(217, 145, 11, 0.03) 65%, transparent 100%);
-  animation: ambMeshAmber 44s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-  transform: translate3d(calc(var(--mouse-px, 0) * -20px), calc(var(--mouse-py, 0) * -20px), 0);
-}
-
-.amb-glow-champagne {
-  bottom: -15vmax;
-  left: 20vw;
-  width: 55vmax;
-  height: 55vmax;
-  background: radial-gradient(closest-side, rgba(239, 195, 109, 0.18), rgba(239, 195, 109, 0.04) 60%, transparent 100%);
-  animation: ambMeshChampagne 50s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-  transform: translate3d(calc(var(--mouse-px, 0) * 12px), calc(var(--mouse-py, 0) * 12px), 0);
-}
-
-.amb-glow-deep {
-  top: 70vh;
-  left: -10vmax;
-  width: 45vmax;
-  height: 45vmax;
-  background: radial-gradient(closest-side, rgba(14, 38, 32, 0.14), transparent 70%);
-  animation: ambMeshDeep 60s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-}
 
 @keyframes ambMeshEmerald {
   0% { transform: translate3d(0, 0, 0) scale(1); }
@@ -1240,62 +1160,10 @@ html body .wj-platform .amb-shape{opacity:.5}
 }
 
 /* 2. ARCHITECTURAL FLOATING GEOMETRY */
-.amb-shape {
-  position: absolute;
-  pointer-events: none;
-  will-change: transform;
-}
 
 /* Orbital Rings */
-.amb-orbit-ring {
-  width: 380px;
-  height: 380px;
-  border-radius: 50%;
-  border: 1px dashed rgba(217, 145, 11, 0.22);
-  top: 14vh;
-  right: 4vw;
-  animation: ambRotateOrbit 110s linear infinite;
-  transform: translate3d(calc(var(--mouse-px, 0) * -10px), calc(var(--mouse-py, 0) * -10px), 0);
-}
-
-.amb-nested-ring {
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  border: 1px solid rgba(17, 48, 42, 0.12);
-  top: 22vh;
-  right: 8vw;
-  animation: ambFloatCounter 45s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-}
 
 /* Glass Diamonds / Prisms with gradient borders */
-.amb-glass-diamond {
-  width: 100px;
-  height: 100px;
-  top: 62vh;
-  left: 3vw;
-  border: 1px solid rgba(217, 145, 11, 0.28);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(217, 145, 11, 0.04) 100%);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border-radius: 12px;
-  transform: rotate(45deg);
-  animation: ambFloatDiamond 36s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-  box-shadow: 0 10px 30px -10px rgba(17, 48, 42, 0.08);
-}
-
-.amb-glass-diamond-sm {
-  width: 44px;
-  height: 44px;
-  top: 32vh;
-  left: 7vw;
-  border: 1px solid rgba(239, 195, 109, 0.35);
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  transform: rotate(45deg);
-  animation: ambFloatDiamond 28s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate-reverse;
-  animation-delay: -8s;
-}
 
 @keyframes ambRotateOrbit {
   from { transform: rotate(0deg); }
@@ -1314,32 +1182,8 @@ html body .wj-platform .amb-shape{opacity:.5}
 }
 
 /* Modern Crosshair Architectural Reticles */
-.amb-reticle {
-  position: absolute;
-  font-family: var(--ff-text);
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 300;
-  color: rgba(217, 145, 11, 0.4);
-  pointer-events: none;
-  user-select: none;
-}
-.amb-reticle-tl { top: 90px; left: 32px; }
-.amb-reticle-tr { top: 90px; right: 32px; }
-.amb-reticle-bl { bottom: 60px; left: 32px; }
-.amb-reticle-br { bottom: 60px; right: 32px; }
 
 /* 3. FLOWING ARCHITECTURAL SOUNDWAVE / CONTOUR LINES */
-.amb-lines-flowing {
-  position: absolute;
-  left: 0;
-  top: 18vh;
-  width: 200%;
-  height: 48vh;
-  opacity: 0.65;
-  animation: ambFlowWave 90s linear infinite;
-  pointer-events: none;
-}
 
 @keyframes ambFlowWave {
   from { transform: translate3d(0, 0, 0); }
@@ -1347,85 +1191,12 @@ html body .wj-platform .amb-shape{opacity:.5}
 }
 
 /* 4. REFINED AMBIENT TOGGLE BUTTON (Luxury Glass Floating Control) */
-.amb-toggle {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 40;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(217, 145, 11, 0.28);
-  color: #11302a;
-  box-shadow: 0 4px 16px rgba(11, 29, 25, 0.1);
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-html body:has(.wj-mobile-panel) .amb-toggle,
-html body:has(dialog[open]) .amb-toggle {
-  display: none !important;
-}
-
-.amb-toggle:hover {
-  background: #ffffff;
-  color: #d9910b;
-  border-color: #d9910b;
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(217, 145, 11, 0.22);
-}
-
-.amb-toggle-label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
 
 /* Pause Mode */
-html[data-ambient="paused"] .amb-glow,
-html[data-ambient="paused"] .amb-shape,
-html[data-ambient="paused"] .amb-lines-flowing {
-  animation-play-state: paused !important;
-}
 
 /* Respect Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  .amb-glow,
-  .amb-shape,
-  .amb-lines-flowing,
-  .amb-particles-canvas {
-    animation: none !important;
-    display: none !important;
-  }
-}
 
 /* On Small Mobile Screens, keep effects subtle & performant */
-@media (max-width: 640px) {
-  .amb-glow {
-    filter: blur(50px);
-    opacity: 0.7;
-  }
-  .amb-shape {
-    display: none;
-  }
-  .amb-toggle {
-    bottom: 16px;
-    right: 16px;
-    width: 38px;
-    height: 38px;
-  }
-}
 /* ==========================================================================
    PREMIUM EDITORIAL VISUAL TRANSFORMATION & ADVANCED MOTION SYSTEM
    Cinematic Hero, Art-Directed Showcases, Floating Geometry, Luxury Cards

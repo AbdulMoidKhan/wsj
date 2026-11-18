@@ -22,6 +22,13 @@
       "port": 4100
     },
     {
+      "name": "build-check-start",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["node_modules/next/dist/bin/next", "start", "--port", "3200"],
+      "env": {"API_URL": "http://localhost:4100/api", "NEXT_DIST_DIR": ".next-build-check"},
+      "port": 3200
+    },
+    {
       "name": "account-preview-web",
       "runtimeExecutable": "node",
       "runtimeArgs": ["node_modules/next/dist/bin/next", "dev", "--port", "3100"],

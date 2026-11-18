@@ -2,6 +2,7 @@ import {Suspense} from 'react';
 import type {Metadata} from 'next';
 import {PublicLayout} from '@/components/public-layout';
 import {LoginForm} from '@/components/account-auth-forms';
+import '../legacy-routes.css'; // legacy-template styles (route-scoped; not on the homepage)
 
 export const metadata: Metadata = {title: 'Sign in', robots: {index: false, follow: false}};
 

@@ -48,7 +48,7 @@ const REVEAL_SELECTOR = [
   '.cn-section-head > *', '.sv-section-head > *', '.mem-section-head > *', '.uc-section-head > *'
 ].join(',');
 
-const SKIP_SCOPE = '[data-mo-static], dialog, [role="dialog"], .wj-header, .wj-footer';
+const SKIP_SCOPE = '[data-mo-static], dialog, [role="dialog"], .at-header, .wj-footer';
 const COUNT_SELECTOR = '.lv-stats dd,[data-mo-count],[data-anim="counter"]';
 const MAGNETIC_SELECTOR = '[data-magnetic]:is(.wj-button,.btn,.ip-button,.lv-pill,.cn-btn-gold)';
 
@@ -96,8 +96,11 @@ export function GsapMotion() {
       const lenis = new Lenis({lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, syncTouch: false}) as unknown as LenisInstance;
       lenisRef.current = lenis;
       document.documentElement.classList.add('has-lenis');
-      // Lenis drives native window scrolling, so scroll listeners (and ScrollTrigger, when a
-      // page loads it) observe its position without an explicit bridge.
+      // Lenis moves the window inside the GSAP tick, but the native `scroll` event only fires a
+      // frame later. Updating ScrollTrigger (once a page has registered it) in the same tick keeps
+      // pinned sections from slipping off screen for a frame and snapping back on fast scrolls.
+      const syncTriggers = () => (gsap.core as unknown as {globals: () => {ScrollTrigger?: {update: () => void}}}).globals().ScrollTrigger?.update();
+      lenis.on('scroll', syncTriggers);
       const tick = (time: number) => lenis.raf(time * 1000);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
@@ -115,6 +118,7 @@ export function GsapMotion() {
 
       sharedLenis = {lenis, destroy: () => {
         observer.disconnect();
+        lenis.off('scroll', syncTriggers);
         gsap.ticker.remove(tick);
         lenis.destroy();
         document.documentElement.classList.remove('has-lenis');
@@ -125,18 +129,29 @@ export function GsapMotion() {
 
   /* ---- Header: elevation + direction-aware retract. Persistent across routes. ---- */
   useEffect(() => {
-    const header = document.querySelector<HTMLElement>('.wj-platform .wj-header');
+    const header = document.querySelector<HTMLElement>('.wj-platform .at-header');
     if (!header) return;
     let lastY = window.scrollY;
     let travel = 0;
     let frame = 0;
     const holdOpen = () => header.matches(':focus-within, :hover') || Boolean(header.querySelector('[aria-expanded="true"]'));
+    /* Full-screen pinned or sticky panels ([data-header-yield]) are laid out for the whole
+       viewport; while one fills it, the header stays tucked away instead of covering its top. */
+    const panelFillsViewport = () => Array.from(document.querySelectorAll<HTMLElement>('[data-header-yield]')).some(el => {
+      const r = el.getBoundingClientRect();
+      return r.top <= 1 && r.top >= -1 && r.height >= window.innerHeight - 2 && r.height <= window.innerHeight + 2;
+    });
     const update = () => {
       frame = 0;
       const y = Math.max(0, window.scrollY);
       header.classList.toggle('is-elevated', y > 80);
       const delta = y - lastY;
       lastY = y;
+      if (!reduced && !holdOpen() && panelFillsViewport()) {
+        travel = 0;
+        header.classList.add('is-retracted');
+        return;
+      }
       if (reduced || y < 320 || holdOpen()) {
         travel = 0;
         header.classList.remove('is-retracted');
@@ -152,27 +167,7 @@ export function GsapMotion() {
     window.addEventListener('scroll', onScroll, {passive: true});
     header.addEventListener('focusin', reveal);
     update();
-
-    // Mobile service pills: edge fades follow the scroll position and the current page's pill
-    // starts in view (scrollLeft only, never scrolling the page itself).
-    const strip = header.querySelector<HTMLElement>('.lv-strip ul');
-    let stripObserver: ResizeObserver | undefined;
-    const edges = () => {
-      if (!strip) return;
-      const max = strip.scrollWidth - strip.clientWidth;
-      strip.dataset.scroll = max <= 2 ? 'none' : strip.scrollLeft <= 2 ? 'start' : strip.scrollLeft >= max - 2 ? 'end' : 'middle';
-    };
-    if (strip) {
-      const current = strip.querySelector<HTMLElement>('[aria-current="page"]');
-      if (current && strip.scrollWidth > strip.clientWidth) strip.scrollLeft = current.offsetLeft - (strip.clientWidth - current.offsetWidth) / 2;
-      strip.addEventListener('scroll', edges, {passive: true});
-      stripObserver = new ResizeObserver(edges);
-      stripObserver.observe(strip);
-      edges();
-    }
     return () => {
-      strip?.removeEventListener('scroll', edges);
-      stripObserver?.disconnect();
       window.removeEventListener('scroll', onScroll);
       header.removeEventListener('focusin', reveal);
       cancelAnimationFrame(frame);
@@ -227,8 +222,10 @@ export function GsapMotion() {
       if (!target || !active || active.isStopped) return;
       event.preventDefault();
       history.pushState(null, '', href);
-      const headerHeight = document.querySelector<HTMLElement>('.wj-header')?.offsetHeight ?? 90;
-      active.scrollTo(target, {offset: -(headerHeight + 12), duration: 0.9});
+      const scrollTarget = target.closest<HTMLElement>('.pin-spacer') || target;
+      const headerHeight = document.querySelector<HTMLElement>('.at-header')?.offsetHeight ?? 90;
+      const offset = target.hasAttribute('data-header-yield') ? 0 : -(headerHeight + 12);
+      active.scrollTo(scrollTarget, {offset, duration: 0.9});
     };
     document.addEventListener('click', onAnchorClick);
     cleanups.push(() => document.removeEventListener('click', onAnchorClick));
@@ -249,6 +246,26 @@ export function GsapMotion() {
       enterObserver.observe(trigger);
     };
     cleanups.push(() => enterObserver.disconnect());
+
+    // Failsafe for jumps (anchor links, scrollbar drags, fast flicks, find-in-page): an element
+    // that is skipped over never changes intersection state, so the observer never reports it and
+    // it would stay in its hidden start state. Once scrolling settles, play every pending entrance
+    // whose top is now within or above the viewport. One read pass, then plays.
+    let settleTimer = 0;
+    const settle = () => {
+      settleTimer = 0;
+      if (!entries.size) return;
+      const limit = window.innerHeight * 0.92;
+      const due = [...entries.keys()].filter(el => el.getBoundingClientRect().top < limit);
+      for (const el of due) {
+        entries.get(el)?.restart(true);
+        entries.delete(el);
+        enterObserver.unobserve(el);
+      }
+    };
+    const onSettleScroll = () => { window.clearTimeout(settleTimer); settleTimer = window.setTimeout(settle, 140); };
+    window.addEventListener('scroll', onSettleScroll, {passive: true});
+    cleanups.push(() => { window.removeEventListener('scroll', onSettleScroll); window.clearTimeout(settleTimer); });
 
     // Reading progress (thin amber bar): one passive listener, written once per frame.
     const progressBar = root.querySelector<HTMLElement>('.gx-progress');
@@ -432,13 +449,21 @@ export function GsapMotion() {
     }
 
     // 8. Below-fold images fade in once decoded; the LCP/eager images are never touched.
-    root.querySelectorAll<HTMLImageElement>('main img:not([data-mo-static]):not([loading="eager"]):not([fetchpriority="high"])').forEach(img => {
+    //    The homepage's images are choreographed by JunctionMotion, so they are skipped here
+    //    rather than having two systems write opacity/transform to the same element.
+    root.querySelectorAll<HTMLImageElement>('main:not(.junction-home) img:not([data-mo-static]):not([loading="eager"]):not([fetchpriority="high"])').forEach(img => {
       if (img.complete || inFirstView(img)) return;
       img.dataset.moImage = '';
       const ready = () => img.classList.add('is-mo-loaded');
       img.addEventListener('load', ready, {once: true});
       img.addEventListener('error', ready, {once: true});
       timers.push(window.setTimeout(ready, 2000));
+      cleanups.push(() => {
+        img.removeEventListener('load', ready);
+        img.removeEventListener('error', ready);
+        delete img.dataset.moImage;
+        img.classList.remove('is-mo-loaded');
+      });
     });
 
     return () => {

@@ -1,16 +1,16 @@
 /* Authoritative project-wide visual contract. Important rules are intentionally
    layered before the legacy button layer: old unlayered page overrides cannot
    create a second typography scale or reintroduce pointed/image/pill corners. */
-@layer wj-consistency, wj-button-contract;
+@layer wj-consistency, wj-button-contract, wj-legacy; /* same order as app/globals.css */
 @layer wj-consistency {
   :root {
-    --ui-canvas:#f7f5ef;--ui-sand:#eeeadd;--ui-sage:#e7eadf;
-    --ui-forest:#193c32;--ui-green:#214d3e;--ui-yellow:#d9910b;
-    --ui-ink:#0b1d19;--ui-muted:#59665f;--ui-line:#cbd2c5;
-    --ui-white:#fff;--ui-on-dark:#d1dcd3;--ui-radius:5px;
-    --ui-heading-font:var(--font-display),Georgia,serif;
-    --ui-body-font:var(--font-sans),Inter,"Helvetica Neue",Arial,sans-serif;
-    --ui-h1:64px;--ui-h2:44px;--ui-h3:28px;--ui-h4:22px;
+    --ui-canvas:#f7f4ed;--ui-sand:#efe9dc;--ui-sage:#e9ede6;--ui-ivory:#fffdf8;--ui-deep:#092317;
+    --ui-forest:#0e3421;--ui-green:#214d3e;--ui-yellow:#d7902a;
+    --ui-ink:#10271c;--ui-muted:#3f4d45;--ui-line:#cbd2c5;
+    --ui-white:#fff;--ui-on-dark:#d6e1d4;--ui-radius:12px;--ui-radius-media:20px;--ui-radius-card:20px;--ui-radius-pill:999px;
+    --ui-heading-font:var(--font-serif),"Newsreader",Georgia,"Times New Roman",serif;
+    --ui-body-font:var(--font-sans),"Manrope","Helvetica Neue",Arial,sans-serif;
+    --ui-h1:clamp(46px,5.8vw,96px);--ui-h2:clamp(36px,4vw,64px);--ui-h3:clamp(22px,1.8vw,28px);--ui-h4:20px;
     --ui-body:16px;--ui-secondary:14px;--ui-eyebrow:12px;
     --ff-display:var(--ui-heading-font)!important;--font-heading:var(--ui-heading-font)!important;
     --ff-text:var(--ui-body-font)!important;--font-body:var(--ui-body-font)!important;--font-nav:var(--ui-body-font)!important;
@@ -21,7 +21,7 @@
     --ds-on-dark:var(--ui-white)!important;--ds-on-dark-soft:var(--ui-on-dark)!important;--ds-line:var(--ui-line)!important;--ds-line-strong:var(--ui-line)!important;
     --ds-fs-h1:var(--ui-h1)!important;--ds-fs-h2:var(--ui-h2)!important;--ds-fs-h3:var(--ui-h3)!important;--ds-fs-h4:var(--ui-h4)!important;
     --ds-fs-body:16px!important;--ds-fs-lead:16px!important;--ds-fs-sm:14px!important;--ds-fs-xs:14px!important;--ds-fs-eyebrow:12px!important;
-    --ds-r-sm:5px!important;--ds-r-md:5px!important;--ds-r-lg:5px!important;--ds-r-xl:5px!important;
+    --ds-r-sm:10px!important;--ds-r-md:14px!important;--ds-r-lg:20px!important;--ds-r-xl:28px!important;
     --bg-page:var(--ui-canvas)!important;--bg-band:var(--ui-sand)!important;--bg-surface:var(--ui-white)!important;--bg-surface-solid:var(--ui-white)!important;
     --text-strong:var(--ui-forest)!important;--text-body:var(--ui-muted)!important;--text-soft:var(--ui-muted)!important;--line-soft:var(--ui-line)!important;--line-strong:var(--ui-line)!important;
     --c-amber:var(--ui-yellow)!important;--c-amber-hover:#c27f06!important;--fs-body:16px!important;--fs-lead:16px!important;--fs-sm:14px!important;--fs-micro:12px!important;
@@ -32,34 +32,34 @@
     --cn-forest-dark:var(--ui-forest)!important;--cn-forest-darker:var(--ui-forest)!important;--cn-forest-surface:var(--ui-forest)!important;
     --cn-amber-gold:var(--ui-yellow)!important;--cn-amber-gold-hover:#c27f06!important;--cn-amber-light:var(--ui-yellow)!important;--cn-amber-ink:var(--ui-green)!important;
     --cn-ink:var(--ui-forest)!important;--cn-text:var(--ui-muted)!important;--cn-text-soft:var(--ui-muted)!important;--cn-canvas:var(--ui-canvas)!important;--cn-surface:var(--ui-white)!important;--cn-sage:var(--ui-sage)!important;
-    --cn-line:var(--ui-line)!important;--cn-line-strong:var(--ui-line)!important;--cn-radius-md:5px!important;--cn-radius-lg:5px!important;--cn-radius-xl:5px!important;
+    --cn-line:var(--ui-line)!important;--cn-line-strong:var(--ui-line)!important;--cn-radius-md:14px!important;--cn-radius-lg:20px!important;--cn-radius-xl:28px!important;
     --adm-navy:var(--ui-forest)!important;--adm-orange:var(--ui-yellow)!important;--adm-muted:var(--ui-muted)!important;--adm-border:var(--ui-line)!important;--adm-surface:var(--ui-canvas)!important;--adm-ink:var(--ui-forest)!important;
   }
   /* One corner treatment for every painted surface, including imagery, controls,
      portals and admin panels. Text-only elements are unaffected visually. */
-  body :where(.wj-platform,.wj-platform *,.adm-root,.adm-root *,.bk-overlay,.bk-overlay *,.service-inquiry-dialog,.service-inquiry-dialog *,.visit-lightbox,.visit-lightbox *,.visit-lightbox-overlay,.wj-dialog,.wj-dialog *) {
-    border-radius:5px!important;
+  body :where(.wj-platform,.wj-platform *:not(:is(.junction-home,.at-header,.gf,.gf-cta,.jx-hero) *),.adm-root,.adm-root *,.bk-overlay,.bk-overlay *,.service-inquiry-dialog,.service-inquiry-dialog *,.visit-lightbox,.visit-lightbox *,.visit-lightbox-overlay,.wj-dialog,.wj-dialog *) {
+    border-radius:var(--ui-radius)!important;
   }
   body :where(.wj-platform,.adm-root,.library-page,.creative-page,.info-page,.visit-page,.cn-page,.ip-page,.bk-modal,.service-inquiry-content,.wj-mobile-panel) {background-color:var(--ui-canvas)!important}
-  body :where(.wj-platform h1,.adm-root h1,.lv-hero-title .lv-h1,[data-ui-type="h1"]) {
-    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h1)!important;font-weight:500!important;line-height:1.12!important;letter-spacing:-.04em!important;color:var(--ui-forest)!important;
+  body :where(.wj-platform h1:not(:is(.junction-home,[data-art]) *),.adm-root h1,.lv-hero-title .lv-h1,[data-ui-type="h1"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h1)!important;font-weight:400!important;line-height:1!important;letter-spacing:-.028em!important;font-variation-settings:"opsz" 72;color:var(--ui-forest)!important;
   }
-  body :where(.wj-platform h2,.adm-root h2,[data-ui-type="h2"]) {
-    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h2)!important;font-weight:500!important;line-height:1.2!important;letter-spacing:-.035em!important;color:var(--ui-forest)!important;
+  body :where(.wj-platform h2:not(:is(.junction-home,[data-art]) *),.adm-root h2,[data-ui-type="h2"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h2)!important;font-weight:400!important;line-height:1.04!important;letter-spacing:-.024em!important;font-variation-settings:"opsz" 72;color:var(--ui-forest)!important;
   }
-  body :where(.wj-platform h3,.adm-root h3,[data-ui-type="h3"]) {
-    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h3)!important;font-weight:500!important;line-height:1.3!important;letter-spacing:-.025em!important;color:var(--ui-forest)!important;
+  body :where(.wj-platform h3:not(:is(.junction-home,[data-art]) *),.adm-root h3,[data-ui-type="h3"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h3)!important;font-weight:500!important;line-height:1.18!important;letter-spacing:-.012em!important;color:var(--ui-forest)!important;
   }
-  body :where(.wj-platform h4,.wj-platform h5,.wj-platform h6,.adm-root h4,.adm-root h5,.adm-root h6,[data-ui-type="h4"]) {
-    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h4)!important;font-weight:600!important;line-height:1.35!important;letter-spacing:-.02em!important;color:var(--ui-forest)!important;
+  body :where(.wj-platform h4:not(:is(.junction-home,[data-art]) *),.wj-platform h5,.wj-platform h6,.adm-root h4,.adm-root h5,.adm-root h6,[data-ui-type="h4"]) {
+    font-family:var(--ui-heading-font)!important;font-size:var(--ui-h4)!important;font-weight:500!important;line-height:1.3!important;letter-spacing:-.005em!important;color:var(--ui-forest)!important;
   }
-  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(h1,h2,h3,h4,h5,h6) :where(span,em,strong,a) {
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(h1,h2,h3,h4,h5,h6) :where(span,em,strong,a):not(:is(.junction-home,[data-art]) *) {
     font-family:inherit!important;font-size:inherit!important;font-weight:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;color:inherit!important;
   }
-  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(p:not(.lv-h1):not([data-ui-type]),li,dt,dd,blockquote,address,td,[data-ui-type="body"]) {
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(p:not(.lv-h1):not([data-ui-type]),li,dt,dd,blockquote,address,td,[data-ui-type="body"]):not(:is(.junction-home,[data-art]) *) {
     font-family:var(--ui-body-font)!important;font-size:16px!important;font-weight:400!important;line-height:1.75!important;letter-spacing:normal!important;color:var(--ui-muted)!important;
   }
-  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(p,li,dd,blockquote,address) :where(span,em,a) {font-family:inherit!important;font-size:inherit!important;line-height:inherit!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(p,li,dd,blockquote,address) :where(span,em,a):not(:is(.junction-home,[data-art]) *) {font-family:inherit!important;font-size:inherit!important;line-height:inherit!important}
   body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.wj-dialog) :where(input,select,textarea) {font-family:var(--ui-body-font)!important;font-size:16px!important;font-weight:400!important;line-height:1.5!important}
   body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.wj-dialog) :where(label,th,[data-ui-type="label"]) {font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:600!important;line-height:1.5!important}
   /* Explicit secondary and navigation roles, independent of page/template. */
@@ -70,7 +70,7 @@
   body :where(.eyebrow,.hp-eyebrow,.ip-eyebrow,.lx-eyebrow,.wj-eyebrow,.cn-eyebrow,.library-eyebrow,.creative-eyebrow,.info-eyebrow,.visit-eyebrow,.ecom-eyebrow,.cd-eyebrow,.sv-eyebrow,.ws-eyebrow,.ts-eyebrow,.mem-eyebrow,.uc-eyebrow,[data-ui-type="eyebrow"]) {
     font-family:var(--ui-body-font)!important;font-size:12px!important;font-weight:600!important;line-height:1.5!important;letter-spacing:.08em!important;color:var(--ui-green)!important;
   }
-  body :where(.wj-header,.wj-footer,.wj-mega-nav,.wj-mobile-panel,.adm-sidebar) :where(nav a,.wj-footer-links a,.wj-nav-group h2,.wj-footer-top h2,.wj-footer-links h2,.lv-primary a,.lv-strip a,.adm-nav-item) {
+  body :where(.wj-footer,.wj-mega-nav,.wj-mobile-panel,.adm-sidebar) :where(nav a,.wj-footer-links a,.wj-nav-group h2,.wj-footer-top h2,.wj-footer-links h2,.lv-primary a,.adm-nav-item) {
     font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:600!important;line-height:1.5!important;letter-spacing:normal!important;
   }
   body :where(.wj-footer) :where(p,a,address,.wj-footer-bottom span,.wj-footer-brand>span) {font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:400!important;line-height:1.6!important}
@@ -81,7 +81,7 @@
   body :where(.bk-plan-card.featured) :where(.bk-plan-period,.bk-plan-desc) {color:var(--ui-on-dark)!important}
   body :where(.price-value,.creative-price,.bk-detail-price) :where(small,span:not(.lx-amount)) {font-family:var(--ui-body-font)!important;font-size:14px!important;font-weight:400!important;line-height:1.6!important;letter-spacing:normal!important}
   /* Palette roles. The same sections use the same tone on every route. */
-  body :where(.wj-header,.cn-circles,.cn-memberships,.cn-more-ways,.cn-faq-sec,.creative-pricing,.info-community-pricing,.visit-policy,.hp-section,.ip-reading-section,.lx-sec.lx-first) {background-color:var(--ui-canvas)!important;background-image:none!important}
+  body :where(.cn-circles,.cn-memberships,.cn-more-ways,.cn-faq-sec,.creative-pricing,.info-community-pricing,.visit-policy,.hp-section,.ip-reading-section,.lx-sec.lx-first) {background-color:var(--ui-canvas)!important;background-image:none!important}
   body :where(.cn-about,.cn-events,.info-band-light,.lx-sec.lx-band,[data-ui-tone="sand"]) {background-color:var(--ui-sand)!important;background-image:none!important}
   body :where(.cn-circle-card-sage,.cn-benefits-wrap,.info-community-pricing,.creative-pricing,.visit-location,[data-ui-tone="sage"]) {background-color:var(--ui-sage)!important;background-image:none!important}
   body :where(.cn-circle-card,.cn-membership-card,.price-card,.ip-service-card,.visit-form,.bk-cal-card,.bk-plan-details-box,.bk-summary,.bk-checkout-summary,.wj-mobile-panel,.wj-dialog,.service-inquiry-dialog,.visit-lightbox,[data-ui-tone="white"]) {background-color:var(--ui-white)!important;background-image:none!important}
@@ -91,14 +91,14 @@
   body :where(.cn-works,.cn-benefits,.cn-banner,.creative-band,.library-works,.info-band,.wj-closing,.wj-footer,.wj-testimonials-sec,.adm-sidebar,[data-ui-tone="dark"],.ecom-band,.cd-band,.sv-highlight-band,.ws-band,.ts-band) :where(.eyebrow,.cn-eyebrow,.library-eyebrow,.creative-eyebrow,.info-eyebrow,.visit-eyebrow,.ecom-eyebrow,.cd-eyebrow,.sv-eyebrow,.ws-eyebrow,.ts-eyebrow) {color:var(--ui-on-dark)!important}
   body :where(.cn-works,.cn-benefits,.cn-banner,.creative-band,.library-works,.info-band,.wj-closing,.wj-footer,.wj-testimonials-sec,.adm-sidebar,[data-ui-tone="dark"]) :where(a:not([class*="button"]):not([class*="btn"]):not(.text-link):not(.info-text-link):not(.creative-textLink):not(.library-textLink)) {color:var(--ui-on-dark)!important}
   body :where(.cn-benefits-wrap):not(:has(.cn-benefits)) :where(h1,h2,h3,h4) {color:var(--ui-forest)!important}
-  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(img,video,iframe,canvas,.lx-crop,[class$="-media"],[class$="-image"],[class$="-photo"]) {clip-path:none!important;border-radius:5px!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(img,video,iframe,canvas,.lx-crop,[class$="-media"],[class$="-image"],[class$="-photo"]) {clip-path:none!important;border-radius:var(--ui-radius-media)!important}
   body :where(.wj-platform,.adm-root) :where([class*="notch"],[class*="cut-corner"]) {clip-path:none!important;transform:none!important}
   body :where(.wj-platform,.adm-root) :where([class*="notch"],[class*="cut-corner"])::before,body :where(.wj-platform,.adm-root) :where([class*="notch"],[class*="cut-corner"])::after {display:none!important}
-  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn) {font-family:var(--ui-body-font)!important;font-size:15px!important;font-weight:700!important;line-height:18px!important;border-radius:5px!important;--wj-button-radius:5px!important}
-  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(button) {border-radius:5px!important;font-family:var(--ui-body-font)!important}
-  @media(max-width:1000px){:root{--ui-h1:48px;--ui-h2:36px;--ui-h3:26px;--ui-h4:22px}}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn) {font-family:var(--ui-body-font)!important;font-size:15px!important;font-weight:600!important;line-height:18px!important;letter-spacing:-.005em!important;border-radius:var(--ui-radius-pill)!important;--wj-button-radius:999px!important}
+  body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(button) {border-radius:var(--ui-radius)!important;font-family:var(--ui-body-font)!important}
+  @media(max-width:1000px){:root{--ui-h1:clamp(40px,7vw,60px);--ui-h2:clamp(30px,5vw,44px);--ui-h3:24px;--ui-h4:20px}}
   @media(max-width:700px){
-    :root{--ui-h1:40px;--ui-h2:32px;--ui-h3:24px;--ui-h4:20px}
+    :root{--ui-h1:clamp(36px,10.5vw,46px);--ui-h2:clamp(28px,8vw,36px);--ui-h3:22px;--ui-h4:19px}
     body :where(.wj-platform,.adm-root,.bk-overlay,.service-inquiry-dialog,.visit-lightbox,.wj-dialog) :where(.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill,.cn-btn-gold,.cn-btn-dark,.cn-btn-outline-dark,.cn-btn-text-play,.cn-plan-btn,.library-button,.library-textLink,.creative-button,.creative-textLink,.info-button,.info-text-link,.visit-button,.visit-link,.ip-text-link,.text-link,.bk-btn,.bk-submit-btn){font-size:14px!important}
   }
 }
@@ -126,7 +126,7 @@ body :where(.bk-overlay,.service-inquiry-dialog)::backdrop{background-color:rgba
   body:has(.wj-platform) .cn-membership-card {
     background-color: var(--ui-white) !important;
     border: 1px solid var(--ui-line) !important;
-    border-radius: 5px !important;
+    border-radius: var(--ui-radius-card) !important;
     padding: 32px 26px 26px !important;
     box-shadow: 0 4px 18px rgba(17, 48, 42, 0.04) !important;
     display: flex !important;
@@ -159,7 +159,7 @@ body :where(.bk-overlay,.service-inquiry-dialog)::backdrop{background-color:rgba
     letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
     padding: 3px 10px !important;
-    border-radius: 5px !important;
+    border-radius: var(--ui-radius-card) !important;
   }
 
   body:has(.wj-platform) .cn-card-header {
@@ -261,6 +261,3 @@ body :where(.bk-overlay,.service-inquiry-dialog)::backdrop{background-color:rgba
 }
 
 /* Hide any residual ambient pause toggle button */
-.amb-toggle {
-  display: none !important;
-}

@@ -115,9 +115,22 @@ export function AccountNav() {
 }
 
 /** Account links inside the mobile navigation panel. */
-export function MobileAccountNav({onNavigate}: {onNavigate: () => void}) {
+export function MobileAccountNav({onNavigate, compact = false}: {onNavigate: () => void; compact?: boolean}) {
   const session = useCustomerSession();
   const router = useRouter();
+  // Compact: a single pill for the menu's top bar — Login, or the customer's dashboard.
+  if (compact) {
+    if (session.status === 'loading') return <span className="an-pill an-pill-loading" aria-hidden="true" />;
+    if (session.status === 'anonymous') {
+      return <Link prefetch={false} href="/login/" className="an-pill" onClick={onNavigate}><LogIn size={17} aria-hidden="true" /> Login</Link>;
+    }
+    return (
+      <Link prefetch={false} href="/account/" className="an-pill" onClick={onNavigate}>
+        <span className="an-avatar" aria-hidden="true">{session.customer.initials}</span>
+        <span>My account</span>
+      </Link>
+    );
+  }
   if (session.status === 'loading') return <div className="an-mobile an-mobile-loading" aria-hidden="true" />;
   if (session.status === 'anonymous') {
     return (

@@ -3,6 +3,7 @@ import type {Metadata} from 'next';
 import {notFound} from 'next/navigation';
 import {PublicLayout} from '@/components/public-layout';
 import {AccountArea, type AccountSection} from '@/components/account-area';
+import '../../legacy-routes.css'; // legacy-template styles (route-scoped; not on the homepage)
 
 const SECTIONS: Record<string, {section: AccountSection; title: string}> = {
   subscriptions: {section: 'subscriptions', title: 'My subscriptions'},

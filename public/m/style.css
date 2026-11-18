@@ -4696,3 +4696,55 @@ p {
     --container: 1320px;
   }
 }
+
+/* Scoped campaign refresh. Content, pricing, visibility and JS hooks stay unchanged. */
+:root {
+  --color-off:#f7f5ef; --color-bg-subtle:#eeeee6; --color-border:#d9ded4;
+  --color-border-hover:#9eafa2; --color-text:#293d32; --color-text-muted:#526357;
+  --color-text-light:#596b60; --color-primary-surface:#edf2eb; --color-primary-tint:#f5f7f1;
+  --radius:10px; --radius-lg:12px; --radius-xl:16px;
+  --shadow-sm:0 2px 5px rgba(14,52,33,.035); --shadow-md:0 8px 24px rgba(14,52,33,.07);
+  --shadow-amber:none;
+}
+body { background:#fcfbf7; }
+h1 { font-size:clamp(32px,4vw,54px); line-height:1.08; letter-spacing:-.035em; font-weight:650; }
+h2 { letter-spacing:-.025em; font-weight:600; }
+.hero-copy .lead { max-width:54ch; line-height:1.7; }
+.site-header { background:#fcfbf7; backdrop-filter:none; box-shadow:none; border-color:var(--color-border); }
+.breadcrumb { background:var(--color-off); }
+.btn { min-height:48px; border-radius:6px; transition:background-color .18s,border-color .18s,color .18s; }
+.btn:hover { transform:none; }
+.btn-primary,.btn-primary:hover,.btn-green,.btn-green:hover { box-shadow:none; }
+.btn-sm,.nav-toggle { min-height:44px; }
+.card,.price-card,.form-card { box-shadow:none; }
+.card:hover,.price-card:hover { transform:none; box-shadow:none; }
+.card:not(.card-dark):hover { border-color:var(--color-border-hover); }
+.glass-card { background:rgba(14,52,33,.92); border-color:rgba(255,255,255,.3); backdrop-filter:none; }
+.price-card .amount,.price-tile .amount,.table .num { font-variant-numeric:tabular-nums; }
+.hero-note,.dark .fine { color:rgba(255,255,255,.86); }
+.table.is-stacked td.is-pro::before { color:var(--color-secondary-ink); }
+.lead-form :is(input:not([type=checkbox]):not([type=radio]),select,textarea) { min-height:48px; font-size:16px; border-color:#a3b0a4; border-radius:6px; }
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible { outline:3px solid #0E3421; outline-offset:3px; box-shadow:0 0 0 5px #fff; }
+.dark :is(a,button,input,select,textarea,summary):focus-visible,.hero-v2.is-dark :is(a,button):focus-visible,.site-footer a:focus-visible { outline-color:#D7902A; box-shadow:0 0 0 5px #0E3421; }
+:is(button,input,select,textarea):disabled { cursor:not-allowed; }
+@media (min-width:861px) { .hero-inner { gap:clamp(32px,4vw,64px); } }
+@media (max-width:640px) {
+  h1 { font-size:clamp(30px,8vw,42px); }
+  .hero-copy .lead { font-size:16px; }
+  .site-header .btn,.nav-toggle { min-height:44px; }
+  .hero-v2 .hero-copy,.hero-copy,.hero-side { min-width:0; }
+  .price-format,.hero-price { overflow-wrap:break-word; }
+  .table-wrap { max-width:100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+}
+
+/* Checkout page-inline styles need the existing body class for specificity. */
+body.wjm-checkout-page { background:#f7f5ef; background-image:none; --wj-border:#d9ded4; --wj-text-primary:#293d32; --wj-text-secondary:#526357; }
+.wjm-checkout-page :is(.wjm-box-card,.wjm-summary-card,.wjm-perks-card,.wjm-help-card,.wjm-quote-card) { border-radius:10px; border-color:#d9ded4; box-shadow:none; }
+.wjm-checkout-page :is(.wjm-input,.wjm-select,.wjm-cycle-select) { font-size:16px; min-height:48px; border-radius:6px; border-color:#9eaea1; }
+.wjm-checkout-page .wjm-btn-submit-order { background:#D7902A; color:#0E3421; min-height:48px; box-shadow:none; border-radius:6px; }
+.wjm-checkout-page .wjm-page-title { letter-spacing:-.035em; color:#0E3421; }
+.wjm-checkout-page .wjm-sum-total-amount { font-variant-numeric:tabular-nums; }

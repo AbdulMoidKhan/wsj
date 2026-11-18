@@ -1,0 +1,765 @@
+{
+ "url": "http://localhost:3100/digital-services/",
+ "at": "2026-11-13T14:02:01.033Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 6,
+   "filled": [
+    1,
+    0.99,
+    0.99,
+    1,
+    1,
+    1
+   ],
+   "motion": {
+    "elements": 5,
+    "css": 1,
+    "transitions": 2,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 5253,
+     "screens": 5.8,
+     "words": 370,
+     "img": 5,
+     "video": 0,
+     "canvas": 0,
+     "svg": 26,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 3,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "?url=%2Fmedia%2Ffigma-pages%2Fdservices-hero.web",
+      "?url=%2Fmedia%2Ffigma-pages%2Fdservices-g1.webp&",
+      "?url=%2Fmedia%2Ffigma-pages%2Fdservices-g2.webp&"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Build. Brand. Automate. Grow.",
+     "words": 4,
+     "chars": 29,
+     "lines": 2,
+     "size": 69.1,
+     "vw": 4.8,
+     "font": "Inter",
+     "weight": 500,
+     "tracking": -0.055,
+     "leading": 1.06,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.47,
+     "top": 282,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Build. Brand. Automate. Grow.",
+     "words": 4,
+     "lines": 2,
+     "size": 69.1,
+     "font": "Inter"
+    },
+    "headings": [
+     {
+      "text": "Build. Brand. Automate. Grow.",
+      "words": 4,
+      "chars": 29,
+      "lines": 2,
+      "size": 69.1,
+      "vw": 4.8,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.47,
+      "top": 282,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Less manual work. More growth.",
+      "words": 5,
+      "chars": 30,
+      "lines": 2,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.41,
+      "top": 972,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Expert teams. Connected solutions.",
+      "words": 4,
+      "chars": 34,
+      "lines": 1,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.59,
+      "top": 1444,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Systems built around your business.",
+      "words": 5,
+      "chars": 35,
+      "lines": 1,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.59,
+      "top": 2393,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Digital Services Options",
+      "words": 3,
+      "chars": 24,
+      "lines": 1,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.59,
+      "top": 3191,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Request a quote",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 53.3,
+      "vw": 3.7,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.58,
+      "top": 3408,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Let’s automate your busywork.",
+      "words": 4,
+      "chars": 29,
+      "lines": 1,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.48,
+      "top": 3858,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Make room for your next chapter.",
+      "words": 6,
+      "chars": 32,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.035,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.35,
+      "top": 4189,
+      "tag": "p",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 8,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 1,
+     "centered": 0,
+     "medianWords": 4,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      24,
+      25,
+      50,
+      53,
+      64,
+      69
+     ],
+     "sizeCount": 13,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 16,
+      "leading": 1.7,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 6.8
+     },
+     "measureChars": 73,
+     "max": {
+      "size": 69.1,
+      "vw": 4.8,
+      "font": "Inter",
+      "text": "Build. Brand. Automate. Grow."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.04,
+     "centerShare": 0.02,
+     "smallText": 0
+    },
+    "eyebrows": [
+     {
+      "text": "Grow it. Digital services",
+      "above": "Build. Brand. Automate. Grow.",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 18,
+      "top": 237
+     },
+     {
+      "text": "WORKSPACE JUNCTION",
+      "above": "Less manual work. More growth.",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 929
+     },
+     {
+      "text": "WHAT WE BUILD",
+      "above": "Expert teams. Connected solutions.",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 1405
+     },
+     {
+      "text": "EXPLORE MORE",
+      "above": "Systems built around your business.",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 2354
+     },
+     {
+      "text": "PLANS & PRICING",
+      "above": "Digital Services Options",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 3152
+     },
+     {
+      "text": "TAILORED TO YOUR NEEDS",
+      "above": "Request a quote",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 16,
+      "top": 3367
+     },
+     {
+      "text": "WORK. CONNECT. GROW.",
+      "above": "Let’s automate your busywork.",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 3821
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f7f4ed",
+     "bodyBgHsl": {
+      "h": 42,
+      "s": 0.38,
+      "l": 0.95
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f7f4ed",
+       "top": 0,
+       "hsl": {
+        "h": 42,
+        "s": 0.38,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#f4f4ee",
+       "top": 136,
+       "hsl": {
+        "h": 60,
+        "s": 0.21,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#d7902a",
+       "top": 136,
+       "hsl": {
+        "h": 35,
+        "s": 0.68,
+        "l": 0.5
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 742,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#e5ebe3",
+       "top": 1290,
+       "hsl": {
+        "h": 105,
+        "s": 0.17,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#173e30",
+       "top": 3295,
+       "hsl": {
+        "h": 158,
+        "s": 0.46,
+        "l": 0.17
+       }
+      },
+      {
+       "color": "#103624",
+       "top": 4117,
+       "hsl": {
+        "h": 152,
+        "s": 0.54,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#19432f",
+       "top": 4614,
+       "hsl": {
+        "h": 151,
+        "s": 0.46,
+        "l": 0.18
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#4b6055",
+       "share": 0.26
+      },
+      {
+       "color": "#cfd8d0",
+       "share": 0.19
+      },
+      {
+       "color": "#173e30",
+       "share": 0.12
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.1
+      },
+      {
+       "color": "#10271c",
+       "share": 0.09
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 8,
+     "inHero": 6,
+     "radius": 2,
+     "height": 48,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Skip to content",
+      "Plans & Pricing",
+      "Login",
+      "Menu",
+      "Book Strategy Call"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 2,
+     "boxRadius": 10,
+     "squareMedia": 0,
+     "roundedMedia": 3,
+     "mediaRadius": 5,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": true,
+       "rounded": false,
+       "top": 1548
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.18
+     }
+    ],
+    "nav": {
+     "links": 14,
+     "fixed": true,
+     "height": 136,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "inter",
+     "__nextjs-geist"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 5253,
+    "margins": {
+     "left": 96,
+     "right": 96
+    },
+    "sections": [
+     {
+      "sel": "header#wj-site-header.wj-header.lv-header",
+      "tag": "header",
+      "top": 0,
+      "height": 136,
+      "words": 31,
+      "media": 0,
+      "middle": 44,
+      "heading": null,
+      "left": 49,
+      "right": 69,
+      "textLeft": 49,
+      "textRight": 69,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": true
+     },
+     {
+      "sel": "div.wj-route-stage",
+      "tag": "div",
+      "top": 136,
+      "height": 3981,
+      "words": 224,
+      "media": 3,
+      "middle": 0,
+      "heading": {
+       "text": "Build. Brand.",
+       "size": 69,
+       "tag": "h1"
+      },
+      "left": 96,
+      "right": 96,
+      "textLeft": 96,
+      "textRight": 207,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer#wj-site-footer.wj-footer.amb-local",
+      "tag": "footer",
+      "top": 4117,
+      "height": 1136,
+      "words": 122,
+      "media": 0,
+      "middle": 20,
+      "heading": {
+       "text": "Make room for",
+       "size": 64,
+       "tag": "p"
+      },
+      "left": 96,
+      "right": 96,
+      "textLeft": 96,
+      "textRight": 96,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Build. Brand. Automate. Grow.",
+      "size": 69,
+      "top": 282,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 188,
+      "n": 6
+     },
+     {
+      "x": 96,
+      "n": 5
+     },
+     {
+      "x": 620,
+      "n": 5
+     },
+     {
+      "x": 107,
+      "n": 3
+     },
+     {
+      "x": 160,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 22,
+    "bodySize": 16,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.16,
+    "voidBox": {
+     "x": 0,
+     "y": 660,
+     "w": 840,
+     "h": 240
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "eyebrow",
+   "width": 1440,
+   "message": "7 eyebrow/kicker label(s) above headings: \"Grow it. Digital services\" above \"Build. Brand. Automate. Grow.\"; \"WORKSPACE JUNCTION\" above \"Less manual work. More growth.\"; \"WHAT WE BUILD\" above \"Expert teams. Connected solutions.\"; \"EXPLORE MORE\" above \"Systems built around your business.\"; \"PLANS & PRICING\" above \"Digital Services Options\"",
+   "fix": "Delete them. If the label carried real information, fold it into the headline or the supporting sentence."
+  },
+  {
+   "level": "FAIL",
+   "id": "icon-cards",
+   "width": 1440,
+   "message": "1 row(s) of identical cards each topped with a small icon (3 cards).",
+   "fix": "Replace with one composed section from the direction: a narrative split, a list set in large type, or real imagery per item."
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #f7f4ed, section #f7f4ed, section #f4f4ee).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream."
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "13 different font sizes (13, 14, 15, 16, 18, 19, 20, 24, 25, 50, 53, 64, 69).",
+   "fix": "A page needs about five: display, heading, lead, body, small."
+  },
+  {
+   "level": "WARN",
+   "id": "grey-body",
+   "width": 1440,
+   "message": "The running text is a soft grey on its ground (6.8:1).",
+   "fix": "Set body copy in the full ink (7:1 or more). Keep the muted ink for secondary notes; pages read thin and unfinished when everything is grey."
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 3 picture(s) on the page (3 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "FAIL",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Only 5 element(s) moved while the page loaded and scrolled.",
+   "fix": "Build the motion layer (SKILL.md step 9, references/motion.md): the signature move, an entrance for the parts of every section, feedback on every control, and one moving picture. Transform and opacity only, with a reduced-motion fallback."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\after-digital-services\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\after-digital-services\\desktop-page-01.jpg",
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\after-digital-services\\desktop-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

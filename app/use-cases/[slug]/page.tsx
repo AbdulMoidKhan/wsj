@@ -11,6 +11,7 @@ import {fetchUseCase, fetchUseCases} from '@/lib/use-cases';
 import '@/components/use-cases-view.css';
 import {FigmaPageView} from '@/components/figma-page/figma-page-view';
 import {figmaPageFor} from '@/lib/figma-pages';
+import '../../legacy-routes.css'; // legacy-template styles (route-scoped; not on the homepage)
 
 export const revalidate = 60;
 

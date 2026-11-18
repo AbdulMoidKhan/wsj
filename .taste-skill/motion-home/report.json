@@ -1,0 +1,1337 @@
+{
+ "url": "http://localhost:3200/",
+ "at": "2026-11-13T14:39:49.170Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 12,
+   "filled": [
+    1,
+    1,
+    0.6,
+    0.58,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0.63,
+    0.83
+   ],
+   "motion": {
+    "elements": 106,
+    "css": 7,
+    "transitions": 27,
+    "scripted": 72,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 16049,
+     "screens": 17.8,
+     "words": 1406,
+     "img": 27,
+     "video": 0,
+     "canvas": 0,
+     "svg": 131,
+     "sections": 12,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 2,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "?url=%2Fmedia%2F7bfb01371b-image-49-scaled.png&w",
+      "?url=%2Fmedia%2F3675f6dc28-slide-1.png&w=1080&q="
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Your business. Connected.",
+     "words": 3,
+     "chars": 25,
+     "lines": 2,
+     "size": 129.6,
+     "vw": 9,
+     "font": "Inter",
+     "weight": 760,
+     "tracking": -0.065,
+     "leading": 0.86,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.58,
+     "top": 398,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Your business. Connected.",
+     "words": 3,
+     "lines": 2,
+     "size": 129.6,
+     "font": "Inter"
+    },
+    "headings": [
+     {
+      "text": "Your business. Connected.",
+      "words": 3,
+      "chars": 25,
+      "lines": 2,
+      "size": 129.6,
+      "vw": 9,
+      "font": "Inter",
+      "weight": 760,
+      "tracking": -0.065,
+      "leading": 0.86,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.58,
+      "top": 398,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Six ways in. One junction.",
+      "words": 5,
+      "chars": 26,
+      "lines": 2,
+      "size": 89.3,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.58,
+      "top": 1064,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Start",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 86.4,
+      "vw": 6,
+      "font": "Inter",
+      "weight": 720,
+      "tracking": -0.06,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.13,
+      "top": 1323,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Establish",
+      "words": 1,
+      "chars": 9,
+      "lines": 1,
+      "size": 86.4,
+      "vw": 6,
+      "font": "Inter",
+      "weight": 720,
+      "tracking": -0.06,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.24,
+      "top": 1417,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Work",
+      "words": 1,
+      "chars": 4,
+      "lines": 1,
+      "size": 86.4,
+      "vw": 6,
+      "font": "Inter",
+      "weight": 720,
+      "tracking": -0.06,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 1511,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Create",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 86.4,
+      "vw": 6,
+      "font": "Inter",
+      "weight": 720,
+      "tracking": -0.06,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.17,
+      "top": 1606,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Grow",
+      "words": 1,
+      "chars": 4,
+      "lines": 1,
+      "size": 86.4,
+      "vw": 6,
+      "font": "Inter",
+      "weight": 720,
+      "tracking": -0.06,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 1700,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Connect",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 86.4,
+      "vw": 6,
+      "font": "Inter",
+      "weight": 720,
+      "tracking": -0.06,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.22,
+      "top": 1795,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Give the idea a legal shape.",
+      "words": 6,
+      "chars": 28,
+      "lines": 1,
+      "size": 37.4,
+      "vw": 2.6,
+      "font": "Inter",
+      "weight": 680,
+      "tracking": -0.004,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.51,
+      "top": 1912,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Rooms that mean business.",
+      "words": 4,
+      "chars": 25,
+      "lines": 2,
+      "size": 89.3,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.54,
+      "top": 2470,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Make it official.",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 89.3,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.39,
+      "top": 3710,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Foundation services",
+      "words": 2,
+      "chars": 19,
+      "lines": 1,
+      "size": 40.3,
+      "vw": 2.8,
+      "font": "Inter",
+      "weight": 700,
+      "tracking": -0.04,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "right",
+      "widthRatio": 0.39,
+      "top": 3782,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Built to be seen.",
+      "words": 4,
+      "chars": 17,
+      "lines": 2,
+      "size": 123.8,
+      "vw": 8.6,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.58,
+      "top": 5050,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Websites & development",
+      "words": 3,
+      "chars": 22,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Inter",
+      "weight": 680,
+      "tracking": -0.045,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.5,
+      "top": 5378,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Marketing & growth",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Inter",
+      "weight": 680,
+      "tracking": -0.045,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.5,
+      "top": 5477,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Branding & identity",
+      "words": 3,
+      "chars": 19,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Inter",
+      "weight": 680,
+      "tracking": -0.045,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.5,
+      "top": 5576,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "CRM & automation",
+      "words": 3,
+      "chars": 16,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Inter",
+      "weight": 680,
+      "tracking": -0.045,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.5,
+      "top": 5675,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Video & content",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Inter",
+      "weight": 680,
+      "tracking": -0.045,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.5,
+      "top": 5774,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Print & business support",
+      "words": 4,
+      "chars": 24,
+      "lines": 1,
+      "size": 49,
+      "vw": 3.4,
+      "font": "Inter",
+      "weight": 680,
+      "tracking": -0.045,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.5,
+      "top": 5873,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Press record.",
+      "words": 2,
+      "chars": 13,
+      "lines": 1,
+      "size": 135.4,
+      "vw": 9.4,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.84,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.93,
+      "top": 6660,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Starter Podcast Session",
+      "words": 3,
+      "chars": 23,
+      "lines": 1,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.004,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.44,
+      "top": 7811,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Find your kind of space.",
+      "words": 5,
+      "chars": 24,
+      "lines": 2,
+      "size": 89.3,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.54,
+      "top": 8721,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "$100 / month",
+      "words": 3,
+      "chars": 12,
+      "lines": 2,
+      "size": 40,
+      "vw": 2.8,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.18,
+      "top": 9239,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "$150 / month",
+      "words": 3,
+      "chars": 12,
+      "lines": 2,
+      "size": 40,
+      "vw": 2.8,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.18,
+      "top": 9239,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "$50 / month",
+      "words": 3,
+      "chars": 11,
+      "lines": 2,
+      "size": 40,
+      "vw": 2.8,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.18,
+      "top": 9260,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "$250 / month",
+      "words": 3,
+      "chars": 12,
+      "lines": 2,
+      "size": 40,
+      "vw": 2.8,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.18,
+      "top": 9260,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "Better together.",
+      "words": 2,
+      "chars": 16,
+      "lines": 2,
+      "size": 89.3,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.33,
+      "top": 10116,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Made for",
+      "words": 2,
+      "chars": 8,
+      "lines": 1,
+      "size": 43.2,
+      "vw": 3,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.23,
+      "top": 10824,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Trusted by Chicagoans",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 48,
+      "vw": 3.3,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.02,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.24,
+      "top": 11358,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Good questions.",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 89.3,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.48,
+      "top": 11937,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Come by the Junction.",
+      "words": 4,
+      "chars": 21,
+      "lines": 2,
+      "size": 37.4,
+      "vw": 2.6,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.24,
+      "top": 13647,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Your business. Connected.",
+      "words": 3,
+      "chars": 25,
+      "lines": 2,
+      "size": 152.6,
+      "vw": 10.6,
+      "font": "Inter",
+      "weight": 780,
+      "tracking": -0.07,
+      "leading": 0.86,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.93,
+      "top": 14496,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Make room for your next chapter.",
+      "words": 6,
+      "chars": 32,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.035,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.35,
+      "top": 14985,
+      "tag": "p",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 33,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 8,
+     "centered": 1,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      22,
+      23,
+      24,
+      26,
+      27,
+      37,
+      40,
+      43,
+      48,
+      49,
+      64,
+      86,
+      89,
+      124,
+      130,
+      135,
+      153
+     ],
+     "sizeCount": 26,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 17,
+      "leading": 1.75,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 15.5
+     },
+     "measureChars": 81,
+     "max": {
+      "size": 152.6,
+      "vw": 10.6,
+      "font": "Inter",
+      "text": "Your business."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 1,
+     "microLabelShare": 0.001,
+     "microSamples": [
+      "Testimonials"
+     ],
+     "upperShare": 0,
+     "centerShare": 0.06,
+     "smallText": 1
+    },
+    "eyebrows": [
+     {
+      "text": "Testimonials",
+      "above": "Trusted by Chicagoans",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 11314
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f7f4ed",
+     "bodyBgHsl": {
+      "h": 42,
+      "s": 0.38,
+      "l": 0.95
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f7f4ed",
+       "top": 0,
+       "hsl": {
+        "h": 42,
+        "s": 0.38,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#092317",
+       "top": 146,
+       "hsl": {
+        "h": 152,
+        "s": 0.59,
+        "l": 0.09
+       }
+      },
+      {
+       "color": "#0e3421",
+       "top": 906,
+       "hsl": {
+        "h": 150,
+        "s": 0.58,
+        "l": 0.13
+       }
+      },
+      {
+       "color": "#e9ede6",
+       "top": 3552,
+       "hsl": {
+        "h": 94,
+        "s": 0.16,
+        "l": 0.92
+       }
+      },
+      {
+       "color": "#fffdf8",
+       "top": 3710,
+       "hsl": {
+        "h": 43,
+        "s": 1,
+        "l": 0.99
+       }
+      },
+      {
+       "color": "#d7902a",
+       "top": 4891,
+       "hsl": {
+        "h": 35,
+        "s": 0.68,
+        "l": 0.5
+       }
+      },
+      {
+       "color": "#06140d",
+       "top": 6103,
+       "hsl": {
+        "h": 150,
+        "s": 0.54,
+        "l": 0.05
+       }
+      },
+      {
+       "color": "#103624",
+       "top": 14913,
+       "hsl": {
+        "h": 152,
+        "s": 0.54,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#19432f",
+       "top": 15410,
+       "hsl": {
+        "h": 151,
+        "s": 0.46,
+        "l": 0.18
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#3f4d45",
+       "share": 0.48
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.16
+      },
+      {
+       "color": "#10271c",
+       "share": 0.16
+      },
+      {
+       "color": "#d6e1d4",
+       "share": 0.08
+      },
+      {
+       "color": "#cfd8d0",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#0e3421",
+      "hsl": {
+       "h": 150,
+       "s": 0.58,
+       "l": 0.13
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 40,
+     "inHero": 6,
+     "radius": 2,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Skip to content",
+      "Plans & Pricing",
+      "Login",
+      "Menu",
+      "Explore our ecosystem"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 1,
+     "shadowOverlay": 0,
+     "shadowSamples": [
+      "figure.lx-vitem.is-active → rgba(0, 0, 0, 0.38) 0px 18px 44px 0px"
+     ],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 3,
+     "hairlineSamples": [
+      "figcaption.lx-vitem-footer 674px",
+      "figcaption.lx-vitem-footer 620px",
+      "figcaption.lx-vitem-footer 620px"
+     ],
+     "outlinedBoxes": 6,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 19,
+     "mediaRadius": 5,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 6,
+       "iconTopped": true,
+       "rounded": false,
+       "top": 146
+      },
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 7949
+      },
+      {
+       "count": 4,
+       "iconTopped": true,
+       "rounded": false,
+       "top": 9068
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.66
+     }
+    ],
+    "nav": {
+     "links": 14,
+     "fixed": true,
+     "height": 136,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "inter"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 16049,
+    "margins": {
+     "left": 49,
+     "right": 56
+    },
+    "sections": [
+     {
+      "sel": "header#wj-site-header.wj-header.lv-header",
+      "tag": "header",
+      "top": 0,
+      "height": 136,
+      "words": 31,
+      "media": 0,
+      "middle": 44,
+      "heading": null,
+      "left": 49,
+      "right": 69,
+      "textLeft": 49,
+      "textRight": 69,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": true
+     },
+     {
+      "sel": "div.wj-route-stage",
+      "tag": "div",
+      "top": 136,
+      "height": 14777,
+      "words": 1101,
+      "media": 19,
+      "middle": 0,
+      "heading": {
+       "text": "Press record.",
+       "size": 135,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": 0,
+      "textRight": 43,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": true
+     },
+     {
+      "sel": "footer#wj-site-footer.wj-footer.amb-local",
+      "tag": "footer",
+      "top": 14913,
+      "height": 1136,
+      "words": 122,
+      "media": 0,
+      "middle": 20,
+      "heading": {
+       "text": "Make room for",
+       "size": 64,
+       "tag": "p"
+      },
+      "left": 96,
+      "right": 96,
+      "textLeft": 96,
+      "textRight": 96,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Your business. Connected.",
+      "size": 130,
+      "top": 398,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 49,
+      "n": 11
+     },
+     {
+      "x": 650,
+      "n": 4
+     },
+     {
+      "x": 912,
+      "n": 4
+     },
+     {
+      "x": 70,
+      "n": 3
+     },
+     {
+      "x": 84,
+      "n": 3
+     },
+     {
+      "x": 870,
+      "n": 2
+     },
+     {
+      "x": 0,
+      "n": 1
+     },
+     {
+      "x": 281,
+      "n": 1
+     },
+     {
+      "x": 422,
+      "n": 1
+     },
+     {
+      "x": 629,
+      "n": 1
+     },
+     {
+      "x": 761,
+      "n": 1
+     },
+     {
+      "x": 1099,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 33,
+    "bodySize": 18,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.01,
+    "voidBox": {
+     "x": 1380,
+     "y": 420,
+     "w": 60,
+     "h": 300
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "eyebrow",
+   "width": 1440,
+   "message": "1 eyebrow/kicker label(s) above headings: \"Testimonials\" above \"Trusted by Chicagoans\"",
+   "fix": "Delete them. If the label carried real information, fold it into the headline or the supporting sentence."
+  },
+  {
+   "level": "WARN",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "1 tiny uppercase letter-spaced label(s): \"Testimonials\"",
+   "fix": "Prefer sentence case at body size."
+  },
+  {
+   "level": "FAIL",
+   "id": "shadow",
+   "width": 1440,
+   "message": "1 box-shadow(s) on elements at rest: figure.lx-vitem.is-active → rgba(0, 0, 0, 0.38) 0px 18px 44px 0px",
+   "fix": "Remove. Separate surfaces with a tone step or space. Shadows are for things that really float (menus, dialogs, sticky bars)."
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "3 thin rule(s)/divider line(s): figcaption.lx-vitem-footer 674px | figcaption.lx-vitem-footer 620px | figcaption.lx-vitem-footer 620px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields."
+  },
+  {
+   "level": "FAIL",
+   "id": "outlined-box",
+   "width": 1440,
+   "message": "6 boxes drawn with a 1px outline.",
+   "fix": "Define a surface by its fill (one tone step from the page) or leave the content unboxed."
+  },
+  {
+   "level": "FAIL",
+   "id": "icon-cards",
+   "width": 1440,
+   "message": "2 row(s) of identical cards each topped with a small icon (6, 4 cards).",
+   "fix": "Replace with one composed section from the direction: a narrative split, a list set in large type, or real imagery per item."
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #f7f4ed, section #f7f4ed, section #fffdf8).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream."
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "26 different font sizes (12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 26, 27, 37, 40, 43, 48, 49, 64, 86, 89, 124, 130, 135, 153).",
+   "fix": "A page needs about five: display, heading, lead, body, small."
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 2 picture(s) on the page (2 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "small-text",
+   "width": 1440,
+   "message": "1 text block(s) under 13px.",
+   "fix": "Nothing meant to be read goes below 13px."
+  },
+  {
+   "level": "WARN",
+   "id": "ragged-edges",
+   "width": 1440,
+   "message": "Left-aligned text starts at 12 different lines (49px, 650px, 912px, 70px, 84px, 870px, 0px); the three most used hold only 58% of it.",
+   "fix": "Pick two or three anchor lines from the grid and start every heading and paragraph on one of them."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\motion-home\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\motion-home\\desktop-page-01.jpg",
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\motion-home\\desktop-page-02.jpg",
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\motion-home\\desktop-page-03.jpg"
+   ],
+   "film": [
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\motion-home\\desktop-film-01.jpg",
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\motion-home\\desktop-film-02.jpg",
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\motion-home\\desktop-film-03.jpg"
+   ]
+  }
+ ]
+}

@@ -8,7 +8,7 @@ html body .wj-platform #main.figma-contact {
   background:#fff!important;color:var(--fc-green)!important;
   font-family:var(--font-sans),Arial,sans-serif!important;
 
-  & :is(.wj-section-motif,.amb-shape,.amb-glow) {display:none!important}
+  & :is(.wj-section-motif) {display:none!important}
   & [data-anim], & .split-line {opacity:1!important;transform:none!important}
   & .fc-shell {width:calc(100% - 64px)!important;max-width:1248px!important;margin-inline:auto!important}
   & p {font-size:16px!important;line-height:1.55!important;color:var(--fc-muted)!important;margin:0!important}
@@ -72,7 +72,7 @@ html body .wj-platform #main.figma-contact {
   & .wj-consent {display:flex!important;align-items:flex-start!important;gap:12px!important;font:400 14px/1.5 var(--font-sans),Arial,sans-serif!important;color:var(--fc-muted)!important}
   & .wj-consent input {width:18px!important;height:18px!important;min-height:0!important;padding:0!important;flex:none!important;margin-top:2px!important;accent-color:var(--fc-green)!important}
   & .wj-form-actions {display:flex!important;gap:12px!important;flex-wrap:wrap!important}
-  & .wj-form .wj-button {display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;min-height:52px!important;padding:14px 28px!important;border-radius:7px!important;background:var(--fc-amber)!important;color:var(--fc-green)!important;border:0!important;font:600 14px/1.4 var(--font-sans),Arial,sans-serif!important;box-shadow:none!important;transform:none!important}
+  & .wj-form .wj-button {display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;min-height:52px!important;padding:14px 28px!important;border-radius:999px!important;background:var(--fc-amber)!important;color:var(--fc-green)!important;border:0!important;font:600 14px/1.4 var(--font-sans),Arial,sans-serif!important;box-shadow:none!important;transform:none!important}
   & .wj-form .wj-button:disabled {opacity:.7!important}
   & .wj-small {font-size:13px!important;color:var(--fc-muted)!important}
   & .wj-error {font-size:13px!important;color:#9a3412!important}

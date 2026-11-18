@@ -46,7 +46,7 @@ const VIEWPORTS = [
         };
 
         // 1. Check card CTA bottom alignment in card grids
-        const cardGrids = document.querySelectorAll('.pricing-grid, .price-grid, .lv-service-grid, .archive-grid, .journal-grid, .ip-service-grid, .lx-cards, .lx-grid');
+        const cardGrids = document.querySelectorAll('.pricing-grid, .price-grid, .fx-grid, .j-foundation-grid, .j-community-grid, .archive-grid, .journal-grid, .ip-service-grid, .lx-cards, .lx-grid');
         cardGrids.forEach(grid => {
           const cards = Array.from(grid.children).filter(vis);
           // Group cards by row (similar top)
@@ -61,7 +61,7 @@ const VIEWPORTS = [
             if (rowCards.length > 1) {
               // check if cards have CTAs or bottom links
               const ctas = rowCards.map(c => {
-                const btn = c.querySelector('button, a.btn, .btn, .text-link, .hp-link, [class*="action"]');
+                const btn = c.querySelector('button, a.btn, .btn, .text-link, .j-link, .fx-cta, [class*="action"]');
                 return btn && vis(btn) ? R(btn).bottom : null;
               });
               const validCtas = ctas.filter(Boolean);
@@ -95,9 +95,9 @@ const VIEWPORTS = [
         });
 
         // 2. Check heading & paragraph left alignment within copy blocks
-        const copyBlocks = document.querySelectorAll('.lv-copy, .lx-col, .hp-section-head, .ip-section-heading, .lv-intro > div, .wj-closing-inner > div');
+        const copyBlocks = document.querySelectorAll('.h-intro-grid > div, .lx-col, .j-eco-head, .j-growth-head, .fx-head-row, .ip-section-heading, .at-closing-copy');
         copyBlocks.forEach(block => {
-          const kids = Array.from(block.querySelectorAll(':scope > h1, :scope > h2, :scope > h3, :scope > p, :scope > .eyebrow, :scope > .hp-eyebrow')).filter(vis);
+          const kids = Array.from(block.querySelectorAll(':scope > h1, :scope > h2, :scope > h3, :scope > p, :scope > .eyebrow, :scope > .h-intro-label, :scope > .fx-eyebrow')).filter(vis);
           if (kids.length > 1) {
             const lefts = kids.map(k => Math.round(R(k).left));
             const minL = Math.min(...lefts);
@@ -133,9 +133,9 @@ const VIEWPORTS = [
         headings.forEach(h => {
           if (!vis(h)) return;
           const s = cs(h);
-          if (!s.fontFamily.includes('Playfair') && !h.closest('.lv-think, .lv-stats, .wj-closing, .hp-eyebrow, .eyebrow')) {
+          if (!s.fontFamily.includes('Newsreader') && !h.closest('.h-hero-stats, .at-closing, .h-intro-label, .fx-eyebrow, .eyebrow')) {
             issues.push({
-              type: 'non-playfair-heading',
+              type: 'non-display-font-heading',
               tag: h.tagName,
               text: h.textContent.trim().slice(0, 30),
               font: s.fontFamily.slice(0, 40)

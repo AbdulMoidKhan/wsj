@@ -45,7 +45,7 @@ export interface AboutSection extends Head { kind: 'about'; icon: IconName; high
 
 export interface GridSection extends Head {
   kind: 'grid';
-  cols: 2 | 3 | 4;
+  cols: 1 | 2 | 3 | 4;
   /** card: white card with icon badge; photo: photo card; value: numbered card. */
   variant: 'card' | 'photo' | 'value';
   /** heading and lead side by side (homepage style) instead of stacked */

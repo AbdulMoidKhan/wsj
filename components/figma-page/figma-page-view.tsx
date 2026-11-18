@@ -19,6 +19,10 @@ import type {
   PlanCard, PriceRef, PricingSection, Section, SeriesSection, StorySection,
 } from '@/lib/figma-pages/types';
 import {SeriesFilter} from './series-filter';
+import {chapterFor, type Chapter} from '@/lib/ecosystem';
+import '@/app/figma-pages.css';
+import '@/app/figma-chapters.css';
+import '@/app/service-theme.css';
 
 /* Renders the "REDESIGN / … — Homepage Style" frames of the Figma file
    qjuAqpLbKBpRwAg5ZP3Q8R from the section data in lib/figma-pages. Styles live in
@@ -117,8 +121,8 @@ function SectionHead({s, split}: {s: {id?: string; eyebrow?: string; title: stri
     <div className={'fx-head' + (split ? ' fx-head-split' : '')}>
       {s.eyebrow && <p className="fx-eyebrow">{s.eyebrow}</p>}
       <div className="fx-head-row">
-        <h2 id={s.id ? s.id + '-title' : undefined} className="fx-h2"><Lines text={s.title} /></h2>
-        {s.lead && <p className="fx-lead">{s.lead}</p>}
+        <h2 id={s.id ? s.id + '-title' : undefined} className="fx-h2" data-anim="clip-up"><Lines text={s.title} /></h2>
+        {s.lead && <p className="fx-lead" data-anim="fade-up" data-anim-delay="0.12">{s.lead}</p>}
       </div>
     </div>
   );
@@ -167,36 +171,39 @@ function ItemCard({item, variant = 'card'}: {item: Item; variant?: 'card' | 'pho
 
 /* ---------- sections ---------- */
 
-async function Hero({s, first}: {s: HeroSection; first: boolean}) {
-  const strip = s.strip ? (s.strip.price ? <>{s.strip.prefix}<PriceText price={s.strip.price} />{s.strip.suffix}</> : s.strip.text) : null;
+/** "COWORKING SPACE" -> "Coworking space": the Figma eyebrows read as sentence-case kickers. */
+function sentence(text?: string) {
+  if (!text) return '';
+  const lower = text.toLowerCase().replace(/\bllc\b/g, 'LLC').replace(/\bbpo\b/g, 'BPO');
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
+}
+
+/* Inner-page hero. One markup, six compositions: the chapter of the ecosystem the page belongs
+   to (lib/ecosystem.ts) sets its art direction in app/junction-system.css. The price line only
+   renders when the catalog actually resolved a price. */
+async function Hero({s, first, chapter}: {s: HeroSection; first: boolean; chapter: Chapter | null}) {
+  const resolved = s.strip?.price ? await resolvePrice(s.strip.price) : null;
+  const priceLine = resolved ? (s.strip?.prefix || '') + resolved.amount + (s.strip?.suffix || '') : s.strip?.text && !/work\. connect\. grow/i.test(s.strip.text) ? s.strip.text : '';
+  const kicker = [chapter?.promise, sentence(s.eyebrow)].filter(Boolean).join(' ');
   return (
-    <section className="fx-hero fx-bg-cream" aria-labelledby="fx-title">
-      <div className="fx-shell">
+    <section className="jx-hero" data-art data-chapter={chapter?.id || 'guide'} aria-labelledby="fx-title">
+      <div className="jx-hero-media">
+        <Media img={s.image} sizes="(max-width:900px) 100vw, 60vw" priority={first} className="jx-hero-photo" />
+      </div>
+      <div className="jx-hero-body">
         {s.crumbs && (
-          <nav className="fx-crumbs" aria-label="Breadcrumb">
+          <nav className="jx-crumbs" aria-label="Breadcrumb">
             <Link prefetch={false} href="/">Home</Link><span aria-hidden="true">/</span><span aria-current="page">{s.crumbs}</span>
           </nav>
         )}
-        <div className="fx-hero-grid">
-          <div className="fx-hero-copy">
-            {s.eyebrow && <p className="fx-eyebrow fx-eyebrow-ink">{s.eyebrow}</p>}
-            <h1 id="fx-title" className={'fx-display fx-display-' + (s.size || 'lg')}><Lines text={s.title} /></h1>
-            {s.lead && <p className="fx-lead fx-hero-lead">{s.lead}</p>}
-            {s.chips && <ul className="fx-chips" aria-label="Highlights">{s.chips.map(c => <li key={c.label}><Icon name={c.icon} size={16} />{c.label}</li>)}</ul>}
-            <div className="fx-actions">
-              {s.actions.map((a, i) => <Act key={a.label} action={a} tone={i === 0 ? 'yellow' : 'ghost'} />)}
-            </div>
-            {strip && <p className="fx-note">Oakbrook Terrace, IL</p>}
-          </div>
-          <Media img={s.image} sizes="(max-width:1023px) 100vw, 660px" priority={first} className="fx-hero-media" />
+        {kicker && <p className="jx-kicker">{kicker}</p>}
+        <h1 id="fx-title" className="jx-title"><Lines text={s.title} /></h1>
+        {s.lead && <p className="jx-lead">{s.lead}</p>}
+        {s.chips && <ul className="jx-facts" aria-label="Highlights">{s.chips.map(c => <li key={c.label}><Icon name={c.icon} size={18} />{c.label}</li>)}</ul>}
+        <div className="jx-actions">
+          {s.actions.map((a, i) => <Act key={a.label} action={a} tone={i === 0 ? 'yellow' : 'ghost'} />)}
         </div>
-        {strip && (
-          <div className="fx-strip">
-            <span className="fx-eyebrow fx-eyebrow-ink">WORK. CONNECT. GROW.</span>
-            <span>{strip}</span>
-            <span className="fx-strip-place">Oakbrook Terrace, IL</span>
-          </div>
-        )}
+        {priceLine && <p className="jx-price">{priceLine}</p>}
       </div>
     </section>
   );
@@ -210,10 +217,10 @@ function Intro({s}: {s: IntroSection}) {
         <div className="fx-stack">
           <Badge icon={s.icon} />
           {s.eyebrow && <p className="fx-eyebrow">{s.eyebrow}</p>}
-          <h2 id={s.id ? s.id + '-title' : undefined} className="fx-h2">{s.title}</h2>
-          {s.lead && <p className="fx-lead">{s.lead}</p>}
+          <h2 id={s.id ? s.id + '-title' : undefined} className="fx-h2" data-anim="clip-up">{s.title}</h2>
+          {s.lead && <p className="fx-lead" data-anim="fade-up" data-anim-delay="0.12">{s.lead}</p>}
           <hr className="fx-rule" />
-          <ul className="fx-checks">{s.checks.map(c => <li key={c}><CircleCheck size={18} aria-hidden="true" />{c}</li>)}</ul>
+          <ul className="fx-checks" data-anim-stagger-group="true" data-anim-stagger="0.06">{s.checks.map(c => <li key={c}><CircleCheck size={18} aria-hidden="true" />{c}</li>)}</ul>
         </div>
       </div>
     </Shell>
@@ -242,7 +249,7 @@ function About({s}: {s: AboutSection}) {
 
 function Grid({s}: {s: GridSection}) {
   return (
-    <Shell s={s} className="fx-grid-sec">
+    <Shell s={s} className={'fx-grid-sec fx-grid-kind-' + (s.variant || 'card')}>
       <SectionHead s={s} split={s.split} />
       <div className={'fx-grid fx-cols-' + s.cols}>
         {s.items.map(item => <ItemCard key={item.title} item={item} variant={s.variant} />)}
@@ -460,7 +467,7 @@ async function PlanCta({plan, service, light}: {plan: PlanCard; service: string;
   const cta = plan.cta;
   if (cta?.href) return <Act action={cta} tone={light ? 'light' : 'ghost'} wide />;
   const resolved = cta?.plan ? null : await resolvePrice(plan.price);
-  const action: Action = {label: cta?.label || 'Inquire about this option', book: cta?.book ?? service, plan: cta?.plan || resolved?.plan};
+  const action: Action = {label: cta?.label || 'Choose ' + plan.name, book: cta?.book ?? service, plan: cta?.plan || resolved?.plan};
   return <Act action={action} tone={light ? 'light' : 'green'} wide />;
 }
 
@@ -622,9 +629,9 @@ function Closing({s}: {s: ClosingSection}) {
   );
 }
 
-function SectionView({s, index}: {s: Section; index: number}) {
+function SectionView({s, index, chapter}: {s: Section; index: number; chapter: Chapter | null}) {
   switch (s.kind) {
-    case 'hero': return <Hero s={s} first={index === 0} />;
+    case 'hero': return <Hero s={s} first={index === 0} chapter={chapter} />;
     case 'intro': return <Intro s={s} />;
     case 'about': return <About s={s} />;
     case 'grid': return <Grid s={s} />;
@@ -642,10 +649,121 @@ function SectionView({s, index}: {s: Section; index: number}) {
   }
 }
 
-export function FigmaPageView({page}: {page: FigmaPage}) {
+/* ---------- service theme ----------
+   Service pages share one look (app/service-theme.css): a deep-green hero with the photo
+   bleeding off the right edge, an amenity strip, dark "spaces" grids, light pricing cards,
+   a member banner and a closing split. Section data is unchanged; only the hero, the strip,
+   the banner and the split have their own markup. */
+
+const UNTHEMED = new Set(['/about-us/']);
+const GENERIC_SPLIT_IMAGE: Img = {src: '/media/figma-pages/about-spaces.webp', alt: 'The lounge and workspaces at Workspace Junction'};
+
+/** The last word of the title carries the amber accent, as in "Work, Connect, and Grow." */
+function AccentTitle({text}: {text: string}) {
+  const lines = text.split('\n');
+  const last = lines.pop() || '';
+  const cut = last.lastIndexOf(' ');
+  const head = cut > 0 ? last.slice(0, cut + 1) : '';
+  const tail = cut > 0 ? last.slice(cut + 1) : last;
+  return <>{lines.map((line, i) => <Fragment key={i}>{line}<br className="sv-br" />{' '}</Fragment>)}{head}<em className="sv-accent">{tail}</em></>;
+}
+
+async function SvHero({s}: {s: HeroSection}) {
+  const resolved = s.strip?.price ? await resolvePrice(s.strip.price) : null;
+  const priceLine = resolved ? (s.strip?.prefix || '') + resolved.amount + (s.strip?.suffix || '') : '';
   return (
-    <main id="main" className="fx-page" data-figma-node={page.node}>
-      {page.sections.map((s, i) => <SectionView key={s.kind + i} s={s} index={i} />)}
+    <section className="sv-hero" aria-labelledby="fx-title">
+      <div className="sv-hero-media"><Media img={s.image} sizes="(max-width:900px) 100vw, 58vw" priority className="sv-hero-photo" /></div>
+      <div className="fx-shell sv-hero-inner">
+        <div className="sv-hero-copy">
+          {s.crumbs && <nav className="sv-crumbs" aria-label="Breadcrumb"><Link prefetch={false} href="/">Home</Link><span aria-hidden="true">/</span><span aria-current="page">{s.crumbs}</span></nav>}
+          {s.eyebrow && <p className="fx-eyebrow sv-eyebrow">{s.eyebrow}</p>}
+          <h1 id="fx-title" className="sv-title"><AccentTitle text={s.title} /></h1>
+          {s.lead && <p className="sv-lead">{s.lead}</p>}
+          <div className="fx-actions sv-actions">{s.actions.map((a, i) => <Act key={a.label} action={a} tone={i === 0 ? 'yellow' : 'ghost'} />)}</div>
+          {priceLine && <p className="sv-price">{priceLine}</p>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SvAmenities({chips}: {chips: NonNullable<HeroSection['chips']>}) {
+  return (
+    <section className="sv-amenities" aria-label="Highlights">
+      <ul className="fx-shell sv-amenities-list" style={{['--n' as string]: chips.length}}>
+        {chips.map(c => <li key={c.label}><Icon name={c.icon} size={26} /><span>{c.label}</span></li>)}
+      </ul>
+    </section>
+  );
+}
+
+function SvBanner({s, image}: {s: ClosingSection; image: Img}) {
+  return (
+    <section className="fx-sec sv-banner-sec" aria-labelledby="fx-closing-title">
+      <div className="fx-shell">
+        <div className="sv-banner">
+          <div className="sv-banner-media"><Media img={image} sizes="(max-width:900px) 100vw, 50vw" /></div>
+          <div className="sv-banner-copy">
+            <p className="fx-eyebrow sv-eyebrow">{s.eyebrow || 'Join our community'}</p>
+            <h2 id="fx-closing-title" className="fx-h2" data-anim="clip-up">{s.title}</h2>
+            {s.lead && <p className="fx-lead">{s.lead}</p>}
+            <div className="fx-actions">{s.actions.map((a, i) => <Act key={a.label} action={a} tone={i === 0 ? 'yellow' : 'light'} />)}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SvExperience({image, service, featuresHref}: {image: Img; service: string; featuresHref: string}) {
+  return (
+    <section className="fx-sec sv-experience" aria-labelledby="sv-experience-title">
+      <div className="fx-shell sv-experience-grid">
+        <Media img={image} sizes="(max-width:900px) 100vw, 50vw" className="sv-experience-media" />
+        <div className="sv-experience-copy">
+          <p className="fx-eyebrow sv-eyebrow">The Workspace experience</p>
+          <h2 id="sv-experience-title" className="fx-h2" data-anim="clip-up">Good things happen <em className="sv-script">at the Junction.</em></h2>
+          <p className="fx-lead">Come to Workspace Junction, a space designed to help you focus, create, and grow.</p>
+          <div className="fx-actions">
+            <Act action={{label: 'Book a Tour', book: service}} tone="yellow" />
+            <Act action={{label: 'See Our Features', href: featuresHref}} tone="ghost" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ThemedPage({page}: {page: FigmaPage}) {
+  const hero = page.sections.find((s): s is HeroSection => s.kind === 'hero');
+  const service = hero?.actions.find(a => a.book !== undefined)?.book || page.title;
+  const imageOf = (s: Section): Img | undefined => 'image' in s && s.image ? s.image : s.kind === 'gallery' ? s.images[0] : undefined;
+  const others = page.sections.filter(s => s.kind !== 'hero').map(imageOf).filter((i): i is Img => !!i && i.src !== hero?.image.src);
+  const bannerImage = hero?.image || others[0] || GENERIC_SPLIT_IMAGE;
+  const splitImage = others.find(i => i.src !== bannerImage.src) || GENERIC_SPLIT_IMAGE;
+  const featuresId = page.sections.find(s => s.kind !== 'hero' && s.kind !== 'pricing' && 'id' in s && s.id)?.id;
+  const experience = <SvExperience key="sv-experience" image={splitImage} service={service} featuresHref={featuresId ? '#' + featuresId : '#pricing'} />;
+  const hasClosing = page.sections.some(s => s.kind === 'closing');
+  return (
+    <main id="main" className="fx-page sv-theme" data-figma-node={page.node}>
+      {page.sections.map((s, i) => {
+        if (s.kind === 'hero') return <Fragment key={'hero' + i}><SvHero s={s} />{s.chips?.length ? <SvAmenities chips={s.chips} /> : null}</Fragment>;
+        if (s.kind === 'closing') return <Fragment key={'closing' + i}><SvBanner s={s} image={bannerImage} />{experience}</Fragment>;
+        return <SectionView key={s.kind + i} s={s} index={i} chapter={null} />;
+      })}
+      {!hasClosing && experience}
+    </main>
+  );
+}
+
+export function FigmaPageView({page, path = ''}: {page: FigmaPage; path?: string}) {
+  const key = '/' + path.replace(/^\/+|\/+$/g, '') + (path.replace(/^\/+|\/+$/g, '') ? '/' : '');
+  if (!UNTHEMED.has(key)) return <ThemedPage page={page} />;
+  const chapter = chapterFor(path);
+  return (
+    <main id="main" className="fx-page" data-figma-node={page.node} data-chapter={chapter?.id || 'guide'}>
+      {page.sections.map((s, i) => <SectionView key={s.kind + i} s={s} index={i} chapter={chapter} />)}
     </main>
   );
 }

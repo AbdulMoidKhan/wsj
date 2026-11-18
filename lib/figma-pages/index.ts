@@ -3,10 +3,11 @@ import {spacesPages} from './spaces';
 import {studioPages} from './studios';
 import {communityPages} from './community';
 import {useCasePages} from './use-cases';
+import {blogPages} from './blogs';
 
 /* Every redesigned Figma page, keyed by its route path (trailing slash).
    Frame → route mapping is documented beside each entry (node id). */
-export const FIGMA_PAGES: Readonly<Record<string, FigmaPage>> = {...spacesPages, ...studioPages, ...communityPages, ...useCasePages};
+export const FIGMA_PAGES: Readonly<Record<string, FigmaPage>> = {...spacesPages, ...studioPages, ...communityPages, ...useCasePages, ...blogPages};
 
 /** Routes that exist only as Figma pages (no migrated WordPress entry). */
 export const FIGMA_ONLY_PATHS = ['/upcoming-events/', '/use-cases/digital-nomads/'];

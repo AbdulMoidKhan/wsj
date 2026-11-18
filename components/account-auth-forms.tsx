@@ -120,7 +120,7 @@ export function LoginForm() {
           <p>If you bought something but never set a password, the email will include your account setup link instead.</p>
         </div>
       ) : (
-        <form className="aa-form" onSubmit={submit} noValidate={false}>
+        <form method="post" className="aa-form" onSubmit={submit} noValidate={false}>
           <div className="aa-segmented" role="radiogroup" aria-label="How do you want to sign in?">
             <button type="button" className="wj-control" role="radio" aria-checked={mode === 'password'} onClick={() => setMode('password')}>Password</button>
             <button type="button" className="wj-control" role="radio" aria-checked={mode === 'link'} onClick={() => setMode('link')}>Email me a link</button>
@@ -177,7 +177,7 @@ export function ForgotPasswordForm() {
       {done ? (
         <p className="aa-alert aa-alert-ok" role="status">If that address has an account, a reset link is on its way. It works once and expires in 30 minutes.</p>
       ) : (
-        <form className="aa-form" onSubmit={submit}>
+        <form method="post" className="aa-form" onSubmit={submit}>
           <Field id={id} label="Email address">
             <input id={id} type="email" required autoComplete="email" maxLength={254} value={email} onChange={event => setEmail(event.target.value)} />
           </Field>
@@ -226,7 +226,7 @@ export function ResetPasswordForm() {
   const hint = passwordHint(password);
   return (
     <Shell eyebrow="YOUR ACCOUNT" title="Choose a new password">
-      <form className="aa-form" onSubmit={submit}>
+      <form method="post" className="aa-form" onSubmit={submit}>
         <Field id={id} label="New password" hint={hint || 'At least 10 characters. A short phrase is easier to remember and harder to guess.'}>
           <PasswordInput id={id} value={password} onChange={setPassword} autoComplete="new-password" describedBy={id + '-hint'} />
         </Field>
@@ -313,7 +313,7 @@ export function ActivateForm() {
   const hint = passwordHint(password);
   return (
     <Shell eyebrow="ACCOUNT SETUP" title="Set up your account" intro={<p>Thanks for your purchase. Choose a password to verify your email and open your account. Your purchase is already safe whether or not you do this now.</p>}>
-      <form className="aa-form" onSubmit={submit}>
+      <form method="post" className="aa-form" onSubmit={submit}>
         <Field id={id} label="Choose a password" hint={hint || 'At least 10 characters. A short phrase is easier to remember and harder to guess.'}>
           <PasswordInput id={id} value={password} onChange={setPassword} autoComplete="new-password" describedBy={id + '-hint'} />
         </Field>

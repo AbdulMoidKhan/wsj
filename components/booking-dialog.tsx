@@ -894,6 +894,7 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
         </div>
         <div className="bk-layout">
           <form
+            method="post"
             ref={formRef}
             className="bk-body"
             data-lenis-prevent

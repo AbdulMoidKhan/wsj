@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+/* Cascade layer order for the whole site, declared once, first, right after Tailwind's own layers,
+   so it never depends on which route stylesheet happened to load first.
+   Remember the rule: for normal declarations a LATER layer wins; for !important declarations an
+   EARLIER layer wins. Nearly every site rule is !important, so the strongest layer comes first.
+   - wj-consistency     the project contract and the redesign (consistency-system.css, atelier.css, ...)
+   - wj-button-contract public button palette and shape (button-system.css)
+   - wj-legacy          route-scoped legacy-template styles (app/legacy-routes.css). Last, so its
+                        !important rules still beat the old unlayered global sheets, as before, but
+                        can never beat the redesign, whichever route the visitor opened first. */
+@layer wj-consistency, wj-button-contract, wj-legacy;
