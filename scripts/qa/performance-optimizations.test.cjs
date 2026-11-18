@@ -4,66 +4,55 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 require('./ts-register.cjs');
-const THREE = require('three');
-const {mergeGeometries} = require('three/examples/jsm/utils/BufferGeometryUtils.js');
-const {createOfficeKit} = require('../../components/office-models.ts');
 const root = path.resolve(__dirname, '../..');
 const source = file => fs.readFileSync(path.join(root, file), 'utf8');
 
-test('identical decorative objects share buffers but never mutable transforms', () => {
- const palette = {metal: new THREE.MeshStandardMaterial(), pearl: new THREE.MeshStandardMaterial(), forest: new THREE.MeshStandardMaterial()};
- let merges = 0;
- const kit = createOfficeKit(THREE, parts => {merges++; return mergeGeometries(parts, false);}, palette);
- const geometries = new Set();
- try {
-  for (const make of Object.values(kit)) {
-   const first = make(), firstMergeCount = merges, second = make();
-   assert.notEqual(first, second);
-   assert.equal(merges, firstMergeCount, 'second instance must not rebuild the model');
-   assert.ok(first.children.length > 0);
-   first.children.forEach((mesh, index) => {
-    const other = second.children[index];
-    assert.notEqual(mesh, other);
-    assert.equal(mesh.geometry, other.geometry);
-    assert.equal(mesh.material, other.material);
-    geometries.add(mesh.geometry);
-   });
-   first.position.x = 3;
-   first.rotation.y = 1;
-   first.scale.setScalar(2);
-   assert.equal(second.position.x, 0);
-   assert.equal(second.rotation.y, 0);
-   assert.equal(second.scale.x, 1);
-   const bounds = new THREE.Box3().setFromObject(second);
-   assert.ok(!bounds.isEmpty());
-   assert.ok(Number.isFinite(bounds.max.x));
-  }
- } finally {
-  geometries.forEach(geometry => geometry.dispose());
-  Object.values(palette).forEach(material => material.dispose());
- }
+/* The homepage hero (app/_home/junction-page.tsx, .h-hero-main) is the LCP element. */
+const heroImageTag = () => {
+ const page = source('app/_home/junction-page.tsx');
+ const figure = page.match(/<figure className="h-hero-main">([\s\S]*?)<\/figure>/);
+ assert.ok(figure, 'homepage hero figure .h-hero-main is present');
+ const image = figure[1].match(/<Image\b[\s\S]*?\/>/);
+ assert.ok(image, 'hero figure renders a next/image');
+ return image[0];
+};
+
+test('homepage hero image is fetched early: preloaded or fetchPriority high', () => {
+ const tag = heroImageTag();
+ assert.ok(/\spreload(?:[\s/]|=\{true\})/.test(tag) || /fetchPriority="high"/.test(tag), 'hero image needs preload or fetchPriority="high"');
+ // Next 16 deprecates `priority` in favour of `preload`.
+ assert.doesNotMatch(tag, /\spriority[=\s/]/);
+ // No other homepage image may claim high priority, or the hint means nothing.
+ const claims = source('app/_home/junction-page.tsx').match(/fetchPriority="high"|\spreload[\s/]/g) || [];
+ const heroClaims = (tag.match(/fetchPriority="high"|\spreload[\s/]/g) || []).length;
+ assert.equal(claims.length, heroClaims, 'only the hero image is preloaded / high priority');
 });
 
-test('scene teardown cancels pending startup and disposes shared buffers once', () => {
- const scene = source('components/scene-backdrop.tsx');
- assert.match(scene, /if \(!disposed\) start\(\)/);
- assert.match(scene, /cancelIdleCallback\?\.\(idle\)/);
- assert.match(scene, /clearTimeout\(timer\)/);
- assert.match(scene, /geometries\.forEach\(geometry => geometry\.dispose\(\)\)/);
+test('homepage hero image is never lazy-loaded', () => {
+ const tag = heroImageTag();
+ assert.doesNotMatch(tag, /loading="lazy"/);
+ assert.doesNotMatch(tag, /loading=\{/, 'loading must not be computed for the hero');
 });
 
-test('current carousel uses prebuilt responsive LCP image and low-priority secondary slides', () => {
- const carousel = source('components/home-live.tsx'), hero = source('components/home-hero-image.tsx');
- assert.match(carousel, /<HomeHeroImage alt=\{s\.alt\} sizes="100vw" className="lv-slide-img"/);
- assert.match(carousel, /fetchPriority="low"/);
- assert.match(hero, /imageSrcSet=\{srcSet\('webp'\)\}/);
- assert.match(hero, /imageSizes=\{sizes\}/);
- assert.match(hero, /loading="eager" fetchPriority="high"/);
- assert.match(hero, /className=\{className\}/);
- for (const width of [384, 640, 828, 867]) for (const format of ['webp', 'avif']) {
-  assert.ok(fs.statSync(path.join(root, `public/media/optimized/home-hero-${width}.${format}`)).size > 0);
+test('image reveal animation leaves the hero alone', () => {
+ const motion = source('components/gsap-motion.tsx');
+ const reveal = motion.match(/querySelectorAll<HTMLImageElement>\('([^']+)'\)/);
+ assert.ok(reveal, 'gsap-motion image reveal selector found');
+ const selector = reveal[1];
+ // Homepage images are choreographed by JunctionMotion, never by the generic fade-in ...
+ assert.match(selector, /main:not\(\.junction-home\) img/);
+ // ... and eager / high-priority images are excluded on every page.
+ assert.match(selector, /:not\(\[fetchpriority="high"\]\)/);
+ assert.match(selector, /:not\(\[loading="eager"\]\)/);
+ // The homepage choreography only scrubs the hero from its visible state; it never gives the
+ // hero a hidden starting state (from / fromTo / set, or opacity 0) that would delay LCP.
+ const home = source('components/junction-motion.tsx');
+ const heroLines = home.split('\n').filter(l => /h-hero-(main|img|side)/.test(l));
+ assert.ok(heroLines.length > 0, 'junction-motion still references the hero (update this test if that changes)');
+ for (const line of heroLines) {
+  assert.doesNotMatch(line, /gsap\.(from|fromTo|set)\(/, line.trim());
+  assert.doesNotMatch(line, /(autoAlpha|opacity):\s*0[,}\s]/, line.trim());
  }
- assert.doesNotMatch(source('app/page.tsx'), /height=\{74\} priority className="lv-podcast-logo"/);
 });
 
 test('server catalog reads bound API waits and preserve revalidation/fallbacks', async () => {

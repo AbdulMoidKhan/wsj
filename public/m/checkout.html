@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | Workspace Junction Memberships</title>
+<meta name="description" content="Complete your membership and get ready to work, collaborate and grow at Workspace Junction.">
+<link rel="icon" href="images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="wj.js" defer></script>
+<style>
+/* Additional custom styles to match checkout-page-design.png 100% */
+:root {
+  --wj-forest: #0E3421;
+  --wj-forest-deep: #081F13;
+  --wj-forest-mid: #16462D;
+  --wj-gold: #D7902A;
+  --wj-gold-hover: #BE7D20;
+  --wj-gold-soft: #FDF6EC;
+  --wj-card-bg: #FFFFFF;
+  --wj-border: #E2E8F0;
+  --wj-border-focus: #0E3421;
+  --wj-text-primary: #1E293B;
+  --wj-text-secondary: #64748B;
+}
+
+body.wjm-checkout-page {
+  background-color: #F8FAF9;
+  background-image: radial-gradient(circle at 100% 0%, rgba(215, 144, 42, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 0% 100%, rgba(14, 52, 33, 0.04) 0%, transparent 40%);
+  color: var(--wj-text-primary);
+  font-family: 'Source Sans 3', 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* Header matching checkout-page-design.png */
+.wjm-header {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--wj-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.wjm-header-inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wjm-logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.wjm-logo-link img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.wjm-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.wjm-nav-links a {
+  color: var(--wj-text-primary);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.wjm-nav-links a:hover, .wjm-nav-links a.active {
+  color: var(--wj-gold);
+}
+
+.wjm-btn-tour {
+  background: var(--wj-forest);
+  color: #FFFFFF;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.wjm-btn-tour:hover {
+  background: var(--wj-forest-mid);
+  transform: translateY(-1px);
+}
+
+/* Page Hero */
+.wjm-hero-band {
+  background: radial-gradient(circle at 85% 30%, rgba(215, 144, 42, 0.12), transparent 50%), #FFFFFF;
+  border-bottom: 1px solid var(--wj-border);
+  padding: 36px 0 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wjm-hero-inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 32px;
+}
+
+.wjm-breadcrumb {
+  font-size: 13px;
+  color: var(--wj-text-secondary);
+  margin-bottom: 12px;
+}
+
+.wjm-breadcrumb a {
+  color: var(--wj-gold-hover);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.wjm-breadcrumb span {
+  margin: 0 6px;
+  color: #94A3B8;
+}
+
+.wjm-page-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(32px, 3.8vw, 44px);
+  font-weight: 700;
+  color: var(--wj-forest);
+  margin: 0 0 10px 0;
+  letter-spacing: -0.02em;
+}
+
+.wjm-page-sub {
+  color: var(--wj-text-secondary);
+  font-size: 16px;
+  margin: 0 0 24px 0;
+  max-width: 540px;
+  line-height: 1.55;
+}
+
+.wjm-hero-art {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(14, 52, 33, 0.12);
+  height: 190px;
+}
+
+.wjm-hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 4-Step Progress */
+.wjm-steps-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  max-width: 520px;
+  margin-top: 24px;
+}
+
+.wjm-steps-bar::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: #E2E8F0;
+  z-index: 1;
+}
+
+.wjm-step-item {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+}
+
+.wjm-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  color: #64748B;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.wjm-step-item.is-done .wjm-step-circle {
+  background: var(--wj-forest);
+  border-color: var(--wj-forest);
+  color: #FFFFFF;
+}
+
+.wjm-step-item.is-active .wjm-step-circle {
+  background: var(--wj-gold);
+  border-color: var(--wj-gold);
+  color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(215, 144, 42, 0.22);
+}
+
+.wjm-step-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--wj-text-secondary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.wjm-step-item.is-active .wjm-step-label {
+  color: var(--wj-forest);
+  font-weight: 700;
+}
+
+/* Layout Grid */
+.wjm-main-layout {
+  max-width: 1220px;
+  margin: 36px auto 64px;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 390px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Cards */
+.wjm-box-card {
+  background: #FFFFFF;
+  border: 1px solid var(--wj-border);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 16px rgba(14, 52, 33, 0.04);
+  margin-bottom: 24px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.wjm-box-card:hover {
+  border-color: #CBD5E1;
+}
+
+.wjm-box-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--wj-forest);
+  margin: 0 0 20px 0;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Selected Plan Card */
+.wjm-selected-plan-header {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.wjm-plan-thumb {
+  width: 140px;
+  height: 100px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #E2E8F0;
+}
+
+.wjm-plan-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wjm-plan-details {
+  flex-grow: 1;
+}
+
+.wjm-plan-badge-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-bottom: 6px;
+}
+
+.wjm-plan-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--wj-text-primary);
+  margin: 0;
+}
+
+.wjm-plan-badge {
+  background: var(--wj-gold);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.wjm-plan-cost {
+  font-size: 26px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--wj-forest);
+  margin: 4px 0 8px 0;
+}
+
+.wjm-plan-cost small {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--wj-text-secondary);
+}
+
+.wjm-plan-desc {
+  font-size: 13.5px;
+  color: var(--wj-text-secondary);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.wjm-btn-change-plan {
+  border: 1px solid #CBD5E1;
+  background: #F8FAFC;
+  color: var(--wj-forest);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wjm-btn-change-plan:hover {
+  background: #E2E8F0;
+  border-color: #94A3B8;
+}
+
+.wjm-features-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid #F1F5F9;
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.wjm-feature-bullet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--wj-text-primary);
+  font-weight: 500;
+}
+
+.wjm-feature-bullet svg {
+  width: 17px;
+  height: 17px;
+  color: var(--wj-gold);
+  flex-shrink: 0;
+}
+
+/* Forms */
+.wjm-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.wjm-field {
+  margin-bottom: 16px;
+}
+
+.wjm-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wj-text-primary);
+  margin-bottom: 6px;
+}
+
+.wjm-label .req {
+  color: #DC2626;
+}
+
+.wjm-input, .wjm-select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--wj-text-primary);
+  background: #FFFFFF;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.wjm-input:focus, .wjm-select:focus {
+  outline: none;
+  border-color: var(--wj-forest);
+  box-shadow: 0 0 0 3px rgba(14, 52, 33, 0.12);
+}
+
+.wjm-phone-group {
+  display: flex;
+  gap: 8px;
+}
+
+.wjm-phone-prefix {
+  width: 105px;
+  flex-shrink: 0;
+}
+
+/* Stripe Payment Method Styling */
+.wjm-stripe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #635BFF;
+  background: #F3F1FF;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.2px;
+}
+
+.wjm-stripe-hero-card {
+  border: 1.5px solid #635BFF;
+  background: linear-gradient(135deg, rgba(99, 91, 255, 0.05) 0%, rgba(14, 52, 33, 0.03) 100%);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 14px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 10px rgba(99, 91, 255, 0.08);
+}
+
+.wjm-stripe-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wjm-stripe-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #635BFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(99, 91, 255, 0.35);
+}
+
+.wjm-stripe-badges-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.wjm-pay-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 7px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 4px;
+  color: #334155;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.wjm-stripe-element-container {
+  background: #FFFFFF;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 8px;
+  padding: 14px 16px;
+  transition: all 0.15s ease;
+  min-height: 44px;
+}
+
+.wjm-stripe-element-container.is-focused {
+  border-color: #635BFF;
+  box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.15);
+}
+
+.wjm-stripe-security-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 13px 16px;
+  margin-top: 18px;
+  font-size: 12.5px;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.wjm-checkbox-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 24px;
+  font-size: 13.5px;
+  color: var(--wj-text-secondary);
+}
+
+.wjm-checkbox-line input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--wj-forest);
+  cursor: pointer;
+}
+
+.wjm-btn-submit-order {
+  width: 100%;
+  background: var(--wj-forest);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(14, 52, 33, 0.25);
+  transition: background 0.2s, transform 0.15s;
+}
+
+.wjm-btn-submit-order:hover {
+  background: var(--wj-forest-mid);
+  transform: translateY(-1px);
+}
+
+.wjm-terms-notice {
+  font-size: 12px;
+  color: var(--wj-text-secondary);
+  text-align: center;
+  margin-top: 14px;
+}
+
+.wjm-terms-notice a {
+  color: var(--wj-gold-hover);
+  text-decoration: underline;
+}
+
+/* Sidebar Order Summary */
+.wjm-sidebar-sticky {
+  position: sticky;
+  top: 96px;
+}
+
+.wjm-summary-card {
+  background: #FFFFFF;
+  border: 1px solid var(--wj-border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  margin-bottom: 20px;
+}
+
+.wjm-sum-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14.5px;
+  color: var(--wj-text-secondary);
+  margin-bottom: 12px;
+}
+
+.wjm-sum-row.total-row {
+  border-top: 2px dashed #E2E8F0;
+  padding-top: 16px;
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--wj-forest);
+  font-family: 'Outfit', sans-serif;
+}
+
+.wjm-sum-total-amount {
+  font-size: 26px;
+  color: var(--wj-forest);
+}
+
+.wjm-cycle-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #CBD5E1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.wjm-trust-checks {
+  list-style: none;
+  padding: 16px 0 0;
+  margin: 16px 0 0;
+  border-top: 1px solid #F1F5F9;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wjm-trust-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.wjm-trust-check-item span {
+  color: #16A34A;
+  font-weight: 800;
+}
+
+/* What You'll Get Card */
+.wjm-perks-card {
+  background: linear-gradient(170deg, #F0FDF4 0%, #FFFFFF 100%);
+  border: 1px solid #DCFCE7;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.wjm-perks-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.wjm-perks-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #DCFCE7;
+  color: #16A34A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.wjm-perks-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.wjm-perks-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #1E293B;
+  font-weight: 500;
+}
+
+.wjm-perks-list li::before {
+  content: "✓";
+  color: #16A34A;
+  font-weight: bold;
+}
+
+/* Need Help Card */
+.wjm-help-card {
+  background: linear-gradient(170deg, #FFFBEB 0%, #FFFFFF 100%);
+  border: 1px solid #FEF3C7;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.wjm-help-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.wjm-help-card h4 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  color: var(--wj-forest);
+}
+
+.wjm-help-card p {
+  font-size: 13px;
+  color: var(--wj-text-secondary);
+  margin: 0 0 14px 0;
+  line-height: 1.4;
+}
+
+.wjm-btn-help {
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: var(--wj-forest);
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Testimonial Quote */
+.wjm-quote-card {
+  background: #FFFFFF;
+  border: 1px solid var(--wj-border);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.wjm-quote-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.wjm-quote-text {
+  font-size: 12.5px;
+  color: #334155;
+  font-style: italic;
+  line-height: 1.45;
+  margin: 0 0 6px 0;
+}
+
+.wjm-quote-author {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--wj-forest);
+  margin: 0;
+}
+
+/* Bottom Trust Bar */
+.wjm-trust-footer-strip {
+  background: #FFFFFF;
+  border-top: 1px solid var(--wj-border);
+  padding: 28px 0;
+}
+
+.wjm-trust-strip-grid {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.wjm-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.wjm-trust-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #FAF8F3;
+  border: 1px solid #ECE7DD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.wjm-trust-item strong {
+  display: block;
+  font-size: 14px;
+  color: var(--wj-forest);
+  margin-bottom: 2px;
+}
+
+.wjm-trust-item span {
+  font-size: 12px;
+  color: var(--wj-text-secondary);
+}
+
+/* Modal for Change Plan */
+.wjm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.wjm-modal-overlay.is-open {
+  display: flex;
+}
+
+.wjm-modal-content {
+  background: #FFFFFF;
+  border-radius: 20px;
+  max-width: 680px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 32px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.wjm-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.wjm-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #64748B;
+}
+
+.wjm-modal-plans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wjm-modal-plan-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wjm-modal-plan-row:hover {
+  border-color: var(--wj-forest);
+  background: #F8FAFC;
+}
+
+.wjm-modal-plan-row.is-selected {
+  border-color: var(--wj-forest);
+  background: rgba(14, 52, 33, 0.05);
+  box-shadow: 0 0 0 1.5px var(--wj-forest);
+}
+
+/* Success Confirmation Screen */
+.wjm-confirm-screen {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 680px;
+  width: calc(100% - 36px);
+  margin: 40px auto;
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--wj-border);
+}
+
+.wjm-confirm-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(26px, 5vw, 32px);
+  color: var(--wj-forest);
+  margin: 0 0 10px;
+}
+
+.wjm-confirm-screen [style*="display:flex"] {
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.wjm-confirm-screen [style*="display:flex"] > strong {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.wjm-confirm-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #DCFCE7;
+  color: #16A34A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 20px;
+}
+
+@media (max-width: 992px) {
+  .wjm-hero-inner { grid-template-columns: 1fr; }
+  .wjm-hero-art { display: none; }
+  .wjm-main-layout { grid-template-columns: 1fr; }
+  .wjm-sidebar-sticky { position: static; }
+  .wjm-trust-strip-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 860px) {
+  .wjm-header-inner {
+    flex-wrap: wrap;
+    column-gap: 12px;
+    padding: 10px 18px 0;
+  }
+
+  .wjm-logo-link img { height: 42px; }
+
+  .wjm-btn-tour {
+    padding: 9px 16px;
+    font-size: 13.5px;
+  }
+
+  .wjm-nav-links {
+    order: 3;
+    width: calc(100% + 36px);
+    margin: 8px -18px 0;
+    padding: 8px 18px 10px;
+    gap: 22px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-top: 1px solid #EEF2F0;
+  }
+
+  .wjm-nav-links::-webkit-scrollbar { display: none; }
+
+  .wjm-nav-links a {
+    padding: 3px 0;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .wjm-header-inner { padding: 9px 18px 0; }
+  .wjm-logo-link img { height: 38px; }
+  .wjm-btn-tour { padding: 8px 14px; font-size: 13px; }
+  .wjm-nav-links {
+    width: calc(100% + 36px);
+    margin: 7px -18px 0;
+    padding: 7px 18px 9px;
+    gap: 20px;
+  }
+
+  .wjm-hero-band { padding: 28px 0 22px; }
+  .wjm-hero-inner { padding: 0 18px; gap: 20px; }
+  .wjm-breadcrumb { margin-bottom: 9px; font-size: 12.5px; }
+  .wjm-page-title { font-size: 30px; margin-bottom: 8px; }
+  .wjm-page-sub { margin-bottom: 18px; font-size: 15.5px; }
+
+  .wjm-steps-bar { max-width: none; margin-top: 18px; }
+  .wjm-steps-bar::before { top: 13px; left: 14px; right: 14px; }
+  .wjm-step-circle { width: 28px; height: 28px; font-size: 12px; }
+  .wjm-step-label {
+    max-width: 68px;
+    font-size: 10.5px;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  .wjm-main-layout {
+    margin: 24px auto 40px;
+    padding: 0 18px;
+    gap: 24px;
+  }
+
+  .wjm-box-card {
+    padding: 22px 18px;
+    margin-bottom: 18px;
+    border-radius: 14px;
+  }
+
+  .wjm-box-title {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    font-size: 18px;
+  }
+
+  .wjm-selected-plan-header { flex-direction: column; gap: 14px; }
+  .wjm-plan-thumb { width: 100%; height: 130px; }
+  .wjm-plan-name { font-size: 20px; }
+  .wjm-plan-cost { font-size: 24px; margin: 3px 0 6px; }
+  .wjm-plan-desc { font-size: 13px; }
+  .wjm-features-list { grid-template-columns: 1fr; gap: 10px; }
+
+  .wjm-form-grid-2 { grid-template-columns: 1fr; gap: 12px; margin-bottom: 12px; }
+  .wjm-field { margin-bottom: 14px; }
+  .wjm-label { font-size: 12.5px; }
+  .wjm-checkbox-line { font-size: 13px; margin: 14px 0 20px; }
+  .wjm-terms-notice { font-size: 11.5px; }
+
+  .wjm-stripe-hero-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .wjm-stripe-security-banner { gap: 10px; padding: 12px; font-size: 12px; }
+
+  .wjm-summary-card, .wjm-perks-card {
+    padding: 20px 18px;
+    margin-bottom: 16px;
+  }
+
+  .wjm-sum-row { font-size: 14px; }
+  .wjm-sum-row.total-row { font-size: 17px; }
+  .wjm-sum-total-amount { font-size: 24px; }
+
+  .wjm-trust-footer-strip { padding: 22px 0; }
+  .wjm-trust-strip-grid { grid-template-columns: 1fr; gap: 18px; padding: 0 18px; }
+  .wjm-trust-item span { font-size: 12.5px; }
+
+  .wjm-confirm-screen { padding: 36px 16px; margin-top: 28px; margin-bottom: 28px; }
+  .wjm-modal-content { padding: 22px 16px; border-radius: 16px; }
+  .wjm-modal-plan-row { padding: 12px 14px; }
+}
+
+@media (max-width: 480px) {
+  .wjm-header-inner { padding: 8px 16px 0; }
+  .wjm-logo-link img { height: 36px; }
+  .wjm-btn-tour { padding: 8px 12px; font-size: 12.5px; }
+  .wjm-nav-links {
+    width: calc(100% + 32px);
+    margin: 6px -16px 0;
+    padding: 6px 16px 8px;
+    gap: 18px;
+  }
+  .wjm-nav-links a { font-size: 13.5px; }
+
+  .wjm-hero-band { padding: 24px 0 20px; }
+  .wjm-hero-inner { padding: 0 16px; }
+  .wjm-page-title { font-size: 28px; }
+  .wjm-page-sub { font-size: 15px; }
+  .wjm-step-circle { width: 26px; height: 26px; font-size: 11px; }
+  .wjm-steps-bar::before { top: 12px; left: 12px; right: 12px; }
+  .wjm-step-label { max-width: 64px; font-size: 10px; }
+
+  .wjm-main-layout { margin: 20px auto 36px; padding: 0 16px; }
+  .wjm-box-card { padding: 18px 14px; margin-bottom: 16px; }
+  .wjm-box-title { font-size: 17px; gap: 8px; }
+  .wjm-btn-change-plan { padding: 7px 12px; font-size: 12.5px; }
+  .wjm-plan-thumb { height: 120px; }
+  .wjm-plan-name { font-size: 19px; }
+  .wjm-phone-prefix { width: 96px; }
+  .wjm-btn-submit-order { padding: 15px 12px; font-size: 15px; }
+  .wjm-summary-card, .wjm-perks-card { padding: 18px 14px; }
+  .wjm-trust-strip-grid { padding: 0 16px; }
+  .wjm-confirm-screen { padding: 30px 14px; width: calc(100% - 32px); }
+  .wjm-confirm-screen > div[style*="background:#F8FAFC"] { padding: 18px 14px !important; }
+  .wjm-modal-overlay { padding: 12px; }
+  .wjm-modal-content { padding: 20px 14px; }
+  .wjm-modal-plan-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .wjm-modal-plan-row > div:last-child { text-align: left; }
+}
+</style>
+</head>
+<body class="wjm-checkout-page">
+
+<!-- Header -->
+<header class="wjm-header">
+  <div class="wjm-header-inner">
+    <a class="wjm-logo-link" href="https://workspacejunction.com/" aria-label="Workspace Junction Home">
+      <img src="logo.png" alt="Workspace Junction" width="150" height="116">
+    </a>
+    <nav class="wjm-nav-links" aria-label="Main Navigation">
+      <a href="https://workspacejunction.com/">Home</a>
+      <a href="https://workspacejunction.com/about/">About</a>
+      <a href="https://workspacejunction.com/services/">Spaces</a>
+      <a href="mailbox.html">Virtual Mailbox</a>
+      <a href="founders.html">Founders Package</a>
+      <a href="#checkout" class="active">Checkout</a>
+    </nav>
+    <a class="wjm-btn-tour" href="tel:+17739861908">Book a Tour &rarr;</a>
+  </div>
+</header>
+
+<!-- Hero & Progress -->
+<section class="wjm-hero-band">
+  <div class="wjm-hero-inner">
+    <div>
+      <div class="wjm-breadcrumb">
+        <a href="https://workspacejunction.com/">Home</a>
+        <span>&rsaquo;</span>
+        <a href="founders.html">Membership</a>
+        <span>&rsaquo;</span>
+        Checkout
+      </div>
+      <h1 class="wjm-page-title">Checkout</h1>
+      <p class="wjm-page-sub">Complete your membership and get ready to work, collaborate and grow at Workspace Junction.</p>
+      
+      <div class="wjm-steps-bar" aria-label="Checkout Progress">
+        <div class="wjm-step-item is-done" id="step-node-1">
+          <div class="wjm-step-circle">&check;</div>
+          <span class="wjm-step-label">Plan Selection</span>
+        </div>
+        <div class="wjm-step-item is-active" id="step-node-2">
+          <div class="wjm-step-circle">2</div>
+          <span class="wjm-step-label">Your Details</span>
+        </div>
+        <div class="wjm-step-item" id="step-node-3">
+          <div class="wjm-step-circle">3</div>
+          <span class="wjm-step-label">Payment</span>
+        </div>
+        <div class="wjm-step-item" id="step-node-4">
+          <div class="wjm-step-circle">4</div>
+          <span class="wjm-step-label">Confirmation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wjm-hero-art">
+      <img src="images/wj-team-meeting.webp" alt="Workspace Junction Chicago location" width="480" height="190">
+    </div>
+  </div>
+</section>
+
+<!-- Main Checkout Form & Sidebar -->
+<main id="checkout-view" class="wjm-main-layout">
+  <!-- Left Column -->
+  <section class="wjm-checkout-content">
+    
+    <!-- 1. Selected Plan Card -->
+    <div class="wjm-box-card">
+      <div class="wjm-box-title">
+        <span>Selected Plan</span>
+        <button class="wjm-btn-change-plan" type="button" id="open-plan-modal">Change Plan &rarr;</button>
+      </div>
+
+      <div class="wjm-selected-plan-header">
+        <div class="wjm-plan-thumb">
+          <img id="plan-thumb-img" src="images/hero-founders-chicago.webp" alt="Selected Plan">
+        </div>
+        <div class="wjm-plan-details">
+          <div class="wjm-plan-badge-row">
+            <h2 class="wjm-plan-name" id="plan-name-display">Founders Package</h2>
+            <span class="wjm-plan-badge" id="plan-badge-display">MOST POPULAR</span>
+          </div>
+          <div class="wjm-plan-cost">
+            $<span id="plan-price-display">41.42</span> <small>/ <span id="plan-cycle-display">month</span></small>
+          </div>
+          <p class="wjm-plan-desc" id="plan-desc-display">Everything you need to form, launch, and grow your Illinois LLC — handled completely by experts.</p>
+        </div>
+      </div>
+
+      <ul class="wjm-features-list" id="plan-features-list">
+        <!-- Rendered by JS -->
+      </ul>
+    </div>
+
+    <!-- 2. Your Information Card -->
+    <div class="wjm-box-card">
+      <h3 class="wjm-box-title">Your Information</h3>
+      
+      <div class="wjm-form-grid-2">
+        <div class="wjm-field">
+          <label class="wjm-label" for="cust-name">Full Name <span class="req">*</span></label>
+          <input class="wjm-input" type="text" id="cust-name" placeholder="John Doe" required autocomplete="name">
+        </div>
+        <div class="wjm-field">
+          <label class="wjm-label" for="cust-email">Email Address <span class="req">*</span></label>
+          <input class="wjm-input" type="email" id="cust-email" placeholder="john@example.com" required autocomplete="email">
+        </div>
+      </div>
+
+      <div class="wjm-field">
+        <label class="wjm-label" for="cust-phone">Phone Number <span class="req">*</span></label>
+        <div class="wjm-phone-group">
+          <select class="wjm-select wjm-phone-prefix" id="cust-phone-prefix">
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+1">🇨🇦 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+61">🇦🇺 +61</option>
+          </select>
+          <input class="wjm-input" type="tel" id="cust-phone" placeholder="(630) 555-0100" required autocomplete="tel">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Billing Address Card -->
+    <div class="wjm-box-card">
+      <h3 class="wjm-box-title">Billing Address</h3>
+      
+      <div class="wjm-field">
+        <label class="wjm-label" for="bill-address">Address <span class="req">*</span></label>
+        <input class="wjm-input" type="text" id="bill-address" placeholder="123 Main Street" required autocomplete="street-address">
+      </div>
+
+      <div class="wjm-field">
+        <label class="wjm-label" for="bill-apt">Apartment, Suite, etc. (Optional)</label>
+        <input class="wjm-input" type="text" id="bill-apt" placeholder="Suite 100" autocomplete="address-line2">
+      </div>
+
+      <div class="wjm-form-grid-2">
+        <div class="wjm-field">
+          <label class="wjm-label" for="bill-city">City <span class="req">*</span></label>
+          <input class="wjm-input" type="text" id="bill-city" placeholder="Chicago" required autocomplete="address-level2">
+        </div>
+        <div class="wjm-field">
+          <label class="wjm-label" for="bill-state">State / Province <span class="req">*</span></label>
+          <select class="wjm-select" id="bill-state" required autocomplete="address-level1">
+            <option value="IL" selected>Illinois (IL)</option>
+            <option value="IN">Indiana (IN)</option>
+            <option value="WI">Wisconsin (WI)</option>
+            <option value="NY">New York (NY)</option>
+            <option value="CA">California (CA)</option>
+            <option value="TX">Texas (TX)</option>
+            <option value="FL">Florida (FL)</option>
+            <option value="OTHER">Other State / Province</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="wjm-form-grid-2">
+        <div class="wjm-field">
+          <label class="wjm-label" for="bill-zip">ZIP / Postal Code <span class="req">*</span></label>
+          <input class="wjm-input" type="text" id="bill-zip" placeholder="60181" required autocomplete="postal-code">
+        </div>
+        <div class="wjm-field">
+          <label class="wjm-label" for="bill-country">Country <span class="req">*</span></label>
+          <select class="wjm-select" id="bill-country" required autocomplete="country">
+            <option value="US" selected>United States</option>
+            <option value="CA">Canada</option>
+            <option value="GB">United Kingdom</option>
+            <option value="AU">Australia</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Payment Method Card -->
+    <div class="wjm-box-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+        <h3 class="wjm-box-title" style="margin:0;">Payment Method</h3>
+        <div class="wjm-stripe-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+          </svg>
+          Secured by Stripe
+        </div>
+      </div>
+
+      <!-- Stripe Dedicated Payment Header -->
+      <div class="wjm-stripe-hero-card">
+        <div class="wjm-stripe-brand">
+          <div class="wjm-stripe-icon-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+          </div>
+          <div>
+            <strong style="display:block; font-size:15px; color:#1E293B;">Stripe Secure Payment</strong>
+            <span style="font-size:12.5px; color:#64748B;">Credit / Debit Cards, Apple Pay, Google Pay</span>
+          </div>
+        </div>
+        <div class="wjm-stripe-badges-row">
+          <span class="wjm-pay-pill">VISA</span>
+          <span class="wjm-pay-pill">MC</span>
+          <span class="wjm-pay-pill">AMEX</span>
+          <span class="wjm-pay-pill">DISCOVER</span>
+          <span class="wjm-pay-pill" style="background:#000; color:#fff; border-color:#000;">Pay</span>
+          <span class="wjm-pay-pill">GPay</span>
+        </div>
+      </div>
+
+      <!-- Stripe Card Input Mount & Fields -->
+      <div id="stripe-payment-form">
+        <div class="wjm-field" id="stripe-element-field" style="display:none;">
+          <label class="wjm-label">Card Information <span class="req">*</span></label>
+          <div id="stripe-card-element" class="wjm-stripe-element-container">
+            <!-- Stripe.js will mount here if publishable key is provided -->
+          </div>
+          <div id="stripe-card-errors" class="wjm-stripe-error" role="alert" style="color:#DC2626; font-size:12.5px; margin-top:6px;"></div>
+        </div>
+
+        <div id="stripe-standard-fields">
+          <div class="wjm-field">
+            <label class="wjm-label" for="card-num">Card Number <span class="req">*</span></label>
+            <div style="position:relative;">
+              <input class="wjm-input" type="text" id="card-num" placeholder="4242 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242" maxlength="19" autocomplete="cc-number">
+              <span id="card-brand-indicator" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:700; color:#64748B;"></span>
+            </div>
+          </div>
+
+          <div class="wjm-form-grid-2">
+            <div class="wjm-field">
+              <label class="wjm-label" for="card-exp">Expiration Date <span class="req">*</span></label>
+              <input class="wjm-input" type="text" id="card-exp" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp">
+            </div>
+            <div class="wjm-field">
+              <label class="wjm-label" for="card-cvc">CVC <span class="req">*</span></label>
+              <input class="wjm-input" type="text" id="card-cvc" placeholder="CVC" maxlength="4" autocomplete="cc-csc">
+            </div>
+          </div>
+
+          <div class="wjm-field">
+            <label class="wjm-label" for="card-name">Name on Card <span class="req">*</span></label>
+            <input class="wjm-input" type="text" id="card-name" placeholder="Full name as printed on card" autocomplete="cc-name">
+          </div>
+        </div>
+
+        <label class="wjm-checkbox-line">
+          <input type="checkbox" id="save-card" checked>
+          <span>Save card securely via Stripe for recurring membership renewals</span>
+        </label>
+
+        <div class="wjm-stripe-security-banner">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#635BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <div>
+            <strong>End-to-End SSL Encrypted:</strong> All payments are processed exclusively through <strong>Stripe</strong> (PCI Service Provider Level 1). Your payment details are encrypted in transit and never stored on Workspace Junction servers.
+          </div>
+        </div>
+      </div>
+
+      <button class="wjm-btn-submit-order" id="btn-submit-checkout" type="button" style="margin-top:20px;">
+        <span>🔒 Pay with Stripe &amp; Complete Membership</span> &rarr;
+      </button>
+
+      <p class="wjm-terms-notice">
+        By completing your purchase, you authorize Workspace Junction and Stripe to bill your card according to your selected membership cycle. Review our <a href="https://workspacejunction.com/terms/" target="_blank" rel="noopener">Terms &amp; Conditions</a> and <a href="https://workspacejunction.com/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- Right Sticky Sidebar -->
+  <aside class="wjm-checkout-sidebar">
+    <div class="wjm-sidebar-sticky">
+
+      <!-- Order Summary Card -->
+      <div class="wjm-summary-card">
+        <h3 class="wjm-box-title" style="margin-bottom: 16px;">Order Summary</h3>
+
+        <div class="wjm-sum-row">
+          <strong id="side-plan-name">Founders Package</strong>
+          <span id="side-plan-price">$41.42 / mo</span>
+        </div>
+
+        <div class="wjm-sum-row">
+          <span>Billing Cycle</span>
+          <select class="wjm-cycle-select" id="billing-cycle-select">
+            <option value="monthly">Monthly</option>
+            <option value="yearly" selected>Yearly</option>
+          </select>
+        </div>
+
+        <div class="wjm-sum-row">
+          <span>Subtotal</span>
+          <span id="side-subtotal">$497.00</span>
+        </div>
+
+        <div class="wjm-sum-row">
+          <span>State Tax (0%)</span>
+          <span id="side-tax">$0.00</span>
+        </div>
+
+        <div class="wjm-sum-row total-row">
+          <span>Total Due Today</span>
+          <span class="wjm-sum-total-amount" id="side-total">$497.00</span>
+        </div>
+
+        <button class="wjm-btn-submit-order" id="btn-side-submit" type="button" style="margin-top: 18px; padding: 13px;">
+          <span>🔒 Pay with Stripe</span> &rarr;
+        </button>
+
+        <ul class="wjm-trust-checks">
+          <li class="wjm-trust-check-item"><span>&check;</span> Powered exclusively by Stripe</li>
+          <li class="wjm-trust-check-item"><span>&check;</span> Secure 256-bit SSL encryption</li>
+          <li class="wjm-trust-check-item"><span>&check;</span> Cancel or adjust anytime</li>
+          <li class="wjm-trust-check-item"><span>&check;</span> Instant onboarding &amp; confirmation</li>
+        </ul>
+      </div>
+
+      <!-- What You'll Get Card -->
+      <div class="wjm-perks-card">
+        <div class="wjm-perks-header">
+          <div class="wjm-perks-icon">&#127873;</div>
+          <h4 style="margin:0; font-size:16px; color:var(--wj-forest);">What You'll Get</h4>
+        </div>
+        <ul class="wjm-perks-list">
+          <li>Instant membership activation</li>
+          <li>Access during business hours</li>
+          <li>All selected plan features included</li>
+          <li>Access to community &amp; networking events</li>
+          <li>Welcome package &amp; team introduction</li>
+        </ul>
+      </div>
+
+      <!-- Need Help Card -->
+      <div class="wjm-help-card">
+        <div class="wjm-help-icon">&#127911;</div>
+        <h4>Need Help?</h4>
+        <p>Our local team is ready to assist you with any questions about your membership.</p>
+        <a class="wjm-btn-help" href="tel:+17739861908">Contact Support &rarr;</a>
+      </div>
+
+      <!-- Testimonial -->
+      <div class="wjm-quote-card">
+        <img class="wjm-quote-avatar" src="images/audience-consultant.webp" alt="Ali Raza">
+        <div>
+          <p class="wjm-quote-text">"Workspace Junction has completely changed the way I work. The facilities, community and support are amazing!"</p>
+          <p class="wjm-quote-author">&mdash; Ali Raza, Freelancer</p>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+</main>
+
+<!-- Confirmation Success Screen (Hidden by default) -->
+<section id="confirmation-view" class="wjm-confirm-screen">
+  <div class="wjm-confirm-icon">&check;</div>
+  <h2 class="wjm-confirm-title">Membership Confirmed!</h2>
+  <p style="color:var(--wj-text-secondary); font-size:16px; margin:0 0 28px;">Thank you for joining Workspace Junction. Your order has been processed successfully.</p>
+  
+  <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:24px; text-align:left; margin-bottom:28px;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+      <span style="color:#64748B;">Order Number:</span>
+      <strong id="conf-order-id" style="color:var(--wj-forest);">#WJM-104928</strong>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+      <span style="color:#64748B;">Membership Plan:</span>
+      <strong id="conf-plan-name">Founders Package</strong>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+      <span style="color:#64748B;">Billing Cycle:</span>
+      <strong id="conf-cycle">Yearly</strong>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+      <span style="color:#64748B;">Customer Email:</span>
+      <strong id="conf-email">customer@example.com</strong>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+      <span style="color:#64748B;">Payment Gateway:</span>
+      <strong id="conf-pay-method" style="color:#635BFF; display:inline-flex; align-items:center; gap:5px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+        Stripe Secure Checkout
+      </strong>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+      <span style="color:#64748B;">Stripe Reference:</span>
+      <code id="conf-stripe-ref" style="background:#E2E8F0; padding:2px 8px; border-radius:4px; font-size:12px; color:#1E293B; font-family:monospace;">pi_stripe_verified</code>
+    </div>
+    <div style="display:flex; justify-content:space-between; padding-top:14px; border-top:1px solid #E2E8F0;">
+      <span style="font-weight:700;">Total Charged:</span>
+      <strong id="conf-total" style="font-size:20px; color:var(--wj-forest);">$497.00</strong>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+    <a href="https://workspacejunction.com/" class="wjm-btn-tour" style="padding:14px 28px;">Return to Workspace Junction</a>
+    <button type="button" onclick="window.print()" class="wjm-btn-change-plan" style="padding:14px 24px;">Print Receipt</button>
+  </div>
+</section>
+
+<!-- Bottom Trust Strip -->
+<section class="wjm-trust-footer-strip">
+  <div class="wjm-trust-strip-grid">
+    <div class="wjm-trust-item">
+      <div class="wjm-trust-icon-box">&#128205;</div>
+      <div>
+        <strong>Prime Location</strong>
+        <span>Oakbrook Terrace &amp; Chicago</span>
+      </div>
+    </div>
+    <div class="wjm-trust-item">
+      <div class="wjm-trust-icon-box">&#128101;</div>
+      <div>
+        <strong>Vibrant Community</strong>
+        <span>Connect, collaborate and grow</span>
+      </div>
+    </div>
+    <div class="wjm-trust-item">
+      <div class="wjm-trust-icon-box">&#9749;</div>
+      <div>
+        <strong>Premium Amenities</strong>
+        <span>Everything you need to produce</span>
+      </div>
+    </div>
+    <div class="wjm-trust-item">
+      <div class="wjm-trust-icon-box">&#128737;</div>
+      <div>
+        <strong>Flexible Plans</strong>
+        <span>Scale up or adjust as you grow</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top is-standalone">
+      <div>
+        <a class="logo" href="#top" aria-label="Workspace Junction, back to top">
+          <div class="footer-logo-badge">
+            <img src="images/icon.png" alt="Workspace Junction" class="footer-logo-img" width="430" height="373">
+          </div>
+        </a>
+        <p class="mt-12">Illinois LLC formation, virtual business mailboxes, coworking desks, and meeting rooms in Oakbrook Terrace &amp; Chicago.</p>
+        <p class="mt-12"><a href="https://workspacejunction.com/">Visit workspacejunction.com</a></p>
+      </div>
+      <div>
+        <h2>Visit or contact us</h2>
+        <address>
+          Workspace Junction<br>
+          1S280 Summit Ave, Unit E2, Suite 1<br>
+          Oakbrook Terrace, IL 60181<br>
+          <a href="tel:+17739861908">(773) 986-1908</a><br>
+          <a href="mailto:grow@workspacejunction.com">grow@workspacejunction.com</a>
+        </address>
+      </div>
+    </div>
+    <div class="legal">
+      <p>&copy; 2026 Workspace Junction. All rights reserved. Secure membership checkout.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal: Change Plan -->
+<div class="wjm-modal-overlay" id="plan-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="wjm-modal-content">
+    <div class="wjm-modal-header">
+      <h3 id="modal-title" style="margin:0; font-family:'Outfit',sans-serif; color:var(--wj-forest); font-size:20px;">Choose a Membership Plan</h3>
+      <button class="wjm-modal-close" type="button" id="close-plan-modal">&times;</button>
+    </div>
+    <div class="wjm-modal-plans-list" id="modal-plans-container">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</div>
+
+<script src="checkout.js"></script>
+
+</body>
+</html>

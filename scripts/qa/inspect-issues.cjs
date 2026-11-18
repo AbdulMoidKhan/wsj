@@ -83,7 +83,7 @@ const ROUTES = [
 
           // Check visible overflowing elements
           const badEls = [];
-          document.querySelectorAll('#main *, .wj-header *, .wj-footer *').forEach(el => {
+          document.querySelectorAll('#main *, #wj-site-header *, .wj-footer *').forEach(el => {
             if (['SCRIPT','STYLE','NOSCRIPT','svg','path'].includes(el.tagName)) return;
             const r = el.getBoundingClientRect();
             if (r.width > 0 && r.height > 0 && r.right > docW + 2) {
@@ -115,7 +115,7 @@ const ROUTES = [
 
           // Overlapping content elements
           const overlaps = [];
-          const splitContainers = document.querySelectorAll('.lv-split, .lx-split, .lv-intro-grid, .hp-faq-grid, .ip-hero-grid, .lx-cols');
+          const splitContainers = document.querySelectorAll('.h-hero-grid, .h-intro-grid, .j-faq-grid, .fx-split, .fx-faq-grid, .lx-split, .ip-hero-grid, .lx-cols');
           splitContainers.forEach(container => {
             const kids = Array.from(container.children).filter(k => {
               const s = window.getComputedStyle(k);
@@ -143,8 +143,8 @@ const ROUTES = [
           }
 
           // Alignment checks: container margins
-          const header = document.querySelector('.wj-header .container, .lv-head-row');
-          const mainShell = document.querySelector('#main .hp-shell, #main .container, #main .ip-wrap, #main .lx-shell');
+          const header = document.querySelector('#wj-site-header .at-head');
+          const mainShell = document.querySelector('#main .j-wrap, #main .fx-shell, #main .container, #main .ip-wrap, #main .lx-shell');
           const footer = document.querySelector('.wj-footer .container');
           const align = {
             headerLeft: header ? Math.round(header.getBoundingClientRect().left) : null,
@@ -158,7 +158,7 @@ const ROUTES = [
 
           // Check card alignment (height differentials > 40px in same row)
           const cardRows = [];
-          document.querySelectorAll('.pricing-grid, .price-grid, .lv-service-grid, .ip-service-grid, .archive-grid, .journal-grid').forEach(grid => {
+          document.querySelectorAll('.pricing-grid, .price-grid, .fx-grid, .j-foundation-grid, .j-community-grid, .ip-service-grid, .archive-grid, .journal-grid').forEach(grid => {
             const cards = Array.from(grid.children).filter(c => {
               const s = window.getComputedStyle(c);
               return s.display !== 'none' && s.visibility !== 'hidden';

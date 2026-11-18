@@ -410,13 +410,13 @@ export function MembershipsPageView({communityPlans, coworking}: {communityPlans
 function TableCell({val}: {val: string}) {
   if (val === 'yes') {
     return (
-      <span className="mem-table-check" aria-label="Included">
-        <Check size={16} strokeWidth={2.5} />
+      <span className="mem-table-check" role="img" aria-label="Included">
+        <Check size={16} strokeWidth={2.5} aria-hidden="true" />
       </span>
     );
   }
   if (val === 'no') {
-    return <span className="mem-table-dash" aria-label="Not included">—</span>;
+    return <span className="mem-table-dash" role="img" aria-label="Not included">—</span>;
   }
   return <span className="mem-table-text">{val}</span>;
 }

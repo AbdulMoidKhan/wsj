@@ -26,16 +26,16 @@ const ctaSelector='.wj-button,.btn,.wj-btn,.ip-button,.lx-btn,.lv-plans,.lv-pill
     const visible=el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0&&!el.closest('[hidden],[aria-hidden="true"]');};
     const buttonIssues=[];const variants={yellow:0,green:0};
     for(const el of document.querySelectorAll(ctaSelector)){
-     if(!visible(el))continue;const s=getComputedStyle(el);const expected=s.backgroundColor==='rgb(217, 145, 11)'?'yellow':s.backgroundColor==='rgb(33, 77, 62)'?'green':null;
+     if(!visible(el))continue;const s=getComputedStyle(el);const expected=s.backgroundColor==='rgb(215, 144, 42)'?'yellow':s.backgroundColor==='rgb(14, 52, 33)'?'green':null;
      if(expected)variants[expected]++;
-     const correct=expected&&(s.borderRadius===(expected==='yellow'?'999px':'10px'))&&s.color===(expected==='yellow'?'rgb(11, 29, 25)':'rgb(255, 255, 255)');
+     const correct=expected&&(s.borderRadius==='999px')&&s.color===(expected==='yellow'?'rgb(9, 35, 23)':'rgb(255, 255, 255)');
      if(!correct)buttonIssues.push({text:el.textContent.trim().slice(0,75),class:el.className,bg:s.backgroundColor,color:s.color,radius:s.borderRadius});
     }
     const ids=new Map();for(const el of document.querySelectorAll('[id]'))ids.set(el.id,(ids.get(el.id)||0)+1);
     const duplicateIds=[...ids].filter(([,count])=>count>1).map(([id,count])=>({id,count}));
     const brokenAnchors=[];for(const a of document.querySelectorAll('a[href]')){let u;try{u=new URL(a.href);}catch{continue;}if(u.origin===location.origin&&u.pathname===location.pathname&&u.hash&&u.hash!=='#wj-booking'&&!document.getElementById(decodeURIComponent(u.hash.slice(1))))brokenAnchors.push({label:a.textContent.trim().slice(0,70),href:a.getAttribute('href')});}
     const brokenImages=[...document.images].filter(i=>visible(i)&&i.complete&&!i.naturalWidth).map(i=>i.getAttribute('src'));
-    return {title:document.title,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,h1:document.querySelectorAll('main h1').length,variants,buttonIssues,duplicateIds,brokenAnchors,brokenImages,header:!!document.querySelector('.wj-header'),footer:!!document.querySelector('.wj-footer')};
+    return {title:document.title,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,h1:document.querySelectorAll('main h1').length,variants,buttonIssues,duplicateIds,brokenAnchors,brokenImages,header:!!document.querySelector('#wj-site-header'),footer:!!document.querySelector('.wj-footer')};
    },ctaSelector);
    results.push({...job,status,...metrics,errors,failed:[...new Set(failed)]});
   }catch(e){results.push({...job,status,error:e.message,errors,failed});}

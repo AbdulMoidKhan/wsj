@@ -43,7 +43,7 @@
   --line-strong:rgba(154,119,56,.42);
   --focus:#b06a12;
   /* type */
-  --ff-display:var(--font-display),'Playfair Display',Georgia,'Times New Roman',serif;
+  --ff-display:var(--font-display); /* defined in atelier.css; its stack already ends in a generic serif */
   --ff-text:var(--font-sans),Inter,'Helvetica Neue',Arial,sans-serif;
   /* shape + depth */
   --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
@@ -64,12 +64,12 @@ html body .wj-platform{
   background:var(--bg-page);color:var(--text-body);font-family:var(--ff-text);
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
-html body .wj-platform>:is(main,.wj-utility,.wj-closing,.wj-footer){position:relative;z-index:1}
+html body .wj-platform>:is(main,.wj-closing,.wj-footer){position:relative;z-index:1}
 html body .wj-platform ::selection{background:var(--c-champagne-300);color:var(--c-forest-950)}
 html body .wj-platform :is(a,button,input,textarea,select,summary):focus-visible{outline:2px solid var(--focus);outline-offset:4px;border-radius:4px}
 
 /* ---------- Typography ---------- */
-html body .wj-platform :is(.ip-page,.ip-archive,.hp-home,.wj-header,.wj-footer,.wj-closing,.wj-mobile-panel){font-family:var(--ff-text)}
+html body .wj-platform :is(.ip-page,.ip-archive,.hp-home,.wj-footer,.wj-closing,.wj-mobile-panel){font-family:var(--ff-text)}
 html body :is(.wj-platform,.wj-dialog) :is(input,textarea,select,button){font-family:var(--ff-text)}
 html body .wj-platform :is(h1,h2,h3,h4){font-family:var(--ff-display);font-weight:500;letter-spacing:-.012em;color:inherit}
 html body .wj-platform :is(h1,.hp-title){line-height:1.06}
@@ -97,15 +97,14 @@ html body .wj-platform :is(.hp-hero-bottom,.hp-faq-list,.hp-faq-list details,.hp
 html body .wj-platform .ip-service-nav{background:rgba(245,239,227,.95);border-color:var(--line-soft)}
 
 /* header + menus */
-html body .wj-platform .wj-utility{background:var(--c-forest-950);color:var(--text-on-dark)}
 html body .wj-platform .wj-tagline{color:var(--c-champagne-300);font-family:var(--ff-display);font-style:italic;letter-spacing:.01em}
-html body .wj-platform .wj-header{background:rgba(245,239,227,.95);border-bottom:1px solid var(--line-soft)}
 html body .wj-platform .wj-mega{background:var(--bg-surface-solid);border:1px solid var(--line-soft);box-shadow:var(--shadow-lift)}
 html body .wj-platform .wj-menu-toggle{background:transparent;color:var(--text-strong)}
 html body .wj-platform .wj-mobile-panel{background:var(--bg-surface-solid)}
-html body .wj-platform .wj-desktop-nav>a,html body .wj-platform .wj-services>button{position:relative}
-html body .wj-platform .wj-desktop-nav>a::after,html body .wj-platform .wj-services>button::after{content:'';position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--c-champagne-600);transform:scaleX(0);transform-origin:right;transition:transform var(--dur-med) var(--ease-out)}
-html body .wj-platform .wj-desktop-nav>a:hover::after,html body .wj-platform .wj-services>button:hover::after,html body .wj-platform .wj-services>button[aria-expanded=true]::after{transform:scaleX(1);transform-origin:left}
+html body .wj-platform .wj-services>button{position:relative}
+html body .wj-platform .wj-services>button::after{content:'';position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--c-champagne-600);transform:scaleX(0);transform-origin:right;transition:transform var(--dur-med) var(--ease-out)}
+html body .wj-platform .wj-services>button:hover::after,
+html body .wj-platform .wj-services>button[aria-expanded=true]::after{transform:scaleX(1);transform-origin:left}
 
 /* footer: deep forest, closes every page without a white strip */
 html body .wj-platform .wj-footer{background:var(--c-forest-950);color:var(--text-on-dark);padding-bottom:28px}
@@ -160,57 +159,7 @@ html body .wj-platform .hp-service-card>svg{color:var(--c-champagne-600)}
 html body .wj-platform .hp-faq-list summary svg{transition:transform var(--dur-med) var(--ease-out);color:var(--c-champagne-600)}
 html body .wj-platform .hp-faq-list details[open] summary svg{transform:rotate(45deg)}
 
-/* ==========================================================================
-   Ambient background system
-   One visual language: drifting champagne light, flowing contour lines,
-   a few floating outline shapes. Fixed, behind content, never interactive.
-   ========================================================================== */
-.amb-backdrop{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:strict;color:rgba(154,119,56,.34)}
-.amb-backdrop>*{position:absolute;will-change:transform}
-.amb-glow{border-radius:50%;width:62vmax;height:62vmax}
-.amb-glow-a{top:-24vmax;left:-18vmax;background:radial-gradient(closest-side,rgba(212,182,127,.30),rgba(212,182,127,0));animation:amb-drift-a 46s var(--ease-inout) infinite alternate}
-.amb-glow-b{top:28vh;right:-26vmax;background:radial-gradient(closest-side,rgba(41,81,74,.13),rgba(41,81,74,0));animation:amb-drift-b 58s var(--ease-inout) infinite alternate}
-.amb-glow-c{bottom:-30vmax;left:24vw;background:radial-gradient(closest-side,rgba(227,207,166,.34),rgba(227,207,166,0));animation:amb-drift-c 71s var(--ease-inout) infinite alternate}
-.amb-lines{left:0;width:200%;height:44vh}
-.amb-lines-a{bottom:2vh;opacity:.9;animation:amb-flow 96s linear infinite}
-.amb-lines-b{top:10vh;opacity:.55;animation:amb-flow 140s linear infinite reverse}
-.amb-shape{border:1px solid rgba(154,119,56,.36)}
-.amb-ring{width:260px;height:260px;border-radius:50%;top:12vh;right:-120px;animation:amb-float-a 34s var(--ease-inout) infinite alternate}
-.amb-diamond{width:86px;height:86px;top:58vh;left:-34px;transform:rotate(45deg);animation:amb-float-b 41s var(--ease-inout) infinite alternate}
-.amb-diamond-sm{width:30px;height:30px;top:30vh;left:2.5vw;opacity:.8;animation-duration:29s;animation-delay:-11s}
-.amb-circle{width:40px;height:40px;border-radius:50%;top:72vh;right:3vw;background:rgba(212,182,127,.12);animation:amb-float-a 27s var(--ease-inout) infinite alternate-reverse}
-.amb-arc{width:420px;height:420px;border-radius:50%;bottom:-210px;right:16vw;border-color:rgba(154,119,56,.3) transparent transparent rgba(154,119,56,.3);animation:amb-spin 120s linear infinite}
-
-@keyframes amb-drift-a{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(16vw,12vh,0) scale(1.12)}}
-@keyframes amb-drift-b{from{transform:translate3d(0,0,0) scale(1.05)}to{transform:translate3d(-14vw,-10vh,0) scale(.92)}}
-@keyframes amb-drift-c{from{transform:translate3d(0,0,0)}to{transform:translate3d(-18vw,-8vh,0) scale(1.1)}}
-@keyframes amb-flow{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
-@keyframes amb-float-a{from{transform:translate3d(0,-18px,0) rotate(0deg)}to{transform:translate3d(16px,24px,0) rotate(10deg)}}
-@keyframes amb-float-b{from{transform:translate3d(0,0,0) rotate(45deg)}to{transform:translate3d(22px,-30px,0) rotate(62deg)}}
-@keyframes amb-spin{to{transform:rotate(360deg)}}
-
-/* WebGL world (components/scene-backdrop.tsx) sits above the CSS light layer. */
-.scene-backdrop{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.scene-backdrop>canvas{display:block;width:100%!important;height:100%!important;opacity:0;animation:amb-fade-in 1.6s .1s var(--ease-out) forwards}
-@keyframes amb-fade-in{to{opacity:1}}
-/* FoundrSpace-style dot grid as the base texture, softly vignetted. */
-.amb-backdrop::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(122,92,36,.22) 1px,transparent 1.4px);background-size:24px 24px;-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 85%);mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 85%)}
-/* Once the 3D world is live it carries the objects; CSS keeps only light + grid. */
-/* ambient shapes and lines remain active alongside 3D scene */
-html[data-scene=live] .amb-backdrop>:is(.amb-shape,.amb-lines){display:block}
-
-/* Section-level ambient for dark bands: champagne contours + one floating ring.
-   Clipped by the section; paused offscreen via data-inview (MotionController). */
-html body .wj-platform .amb-local{position:relative;overflow:hidden;isolation:isolate}
-html body .wj-platform .amb-local::before{content:'';position:absolute;top:0;bottom:0;left:0;width:calc(100% + 1200px);z-index:-1;pointer-events:none;opacity:.55;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 400' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23D9910B' stroke-opacity='.3' stroke-width='1'%3E%3Cpath d='M0 300C200 240 400 360 600 300C800 240 1000 360 1200 300'/%3E%3Cpath d='M0 330C200 270 400 390 600 330C800 270 1000 390 1200 330'/%3E%3Cpath d='M0 90C200 150 400 30 600 90C800 150 1000 30 1200 90'/%3E%3C/g%3E%3C/svg%3E") 0 0/1200px 100% repeat-x;
-  animation:amb-local-flow 80s linear infinite;will-change:transform}
-html body .wj-platform .amb-local::after{content:'';position:absolute;z-index:-1;pointer-events:none;width:260px;height:260px;border-radius:50%;border:1px solid rgba(212,182,127,.22);top:-70px;right:-60px;animation:amb-float-a 36s var(--ease-inout) infinite alternate;will-change:transform}
-html body .wj-platform .wj-footer.amb-local::before{top:auto;height:300px;opacity:.4}
-html body .wj-platform .wj-footer.amb-local::after{top:auto;bottom:-120px;right:6vw}
-html body .wj-platform .hp-hero-aside.amb-local::after{width:150px;height:150px;top:-40px;right:-40px}
-@keyframes amb-local-flow{from{transform:translate3d(0,0,0)}to{transform:translate3d(-1200px,0,0)}}
-html body .wj-platform .amb-local[data-inview=false]::before,html body .wj-platform .amb-local[data-inview=false]::after{animation-play-state:paused}
+/* Ambient backdrop, WebGL scene and section "amb-local" decoration retired (see DESIGN.md). */
 
 /* Hero: content arrives on load (CSS only, finishes visible), photo settles then breathes. */
 @media (prefers-reduced-motion:no-preference){
@@ -233,13 +182,9 @@ html.rv-on :is(figure,.hp-place-photo,.hp-creative-photo)[data-reveal][data-reve
 html.rv-on :is(.hp-faq-list details,.hp-creative-links>a,.hp-benefits>div)[data-reveal][data-reveal]:not([data-revealed]){transform:translate3d(0,14px,0)}
 
 /* Pause control */
-.amb-toggle{position:fixed;right:18px;bottom:18px;z-index:45;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-strong);background:rgba(252,250,245,.92);color:var(--c-forest-900);cursor:pointer;box-shadow:var(--shadow-soft);transition:transform var(--dur-fast) ease,background-color var(--dur-fast) ease}
-.amb-toggle:hover{transform:translateY(-2px);background:var(--c-ivory-50)}
-.amb-toggle:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
-.amb-toggle-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 
 /* Paused by user or hidden tab: freeze decorative loops in place. */
-html:is([data-ambient=paused],[data-tab=hidden]) :is(.amb-backdrop>*,.wj-platform .amb-local::before,.wj-platform .amb-local::after,.wj-platform .hp-hero-visual>img,.wj-platform .ip-hero-media>img){animation-play-state:paused!important}
+html:is([data-ambient=paused],[data-tab=hidden]) :is(.wj-platform .hp-hero-visual>img,.wj-platform .ip-hero-media>img){animation-play-state:paused!important}
 
 /* ==========================================================================
    3D: pointer tilt cards (the WebGL world lives in components/scene-backdrop.tsx)
@@ -252,24 +197,12 @@ html body .wj-platform [data-tilt]:hover::after{opacity:1}
 @media (prefers-reduced-motion:reduce){html body .wj-platform [data-tilt]:hover{transform:none}}
 
 /* ---------- Responsive ---------- */
-@media (max-width:900px){
-  .amb-ring{width:170px;height:170px;right:-95px}
-  .amb-arc,.amb-diamond-sm{display:none}
-  .amb-lines{height:30vh}
-}
 @media (max-width:600px){
-  .amb-glow{width:90vmax;height:90vmax}
-  .amb-diamond{width:56px;height:56px;left:-24px}
-  .amb-circle{right:-12px}
-  html body .wj-platform .amb-local::after{width:170px;height:170px}
   html body .wj-platform :is(.hp-eyebrow,.ip-eyebrow,.eyebrow)::before{width:18px}
-  .amb-toggle{right:12px;bottom:12px}
 }
 
 /* Reduced motion: a static composition (shapes rest in place), no reveals. */
 @media (prefers-reduced-motion:reduce){
-  .amb-backdrop>*,html body .wj-platform .amb-local::before,html body .wj-platform .amb-local::after{animation:none!important}
-  .amb-toggle{display:none}
   html.rv-on [data-reveal]{opacity:1!important;transform:none!important}
 }
 
@@ -286,22 +219,17 @@ html.lenis,html.lenis body{height:auto}
 .lenis.lenis-stopped{overflow:hidden}
 /* When the WebGL world is live, the CSS light pools stop drifting: one animated layer, not two. */
 /* glow continues moving smoothly in live scene */
-html[data-scene=live] .amb-glow{animation-play-state:running}
-.amb-backdrop>*{will-change:auto}
 /* GSAP owns transforms on these while animating; keep the CSS hover lift from fighting it */
-html body .wj-platform :is(.hp-button,.btn-primary,.wj-header-book,.ip-button-primary):hover{transform:none}
+html body .wj-platform :is(.hp-button,.btn-primary,.ip-button-primary):hover{transform:none}
 @media (prefers-reduced-motion:reduce){.gx-progress{display:none}}
 html body .wj-platform .hp-service-grid .hp-service-card{transition:box-shadow .6s var(--ease-out),border-color .3s ease}
 /* Compositor promotion for layers that move every frame while scrolling */
-.amb-backdrop,.scene-backdrop{will-change:transform;transform:translateZ(0)}
 html body .wj-platform :is(.hp-hero-visual,.hp-place-photo,.hp-creative-photo,.hp-journal-photo,.journal-image)>img{will-change:transform}
 /* Lite mode (set at runtime by the scene governor, or on <=4-core / Save-Data devices): stop secondary loops */
-html[data-perf=lite] .wj-platform .amb-local::before,html[data-perf=lite] .wj-platform .amb-local::after{animation:none}
 html[data-perf=lite] .wj-platform :is(.hp-hero-visual,.hp-place-photo,.hp-creative-photo,.hp-journal-photo,.journal-image)>img{will-change:auto}
 html body .wj-platform :is(.ip-page figure,.ip-gallery-photo){overflow:hidden}
 html body .wj-platform :is(.prose,.migrated-content) figure{overflow:visible}
 /* Phones: margins are 20px, so objects inevitably pass behind copy - keep the 3D layer softer there */
-@media (max-width:760px){.scene-backdrop{opacity:.6}}
 
 
 /* ==========================================================================
@@ -327,21 +255,21 @@ html body .wj-platform{--gold:var(--c-amber);--accent:var(--c-amber);--paper:var
 html body .wj-platform ::selection{background:#efc874;color:#0c1f1b}
 
 /* Light chrome on the grey canvas */
-html body .wj-platform :is(.wj-header,.ip-service-nav){background:rgba(208,207,203,.94)}
-.amb-toggle{background:rgba(230,229,226,.94)}
-.amb-toggle:hover{background:var(--c-amber);color:#0c1f1b;border-color:var(--c-amber)}
+html body .wj-platform :is(.ip-service-nav){background:rgba(208,207,203,.94)}
 html body .wj-platform :is(.wj-mobile-panel,.wj-mega){background:var(--c-grey-light)}
 html body :is(.wj-dialog,.wj-platform) .wj-form :is(input:not([type=checkbox]),select,textarea){background:#f2f1ee}
 
 /* Focus: dark ring on light surfaces, amber ring on dark bands */
 html body .wj-platform :is(a,button,input,textarea,select,summary):focus-visible{outline-color:#132e29}
-html body .wj-platform :is(.hp-creative,.hp-ending,.hp-hero-aside,.wj-closing,.wj-footer,.wj-utility,.price-card.featured) :is(a,button,summary):focus-visible{outline-color:var(--c-amber)}
+html body .wj-platform :is(.hp-creative,.hp-ending,.hp-hero-aside,.wj-closing,.wj-footer,.price-card.featured) :is(a,button,summary):focus-visible{outline-color:var(--c-amber)}
 
 /* Buttons: every button is amber; hover deepens + lifts */
-html body .wj-platform :is(.btn-primary,.btn-dark,.btn-cream,.ip-button-primary,.hp-button,.wj-header-book,.ip-button-light),
-html body .wj-platform .hp-ending .btn-primary,html body .wj-platform .price-card.featured>.btn,
-html body .wj-dialog .wj-btn-primary,html body .wj-campaign .wj-btn-primary{background:var(--c-amber);color:#0c1f1b;border-color:var(--c-amber);box-shadow:none}
-html body .wj-platform :is(.btn-primary,.btn-dark,.btn-cream,.ip-button-primary,.hp-button,.wj-header-book,.ip-button-light):hover,
+html body .wj-platform :is(.btn-primary,.btn-dark,.btn-cream,.ip-button-primary,.hp-button,.ip-button-light),
+html body .wj-platform .hp-ending .btn-primary,
+html body .wj-platform .price-card.featured>.btn,
+html body .wj-dialog .wj-btn-primary,
+html body .wj-campaign .wj-btn-primary{background:var(--c-amber);color:#0c1f1b;border-color:var(--c-amber);box-shadow:none}
+html body .wj-platform :is(.btn-primary,.btn-dark,.btn-cream,.ip-button-primary,.hp-button,.ip-button-light):hover,
 html body .wj-platform .price-card.featured>.btn:hover,
 html body .wj-dialog .wj-btn-primary:hover{background:var(--c-amber-hover);border-color:var(--c-amber-hover);color:#0c1f1b;box-shadow:0 14px 28px -16px rgba(194,127,6,.75)}
 html body .wj-platform :is(.btn-outline,.ip-button-secondary),html body .wj-dialog .wj-btn-secondary{background:transparent;border-color:#132e29;color:#132e29}
@@ -360,7 +288,7 @@ html body .wj-dialog .wj-service-option:is(:hover,.is-selected){border-color:var
 html body .wj-platform :is(.text-link,.hp-link,.hp-aside-link,.ip-text-link){background-image:linear-gradient(var(--c-amber),var(--c-amber));background-size:0 2px}
 html body .wj-platform :is(.text-link,.hp-link,.hp-aside-link,.ip-text-link):hover{background-size:100% 2px;color:inherit}
 html body .wj-platform :is(.hp-creative,.hp-ending,.hp-hero-aside,.wj-closing,.wj-footer) :is(.text-link,.hp-link,.hp-aside-link,a):hover{color:var(--c-amber-light)}
-html body .wj-platform .wj-desktop-nav>a::after,html body .wj-platform .wj-services>button::after{background:var(--c-amber);height:2px}
+html body .wj-platform .wj-services>button::after{background:var(--c-amber);height:2px}
 html body .wj-platform :is(.hp-service-card li a,.business-links>a,.hp-creative-links>a,.wj-mega a,.wj-mobile-nav a):hover{color:inherit;text-decoration:underline;text-decoration-color:var(--c-amber);text-decoration-thickness:2px;text-underline-offset:5px}
 html body .wj-platform :is(.hp-service-card,.price-card,.ip-service-card,.ip-feature-card,.ip-topic,.directory-card):hover{border-color:var(--c-amber)}
 html body .wj-platform :is(.hp-eyebrow,.ip-eyebrow,.eyebrow)::before{background:var(--c-amber);opacity:1}
@@ -371,11 +299,6 @@ html body .wj-platform .price-card.featured>.eyebrow{background:var(--c-amber);c
 html body .wj-platform .price-card.featured,html body .wj-platform .pricing-grid .price-card.featured{border-color:var(--c-amber)}
 
 /* Ambient layers retuned for the grey canvas */
-.amb-backdrop::before{background-image:radial-gradient(rgba(19,46,41,.2) 1px,transparent 1.4px)}
-.amb-glow-a{background:radial-gradient(closest-side,rgba(217,145,11,.16),rgba(217,145,11,0))}
-.amb-glow-b{background:radial-gradient(closest-side,rgba(41,81,74,.12),rgba(41,81,74,0))}
-.amb-glow-c{background:radial-gradient(closest-side,rgba(255,255,255,.4),rgba(255,255,255,0))}
-html body .wj-platform .amb-local::after{border-color:rgba(217,145,11,.28)}
 /* homepage pricing uses deeper selectors (.hp-pricing ...) - match them */
 html body .wj-platform :is(.hp-pricing,.ip-pricing,.pricing-section) .pricing-filters button{background:var(--c-grey-light);border-color:var(--line-soft);color:#132e29}
 html body .wj-platform :is(.hp-pricing,.ip-pricing,.pricing-section) .pricing-filters button:hover{border-color:var(--c-amber)}
@@ -420,28 +343,17 @@ html body .wj-platform .lv-primary a:is(:hover,[aria-current=page])::after{trans
 html body .wj-platform .lv-burger{display:grid;border:0;background:transparent;width:46px;height:46px;border-radius:50%}
 html body .wj-platform .lv-burger:hover{background:var(--c-amber);color:#0c1f1b}
 /* service strip */
-html body .wj-platform .lv-strip{border-top:1px solid var(--line-soft);background:rgba(196,195,190,.55)}
-html body .wj-platform .lv-strip ul{display:flex;justify-content:space-between;gap:12px;list-style:none;margin:0 auto;padding:0}
-html body .wj-platform .lv-strip li{flex:0 0 auto}
-html body .wj-platform .lv-strip a{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px 13px;color:#2b2f2d;font:500 13px/1.2 var(--font-nav),var(--ff-text);white-space:nowrap;transition:color var(--dur-fast) ease}
-html body .wj-platform .lv-strip a svg{color:#393939;transition:transform var(--dur-med) var(--ease-out),color var(--dur-fast) ease}
-html body .wj-platform .lv-strip a::after{content:'';position:absolute;left:20%;right:20%;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--c-amber);transform:scaleX(0);transition:transform var(--dur-med) var(--ease-out)}
-html body .wj-platform .lv-strip a:hover svg,html body .wj-platform .lv-strip a[aria-current=page] svg{transform:translateY(-2px);color:#132e29}
-html body .wj-platform .lv-strip a:hover::after,html body .wj-platform .lv-strip a[aria-current=page]::after{transform:scaleX(1)}
-html body .wj-platform .lv-strip a[aria-current=page]{color:#0c1f1b;font-weight:700}
 /* menu drawer (opened by the hamburger at every width) */
 @media (min-width:900px){html body .wj-platform .wj-mobile-panel{inset:0 0 0 auto;width:min(460px,100vw);box-shadow:-30px 0 60px -30px rgba(12,31,27,.5);animation:lv-drawer .45s var(--ease-out) both}}
 @keyframes lv-drawer{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 #pricing,#main{scroll-margin-top:170px}
 @media (max-width:1180px){html body .wj-platform .lv-head-right{gap:16px} html body .wj-platform .lv-primary{gap:18px} html body .wj-platform .lv-phone{font-size:15px}}
 @media (max-width:1040px){html body .wj-platform .lv-primary,html body .wj-platform .lv-phone{display:none}}
-@media (max-width:1100px){html body .wj-platform .lv-strip ul{justify-content:flex-start;overflow-x:auto;scrollbar-width:none;width:100%;padding-inline:max(16px,calc((100% - 1200px)/2))} html body .wj-platform .lv-strip ul::-webkit-scrollbar{display:none} html body .wj-platform .lv-strip li{flex:0 0 auto}}
 @media (max-width:640px){
   html body .wj-platform .lv-head-row{min-height:74px;gap:10px}
   html body .wj-platform .lv-plans{min-height:40px;padding:6px 14px;font-size:14px}
   html body .wj-platform .lv-head-right{gap:6px}
   html body .wj-platform .lv-header .wj-logo{width:150px;height:48px}
-  html body .wj-platform .lv-strip a{font-size:12px;padding:10px 8px}
   #pricing,#main{scroll-margin-top:150px}
 }
 @media (max-width:380px){html body .wj-platform .lv-plans{display:none}}

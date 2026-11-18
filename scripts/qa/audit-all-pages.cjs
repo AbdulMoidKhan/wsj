@@ -128,8 +128,8 @@ async function runAudit() {
           });
 
           // Check container alignment: header vs main vs footer left offset
-          const header = document.querySelector('.wj-header .container, .lv-head-row');
-          const mainContainer = document.querySelector('#main .hp-shell, #main .container, #main .ip-wrap, #main .lx-shell');
+          const header = document.querySelector('#wj-site-header .at-head');
+          const mainContainer = document.querySelector('#main .j-wrap, #main .fx-shell, #main .container, #main .ip-wrap, #main .lx-shell');
           const footerContainer = document.querySelector('.wj-footer .container');
 
           const headerLeft = header ? Math.round(header.getBoundingClientRect().left) : null;
@@ -138,7 +138,7 @@ async function runAudit() {
 
           // Card height consistency in rows
           const cardDefects = [];
-          const cardGrids = document.querySelectorAll('.price-grid, .pricing-grid, .lv-service-grid, .archive-grid, .journal-grid, .ip-service-grid, .lx-grid');
+          const cardGrids = document.querySelectorAll('.price-grid, .pricing-grid, .fx-grid, .j-foundation-grid, .j-community-grid, .archive-grid, .journal-grid, .ip-service-grid, .lx-grid');
           cardGrids.forEach(grid => {
             const cards = Array.from(grid.children).filter(c => {
               const cs = window.getComputedStyle(c);
@@ -171,7 +171,7 @@ async function runAudit() {
 
           // Check overlapping sibling elements
           const overlaps = [];
-          const containers = document.querySelectorAll('.lv-split, .lx-split, .hp-faq-grid, .lv-intro-grid, .ip-hero-grid');
+          const containers = document.querySelectorAll('.h-hero-grid, .h-intro-grid, .j-faq-grid, .fx-split, .fx-faq-grid, .lx-split, .ip-hero-grid');
           containers.forEach(container => {
             const kids = Array.from(container.children).filter(k => {
               const cs = window.getComputedStyle(k);

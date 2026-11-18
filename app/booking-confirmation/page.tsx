@@ -2,6 +2,7 @@ import {Suspense} from 'react';
 import type {Metadata} from 'next';
 import {PublicLayout} from '@/components/public-layout';
 import {BookingConfirmationClient} from '@/components/booking-status';
+import '../legacy-routes.css'; // legacy-template styles (route-scoped; not on the homepage)
 
 export const metadata: Metadata = {
   title: 'Booking confirmation',

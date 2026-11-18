@@ -17,12 +17,14 @@
  * request behaviour and never implies a payment was taken.
  */
 import {PUBLIC_API_URL} from '@/lib/public-api';
-import {findCatalogServiceHint} from '@/lib/catalog-service-hint';
+import {accountFetch, useCustomerSession} from '@/lib/account-client';
+import {findCatalogServiceHint, findPlanHint} from '@/lib/catalog-service-hint';
 import {blocksSameDayBooking} from '@/lib/booking-policy';
 import './booking-dialog.css';
 import {sendInquiry} from './forms';
 import {useCallback, useEffect, useMemo, useReducer, useState, useRef, useId} from 'react';
 import {useRouter} from 'next/navigation';
+import Link from 'next/link';
 import {
   AlertTriangle,
   Archive,
@@ -225,42 +227,19 @@ const FALLBACK_CIRCLES = [
 
 const TIME_SLOTS = ['8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM'];
 
-/* Stripe.js is loaded from Stripe's own CDN, once per page, only when the
-   checkout step is reached. The Payment Element is our own form's field: the
-   card number lives inside Stripe's iframe, so card data goes straight to
-   Stripe and never reaches this code or our servers. */
-export interface StripeElement {
+/* Stripe.js is loaded from Stripe's own CDN, once per page, only when a payment
+   actually starts. Embedded Checkout renders Stripe's hosted payment UI inside
+   this dialog; card details go straight to Stripe and never touch our code. */
+export interface EmbeddedCheckout {
   mount: (target: HTMLElement) => void;
-  unmount: () => void;
   destroy: () => void;
-  on: (event: string, handler: (payload: {complete?: boolean; error?: {message?: string}}) => void) => void;
 }
-export interface StripeElements {
-  create: (type: 'payment', options?: Record<string, unknown>) => StripeElement;
-  getElement: (type: 'payment') => StripeElement | null;
-  update: (options: Record<string, unknown>) => void;
-  submit: () => Promise<{error?: {message?: string; code?: string}}>;
-}
-export interface StripeClient {
-  elements: (options: Record<string, unknown>) => StripeElements;
-  confirmPayment: (options: Record<string, unknown>) => Promise<{error?: {message?: string; code?: string; type?: string}}>;
-  confirmSetup: (options: Record<string, unknown>) => Promise<{error?: {message?: string; code?: string; type?: string}}>;
-}
-type StripeFactory = (publishableKey: string) => StripeClient;
+type StripeFactory = (publishableKey: string) => {initEmbeddedCheckout: (options: {clientSecret: string}) => Promise<EmbeddedCheckout>};
 declare global {
   interface Window {
     Stripe?: StripeFactory;
   }
 }
-
-/** The capability for one checkout attempt, kept out of the URL. */
-function randomHex(bytes: number): string {
-  const buffer = new Uint8Array(bytes);
-  crypto.getRandomValues(buffer);
-  return Array.from(buffer, byte => byte.toString(16).padStart(2, '0')).join('');
-}
-
-export const checkoutTokenKey = (orderId: string) => 'wj.checkout.' + orderId;
 
 let stripeJs: Promise<StripeFactory | null> | null = null;
 function loadStripeJs(): Promise<StripeFactory | null> {
@@ -320,8 +299,13 @@ interface S {
   notes: string;
   circle: string;
   terms: boolean;
-  /** Never pre-selected: a recurring charge needs an explicit choice. */
-  autoRenew: boolean;
+  /** Card purchases include a customer account and a saved card; this is that consent. */
+  accountTerms: boolean;
+  /** Separate, optional, never pre-ticked. */
+  marketing: boolean;
+  /** Signed-in buyer confirmed a second subscription to a plan they already have. */
+  confirmExtra: boolean;
+  duplicate: boolean;
   submitting: boolean;
   error: string;
 }
@@ -336,15 +320,14 @@ type A =
   | {t: 'ERROR'; v: string};
 
 function init(): S {
-  return {stepIndex: 0, serviceSlug: '', planSlug: '', units: 1, addOns: {}, date: '', time: '', email: '', firstName: '', lastName: '', phone: '', coupon: '', notes: '', circle: '', terms: false, autoRenew: false, submitting: false, error: ''};
+  return {stepIndex: 0, serviceSlug: '', planSlug: '', units: 1, addOns: {}, date: '', time: '', email: '', firstName: '', lastName: '', phone: '', coupon: '', notes: '', circle: '', terms: false, accountTerms: false, marketing: false, confirmExtra: false, duplicate: false, submitting: false, error: ''};
 }
 function reducer(s: S, a: A): S {
   switch (a.t) {
     case 'SET_SERVICE':
-      /* A new service is a new purchase: the renewal choice starts off again. */
-      return {...s, serviceSlug: a.v, planSlug: '', addOns: {}, units: 1, date: '', time: '', autoRenew: false};
+      return {...s, serviceSlug: a.v, planSlug: '', addOns: {}, units: 1, date: '', time: ''};
     case 'SET_PLAN':
-      return {...s, planSlug: a.v, units: a.units, addOns: a.addOns, date: '', time: '', autoRenew: false};
+      return {...s, planSlug: a.v, units: a.units, addOns: a.addOns, date: '', time: ''};
     case 'SET_ADDON': {
       const next = {...s.addOns};
       if (a.quantity <= 0) delete next[a.slug];
@@ -448,19 +431,33 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
   const [quote, setQuote] = useState<Quote | null>(null);
   const [quoting, setQuoting] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
-  /* Payment form state. The card field is Stripe's; everything around it is
-     ours, so there is no hosted page and no redirect away from this dialog. */
-  const [cardReady, setCardReady] = useState(false);
-  const [cardError, setCardError] = useState('');
+  const [pay, setPay] = useState<{clientSecret: string; publishableKey: string} | null>(null);
+  const [payReady, setPayReady] = useState(false);
   const [closing, setClosing] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const payMountRef = useRef<HTMLDivElement>(null);
-  const stripeRef = useRef<StripeClient | null>(null);
-  const elementsRef = useRef<StripeElements | null>(null);
-  const paymentElementRef = useRef<StripeElement | null>(null);
-  const attemptRef = useRef<{signature: string; idempotencyKey: string; checkoutToken: string} | null>(null);
+  const embeddedRef = useRef<EmbeddedCheckout | null>(null);
   const [s, dispatch] = useReducer(reducer, undefined, init);
   const router = useRouter();
+  const session = useCustomerSession();
+  const signedIn = session.status === 'authenticated';
+
+  /* A signed-in buyer starts from their own saved details. They stay editable as order contact
+     details, but the server attaches the purchase to the signed-in account regardless. */
+  const prefilled = useRef(false);
+  useEffect(() => {
+    if (!signedIn || prefilled.current) return;
+    prefilled.current = true;
+    accountFetch<{name?: string; email?: string; phone?: string | null}>('/account/profile')
+      .then(profile => {
+        const [first, ...rest] = String(profile.name ?? '').trim().split(/\s+/);
+        if (profile.email) dispatch({t: 'SET_FIELD', k: 'email', v: profile.email});
+        if (first) dispatch({t: 'SET_FIELD', k: 'firstName', v: first});
+        if (rest.length) dispatch({t: 'SET_FIELD', k: 'lastName', v: rest.join(' ')});
+        if (profile.phone) dispatch({t: 'SET_FIELD', k: 'phone', v: profile.phone});
+      })
+      .catch(() => undefined);
+  }, [signedIn]);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -522,14 +519,17 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
         if (!response.ok) throw new Error('service');
         const body = (await response.json()) as ServiceDetail;
         setLoadedDetail({slug, data: body});
-        const target = preselectedPlan ? body.plans.find(entry => entry.slug === preselectedPlan) : undefined;
+        // An explicit package slug wins; otherwise a CTA labelled "Service - Package" may select
+        // its package when that name is unique within the live service.
+        const target = (preselectedPlan ? body.plans.find(entry => entry.slug === preselectedPlan) : undefined)
+          ?? (!preselectedPlan && service ? findPlanHint(body.plans, service) : undefined);
         if (target) dispatch({t: 'SET_PLAN', v: target.slug, units: Math.max(1, target.minQuantity), addOns: requiredAddOns(target)});
       } catch (error) {
         if ((error as {name?: string})?.name !== 'AbortError') setCatalogError(true);
       }
     })();
     return () => controller.abort();
-  }, [s.serviceSlug, preselectedPlan]);
+  }, [s.serviceSlug, preselectedPlan, service]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -597,7 +597,7 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
   const serviceRules = useMemo(() => [...new Set((detail?.plans ?? []).map(entry => entry.rulesNotice).filter((value): value is string => Boolean(value)))], [detail]);
 
   /* The steps a service declares, minus the ones that have nothing to show. */
-  const steps = useMemo<FlowStep[]>(() => {
+  const steps = useMemo<Array<FlowStep | 'pay'>>(() => {
     const declared = detail?.steps?.length ? detail.steps : (['service', 'plan', 'checkout'] as FlowStep[]);
     const list = declared.filter(entry => {
       if (entry === 'amenities') return amenities.length > 0;
@@ -607,12 +607,13 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
     });
     if (!list.includes('service')) list.unshift('service');
     if (!list.includes('checkout')) list.push('checkout');
-    return list;
-  }, [detail, amenities.length, availableAddOns.length, plan]);
+    return pay ? [...list, 'pay'] : list;
+  }, [detail, amenities.length, availableAddOns.length, plan, pay]);
 
-  const stepIndex = Math.min(s.stepIndex, steps.length - 1);
+  /* While a payment session is open the dialog stays on the payment step. */
+  const stepIndex = pay ? steps.length - 1 : Math.min(s.stepIndex, steps.length - 1);
   const step = steps[stepIndex];
-  const STEP_TITLES: Record<string, string> = {service: 'Choose a service', plan: 'Select your package', amenities: "What's included", extras: 'Optional extras', schedule: 'Pick a date & time', circle: 'Choose your Circle', checkout: 'Almost there \u2014 share your details'};
+  const STEP_TITLES: Record<string, string> = {service: 'Choose a service', plan: 'Select your package', amenities: "What's included", extras: 'Optional extras', schedule: 'Pick a date & time', circle: 'Choose your Circle', checkout: 'Review & pay', pay: 'Secure payment'};
   const STEP_HINTS: Record<string, string> = {
     service: 'Pick what you need. Every service below is live from our catalogue.',
     plan: 'Prices are set by us, confirmed by our server, and never change in your browser.',
@@ -620,14 +621,59 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
     extras: 'Optional extras you can add to this purchase.',
     schedule: 'Choose when you would like the space. Times are Central.',
     circle: 'Your membership includes one professional Circle.',
-    checkout: 'Enter your details and pay securely. Card details go straight to Stripe and never reach our servers.',
+    checkout: 'Check the details, then pay securely with Stripe.',
+    pay: 'Card details go straight to Stripe. We never see or store them.',
   };
-  const STEP_LABELS: Record<string, string> = {service: 'Service', plan: 'Package', amenities: 'Included', extras: 'Extras', schedule: 'Date & Time', circle: 'Circle', checkout: 'Enter Details'};
+  const STEP_LABELS: Record<string, string> = {service: 'Service', plan: 'Package', amenities: 'Included', extras: 'Extras', schedule: 'Date & Time', circle: 'Circle', checkout: 'Review', pay: 'Payment'};
 
   useEffect(() => {
     titleRef.current?.focus({preventScroll: true});
     formRef.current?.scrollTo({top: 0, behavior: 'instant'});
   }, [stepIndex]);
+
+  /* Mount Stripe's embedded payment form once a checkout session exists. */
+  useEffect(() => {
+    if (step !== 'pay' || !pay) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const target = payMountRef.current;
+        if (!target) return;
+        const Stripe = await loadStripeJs();
+        if (!Stripe) throw new Error('Stripe could not be loaded');
+        if (!pay.publishableKey) throw new Error('Payments are not configured. Please contact our team.');
+        const instance = await Stripe(pay.publishableKey).initEmbeddedCheckout({clientSecret: pay.clientSecret});
+        if (cancelled) {
+          instance.destroy();
+          return;
+        }
+        instance.mount(target);
+        embeddedRef.current = instance;
+        setPayReady(true);
+      } catch (error) {
+        if (!cancelled) dispatch({t: 'ERROR', v: error instanceof Error ? error.message : 'We could not open the secure payment form.'});
+      }
+    })();
+    return () => {
+      cancelled = true;
+      try {
+        embeddedRef.current?.destroy();
+      } catch {}
+      embeddedRef.current = null;
+    };
+  }, [step, pay]);
+
+  /** Abandon the open payment session and return to the review step. */
+  function cancelPayment() {
+    try {
+      embeddedRef.current?.destroy();
+    } catch {}
+    embeddedRef.current = null;
+    setPayReady(false);
+    setPay(null);
+    submittingRef.current = false;
+    dispatch({t: 'ERROR', v: ''});
+  }
 
   const selectedAddOns = useMemo(() => availableAddOns.filter(addOn => (s.addOns[addOn.slug] ?? 0) > 0), [availableAddOns, s.addOns]);
   /* Each add-on uses its own selected units. Package hours/days must not
@@ -700,6 +746,10 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
       dispatch({t: 'ERROR', v: recurringPlan ? 'Please accept the terms and the recurring billing notice to continue.' : 'Please accept the Terms of Use to continue.'});
       return;
     }
+    if (plan && !signedIn && !s.accountTerms) {
+      dispatch({t: 'ERROR', v: 'Please confirm the customer account and saved card to continue.'});
+      return;
+    }
     if (plan?.requiresSchedule) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -730,25 +780,13 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
       return;
     }
 
-    /* 1. Validate the card field before anything is created server-side, so a
-       mistyped number never leaves a half-finished order behind. */
-    const elements = elementsRef.current;
-    if (payable && elements) {
-      const submitted = await elements.submit();
-      if (submitted.error) {
-        setCardError(submitted.error.message || 'Please check your card details.');
-        dispatch({t: 'ERROR', v: submitted.error.message || 'Please check your card details.'});
-        submittingRef.current = false;
-        return;
-      }
-    }
-
-    const attempt = currentAttempt();
     try {
       const startAt = plan?.requiresSchedule && s.date && s.time ? new Date(s.date + 'T' + to24(s.time) + ':00').toISOString() : undefined;
-      const response = await fetch(PUBLIC_API_URL + '/public/payments/intents', {
+      const response = await fetch(PUBLIC_API_URL + '/public/catalog/checkout', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Idempotency-Key': attempt.idempotencyKey, 'X-Checkout-Token': attempt.checkoutToken},
+        credentials: 'same-origin',
+        /* The header lets a signed-in checkout pass the API's cross-site request check. */
+        headers: {'Content-Type': 'application/json', 'X-WSJ-CSRF': '1'},
         body: JSON.stringify({
           ...selectionBody(),
           customerName,
@@ -757,40 +795,41 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
           ...(startAt ? {startAt} : {}),
           ...(s.circle.trim() ? {membershipCircle: s.circle.trim()} : {}),
           ...(s.notes.trim() ? {notes: s.notes.trim()} : {}),
-          acceptTerms: true,
-          /* The only thing that can enrol a recurring charge. */
-          autoRenew: wantsRenewal,
-          ...(wantsRenewal ? {acceptRecurringTerms: true} : {}),
+          ...(recurringPlan ? {acceptRecurringTerms: true} : {}),
+          /* A signed-in account already agreed to the account terms when it was created. */
+          acceptAccountTerms: signedIn || s.accountTerms,
+          marketingOptIn: s.marketing,
+          ...(s.confirmExtra ? {confirmAdditionalSubscription: true} : {}),
+          embedded: true,
         }),
       });
       const body = await response.json();
-      if (!response.ok || body?.success === false) throw new Error(typeof body?.message === 'string' ? body.message : Array.isArray(body?.message) ? body.message.join(' ') : 'We could not start this payment. Please try again.');
-      const result = body.data as {orderId: string; clientSecret: string | null; intentType: 'payment' | 'setup' | 'none'};
-
-      /* Keep the capability out of the URL: the confirmation page reads it
-         from this tab's own storage to poll the order it just paid for. */
-      try {
-        sessionStorage.setItem(checkoutTokenKey(result.orderId), attempt.checkoutToken);
-      } catch {}
-      const returnUrl = window.location.origin + '/booking-confirmation/?order=' + encodeURIComponent(result.orderId);
-
-      if (result.intentType !== 'none' && result.clientSecret) {
-        const stripe = stripeRef.current;
-        if (!stripe || !elements) throw new Error('The payment form is still loading. Please try again in a moment.');
-        const confirmOptions = {elements, clientSecret: result.clientSecret, confirmParams: {return_url: returnUrl, receipt_email: s.email.trim()}, redirect: 'if_required' as const};
-        const confirmed = result.intentType === 'setup' ? await stripe.confirmSetup(confirmOptions) : await stripe.confirmPayment(confirmOptions);
-        if (confirmed.error) {
-          /* A decline leaves the same order payable, so the customer can try
-             another card without starting the whole booking again. */
-          setCardError(confirmed.error.message || 'Your payment could not be completed.');
-          dispatch({t: 'ERROR', v: confirmed.error.message || 'Your payment could not be completed. Please try another card.'});
-          submittingRef.current = false;
-          return;
-        }
+      if (response.status === 409 && body?.code === 'DUPLICATE_SUBSCRIPTION') {
+        dispatch({t: 'SET_FIELD', k: 'duplicate', v: true});
+        dispatch({t: 'ERROR', v: body.message});
+        submittingRef.current = false;
+        return;
       }
-      /* Paid or authorised. Whether access is granted is decided by the
-         verified webhook, which the confirmation page waits for. */
-      router.push('/booking-confirmation/?order=' + encodeURIComponent(result.orderId));
+      if (!response.ok) throw new Error(Array.isArray(body?.message) ? body.message.join(' ') : body?.message || 'Checkout could not be started. Please try again.');
+      /* Lets this browser, and only this one, see the itemised receipt for this one order. */
+      try {
+        if (body.receiptProof && body.orderId) sessionStorage.setItem('wsj-receipt:' + body.orderId, body.receiptProof);
+      } catch {
+        /* Storage blocked: the confirmation page still shows the payment state. */
+      }
+      /* Preferred path: Stripe's payment form opens inside this dialog. */
+      if (body.clientSecret) {
+        setPay({clientSecret: body.clientSecret, publishableKey: body.publishableKey || ''});
+        dispatch({t: 'ERROR', v: ''});
+        submittingRef.current = false;
+        return;
+      }
+      /* Fallback: Stripe's hosted page is an external destination. */
+      if (body.checkoutUrl) {
+        window.location.href = body.checkoutUrl;
+        return;
+      }
+      router.push('/booking-confirmation/?order=' + encodeURIComponent(body.orderId));
     } catch (error) {
       dispatch({t: 'ERROR', v: error instanceof Error ? error.message : 'Something went wrong. Please try again.'});
       submittingRef.current = false;
@@ -800,81 +839,6 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
   const progress = ((stepIndex + 1) / steps.length) * 100;
   const dueNow = quote ? quote.dueNowAmount : localDueNow;
   const recurring = quote ? quote.recurringAmount : localRecurring;
-  /* Only a recurring package can be renewed, and only if the buyer ticks the
-     box. Both conditions are checked again on the server. */
-  const canRenew = recurringPlan;
-  const wantsRenewal = canRenew && s.autoRenew;
-  const payable = Boolean(plan) && dueNow > 0;
-  const paymentMode = wantsRenewal ? 'subscription' : 'payment';
-
-  /**
-   * One idempotency key and one capability per distinct selection. Pressing
-   * Pay Now twice, or retrying after a network error, reuses the same key, so
-   * the server returns the same order instead of charging again. Changing what
-   * is being bought starts a genuinely new attempt.
-   */
-  function currentAttempt() {
-    const signature = JSON.stringify([s.planSlug, s.units, s.addOns, s.coupon.trim(), s.email.trim().toLowerCase(), wantsRenewal, s.date, s.time]);
-    if (attemptRef.current?.signature !== signature) {
-      attemptRef.current = {signature, idempotencyKey: randomHex(16), checkoutToken: randomHex(32)};
-    }
-    return attemptRef.current;
-  }
-
-  /* Mount our own payment field. Stripe's deferred mode lets the card input
-     appear beside the name and email, with no intent created until Pay Now. */
-  useEffect(() => {
-    if (step !== 'checkout' || !payable) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const target = payMountRef.current;
-        if (!target) return;
-        const [factory, configResponse] = await Promise.all([loadStripeJs(), fetch(PUBLIC_API_URL + '/public/payments/config', {cache: 'no-store'})]);
-        if (!factory) throw new Error('The secure payment form could not be loaded.');
-        const config = await configResponse.json();
-        const publishableKey = config?.data?.publishableKey;
-        if (!publishableKey) throw new Error('Online payment is unavailable right now. Please contact our team.');
-        if (cancelled) return;
-        const stripe = stripeRef.current ?? factory(publishableKey);
-        stripeRef.current = stripe;
-        const elements = stripe.elements({mode: paymentMode, amount: dueNow, currency: currency.toLowerCase(), appearance: {theme: 'stripe', variables: {colorPrimary: '#193c32', colorText: '#193c32', fontFamily: 'Inter, system-ui, sans-serif', borderRadius: '5px', spacingUnit: '4px'}}});
-        const element = elements.create('payment', {layout: 'tabs'});
-        element.on('change', event => {
-          setCardError(event.error?.message ?? '');
-        });
-        element.on('ready', () => setCardReady(true));
-        element.mount(target);
-        elementsRef.current = elements;
-        paymentElementRef.current = element;
-      } catch (error) {
-        if (!cancelled) dispatch({t: 'ERROR', v: error instanceof Error ? error.message : 'We could not open the secure payment form.'});
-      }
-    })();
-    return () => {
-      cancelled = true;
-      try {
-        paymentElementRef.current?.destroy();
-      } catch {}
-      paymentElementRef.current = null;
-      elementsRef.current = null;
-      setCardReady(false);
-    };
-    /* Deliberately not keyed on the amount or currency: rebuilding the field
-       on every price change would discard what the customer has typed. The
-       effect below updates the live element instead. The element is rebuilt
-       only when the purchase changes shape, because a single charge and a
-       subscription offer different payment methods. */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, payable, paymentMode]);
-
-  /* A changed price or currency updates the live element in place. */
-  useEffect(() => {
-    if (!elementsRef.current || !payable) return;
-    try {
-      elementsRef.current.update({amount: dueNow, currency: currency.toLowerCase()});
-    } catch {}
-  }, [dueNow, currency, payable]);
 
   return (
     <dialog
@@ -913,7 +877,7 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
           </ol>
           <div className="bk-headline">
             {stepIndex > 0 && (
-              <button type="button" className="bk-back" disabled={s.submitting} onClick={() => dispatch({t: 'BACK'})} aria-label="Go back">
+              <button type="button" className="bk-back" disabled={s.submitting && step !== 'pay'} onClick={() => (step === 'pay' ? cancelPayment() : dispatch({t: 'BACK'}))} aria-label={step === 'pay' ? 'Cancel payment and go back' : 'Go back'}>
                 <ArrowLeft size={17} aria-hidden="true" />
               </button>
             )}
@@ -930,6 +894,7 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
         </div>
         <div className="bk-layout">
           <form
+            method="post"
             ref={formRef}
             className="bk-body"
             data-lenis-prevent
@@ -1254,10 +1219,6 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
 
               {step === 'checkout' && (
                 <>
-                  <div className="bk-checkout-hero" aria-hidden="true">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/media/00fb7cff28-Meeting-Rooms-1024x683.jpg" alt="" loading="lazy" decoding="async" width={1024} height={683} />
-                  </div>
                   <div className="bk-field">
                     <label className="bk-label" htmlFor="bk-email">
                       Email Address
@@ -1308,33 +1269,18 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
                       </div>
                     )}
                   </div>
-                  {payable && (
-                    <div className="bk-field">
-                      <span className="bk-label" id="bk-card-label">
-                        Card details
-                      </span>
-                      {!cardReady && (
-                        <p className="bk-status" role="status">
-                          Loading the secure card field&hellip;
-                        </p>
-                      )}
-                      <div ref={payMountRef} className={'bk-pay-mount' + (cardReady ? ' is-ready' : '')} aria-busy={!cardReady} aria-labelledby="bk-card-label" />
-                      {cardError && (
-                        <p className="bk-field-error" role="alert">
-                          {cardError}
-                        </p>
-                      )}
-                    </div>
-                  )}
                   {plan && (
-                    <div className="bk-field">
-                      <label className="bk-label" htmlFor="bk-coupon">
-                        Coupon code (optional)
-                      </label>
-                      <div className="bk-coupon-row">
-                        <input id="bk-coupon" className="bk-input" type="text" placeholder="Enter coupon code" autoComplete="off" maxLength={100} readOnly={s.submitting} value={s.coupon} onChange={e => dispatch({t: 'SET_FIELD', k: 'coupon', v: e.target.value})} />
-                        <button type="button" className="bk-btn bk-btn-primary bk-coupon-apply" disabled={quoting || s.submitting} onClick={() => void refreshQuote()}>
-                          {quoting ? 'Checking\u2026' : 'Apply'}
+                    <div className="bk-row-2">
+                      <div className="bk-field">
+                        <label className="bk-label" htmlFor="bk-coupon">
+                          Coupon code (optional)
+                        </label>
+                        <input id="bk-coupon" className="bk-input" type="text" placeholder="SAVE10" autoComplete="off" maxLength={100} readOnly={s.submitting} value={s.coupon} onChange={e => dispatch({t: 'SET_FIELD', k: 'coupon', v: e.target.value})} onBlur={() => void refreshQuote()} />
+                      </div>
+                      <div className="bk-field bk-quote-action">
+                        <span className="bk-label">Confirm your price</span>
+                        <button type="button" className="bk-btn bk-btn-ghost" disabled={quoting} onClick={() => void refreshQuote()}>
+                          {quoting ? 'Checking…' : 'Review price'}
                         </button>
                       </div>
                     </div>
@@ -1390,22 +1336,16 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
                     )}
                     {plan && (
                       <div className="bk-summary-row total">
-                        <span>Total due today</span>
+                        <span>Due today</span>
                         <span>{money(dueNow, currency)}</span>
                       </div>
                     )}
-                    {wantsRenewal && recurring > 0 && (
+                    {recurring > 0 && (
                       <div className="bk-summary-row">
-                        <span>Then, until you cancel</span>
+                        <span>Then</span>
                         <span>
                           {money(recurring, currency)} {quote?.recurringDescription || plan?.intervalDescription}
                         </span>
-                      </div>
-                    )}
-                    {canRenew && !s.autoRenew && (
-                      <div className="bk-summary-row">
-                        <span className="bk-plan-fallback-note">One payment for this period only. Nothing will be charged again unless you choose to renew.</span>
-                        <span />
                       </div>
                     )}
                     {plan && !quote && (
@@ -1439,28 +1379,76 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
                         Privacy Notice
                       </a>
                       {plan ? (
-                        wantsRenewal ? (
+                        recurringPlan ? (
                           <>
                             , and I understand this is a subscription of {money(recurring, currency)} {quote?.recurringDescription || plan.intervalDescription}, charged automatically until I cancel. I can stop renewal any time from my account; access continues to the end of the paid period and the current period is not refunded.
                           </>
                         ) : (
-                          <>, and authorize the single payment of {money(dueNow, currency)} shown above</>
+                          <>, and authorize the one-time payment of {money(dueNow, currency)} shown above</>
                         )
                       ) : (
                         <>, and understand this is a reservation request, not a confirmed booking</>
                       )}
                     </span>
                   </label>
+                  {plan && (signedIn ? (
+                    <p className="bk-account-note">
+                      Purchasing as <strong>{session.status === 'authenticated' ? session.customer.displayName : ''}</strong>. This purchase is added to your account, and you can pay with a saved card or a new one.
+                    </p>
+                  ) : (
+                    <label className="bk-terms">
+                      <input type="checkbox" required disabled={s.submitting} checked={s.accountTerms} onChange={e => dispatch({t: 'SET_FIELD', k: 'accountTerms', v: e.target.checked})} />
+                      <span className="bk-terms-copy">
+                        I understand a Workspace Junction customer account is created with this purchase, and my card is saved securely with Stripe for renewals and future purchases. I can manage or replace it from my account. We email you a link to set your password.
+                      </span>
+                    </label>
+                  ))}
+                  {plan && (
+                    <label className="bk-terms">
+                      <input type="checkbox" disabled={s.submitting} checked={s.marketing} onChange={e => dispatch({t: 'SET_FIELD', k: 'marketing', v: e.target.checked})} />
+                      <span className="bk-terms-copy">Send me occasional news and offers (optional).</span>
+                    </label>
+                  )}
+                  {s.duplicate && (
+                    <label className="bk-terms">
+                      <input type="checkbox" disabled={s.submitting} checked={s.confirmExtra} onChange={e => dispatch({t: 'SET_FIELD', k: 'confirmExtra', v: e.target.checked})} />
+                      <span className="bk-terms-copy">Yes, buy an additional, separately billed subscription. To change my existing plan instead I will use <Link href="/account/subscriptions/" onClick={() => closeRef.current()}>My subscriptions</Link>.</span>
+                    </label>
+                  )}
                   {s.error && (
                     <p className="bk-error-msg" role="alert">
                       {s.error}
                     </p>
                   )}
-                  <button type="submit" className="bk-submit-btn" disabled={s.submitting || requestSent || (!services && !catalogError) || (payable && !cardReady)}>
-                    {plan ? (s.submitting ? 'Processing payment\u2026' : 'Pay Now ' + money(dueNow, currency)) : requestSent ? 'Request sent' : s.submitting ? 'Sending request\u2026' : 'Send booking request'}
+                  <button type="submit" className="bk-submit-btn" disabled={s.submitting || requestSent || (!services && !catalogError)}>
+                    {plan ? (s.submitting ? 'Opening secure payment…' : 'Continue to payment') : requestSent ? 'Request sent' : s.submitting ? 'Sending request…' : 'Send booking request'}
                   </button>
-                  <p className="bk-plan-fallback-note">Payments are processed by Stripe. Card details are entered directly into Stripe&rsquo;s own field and never reach our servers.</p>
+                  <p className="bk-plan-fallback-note">Payments are processed by Stripe. Card details never reach our servers.</p>
                 </>
+              )}
+
+              {step === 'pay' && (
+                <div className="bk-pay">
+                  <div className="bk-pay-head">
+                    <span>Paying now</span>
+                    <strong>{money(dueNow, currency)}</strong>
+                  </div>
+                  {!payReady && (
+                    <p className="bk-status" role="status">
+                      Opening Stripe&rsquo;s secure payment form&hellip;
+                    </p>
+                  )}
+                  <div ref={payMountRef} className={'bk-pay-mount' + (payReady ? ' is-ready' : '')} aria-busy={!payReady} />
+                  {s.error && (
+                    <p className="bk-error-msg" role="alert">
+                      {s.error}
+                    </p>
+                  )}
+                  <button type="button" className="bk-btn bk-btn-ghost bk-pay-cancel" onClick={cancelPayment}>
+                    Back to review
+                  </button>
+                  <p className="bk-plan-fallback-note">Payment is processed by Stripe. Your card details are entered directly into Stripe&rsquo;s own form and never reach our servers.</p>
+                </div>
               )}
             </div>
           </form>
@@ -1504,31 +1492,7 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
               <span>Due today</span>
               <strong>{plan ? money(dueNow, currency) : '—'}</strong>
             </div>
-            {/*
-             * The renewal choice. It is never pre-selected, the price and the
-             * cancellation terms are stated before it is made, and the server
-             * refuses to create a subscription without it.
-             */}
-            {canRenew && (
-              <div className={'bk-renew' + (s.autoRenew ? ' is-on' : '')}>
-                <label className="bk-renew-choice">
-                  <input type="checkbox" checked={s.autoRenew} disabled={s.submitting} onChange={e => dispatch({t: 'SET_FIELD', k: 'autoRenew', v: e.target.checked})} />
-                  <span>Continue my subscription and automatically renew next month.</span>
-                </label>
-                <p className="bk-renew-note">
-                  {s.autoRenew ? (
-                    <>
-                      You will be charged {money(recurring || dueNow, currency)} {quote?.recurringDescription || plan?.intervalDescription} after today, automatically, until you cancel. Cancel any time from your account: access runs to the end of the period you already paid for.
-                    </>
-                  ) : (
-                    <>
-                      Leave this unticked to pay for this period only. We will not store your card for future payments and nothing will be charged next month. Renewal would be {money(recurring || dueNow, currency)} {quote?.recurringDescription || plan?.intervalDescription}.
-                    </>
-                  )}
-                </p>
-              </div>
-            )}
-            {wantsRenewal && recurring > 0 && (
+            {recurring > 0 && (
               <p className="bk-rail-recurring">
                 then {money(recurring, currency)} {quote?.recurringDescription || plan?.intervalDescription}, until you cancel
               </p>
@@ -1548,21 +1512,18 @@ export function BookingDialog({service, plan: preselectedPlan, onClose}: {servic
             </p>
           </aside>
         </div>
-        {step !== 'checkout' && (
+        {step !== 'checkout' && step !== 'pay' && (
           <footer className="bk-footer">
             <div className="bk-footer-price">
               {plan ? (
                 <>
                   <span>Due today</span>
                   <strong>{money(localDueNow, currency)}</strong>
-                  {/* A future charge is only promised once renewal is chosen. */}
-                  {wantsRenewal && localRecurring > 0 ? (
+                  {localRecurring > 0 && (
                     <small>
                       then {money(localRecurring, currency)} {plan.intervalDescription}
                     </small>
-                  ) : canRenew ? (
-                    <small>this period only unless you choose to renew</small>
-                  ) : null}
+                  )}
                 </>
               ) : (
                 <span>Choose a package to see pricing</span>

@@ -40,3 +40,41 @@ export function configurationErrors(resource:string,metadata:any):string[]{
  }
  return errors;
 }
+
+/* ---------------------------------------------------------------------------------------------
+ * F-003: SQL-level eligibility. Content.publishAt/startsAt/endsAt/enabled/requiresReview are
+ * derived from metadata on every write (content_schedule_sync trigger, migration 20261109000000,
+ * and scheduleColumns() below on the admin path). These builders express exactly the rules of
+ * contentEligible() above as Prisma filters, so filtering, totals and pagination run in SQL.
+ * Present-but-unparseable values (JS-truthy, not a parseable ISO date) are stored as sentinels that
+ * keep them hidden exactly like contentEligible(): publishAt/startsAt far future, endsAt in the past.
+ * configurationErrors() already rejects such values on admin writes.
+ * ------------------------------------------------------------------------------------------- */
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}/;
+export const SCHEDULE_NEVER = new Date('9999-12-31T23:59:59.999Z');
+export const SCHEDULE_ALREADY_OVER = new Date('1970-01-01T00:00:00.000Z');
+function scheduleInstant(value: unknown, unparseable: Date): Date | null {
+ if (!value) return null;
+ if (typeof value === 'string' && ISO_DAY.test(value)) { const ms = Date.parse(value); if (Number.isFinite(ms)) return new Date(ms); }
+ return unparseable;
+}
+/** Column values for a metadata object (same rules as the database trigger). */
+export function scheduleColumns(metadata: unknown) {
+ const m: any = metadata && typeof metadata === 'object' && !Array.isArray(metadata) ? metadata : {};
+ return {
+  publishAt: scheduleInstant(m.publishAt, SCHEDULE_NEVER),
+  startsAt: scheduleInstant(m.startsAt, SCHEDULE_NEVER),
+  endsAt: scheduleInstant(m.endsAt, SCHEDULE_ALREADY_OVER),
+  enabled: m.enabled !== false,
+  requiresReview: m.requiresReview === true,
+ };
+}
+/** Prisma where-clause equivalent of contentEligible(resource,row) at instant `now`. */
+export function eligibilityWhere(resource: string, now: Date) {
+ const and: any[] = [{enabled: true}, {OR: [{publishAt: null}, {publishAt: {lte: now}}]}];
+ if (resource === 'pricing') and.push({requiresReview: false});
+ if (resource === 'popups') and.push({OR: [{startsAt: null}, {startsAt: {lte: now}}]}, {OR: [{endsAt: null}, {endsAt: {gt: now}}]});
+ return {AND: and};
+}
+/** Scheduling columns are internal: public responses keep the pre-existing contract. */
+export const SCHEDULE_COLUMNS_OMIT = {publishAt: true, startsAt: true, endsAt: true, enabled: true, requiresReview: true} as const;

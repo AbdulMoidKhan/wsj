@@ -81,14 +81,12 @@ export function BookingStatus({id}:{id:string}) {
 }
 
 
-type OrderStatusBody = {id:string;status:string;mode?:string;processing:boolean;paymentMethod?:string;currency:string;dueNowAmount:number;autoRenew?:boolean;recurringAmount:number;recurringDescription:string|null;currentPeriodEnd?:string|null;items:Array<{description:string;quantity:number;amount:number;billingType:string}>;subscriptions:Array<{id:string;accessStatus:string;autoRenew?:boolean;renews?:boolean;activeUntil?:string|null;currentPeriodEnd?:string|null}>};
+/* Without the buyer's own receipt proof the API returns payment state only (detail:false). */
+type OrderStatusBody = {id:string;status:string;processing:boolean;paymentMethod:string;account:'ready'|'check_email'|null;detail:boolean;mode?:string;currency?:string;dueNowAmount?:number;recurringAmount?:number;recurringDescription?:string|null;items?:Array<{description:string;quantity:number;amount:number;billingType:string}>;subscriptions?:Array<{accessStatus:string;currentPeriodEnd:string|null}>};
 
-/**
- * The capability minted for this checkout attempt, kept in this tab only.
- * It is never put in the URL, so a shared or logged link reveals nothing.
- */
-function checkoutToken(orderId:string):string|null {
- try { return sessionStorage.getItem('wj.checkout.' + orderId); } catch { return null; }
+/** The order-scoped proof checkout returned to this browser. It opens this one receipt and nothing else. */
+function receiptProof(orderId:string):string {
+ try { return sessionStorage.getItem('wsj-receipt:' + orderId) || ''; } catch { return ''; }
 }
 
 /**
@@ -107,17 +105,12 @@ export function OrderStatus({id}:{id:string}) {
   let timer: ReturnType<typeof setTimeout>;
   async function poll() {
    try {
-    const token = checkoutToken(id);
-    /* Purchases made in our own payment form are read back with their own
-       capability; older orders keep using the public status route. */
-    const res = token
-     ? await fetch(PUBLIC_API_URL + '/public/payments/orders/' + encodeURIComponent(id), {cache:'no-store', headers:{'X-Checkout-Token': token}})
-     : await fetch(PUBLIC_API_URL + '/billing/orders/' + encodeURIComponent(id) + '/status', {cache:'no-store'});
+    const proof = receiptProof(id);
+    const res = await fetch(PUBLIC_API_URL + '/billing/orders/' + encodeURIComponent(id) + '/status', {cache:'no-store', credentials:'same-origin', headers: proof ? {'X-Order-Proof': proof} : undefined});
     if (cancelled) return;
     if (res.status === 404) { setNotFound(true); return; }
     if (!res.ok) throw new Error('request failed');
-    const payload = await res.json();
-    const body: OrderStatusBody = payload && typeof payload === 'object' && 'data' in payload && payload.data ? payload.data : payload;
+    const body: OrderStatusBody = await res.json();
     setData(body);
     attempts.current += 1;
     if (body.processing && attempts.current < MAX_ATTEMPTS) timer = setTimeout(poll, POLL_MS);
@@ -139,21 +132,20 @@ export function OrderStatus({id}:{id:string}) {
 
  if (!data) return <p role="status">Checking your payment status&hellip;</p>;
 
- const amount = (minor:number) => money(minor/100, data.currency);
+ const amount = (minor:number) => money(minor/100, data.currency || 'usd');
 
- if (data.status === 'PAID') {
-  const renews = data.subscriptions[0]?.renews ?? (data.autoRenew !== false && data.recurringAmount > 0);
-  const activeUntil = data.subscriptions[0]?.activeUntil ?? data.subscriptions[0]?.currentPeriodEnd ?? data.currentPeriodEnd ?? null;
-  return <>
-   <p role="status"><strong>Payment confirmed.</strong> We received {amount(data.dueNowAmount)} for {data.items.map(item=>item.description).join(', ')}.</p>
-   {renews
-    ? <p>You chose automatic renewal, so this continues at {amount(data.recurringAmount)} {data.recurringDescription} until you cancel. You can stop renewal at any time from your account.</p>
-    : <p>This was a single payment for the current period. <strong>Nothing further will be charged</strong> and no card was stored for future payments.</p>}
-   {activeUntil && <p>Your paid period runs until {new Date(activeUntil).toLocaleDateString(undefined,{dateStyle:'medium'})}.</p>}
-   <p>Reference: <code>{data.id}</code></p>
-   <p><Link href="/account/">Manage your purchase</Link></p>
-  </>;
- }
+ if (data.status === 'PAID') return <>
+  <p role="status"><strong>Payment confirmed.</strong>{data.detail && data.items ? <> We received {amount(data.dueNowAmount ?? 0)} for {data.items.map(item=>item.description).join(', ')}.</> : <> Your purchase is complete.</>}</p>
+  {data.detail && (data.recurringAmount ?? 0) > 0 && <p>Your subscription renews automatically at {amount(data.recurringAmount ?? 0)} {data.recurringDescription}. You can stop automatic renewal at any time from your account.</p>}
+  {data.detail && data.subscriptions?.[0]?.currentPeriodEnd && <p>Your current paid period runs until {new Date(data.subscriptions[0].currentPeriodEnd).toLocaleDateString(undefined,{dateStyle:'medium'})}.</p>}
+  <p>Reference: <code>{data.id}</code></p>
+  {data.account === 'ready'
+   ? <p><strong>Your account is ready.</strong> <Link href="/account/">Go to your dashboard</Link> to manage this purchase.</p>
+   : <>
+      <p><strong>Next: set up your account.</strong> We are emailing you a receipt and a secure link to set your password, if you have not set one already. The link works once and expires in 24 hours.</p>
+      <p>Already have an account? <Link href="/login/">Sign in</Link> to see this purchase. Didn&apos;t get the email? <Link href="/login/">Request a new link</Link>.</p>
+     </>}
+ </>;
 
  if (data.paymentMethod === 'MANUAL') return <>
   <p>Your request is recorded and is <strong>awaiting payment</strong>. Our team will contact you to arrange it.</p>

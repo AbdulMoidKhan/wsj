@@ -1,0 +1,2 @@
+*.sh text eol=lf
+scripts/devops/sql/*.sql text eol=lf

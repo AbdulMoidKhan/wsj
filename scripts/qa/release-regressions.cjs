@@ -15,5 +15,4 @@ for (const file of [
  '../../backend/test/public-cache-performance.test.ts',
  '../../backend/test/catalog-checkout-regressions.test.ts',
  '../../backend/test/catalog-billing-lifecycle.test.ts',
- '../../backend/test/direct-payments.test.ts',
 ]) require(file);

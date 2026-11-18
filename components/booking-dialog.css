@@ -186,31 +186,13 @@
 .bk-submit-btn:disabled{opacity:.45;cursor:not-allowed}
 .bk-error-msg{margin:0 0 14px;padding:12px 14px;border-radius:5px;background:#fdecec;border:1px solid #e3b7b7;color:#8a2b2b;font:400 13.5px/1.55 var(--bk-body)}
 
-/* ── Our own payment form: Stripe owns only the card field ── */
+/* ── Embedded Stripe payment step ── */
 .bk-pay{display:flex;flex-direction:column;gap:14px}
 .bk-pay-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 18px;background:#fff;border:1px solid var(--bk-line);border-left:3px solid var(--bk-amber);border-radius:5px}
 .bk-pay-head span{font:600 13px/1 var(--bk-body);color:var(--bk-muted)}
 .bk-pay-head strong{font-family:var(--bk-display);font-weight:500;font-size:26px;letter-spacing:-.02em;color:var(--bk-forest)}
-.bk-pay-mount{min-height:52px;padding:12px 14px;border:1px solid var(--bk-line);border-radius:5px;background:#fff;transition:border-color .18s}
-.bk-pay-mount.is-ready{min-height:0}
+.bk-pay-mount{min-height:120px}
 .bk-pay-mount iframe{width:100%!important;border:0;display:block}
-.bk-field-error{margin:8px 0 0;font:400 12.5px/1.5 var(--bk-body);color:#8a2b2b}
-
-/* Reference photo at the head of the details step. */
-.bk-checkout-hero{margin:0 0 20px;border-radius:5px;overflow:hidden;border:1px solid var(--bk-line);background:var(--bk-sand)}
-.bk-checkout-hero img{display:block;width:100%;height:clamp(110px,18vw,168px);object-fit:cover}
-
-/* Coupon field with its own apply action, as in the reference layout. */
-.bk-coupon-row{display:flex;gap:10px;align-items:stretch}
-.bk-coupon-row .bk-input{flex:1;min-width:0}
-.bk-coupon-apply{flex:0 0 auto;white-space:nowrap}
-
-/* The renewal choice. Never pre-selected, always priced before the tick. */
-.bk-renew{padding:14px 15px;border:1px solid var(--bk-line);border-radius:5px;background:#fff}
-.bk-renew.is-on{border-color:var(--bk-amber);box-shadow:0 0 0 1px var(--bk-amber) inset}
-.bk-renew-choice{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font:600 13px/1.5 var(--bk-body);color:var(--bk-ink)}
-.bk-renew-choice input[type=checkbox]{width:18px;height:18px;min-width:18px;min-height:18px;margin:1px 0 0;flex-shrink:0;accent-color:var(--bk-forest);cursor:pointer}
-.bk-renew-note{margin:9px 0 0;font:400 12px/1.6 var(--bk-body);color:var(--bk-muted)}
 .bk-status{margin:0;display:flex;align-items:center;gap:8px;font:400 13.5px/1.55 var(--bk-body);color:var(--bk-muted)}
 .bk-pay-cancel{align-self:flex-start}
 
@@ -528,4 +510,31 @@
     padding-left: 0;
     margin-left: 0;
   }
+}
+
+/* Signed-in checkout note (customer accounts). */
+.bk-account-note{margin:0;padding:10px 12px;border-radius:10px;background:#eef3ee;border:1px solid #cfdccf;color:#1d4d37;font-size:13.5px;line-height:1.5}
+
+
+/* Booking visual polish only; the existing step/state/Stripe rules are retained. */
+.bk-overlay { --bk-forest:#0E3421; --bk-green:#1c5035; --bk-amber:#D7902A; --bk-amber-soft:rgba(215,144,42,.13); --bk-ink:#0E3421; --bk-line:#d5ddd0; --bk-canvas:#f7f5ef; }
+.bk-overlay .bk-modal { border-radius:12px; box-shadow:0 24px 80px rgba(14,52,33,.25); }
+.bk-overlay .bk-header { padding-top:20px; }
+.bk-overlay .bk-close,.bk-overlay .bk-back { width:44px; height:44px; }
+.bk-overlay .bk-title { letter-spacing:-.025em; }
+.bk-overlay .bk-subtitle { color:rgba(255,255,255,.86); }
+.bk-overlay .bk-btn { min-height:48px; line-height:1.35; }
+.bk-overlay .bk-input { min-height:48px; border-color:#9eaea1; }
+.bk-overlay .bk-input:focus { border-color:#0E3421; box-shadow:none; }
+.bk-overlay .bk-btn-primary:hover:not(:disabled),.bk-overlay .bk-submit-btn:hover:not(:disabled) { background:#e1a247!important; border-color:#e1a247!important; }
+.bk-overlay .bk-rule-pill { border-radius:6px; }
+.bk-overlay :is(button,input,select,textarea,a,[tabindex]):focus-visible { outline:3px solid #0E3421; outline-offset:3px; box-shadow:0 0 0 5px #fff; }
+.bk-overlay .bk-header :is(button,a):focus-visible { outline-color:#D7902A; box-shadow:0 0 0 5px #0E3421; }
+.bk-overlay .bk-cal-card .bk-cal-grid { min-width:0; }
+.bk-overlay .bk-footer-price strong { font-variant-numeric:tabular-nums; }
+@media(max-width:560px) {
+  .bk-overlay .bk-modal { border-radius:0; }
+  .bk-overlay .bk-btn { padding-inline:14px; }
+  .bk-overlay .bk-footer-actions { flex-wrap:wrap; }
+  .bk-overlay .bk-amenities-step { grid-template-columns:minmax(0,1fr); }
 }

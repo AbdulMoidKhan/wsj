@@ -79,3 +79,47 @@ export class BookingUpdateDto {
  @ValidateIf((_object,value)=>value!==undefined) @IsIn(['PENDING','CONFIRMED','CANCELLED','COMPLETED','REFUNDED']) status?:'PENDING'|'CONFIRMED'|'CANCELLED'|'COMPLETED'|'REFUNDED';
  @ValidateIf((_object,value)=>value!==undefined) @IsString() @MaxLength(5000) notes?:string;
 }
+
+export class PresignUploadDto {
+ @ApiProperty({enum:['blogs','sliders','use-cases','services','images','videos','static']})
+ @IsIn(['blogs','sliders','use-cases','services','images','videos','static'])
+ category!:'blogs'|'sliders'|'use-cases'|'services'|'images'|'videos'|'static';
+
+ @ApiProperty()
+ @IsString()
+ @MinLength(1)
+ @MaxLength(255)
+ filename!:string;
+
+ @ApiProperty()
+ @IsString()
+ @MinLength(1)
+ @MaxLength(100)
+ contentType!:string;
+
+ @ApiProperty()
+ @Type(()=>Number)
+ @IsInt()
+ @Min(1)
+ @Max(1024 * 1024 * 1024)
+ contentLength!:number;
+}
+
+export class FinalizeUploadDto {
+ @ApiProperty()
+ @IsString()
+ @MinLength(1)
+ @MaxLength(512)
+ key!:string;
+
+ @ValidateIf((_object,value)=>value!==undefined)
+ @IsString()
+ @MaxLength(300)
+ alt?:string;
+
+ @ValidateIf((_object,value)=>value!==undefined)
+ @IsString()
+ @MaxLength(255)
+ originalName?:string;
+}
+

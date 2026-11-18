@@ -53,23 +53,23 @@ const VIEWPORTS = [
           const hasHOverflow = scrollW > docW + 1;
 
           // Header alignment
-          const headerContainer = document.querySelector('.wj-header .container, .lv-head-row');
+          const headerContainer = document.querySelector('#wj-site-header .at-head');
           const headerLeft = headerContainer ? Math.round(headerContainer.getBoundingClientRect().left) : null;
           const headerRight = headerContainer ? Math.round(headerContainer.getBoundingClientRect().right) : null;
 
           // First content container
-          const mainContainer = document.querySelector('#main .hp-shell, #main .container, #main .ip-wrap, #main .lx-shell');
+          const mainContainer = document.querySelector('#main .j-wrap, #main .fx-shell, #main .container, #main .ip-wrap, #main .lx-shell');
           const mainLeft = mainContainer ? Math.round(mainContainer.getBoundingClientRect().left) : null;
           const mainRight = mainContainer ? Math.round(mainContainer.getBoundingClientRect().right) : null;
 
           // Footer container
-          const footerContainer = document.querySelector('.wj-footer .container');
+          const footerContainer = document.querySelector('.wj-footer .gf-wrap');
           const footerLeft = footerContainer ? Math.round(footerContainer.getBoundingClientRect().left) : null;
           const footerRight = footerContainer ? Math.round(footerContainer.getBoundingClientRect().right) : null;
 
           // Check all sections vertical gaps
           const sectionGaps = [];
-          const sections = Array.from(document.querySelectorAll('#main > section, #main > div, #main > .hp-section, #main > .lx-sec, #main > .ip-wrap'));
+          const sections = Array.from(document.querySelectorAll('#main > section, #main > div, #main > .lx-sec, #main > .ip-wrap'));
           for (let i = 0; i < sections.length - 1; i++) {
             const ra = sections[i].getBoundingClientRect();
             const rb = sections[i + 1].getBoundingClientRect();
@@ -94,19 +94,19 @@ const VIEWPORTS = [
             }
           });
 
-          // Check headings: Playfair Display font check
-          const nonPlayfairHeadings = [];
+          // Check headings: display font (Newsreader) check
+          const nonDisplayFontHeadings = [];
           document.querySelectorAll('#main h1, #main h2, #main h3').forEach(h => {
             const s = window.getComputedStyle(h);
             const r = h.getBoundingClientRect();
-            if (r.width > 0 && r.height > 0 && !s.fontFamily.includes('Playfair') && !h.closest('.lv-think, .lv-stats, .wj-closing')) {
-              nonPlayfairHeadings.push({ tag: h.tagName, text: h.textContent.trim().slice(0, 35), font: s.fontFamily });
+            if (r.width > 0 && r.height > 0 && !s.fontFamily.includes('Newsreader') && !h.closest('.h-hero-stats, .at-closing')) {
+              nonDisplayFontHeadings.push({ tag: h.tagName, text: h.textContent.trim().slice(0, 35), font: s.fontFamily });
             }
           });
 
           // Card height differences in grids
           const cardGrids = [];
-          document.querySelectorAll('.pricing-grid, .price-grid, .lv-service-grid, .archive-grid, .journal-grid, .lx-grid, .ip-service-grid').forEach(grid => {
+          document.querySelectorAll('.pricing-grid, .price-grid, .fx-grid, .j-foundation-grid, .j-community-grid, .archive-grid, .journal-grid, .lx-grid, .ip-service-grid').forEach(grid => {
             const kids = Array.from(grid.children).filter(k => {
               const s = window.getComputedStyle(k);
               return s.display !== 'none' && s.visibility !== 'hidden';
@@ -141,7 +141,7 @@ const VIEWPORTS = [
             footerRight,
             sectionGaps,
             buttonIssues: buttonIssues.slice(0, 3),
-            nonPlayfairHeadings: nonPlayfairHeadings.slice(0, 3),
+            nonDisplayFontHeadings: nonDisplayFontHeadings.slice(0, 3),
             cardGrids: cardGrids.slice(0, 3)
           };
         }, { width: vp.width, name: target.name });

@@ -2,7 +2,7 @@ import Image from '@/components/consistent-image';
 import {ArrowUpRight, Check, Plus, X} from 'lucide-react';
 import {Fragment, type ReactNode} from 'react';
 import {BookingButton} from './booking';
-import {InquiryForm} from './forms';
+import {InquiryForm} from './lazy-client';
 import {LiveTabs} from './live-tabs';
 import {safeContent} from '@/lib/site';
 import livePages from '@/data/live-pages.json';
@@ -449,7 +449,12 @@ export function LiveSections({sections, title, service}: {sections: LNode[]; tit
     }
     tree.push(s);
   }
+  // Sibling-structure :has() rules for this legacy layout live in their own sheet so other pages
+  // never carry them (they make every DOM insertion re-style the whole document). React hoists
+  // this into <head> and holds the commit until it has loaded, so there is no unstyled flash.
   return <div className="lx-page">
+    {/* eslint-disable-next-line @next/next/no-css-tags -- page-scoped React stylesheet resource; a CSS import would ship it on every catch-all route */}
+    <link rel="stylesheet" href="/styles/live-sections-structure.css" precedence="wj-live-sections"/>
     {!firstHasHeading && <h1 className="lx-sr">{title}</h1>}
     {tree.map((s, i) => {
       const box = isBox(s) ? s : {t: 'box' as const, children: [s]};

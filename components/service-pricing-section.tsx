@@ -1,6 +1,7 @@
 'use client';
 
 import React, {useState, useEffect} from 'react';
+import '@/app/community-network.css';
 import {Check, Crown, ArrowRight, ShieldCheck} from 'lucide-react';
 import {BookingButton} from './booking';
 import {PUBLIC_API_URL} from '@/lib/public-api';

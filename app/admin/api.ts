@@ -20,6 +20,7 @@ export async function request<T = Record<string, unknown>>(endpoint: string, opt
  try { response = await fetch(API + endpoint, {...options, headers, credentials: 'include', cache: 'no-store'}); }
  catch { throw new ApiError('API unavailable. Check that the backend is running at ' + API + ' and allows this site via CORS.', 0); }
  const data = response.status === 204 ? null : await response.json().catch(() => null);
+ if (response.status === 429) throw new ApiError('Too many attempts. Please wait a minute and try again.', 429);
  if (!response.ok) throw new ApiError(Array.isArray(data?.message) ? data.message.join(', ') : data?.message || data?.error || 'Request failed (' + response.status + ')', response.status);
  return data as T;
 }

@@ -37,10 +37,13 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
   const browser = await chromium.launch();
   const desktop = await browser.newContext({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
   const mobile = await browser.newContext({viewport: {width: 390, height: 844}, reducedMotion: 'reduce', hasTouch: true, isMobile: true});
+  // Popup campaigns (e.g. a timed welcome popup) are CMS data and open on a timer, so they could
+  // cover whatever a test is about to click. None of these tests cover popups: serve none.
+  for (const ctx of [desktop, mobile]) await ctx.route('**/public/popups/**', route => route.fulfill({status: 200, contentType: 'application/json', body: '{"items":[],"total":0}'}));
 
   await test('header: primary nav links resolve', async page => {
     await go(page, '/');
-    const hrefs = await page.$$eval('.lv-primary a, .lv-strip a', as => [...new Set(as.map(a => a.getAttribute('href')))]);
+    const hrefs = await page.$$eval('#wj-site-header .at-nav a, #wj-site-header .at-services a', as => [...new Set(as.map(a => a.getAttribute('href')))]);
     assert(hrefs.length >= 10, 'expected header links, got ' + hrefs.length);
     for (const h of hrefs) {const r = await page.request.get(base + h); assert(r.status() < 400, h + ' -> ' + r.status());}
   }, desktop);
@@ -52,37 +55,23 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
     for (const h of hrefs) {const r = await page.request.get(base + h); assert(r.status() < 400, h + ' -> ' + r.status());}
   }, desktop);
 
-  await test('header search: opens, Escape closes, submits to journal results', async page => {
-    await go(page, '/');
-    await page.click('.lv-search .lv-icon-btn');
-    await page.waitForSelector('#lv-search-form');
-    assert(await page.evaluate(() => document.activeElement?.id === 'lv-q'), 'search input not focused');
-    await page.keyboard.press('Escape');
-    await page.waitForSelector('#lv-search-form', {state: 'detached'});
-    await page.click('.lv-search .lv-icon-btn');
-    await page.fill('#lv-q', 'coworking');
-    await Promise.all([page.waitForURL(/\/blogs\/\?q=coworking/), page.press('#lv-q', 'Enter')]);
-    const cards = await page.$$eval('.archive-grid .journal-card', c => c.length);
-    assert(cards > 0, 'no search results for "coworking"');
-  }, desktop);
-
   await test('mobile menu: opens as modal, traps focus, Escape closes and restores focus', async page => {
     await go(page, '/');
-    await page.click('.lv-burger');
+    await page.click('.wj-menu-toggle');
     await page.waitForSelector('#wj-mobile-menu[role=dialog]');
     assert(await page.evaluate(() => document.getElementById('wj-mobile-menu').contains(document.activeElement)), 'focus not inside menu');
     const box = await page.locator('#wj-mobile-menu').boundingBox();
     assert(box && box.x >= -1 && box.width <= 391, 'menu panel outside viewport');
     await page.keyboard.press('Escape');
     await page.waitForSelector('#wj-mobile-menu', {state: 'detached'});
-    assert(await page.evaluate(() => document.activeElement?.classList.contains('lv-burger')), 'focus not restored to menu button');
-    await page.click('.lv-burger');
+    assert(await page.evaluate(() => document.activeElement?.classList.contains('wj-menu-toggle')), 'focus not restored to menu button');
+    await page.click('.wj-menu-toggle');
     await Promise.all([page.waitForURL(/\/coworking\/$/), page.click('#wj-mobile-menu a[href="/coworking/"]')]);
   }, mobile);
 
   await test('booking dialog: opens, loads live catalog, Escape closes, focus restored', async page => {
     await go(page, '/coworking/');
-    const trigger = page.locator('.wj-closing .btn-cream');
+    const trigger = page.locator('.gf-cta').getByRole('button', {name: /book a tour/i});
     await trigger.scrollIntoViewIfNeeded();
     await trigger.click({force: true});
     await page.waitForSelector('.bk-modal');
@@ -97,7 +86,7 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
 
   await test('booking dialog (mobile): fits viewport and plan step shows prices', async page => {
     await go(page, '/');
-    await page.locator('.lv-hero-actions .btn-primary').click({force: true});
+    await page.locator('.h-actions').getByRole('button', {name: /book a tour/i}).click({force: true});
     await page.waitForSelector('.bk-modal');
     const box = await page.locator('.bk-modal').boundingBox();
     assert(box.x >= 0 && box.x + box.width <= 391, 'booking modal wider than viewport');
@@ -113,7 +102,7 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
 
   await test('homepage FAQ: summary toggles answer', async page => {
     await go(page, '/');
-    const d = page.locator('.hp-faq-list details').first();
+    const d = page.locator('.j-faq-list details').first();
     await d.locator('summary').scrollIntoViewIfNeeded();
     await d.locator('summary').click();
     assert(await d.evaluate(e => e.open), 'FAQ did not open');
@@ -123,7 +112,7 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
 
   await test('homepage studio tabs: click and arrow keys switch panels', async page => {
     await go(page, '/');
-    const tabs = page.locator('.lv-studios [role=tab]');
+    const tabs = page.locator('.st-studios [role=tab]');
     await tabs.nth(1).scrollIntoViewIfNeeded();
     await tabs.nth(1).click();
     assert(await tabs.nth(1).getAttribute('aria-selected') === 'true', 'tab 2 not selected');
@@ -143,15 +132,24 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
     assert(after && after !== before, 'plans did not change');
   }, desktop);
 
-  await test('hero slider: dots and pause control', async page => {
+  await test('homepage ecosystem explorer: click and arrow keys switch chapters', async page => {
     await go(page, '/');
-    await page.locator('.lv-slide-dot').nth(2).click();
-    assert(await page.locator('.lv-slide-dot').nth(2).getAttribute('aria-pressed') === 'true', 'dot not active');
-    assert(/resume/i.test(await page.locator('.lv-slide-pause').innerText()), 'slider not paused after manual selection');
+    const tabs = page.locator('.jx-verbs [role=tab]');
+    assert(await tabs.count() >= 3, 'explorer chapters missing');
+    await tabs.nth(1).scrollIntoViewIfNeeded();
+    await tabs.nth(1).click();
+    assert(await tabs.nth(1).getAttribute('aria-selected') === 'true', 'chapter 2 not selected');
+    await page.keyboard.press('ArrowDown');
+    assert(await tabs.nth(2).getAttribute('aria-selected') === 'true', 'arrow key did not move selection');
+    const panel = await tabs.nth(2).getAttribute('aria-controls');
+    assert(await page.locator('#' + panel).isVisible(), 'selected chapter panel hidden');
   }, desktop);
 
   await test('inquiry form: empty submit shows validation and sends nothing', async page => {
     await go(page, '/contact-us/');
+    // Validation runs in React; a click before hydration is a native POST reload (by design, so
+    // no field reaches the URL). Wait for the client to settle before testing validation.
+    await page.waitForLoadState('networkidle', {timeout: 30000}).catch(() => {});
     const form = page.locator('form.wj-form').first();
     await form.scrollIntoViewIfNeeded();
     await form.locator('button[type=submit]').click();
@@ -168,7 +166,7 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
     await go(page, '/category/workshops/');
     const empty = page.locator('.archive-empty');
     if (await empty.count()) assert(/workshops/i.test(await empty.innerText()), 'empty state does not name the category');
-    await go(page, '/blogs/?page=2');
+    await go(page, '/blogs/page/2/'); // pagination is path-based (/blogs/page/N/), not ?page=N
     assert(await page.locator('.pagination a[aria-current=page]').innerText() === '2', 'pagination did not move to page 2');
   }, desktop);
 
@@ -186,7 +184,7 @@ const go = (page, p) => page.goto(base + p, {waitUntil: 'load', timeout: 60000})
 
   await test('gallery: renders venue photos', async page => {
     await go(page, '/gallery/');
-    const n = await page.locator('.ip-gallery-grid img').count();
+    const n = await page.locator('.visit-gallery-grid img').count();
     assert(n >= 4, 'gallery has ' + n + ' images');
   }, desktop);
 

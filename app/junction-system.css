@@ -1,0 +1,195 @@
+/* ==========================================================================
+   Workspace Junction — brand layer (see DESIGN.md)
+   Loaded last in app/layout.tsx. Three jobs only:
+   1. Tokens: Inter as the one display face; brand colours as --wj-* roles.
+   2. The header route strip: the six chapters of the ecosystem.
+   3. The inner-page hero (.jx-hero): one markup, six chapter compositions.
+   Rules that must beat the layered `wj-consistency` contract live in that same
+   layer (same layer + later source order + equal specificity wins); everything
+   else is plain, unlayered and scoped to new jx-* classes so nothing fights.
+   ========================================================================== */
+
+:root {
+  --font-display: var(--font-sans);
+  --wj-green: #0e3421;
+  --wj-deep: #092317;
+  --wj-night: #06140d;
+  --wj-amber: #d7902a;
+  --wj-amber-hi: #e9a845;
+  --wj-amber-ink: #7d5212;   /* amber as text on light grounds: 6.2:1 on cream */
+  --wj-cream: #f7f4ed;
+  --wj-ivory: #fffdf8;
+  --wj-sage: #e9ede6;
+  --wj-ink: #10271c;
+  --wj-soft: #3f4d45;
+  --wj-on-dark: #d6e1d4;
+  --wj-ease: cubic-bezier(.22, 1, .36, 1);
+  --wj-gutter: clamp(20px, 3.4vw, 56px);
+  --wj-max: 1440px;
+}
+
+/* ---------- 2. Header route strip ---------------------------------------- */
+
+/* ---------- 3. Inner-page hero ------------------------------------------ */
+.jx-hero {
+  --jx-ground: var(--wj-cream); --jx-ink: var(--wj-ink); --jx-soft: var(--wj-soft); --jx-accent: var(--wj-amber-ink);
+  position: relative; display: grid; isolation: isolate; overflow: clip;
+  grid-template-columns: [full-start] var(--wj-gutter) [body-start] minmax(0, 1fr) minmax(0, 1fr) [body-end] var(--wj-gutter) [full-end];
+  background: var(--jx-ground); color: var(--jx-ink);
+}
+.jx-hero .jx-hero-body { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 22px; padding-block: clamp(48px, 7vw, 112px); }
+.jx-hero .jx-crumbs { display: flex; gap: 10px; font-size: 14px; color: var(--jx-soft); }
+.jx-hero .jx-crumbs a { color: inherit; text-decoration: none; }
+.jx-hero .jx-crumbs a:hover { color: var(--jx-ink); text-decoration: underline; text-underline-offset: 3px; }
+.jx-hero .jx-kicker { margin: 0; font: 650 clamp(16px, 1.25vw, 19px)/1.3 var(--font-sans), sans-serif; color: var(--jx-accent); }
+.jx-hero .jx-title {
+  margin: 0; max-width: 20ch; font: 680 clamp(40px, 4.8vw, 80px)/.96 var(--font-sans), sans-serif;
+  letter-spacing: -.055em; color: var(--jx-ink); text-wrap: balance;
+}
+.jx-hero .jx-title .fx-br { display: none; }
+.jx-hero .jx-lead { margin: 0; max-width: 46ch; font-size: clamp(17px, 1.35vw, 20px); line-height: 1.55; color: var(--jx-ink); }
+.jx-hero .jx-facts { display: flex; flex-wrap: wrap; gap: 8px 26px; margin: 4px 0 0; padding: 0; list-style: none; }
+.jx-hero .jx-facts li { display: inline-flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 600; color: var(--jx-ink); }
+.jx-hero .jx-facts svg { color: var(--jx-accent); }
+.jx-hero .jx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 8px; }
+.jx-hero .jx-price { margin: 0; font: 600 16px/1.4 var(--font-sans), sans-serif; color: var(--jx-ink); }
+.jx-hero .jx-price::before { content: ''; display: inline-block; width: 28px; height: 3px; margin: 0 12px 4px 0; background: var(--wj-amber); vertical-align: middle; }
+.jx-hero .jx-hero-media { position: relative; overflow: hidden; }
+.jx-hero .jx-hero-media .fx-media { position: absolute; inset: 0; }
+.jx-hero .jx-hero-media img { object-fit: cover; animation: jx-settle 1.4s var(--wj-ease) both; }
+@keyframes jx-settle { from { transform: scale(1.06); } to { transform: none; } }
+.jx-hero .fx-btn-ghost { color: var(--jx-ink); }
+
+/* Work — architectural: the room fills the screen, the copy stands on a deep-green plinth. */
+.jx-hero[data-chapter="work"] { --jx-ground: var(--wj-deep); --jx-ink: #fff; --jx-soft: var(--wj-on-dark); --jx-accent: var(--wj-amber); min-height: min(88svh, 900px); align-items: end; }
+.jx-hero[data-chapter="work"] .jx-hero-media { grid-column: full; grid-row: 1; align-self: stretch; }
+.jx-hero[data-chapter="work"] .jx-hero-body { grid-column: body-start / span 1; grid-row: 1; align-self: end; padding: clamp(32px, 4vw, 56px) clamp(28px, 3.6vw, 56px) clamp(32px, 4vw, 52px); background: var(--wj-deep); max-width: 720px; margin-left: calc(-1 * clamp(28px, 3.6vw, 56px)); }
+.jx-hero[data-chapter="work"] .jx-title { font-size: clamp(40px, 4.4vw, 72px); }
+
+/* Start — confident: deep green field, the type does the work, the photograph stands tall at the right edge. */
+.jx-hero[data-chapter="start"] { --jx-ground: var(--wj-green); --jx-ink: #fff; --jx-soft: var(--wj-on-dark); --jx-accent: var(--wj-amber); grid-template-columns: [full-start] var(--wj-gutter) [body-start] minmax(0, 7fr) minmax(0, 5fr) [full-end]; min-height: min(84svh, 860px); }
+.jx-hero[data-chapter="start"] .jx-hero-body { grid-column: body-start / span 1; grid-row: 1; justify-content: center; padding-right: clamp(24px, 4vw, 72px); }
+.jx-hero[data-chapter="start"] .jx-hero-media { grid-column: 3 / full-end; grid-row: 1; }
+
+/* Establish — trustworthy: ivory paper under an amber rule, the photograph set like a framed document. */
+.jx-hero[data-chapter="establish"] { --jx-ground: var(--wj-ivory); grid-template-columns: [full-start] var(--wj-gutter) [body-start] minmax(0, 7fr) minmax(0, 4fr) [body-end] var(--wj-gutter) [full-end]; column-gap: clamp(32px, 5vw, 96px); border-top: 10px solid var(--wj-amber); }
+.jx-hero[data-chapter="establish"] .jx-hero-body { grid-column: body-start / span 1; grid-row: 1; justify-content: center; }
+.jx-hero[data-chapter="establish"] .jx-hero-media { grid-column: 3 / body-end; grid-row: 1; align-self: center; aspect-ratio: 4 / 5; margin-block: clamp(40px, 5vw, 80px); }
+
+/* Create — cinematic: a black stage, the title over the full width, the studio in letterbox beneath. */
+.jx-hero[data-chapter="create"] { --jx-ground: var(--wj-night); --jx-ink: #fff; --jx-soft: #b9c6bd; --jx-accent: var(--wj-amber); }
+.jx-hero[data-chapter="create"] .jx-hero-body { grid-column: body-start / body-end; grid-row: 1; padding-bottom: clamp(32px, 4vw, 56px); }
+.jx-hero[data-chapter="create"] .jx-title { max-width: 18ch; font-size: clamp(48px, 6.4vw, 112px); }
+.jx-hero[data-chapter="create"] .jx-hero-media { grid-column: full; grid-row: 2; aspect-ratio: 21 / 8; min-height: 280px; }
+
+/* Grow — agency: a whole field of amber, ink type, the work shown square. */
+.jx-hero[data-chapter="grow"] { --jx-ground: var(--wj-amber); --jx-ink: var(--wj-ink); --jx-soft: #3a2f17; --jx-accent: var(--wj-ink); grid-template-columns: [full-start] var(--wj-gutter) [body-start] minmax(0, 7fr) minmax(0, 5fr) [body-end] var(--wj-gutter) [full-end]; column-gap: clamp(32px, 4vw, 72px); }
+.jx-hero[data-chapter="grow"] .jx-hero-body { grid-column: body-start / span 1; grid-row: 1; justify-content: center; }
+.jx-hero[data-chapter="grow"] .jx-hero-media { grid-column: 3 / body-end; grid-row: 1; align-self: end; aspect-ratio: 1; margin-top: clamp(40px, 5vw, 80px); }
+
+/* Connect — editorial and warm: the gathering fills the left half, the invitation sits on green. */
+.jx-hero[data-chapter="connect"] { --jx-ground: var(--wj-green); --jx-ink: #fff; --jx-soft: var(--wj-on-dark); --jx-accent: var(--wj-amber); grid-template-columns: [full-start] minmax(0, 6fr) minmax(0, 5fr) var(--wj-gutter) [full-end]; min-height: min(82svh, 820px); }
+.jx-hero[data-chapter="connect"] .jx-hero-media { grid-column: 1 / 2; grid-row: 1; }
+.jx-hero[data-chapter="connect"] .jx-hero-body { grid-column: 2 / 3; grid-row: 1; justify-content: center; padding-left: clamp(32px, 4.5vw, 80px); }
+.jx-hero[data-chapter="connect"] .jx-title { font-size: clamp(38px, 4vw, 66px); }
+
+/* Guide (use cases and other routes) — sage, photograph right, same rhythm. */
+.jx-hero[data-chapter="guide"] { --jx-ground: var(--wj-sage); grid-template-columns: [full-start] var(--wj-gutter) [body-start] minmax(0, 6fr) minmax(0, 5fr) [full-end]; min-height: min(76svh, 780px); }
+.jx-hero[data-chapter="guide"] .jx-hero-body { grid-column: body-start / span 1; grid-row: 1; justify-content: center; padding-right: clamp(24px, 4vw, 72px); }
+.jx-hero[data-chapter="guide"] .jx-hero-media { grid-column: 3 / full-end; grid-row: 1; }
+
+/* Dark grounds: secondary action and focus ring read on green/black. */
+.jx-hero:is([data-chapter="work"], [data-chapter="start"], [data-chapter="create"], [data-chapter="connect"]) .fx-btn-ghost { color: #fff !important; border-color: rgba(255, 255, 255, .55) !important; background: transparent !important; }
+.jx-hero :is(a, button):focus-visible { outline: 3px solid var(--wj-amber); outline-offset: 3px; }
+.jx-hero[data-chapter="grow"] :is(a, button):focus-visible { outline-color: var(--wj-ink); }
+
+@media (max-width: 900px) {
+  .jx-hero, .jx-hero[data-chapter] { grid-template-columns: [full-start] var(--wj-gutter) [body-start] minmax(0, 1fr) [body-end] var(--wj-gutter) [full-end] !important; min-height: 0; column-gap: 0; }
+  .jx-hero[data-chapter] .jx-hero-body { grid-column: body-start / body-end !important; grid-row: 2 !important; padding: 32px 0 48px !important; margin: 0 !important; max-width: none; background: transparent; }
+  .jx-hero[data-chapter] .jx-hero-media { grid-column: full !important; grid-row: 1 !important; aspect-ratio: 4 / 3; min-height: 0; margin: 0 !important; }
+  .jx-hero[data-chapter="work"] .jx-hero-media { aspect-ratio: 4 / 5; }
+  .jx-hero[data-chapter="create"] .jx-hero-body { grid-row: 1 !important; }
+  .jx-hero[data-chapter="create"] .jx-hero-media { grid-row: 2 !important; aspect-ratio: 16 / 9; }
+  .jx-hero[data-chapter="establish"] .jx-hero-media { grid-column: body-start / body-end !important; aspect-ratio: 16 / 11; margin-top: 28px !important; }
+  .jx-hero[data-chapter="grow"] .jx-hero-media { grid-column: body-start / body-end !important; margin-top: 28px !important; aspect-ratio: 4 / 3; }
+  .jx-hero .jx-title, .jx-hero[data-chapter] .jx-title { font-size: clamp(40px, 11vw, 64px); max-width: none; }
+  .jx-hero .jx-actions { width: 100%; }
+  .jx-hero .jx-actions > * { flex: 1 1 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { .jx-hero .jx-hero-media img { animation: none; } }
+
+/* ---------- Legacy spacing kept from the retired decorative layer --------- */
+html body .wj-platform .info-wrap.info-split { padding-block: clamp(64px, 5vw, 78px); }
+html body .wj-platform .info-band { padding-block: clamp(56px, 4.5vw, 68px); }
+html body .wj-platform .info-wrap.info-directory, html body .wj-platform .info-faq.info-wrap { padding-block: clamp(64px, 5vw, 76px); }
+html body .wj-platform .cn-page .cn-hero { padding-top: clamp(40px, 4.2vw, 56px); padding-bottom: clamp(48px, 5vw, 68px); }
+html body .wj-platform .cn-page .cn-hero-media { aspect-ratio: 1.22 / 1; max-height: 540px; overflow: hidden; align-self: center; }
+html body .wj-platform .cn-page .cn-hero-img { width: 100%; height: 100%; max-width: none; object-fit: cover; }
+html body .wj-platform .cn-page :is(.cn-about, .cn-works, .cn-circles, .cn-events, .cn-memberships, .cn-more-ways) { padding-block: clamp(60px, 6vw, 86px); }
+html body .wj-platform .cn-page .cn-benefits-wrap { padding-block: clamp(32px, 3.5vw, 52px); }
+@media (max-width: 767px) {
+  html body .wj-platform .cn-page .cn-hero { padding-block: 38px 48px; }
+  html body .wj-platform .cn-page .cn-hero-media { aspect-ratio: 1.2 / 1; max-height: 360px; }
+  html body .wj-platform .cn-page :is(.cn-about, .cn-works, .cn-circles, .cn-events, .cn-memberships, .cn-more-ways) { padding-block: 54px; }
+}
+
+/* ---------- 4. Pricing grid (shared, live catalog) ----------------------- */
+/* Comparison stays functional; surfaces are defined by tone, not outlines or shadows. */
+@layer wj-consistency {
+  body .wj-platform .pricing-grid { gap: 12px !important; }
+  body .wj-platform .pricing-grid .price-card {
+    background-color: var(--wj-cream) !important; border: 0 !important; box-shadow: none !important;
+    padding: clamp(24px, 2.4vw, 36px) !important; border-radius: 2px !important;
+  }
+  body .wj-platform .pricing-grid .price-card.featured { background-color: var(--wj-green) !important; color: #fff !important; }
+  body .wj-platform .pricing-grid .price-card.featured :is(h3, .price-value, li, p, span) { color: #fff !important; }
+  body .wj-platform .pricing-grid .price-card .eyebrow {
+    font-size: 14px !important; letter-spacing: 0 !important; text-transform: none !important; font-weight: 700 !important;
+    color: var(--wj-amber-ink) !important; background: none !important; border: 0 !important; padding: 0 !important;
+  }
+  body .wj-platform .pricing-grid .price-card.featured .eyebrow { color: var(--wj-amber) !important; }
+  body .wj-platform .pricing-grid .price-card :is(ul, hr) { border: 0 !important; }
+  body .wj-platform .pricing-grid .price-card .price-value { font-variant-numeric: tabular-nums; }
+  body .wj-platform .pricing-filters { gap: 6px !important; }
+  body .wj-platform .pricing-filters button { min-height: 44px !important; }
+}
+@layer wj-consistency {
+  body .wj-platform .pricing-grid .price-card.featured :is(.btn, .wj-button, button) { background-color: var(--wj-amber) !important; border-color: var(--wj-amber) !important; color: var(--wj-deep) !important; }
+}
+
+/* The figma-pages layer paints every fx-page heading forest and resets tracking (layered
+   !important). The hero's chapter colours and display tracking are restated in that layer. */
+@layer wj-consistency {
+  #main.fx-page .jx-hero .jx-title { color: var(--jx-ink) !important; letter-spacing: -.055em !important; }
+  #main.fx-page .jx-hero .jx-kicker { margin: 0 !important; }
+  #main.fx-page .jx-hero .jx-hero-media .fx-media { border-radius: 0 !important; background: var(--wj-deep) !important; }
+}
+@layer wj-consistency {
+  #main.fx-page .jx-hero .jx-hero-media .fx-media { position: absolute !important; inset: 0 !important; width: auto !important; height: auto !important; aspect-ratio: auto !important; }
+  #main.fx-page .jx-hero:is([data-chapter="work"], [data-chapter="start"], [data-chapter="create"], [data-chapter="connect"]) .fx-btn-ghost { color: #fff !important; border-color: rgba(255, 255, 255, .6) !important; background: transparent !important; }
+  #main.fx-page .jx-hero:is([data-chapter="work"], [data-chapter="start"], [data-chapter="create"], [data-chapter="connect"]) .fx-btn-ghost:hover { background: #fff !important; color: var(--wj-deep) !important; }
+  #main.fx-page .jx-hero .fx-btn-ghost { border-radius: 2px !important; min-height: 48px !important; }
+  #main.fx-page .jx-hero[data-chapter="grow"] :is(.wj-button-yellow, .fx-cta) { background-color: var(--wj-ink) !important; border-color: var(--wj-ink) !important; color: #fff !important; }
+  #main.fx-page .jx-hero[data-chapter="grow"] .fx-btn-ghost { background: transparent !important; color: var(--wj-ink) !important; border-color: var(--wj-ink) !important; }
+}
+
+/* ---------- 5. Accessibility fixes in shared components ------------------ */
+@layer wj-consistency {
+  /* Featured price card is green: its period text must read on green (was 1.5:1). */
+  body .wj-platform .pricing-grid .price-card.featured .price-value :is(small, span) { color: var(--wj-on-dark) !important; }
+  /* Testimonial slider dots: 24px targets (WCAG 2.5.8); the visible dot is drawn inside. */
+  body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot {
+    width: 24px !important; height: 24px !important; min-width: 24px !important; min-height: 24px !important;
+    padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important;
+  }
+  body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot::after { inset: 7.5px !important; }
+  body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot.is-active::after { inset: 7.5px 0 !important; background: var(--wj-amber) !important; }
+  body .wj-platform .wj-testimonials-sec .lx-vslider-dots .lx-vdot:focus-visible { outline: 2px solid var(--wj-amber) !important; outline-offset: 0 !important; }
+}
+
+/* One closing per page: when a page already ends with its own call to action, the shared
+   "Good things happen at the Junction" band (site-shell) would repeat it directly above the
+   footer's CTA, so it steps aside. */
+.wj-platform .wj-route-stage:has(:is(.fx-closing, .fx-closing-centered, .j-statement)) ~ .wj-closing { display: none; }
+
+/* ---------- 6. Footer: see components/site-footer.css ---------- */

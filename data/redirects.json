@@ -70,5 +70,13 @@
   {
     "source": "/what-is-lorem-ipsum-2/",
     "destination": "/blogs/"
+  },
+  {
+    "source": "/about/",
+    "destination": "/about-us/"
+  },
+  {
+    "source": "/contact/",
+    "destination": "/contact-us/"
   }
 ]

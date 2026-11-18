@@ -2,20 +2,20 @@
 
 import Image from '@/components/consistent-image';
 import {useEffect, useMemo, useState, useRef} from 'react';
-import {ArrowUpRight, Sparkles, ShieldCheck, Clock, MapPin, ChevronLeft, ChevronRight} from 'lucide-react';
+import {ArrowUpRight, ArrowRight, ArrowLeft, Pause, Play} from 'lucide-react';
+import {useReducedMotion} from '@/lib/use-reduced-motion';
 import {BookingButton} from './booking';
-import {HomeHeroImage} from './home-hero-image';
 
 /* Content in this file is taken from the live workspacejunction.com homepage (Oct 2026). */
 
 const SLIDES = [
   {
-    src: '/media/3675f6dc28-slide-1.png',
-    alt: 'Team meeting in the Workspace Junction boardroom with a video call on screen',
+    src: '/media/dfcf491571-image.png',
+    alt: 'Four professionals meeting around a table at Workspace Junction',
     badge: 'Executive Suites & Private Boardrooms',
     title: 'Where Leaders Work.',
     sub: 'Your premier business headquarters in Oakbrook Terrace — from executive boardroom strategy sessions to high-impact broadcasts.',
-    tags: ['High-Speed Fiber', 'Dual 4K Displays', 'Full AV Support'],
+    tags: ['24/7 Access Option', 'Curated Member Network', 'Private Phone Booths'],
     ctaService: 'Meeting rooms',
     ctaLabel: 'Book a Private Tour',
   },
@@ -45,24 +45,30 @@ export function HeroSlides() {
   const [index, setIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [paused, setPaused] = useState(false);
+  // Slides 2-3 are fetched only after the first slide (the LCP image) has had the network.
+  const [warm, setWarm] = useState(false);
+  const reduced = useReducedMotion();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const swipeRef = useRef<{x: number; y: number} | null>(null);
+  const autoplay = !paused && !reduced;
 
   useEffect(() => {
-    if (hovered || focused) return;
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (media.matches) return;
+    const t = window.setTimeout(() => setWarm(true), 2500);
+    return () => window.clearTimeout(t);
+  }, []);
 
+  useEffect(() => {
+    if (!autoplay || hovered || focused) return;
     timerRef.current = setInterval(() => {
-      if (!document.hidden && document.documentElement.dataset.ambient !== 'paused') {
-        setIndex(i => (i + 1) % SLIDES.length);
-      }
+      if (!document.hidden) setIndex(i => (i + 1) % SLIDES.length);
     }, 7000);
-
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [hovered, focused]);
+  }, [autoplay, hovered, focused]);
 
+  const go = (next: number) => {setWarm(true); setIndex((next + SLIDES.length) % SLIDES.length);};
   const slide = SLIDES[index];
 
   return (
@@ -77,114 +83,71 @@ export function HeroSlides() {
       onBlur={event => {
         if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
       }}
+      onPointerDown={event => {
+        if (event.pointerType !== 'mouse') swipeRef.current = {x: event.clientX, y: event.clientY};
+      }}
+      onPointerUp={event => {
+        const start = swipeRef.current;
+        swipeRef.current = null;
+        if (!start) return;
+        const dx = event.clientX - start.x;
+        // Horizontal swipes only; vertical drags keep scrolling the page.
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(event.clientY - start.y) * 1.5) go(index + (dx < 0 ? 1 : -1));
+      }}
+      onPointerCancel={() => {swipeRef.current = null;}}
     >
-      {SLIDES.map((s, i) => (
-        <figure key={s.src} className={'lv-slide' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
-          {i === 0
-            ? <HomeHeroImage alt={s.alt} sizes="100vw" className="lv-slide-img"/>
-            : <Image src={s.src} alt={s.alt} fill fetchPriority="low" sizes="100vw" className="lv-slide-img" />}
-        </figure>
-      ))}
-
-      <div className="lv-hero-shade" aria-hidden="true" />
-      <div className="lv-hero-radial-glow" aria-hidden="true" />
-
       <div className="lv-hero-copy">
-        <h1 id="hp-title" className="lv-sr">{SLIDES[0].title}</h1>
-
         <div className="lv-hero-content-wrap">
-          <div className="lv-hero-badge-row">
-            <span className="lv-hero-badge">
-              <Sparkles size={13} className="lv-badge-icon" aria-hidden="true" />
-              <span>{slide.badge}</span>
-            </span>
-          </div>
-
-          <div className="lv-hero-titles" aria-live="off">
-            {SLIDES.map((s, i) => (
-              <div key={s.title} className={'lv-hero-title' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
-                <p className="lv-h1" aria-hidden={i === 0 ? true : undefined}>{s.title}</p>
-                <p className="lv-hero-sub">{s.sub}</p>
-              </div>
-            ))}
-          </div>
-
+          <p className="lv-hero-badge">{slide.badge}</p>
+          <h1 id="hp-title" className="lv-h1">{slide.title}</h1>
+          <p className="lv-hero-sub">{slide.sub}</p>
           <div className="lv-hero-tags" aria-label="Key features">
             {slide.tags.map(tag => (
-              <span key={tag} className="lv-hero-tag">
-                <span className="lv-tag-dot" aria-hidden="true" />
-                {tag}
-              </span>
+              <span key={tag} className="lv-hero-tag">• {tag}</span>
             ))}
           </div>
-
           <div className="lv-hero-actions">
             <BookingButton className="btn btn-primary lv-pill lv-hero-primary-cta" service={slide.ctaService}>
               {slide.ctaLabel} <ArrowUpRight size={17} aria-hidden="true" />
             </BookingButton>
-            <BookingButton className="lv-pill lv-pill-ghost lv-hero-secondary-cta">
+            <a className="lv-pill lv-pill-ghost lv-hero-secondary-cta" href="#home-pricing">
               Plans &amp; Pricing <ArrowUpRight size={17} aria-hidden="true" />
-            </BookingButton>
+            </a>
           </div>
+          <p className="lv-hero-location">Oakbrook Terrace, IL <span>·</span> 24/7 Access</p>
         </div>
-
-        <div className="lv-hero-bottom-bar">
-          <div className="lv-hero-meta-strip">
-            <span className="lv-meta-item">
-              <MapPin size={14} className="lv-meta-icon" aria-hidden="true" />
-              <span>Oakbrook Terrace, IL</span>
-            </span>
-            <span className="lv-meta-divider" aria-hidden="true">/</span>
-            <span className="lv-meta-item">
-              <Clock size={14} className="lv-meta-icon" aria-hidden="true" />
-              <span>24/7 Access</span>
-            </span>
-            <span className="lv-meta-divider" aria-hidden="true">/</span>
-            <span className="lv-meta-item">
-              <ShieldCheck size={14} className="lv-meta-icon" aria-hidden="true" />
-              <span>Verified Enterprise Standard</span>
-            </span>
+      </div>
+      <div className="lv-hero-media">
+        {SLIDES.map((s, i) => (
+          <figure key={s.src} className={'lv-slide' + (i === index ? ' is-active' : '')} aria-hidden={i !== index}>
+            {(i === 0 || warm || i === index) && <Image src={s.src} alt={s.alt} fill preload={i === 0} fetchPriority={i === 0 ? 'high' : 'low'} sizes="(max-width: 767px) 100vw, 50vw" className="lv-slide-img" />}
+          </figure>
+        ))}
+      </div>
+      <div className="lv-hero-bottom-bar">
+        <span className="lv-hero-motto">WORK. CONNECT. GROW.</span>
+        <p>Flexible spaces for every way of working.</p>
+        <div className="lv-controls-cluster">
+          {/* Announce slide changes only when the user drives them, never on autoplay. */}
+          <span aria-live={autoplay ? 'off' : 'polite'} aria-atomic="true">
+            <span className="sr-only">Slide </span>{String(index + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+          </span>
+          <div className="lv-slide-dots" role="group" aria-label="Choose slide">
+            {SLIDES.map((s, i) => (
+              <button key={s.src} type="button" className="lv-slide-dot" aria-label={`Show slide ${i + 1}: ${s.title}`} aria-current={i === index ? 'true' : undefined} onClick={() => go(i)}><span aria-hidden="true"/></button>
+            ))}
           </div>
-
-          <div className="lv-controls-cluster">
-            <div className="lv-arrow-nav">
-              <button
-                type="button"
-                className="lv-nav-arrow"
-                aria-label="Previous slide"
-                onClick={() => {
-                  setIndex((index - 1 + SLIDES.length) % SLIDES.length);
-                }}
-              >
-                <ChevronLeft size={18} aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="lv-nav-arrow"
-                aria-label="Next slide"
-                onClick={() => {
-                  setIndex((index + 1) % SLIDES.length);
-                }}
-              >
-                <ChevronRight size={18} aria-hidden="true" />
-              </button>
-            </div>
-
-            <div className="lv-dots" role="group" aria-label="Choose slide">
-              {SLIDES.map((s, i) => (
-                <button
-                  key={s.title}
-                  className={'lv-slide-dot' + (i === index ? ' is-active' : '')}
-                  type="button"
-                  aria-label={`Show slide ${i + 1}: ${s.title}`}
-                  aria-pressed={i === index}
-                  onClick={() => {
-                    setIndex(i);
-                  }}
-                />
-              ))}
-            </div>
-          </div>
+          <button type="button" className="lv-nav-arrow" aria-label="Previous slide" onClick={() => go(index - 1)}>
+            <ArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <button type="button" className="lv-nav-arrow" aria-label="Next slide" onClick={() => go(index + 1)}>
+            <ArrowRight size={18} aria-hidden="true" />
+          </button>
+          {!reduced && (
+            <button type="button" className="lv-nav-arrow lv-autoplay-toggle" aria-pressed={paused} aria-label={paused ? 'Play slideshow' : 'Pause slideshow'} onClick={() => setPaused(p => !p)}>
+              {paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -197,7 +160,6 @@ export function HeroSlides() {
    immediately. Session prices are the catalog hourly rate multiplied by the
    session length, which is why they can never disagree with checkout. */
 type Tier = {name: string; duration: string; hours: number; includes: string[]};
-type Studio = {slug?: string; name: string; blurb: string; capacity: string; tiers: Tier[]};
 
 const SESSION_TIERS: Tier[][] = [
   [
@@ -235,102 +197,110 @@ export interface StudioRate {
   unitAmountCents: number;
   currency: string;
   description: string;
+  durationMinutes?: number | null;
 }
 
-/** Build the tab data from catalog packages, keeping the marketing copy. */
-export function studiosFromCatalog(rates: StudioRate[]): Studio[] {
-  return rates.map((rate, index) => ({
-    slug: rate.slug,
-    name: rate.name,
-    blurb: rate.description || STUDIO_BLURBS[index] || STUDIO_BLURBS[0],
-    capacity: rate.capacityText || 'Capacity confirmed by our team',
-    tiers: SESSION_TIERS[index] || SESSION_TIERS[0],
-  }));
+type TierKind = 0 | 1 | 2; // starter (per hour), standard session, premium production
+type StudioTier = {kind: TierKind; name: string; hours: number; price: string; planSlug: string; includes: string[]};
+type StudioGroup = {name: string; blurb: string; capacity: string; tiers: StudioTier[]};
+
+/* The catalog lists each studio's sessions as separate packages, e.g. "Solo Creator Studio"
+   (starter, per hour), "Solo Creator Studio — Standard Session" and "… — Premium Production".
+   Group them by studio and keep every price exactly as published in the catalog. */
+const tierOf = (name: string): TierKind => /premium\s+(podcast\s+)?production/i.test(name) ? 2 : /standard/i.test(name) ? 1 : 0;
+const studioOf = (name: string) => name
+  .replace(/(starter|standard|premium)\s+podcast\s+(session|production)/gi, '')
+  .replace(/standard\s+session|premium\s+production/gi, '')
+  .replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N})]+$/gu, '')
+  .trim();
+const contentIndex = (studio: string, fallback: number) => {
+  const s = studio.toLowerCase();
+  return s.includes('solo') ? 0 : s.includes('interview') ? 1 : s.includes('panel') ? 2 : s.includes('premium') || s.includes('video') ? 3 : Math.min(fallback, 3);
+};
+const money = (cents: number, currency: string) => (cents / 100).toLocaleString('en-US', {style: 'currency', currency: currency.toUpperCase(), maximumFractionDigits: cents % 100 ? 2 : 0});
+
+/** Build studio tabs from catalog packages, keeping the published marketing copy. */
+export function studiosFromCatalog(rates: StudioRate[]): StudioGroup[] {
+  const groups = new Map<string, StudioRate[]>();
+  for (const rate of rates) {
+    const studio = studioOf(rate.name);
+    if (!studio) continue;
+    groups.set(studio, [...(groups.get(studio) || []), rate]);
+  }
+  return [...groups.entries()].map(([name, plans], index) => {
+    const content = contentIndex(name, index);
+    const tiers = plans
+      .map(plan => {
+        const kind = tierOf(plan.name);
+        const copy = (SESSION_TIERS[content] || SESSION_TIERS[0])[kind];
+        return {kind, name: copy.name, hours: plan.durationMinutes ? Math.max(1, Math.round(plan.durationMinutes / 60)) : copy.hours, price: money(plan.unitAmountCents, plan.currency), planSlug: plan.slug, includes: copy.includes};
+      })
+      .sort((a, b) => a.kind - b.kind)
+      .filter((tier, i, all) => all.findIndex(t => t.kind === tier.kind) === i);
+    const starter = plans.find(plan => tierOf(plan.name) === 0) || plans[0];
+    return {name, blurb: STUDIO_BLURBS[content] || starter.description, capacity: starter.capacityText || plans.find(p => p.capacityText)?.capacityText || 'Confirmed by our team', tiers};
+  }).filter(group => group.tiers.length);
 }
 
 export function StudioTabs({rates = []}: {rates?: StudioRate[]}) {
   const [active, setActive] = useState(0);
-  const STUDIOS = useMemo(() => studiosFromCatalog(rates), [rates]);
-  const studio = STUDIOS[active] as Studio | undefined;
-  const rate = rates[active];
-  const sessionPrice = (hours: number) => (rate ? (rate.unitAmountCents * hours / 100).toLocaleString('en-US', {style: 'currency', currency: rate.currency.toUpperCase(), maximumFractionDigits: 0}) : 'On request');
+  const studios = useMemo(() => studiosFromCatalog(rates), [rates]);
+  const studio = studios[active];
   if (!studio) {
     return (
-      <div className="lv-studios">
-        <p className="lv-studio-empty">Studio packages are confirmed by our team. Ask us about availability and current session rates.</p>
+      <div className="st st-empty">
+        <p>Studio sessions are confirmed by our team. Ask us about availability and current session rates.</p>
       </div>
     );
   }
   const onKey = (e: React.KeyboardEvent) => {
-    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+    if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
-    const next = e.key === 'Home' ? 0 : e.key === 'End' ? STUDIOS.length - 1 : (active + (e.key === 'ArrowRight' ? 1 : STUDIOS.length - 1)) % STUDIOS.length;
+    const n = studios.length;
+    const next = e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : (active + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : n - 1)) % n;
     setActive(next);
-    document.getElementById(`lv-studio-tab-${next}`)?.focus();
+    document.getElementById(`st-tab-${next}`)?.focus();
   };
   return (
-    <div className="lv-studios">
-      <div className="lv-tabs" role="tablist" aria-label="Podcast studios" onKeyDown={onKey}>
-        {STUDIOS.map((s, i) => (
+    <div className="st">
+      <div className="st-studios" role="tablist" aria-label="Podcast studios" onKeyDown={onKey}>
+        {studios.map((s, i) => (
           <button
             key={s.name}
-            id={`lv-studio-tab-${i}`}
+            id={`st-tab-${i}`}
             role="tab"
             type="button"
             aria-selected={i === active}
-            aria-controls="lv-studio-panel"
+            aria-controls="st-panel"
             tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)}
-            className="lv-studio-tab-btn"
+            className="st-studio wj-control"
           >
-            <span className="lv-tab-title">{s.name}</span>
+            <span className="st-studio-name">{s.name}</span>
+            <span className="st-studio-cap">{s.capacity}</span>
           </button>
         ))}
       </div>
 
-      <div id="lv-studio-panel" role="tabpanel" tabIndex={0} aria-labelledby={`lv-studio-tab-${active}`} className="lv-studio-panel" key={studio.name}>
-        <div className="lv-studio-head">
-          <div className="lv-studio-head-left">
-            <h3>{studio.name}</h3>
-            <p>{studio.blurb}</p>
-          </div>
-          <div className="lv-studio-capacity-pill">
-            <span className="lv-capacity-dot" aria-hidden="true" />
-            <span>Capacity: <strong>{studio.capacity}</strong></span>
-          </div>
-        </div>
-
-        <div className="lv-tier-grid">
-          {studio.tiers.map((t, i) => (
-            <article key={t.name} className={'lv-tier' + (i === 1 ? ' is-mid' : '')}>
-              {i === 1 && (
-                <div className="lv-value-badge">
-                  <Image src="/media/aa00b61c5b-value.png" alt="Best value for your money" width={84} height={84} className="lv-value" />
-                </div>
-              )}
-              <div className="lv-tier-header">
+      <div id="st-panel" role="tabpanel" tabIndex={0} aria-labelledby={`st-tab-${active}`} className="st-panel" key={studio.name}>
+        <p className="st-blurb">{studio.blurb}</p>
+        <ol className="st-tiers">
+          {studio.tiers.map(t => (
+            <li key={t.planSlug} className={'st-tier st-tier-' + t.kind}>
+              <div className="st-tier-head">
                 <h4>{t.name}</h4>
-                <p className="lv-tier-dur">Duration: {t.duration}</p>
+                <p className="st-tier-dur">{t.hours} hour{t.hours === 1 ? '' : 's'} in studio</p>
               </div>
-
-              <div className="lv-tier-features">
-                <p className="lv-tier-inc">Includes:</p>
-                <ul>
-                  {t.includes.map(x => (
-                    <li key={x}>{x}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="lv-tier-footer">
-                <BookingButton className="btn btn-primary lv-pill lv-tier-cta" service="podcast-studio" plan={studio.slug}>
-                  {sessionPrice(t.hours)}
-                  <span className="lv-tier-hours"> / {t.hours} hour{t.hours === 1 ? '' : 's'}</span>
-                </BookingButton>
-              </div>
-            </article>
+              <p className="st-price"><span>{t.price}</span> <small>/ {t.hours} hour{t.hours === 1 ? '' : 's'}</small></p>
+              <ul className="st-includes">
+                {t.includes.map(x => <li key={x}>{x}</li>)}
+              </ul>
+              <BookingButton className="st-book wj-control" service="podcast-studio" plan={t.planSlug}>
+                Book {t.name.replace(/ podcast/i, '').toLowerCase()} <ArrowUpRight size={16} aria-hidden="true" />
+              </BookingButton>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </div>
   );

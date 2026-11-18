@@ -64,3 +64,5 @@ next-env.d.ts
 /FULL_QA_TEST_PROMPT.md
 /GSAP_SCROLL_MOTION_PROMPT.md
 /MOTION_DESIGN_PROMPT.md
+# Commit-named release builds (see ecosystem.config.cjs / release runbook)
+/backend/dist-*/

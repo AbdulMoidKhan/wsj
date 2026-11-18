@@ -36,7 +36,7 @@ function scan() {
   const main = document.querySelector('#main'); if (!main) return res;
 
   // overlap / overwide between grid/flex siblings
-  for (const parent of main.querySelectorAll('.lx-cols,.lx-split,.lv-split,.lv-intro-grid,.ip-hero-grid,.ip-overview-grid,.lx-photo-grid,.hp-faq-grid,.lv-podcast-photos,.lv-service-grid,.pricing-grid,.ip-service-grid,.lx-gallery,.vg-grid,.archive-grid,.journal-grid,.lv-tier-grid,.lv-stats,.lx-stats')) {
+  for (const parent of main.querySelectorAll('.lx-cols,.lx-split,.h-hero-grid,.h-intro-grid,.fx-split,.fx-grid,.ip-hero-grid,.ip-overview-grid,.lx-photo-grid,.j-faq-grid,.j-foundation-grid,.pricing-grid,.ip-service-grid,.lx-gallery,.vg-grid,.archive-grid,.journal-grid,.h-hero-stats,.j-community-grid,.lx-stats')) {
     const s = getComputedStyle(parent);
     if (!/grid|flex/.test(s.display) || parent.children.length < 2) continue;
     if (s.display.includes('flex') && s.flexDirection.startsWith('column')) continue;
@@ -47,10 +47,10 @@ function scan() {
       if (ox > 8 && oy > 8 && !kids[i].contains(kids[j]) && getComputedStyle(kids[i]).position !== 'absolute' && getComputedStyle(kids[j]).position !== 'absolute')
         res.push(['overlap', `${label(kids[i])} x ${label(kids[j])} (${Math.round(ox)}x${Math.round(oy)})`]);
     }
-    for (const k of kids) {const inner = [...k.querySelectorAll('img,figure,.lx-crop')].filter(vis).filter(x => !x.closest('.lv-value,.lv-value-badge') && getComputedStyle(x).position !== 'absolute'); for (const im of inner) {const r = R(im), c = R(k); if (r.right - c.right > 12 && getComputedStyle(k).overflow === 'visible') res.push(['overwide', `${label(im)} ${Math.round(r.width)}px in ${Math.round(c.width)}px column`]);}}
+    for (const k of kids) {const inner = [...k.querySelectorAll('img,figure,.lx-crop')].filter(vis).filter(x => !x.closest('.h-hero-card') && getComputedStyle(x).position !== 'absolute'); for (const im of inner) {const r = R(im), c = R(k); if (r.right - c.right > 12 && getComputedStyle(k).overflow === 'visible') res.push(['overwide', `${label(im)} ${Math.round(r.width)}px in ${Math.round(c.width)}px column`]);}}
   }
   // sections
-  for (const sec of main.querySelectorAll(':scope > section, :scope .lx-sec, :scope .hp-section, :scope .ip-wrap > section')) {
+  for (const sec of main.querySelectorAll(':scope > section, :scope .lx-sec, :scope .ip-wrap > section')) {
     if (!vis(sec)) continue;
     const t = textOf(sec), imgs = [...sec.querySelectorAll('img')].filter(vis).length, ctrls = sec.querySelectorAll('a,button,input,details').length;
     const heads = [...sec.querySelectorAll('h1,h2,h3,h4')].filter(vis).map(textOf).join(' ');
@@ -74,7 +74,7 @@ function scan() {
     const r = R(im); if (r.width < 300) continue;
     let row = im.parentElement; while (row && row !== main && R(row).width < W * 0.7) row = row.parentElement;
     const sibs = row ? [...row.querySelectorAll('h1,h2,h3,p,ul,img,.lx-crop')].filter(e => e !== im && !im.contains(e) && vis(e) && R(e).bottom > r.top + 20 && R(e).top < r.bottom - 20 && (R(e).left >= r.right - 4 || R(e).right <= r.left + 4)) : [];
-    const cw = Math.min(W, document.querySelector('#main .ip-wrap, #main .hp-shell')?.getBoundingClientRect().width || W);
+    const cw = Math.min(W, document.querySelector('#main .ip-wrap, #main .j-wrap, #main .fx-shell')?.getBoundingClientRect().width || W);
     if (!sibs.length && r.width < cw * 0.7) res.push(['narrow-lone', `${Math.round(r.width)}px of ${Math.round(cw)}px ${label(im)}`]);
   }
   // ragged image stacks
@@ -91,7 +91,7 @@ function scan() {
     if (im.classList.contains('lx-img-cutout') || (Math.abs(ar - br) / ar > 0.35 && /Image-26|\b4\.png|image-8|avatar/i.test(im.currentSrc))) res.push(['cutout-cropped', `${(im.getAttribute('alt') || '').slice(0, 30)} ${decodeURIComponent((im.currentSrc || '').replace(/.*url=/, '').replace(/&.*/, '')).split('/').pop()}`]);
   }
   // unbalanced side-by-side columns
-  for (const g of main.querySelectorAll('.lx-cols, .lv-split, .ip-hero-grid, .ip-overview-grid')) {
+  for (const g of main.querySelectorAll('.lx-cols, .h-hero-grid, .h-intro-grid, .fx-split, .ip-hero-grid, .ip-overview-grid')) {
     if (!vis(g)) continue; const cols = [...g.children].filter(vis); if (cols.length !== 2) continue;
     const [a, b] = cols.map(R); if (Math.abs(a.top - b.top) > 40) continue; // stacked, not side by side
     const ha = cols[0].scrollHeight, hb = cols[1].scrollHeight; const content = e => [...e.querySelectorAll('*')].filter(vis).reduce((m, x) => Math.max(m, R(x).bottom), R(e).top) - R(e).top;

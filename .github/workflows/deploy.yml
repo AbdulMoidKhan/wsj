@@ -34,6 +34,14 @@ jobs:
           script: |
             set -euo pipefail
 
+            # DISABLED 2026-11-09: this workflow predates the cluster / commit-named-build layout.
+            # It builds into .next and backend/dist (which the cluster workers no longer run),
+            # runs npm install in place, migrates without a verified backup and uses pm2 restart.
+            # Use reports/remediation/2026-11-09/CORRECTED_DEPLOYMENT_RUNBOOK.md until it is rewritten
+            # and re-tested in staging.
+            echo "ABORT: deploy.yml is disabled; follow CORRECTED_DEPLOYMENT_RUNBOOK.md"
+            exit 1
+
             APP_DIR=/root/wsj-next
             BACKUP_ROOT=/root/wsj-backups
             BK="$BACKUP_ROOT/ci-$(date +%Y%m%d-%H%M%S)"

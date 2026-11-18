@@ -1,0 +1,720 @@
+{
+ "url": "http://localhost:3100/business-address/",
+ "at": "2026-11-13T14:00:40.945Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 6,
+   "filled": [
+    1,
+    0.99,
+    0.99,
+    1,
+    1,
+    1
+   ],
+   "motion": {
+    "elements": 4,
+    "css": 1,
+    "transitions": 1,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 4695,
+     "screens": 5.2,
+     "words": 377,
+     "img": 5,
+     "video": 0,
+     "canvas": 0,
+     "svg": 28,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 2,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "?url=%2Fmedia%2Ffigma-pages%2Faddress-intro.webp",
+      "?url=%2Fmedia%2Ffigma-pages%2Faddress-location.w"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "A Professional Address for Your Business.",
+     "words": 6,
+     "chars": 41,
+     "lines": 2,
+     "size": 69.1,
+     "vw": 4.8,
+     "font": "Inter",
+     "weight": 500,
+     "tracking": -0.055,
+     "leading": 1.06,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.5,
+     "top": 302,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "A Professional Address for Your Business.",
+     "words": 6,
+     "lines": 2,
+     "size": 69.1,
+     "font": "Inter"
+    },
+    "headings": [
+     {
+      "text": "A Professional Address for Your Business.",
+      "words": 6,
+      "chars": 41,
+      "lines": 2,
+      "size": 69.1,
+      "vw": 4.8,
+      "font": "Inter",
+      "weight": 500,
+      "tracking": -0.055,
+      "leading": 1.06,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.5,
+      "top": 302,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Keep Your Home Address Private",
+      "words": 5,
+      "chars": 30,
+      "lines": 2,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.4,
+      "top": 1018,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "A Simple, Professional Setup",
+      "words": 4,
+      "chars": 28,
+      "lines": 1,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.49,
+      "top": 1654,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Business Address Options",
+      "words": 3,
+      "chars": 24,
+      "lines": 1,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.49,
+      "top": 2412,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "On request",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 76,
+      "vw": 5.3,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.38,
+      "top": 2599,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "Give Your Business a Real Address",
+      "words": 6,
+      "chars": 33,
+      "lines": 1,
+      "size": 50,
+      "vw": 3.5,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.025,
+      "leading": 1.12,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.54,
+      "top": 3300,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Make room for your next chapter.",
+      "words": 6,
+      "chars": 32,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Inter",
+      "weight": 400,
+      "tracking": -0.035,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.35,
+      "top": 3631,
+      "tag": "p",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 7,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 1,
+     "centered": 0,
+     "medianWords": 5,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      24,
+      25,
+      26,
+      50,
+      64,
+      69,
+      76
+     ],
+     "sizeCount": 13,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 16,
+      "leading": 1.7,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 6.8
+     },
+     "measureChars": 72,
+     "max": {
+      "size": 76,
+      "vw": 5.3,
+      "font": "Inter",
+      "text": "On request"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.05,
+     "centerShare": 0.03,
+     "smallText": 0
+    },
+    "eyebrows": [
+     {
+      "text": "Establish it. Business address",
+      "above": "A Professional Address for Your Business",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 18,
+      "top": 257
+     },
+     {
+      "text": "WORKSPACE JUNCTION / BUSINESS ADDRESS",
+      "above": "Keep Your Home Address Private",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 975
+     },
+     {
+      "text": "WHAT’S INCLUDED",
+      "above": "A Simple, Professional Setup",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 1615
+     },
+     {
+      "text": "PLANS & PRICING",
+      "above": "Business Address Options",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 2373
+     },
+     {
+      "text": "BUSINESS ADDRESS",
+      "above": "On request",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 2554
+     },
+     {
+      "text": "WORK. CONNECT. GROW.",
+      "above": "Give Your Business a Real Address",
+      "upper": true,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 14,
+      "top": 3263
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f7f4ed",
+     "bodyBgHsl": {
+      "h": 42,
+      "s": 0.38,
+      "l": 0.95
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f7f4ed",
+       "top": 0,
+       "hsl": {
+        "h": 42,
+        "s": 0.38,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#f4f4ee",
+       "top": 136,
+       "hsl": {
+        "h": 60,
+        "s": 0.21,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#fffdf8",
+       "top": 136,
+       "hsl": {
+        "h": 43,
+        "s": 1,
+        "l": 0.99
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 802,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#e5ebe3",
+       "top": 1500,
+       "hsl": {
+        "h": 105,
+        "s": 0.17,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#103624",
+       "top": 3559,
+       "hsl": {
+        "h": 152,
+        "s": 0.54,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#19432f",
+       "top": 4056,
+       "hsl": {
+        "h": 151,
+        "s": 0.46,
+        "l": 0.18
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#4b6055",
+       "share": 0.22
+      },
+      {
+       "color": "#cfd8d0",
+       "share": 0.18
+      },
+      {
+       "color": "#173e30",
+       "share": 0.13
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.09
+      },
+      {
+       "color": "#10271c",
+       "share": 0.09
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 8,
+     "inHero": 6,
+     "radius": 2,
+     "height": 48,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Skip to content",
+      "Plans & Pricing",
+      "Login",
+      "Menu",
+      "Get a Business Address"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 2,
+     "mediaRadius": 5,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 14,
+     "fixed": true,
+     "height": 136,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "inter",
+     "__nextjs-geist"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 4695,
+    "margins": {
+     "left": 96,
+     "right": 96
+    },
+    "sections": [
+     {
+      "sel": "header#wj-site-header.wj-header.lv-header",
+      "tag": "header",
+      "top": 0,
+      "height": 136,
+      "words": 31,
+      "media": 0,
+      "middle": 44,
+      "heading": null,
+      "left": 49,
+      "right": 69,
+      "textLeft": 49,
+      "textRight": 69,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": true
+     },
+     {
+      "sel": "div.wj-route-stage",
+      "tag": "div",
+      "top": 136,
+      "height": 3423,
+      "words": 232,
+      "media": 2,
+      "middle": 0,
+      "heading": {
+       "text": "A Professional",
+       "size": 69,
+       "tag": "h1"
+      },
+      "left": 96,
+      "right": 106,
+      "textLeft": 96,
+      "textRight": 106,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer#wj-site-footer.wj-footer.amb-local",
+      "tag": "footer",
+      "top": 3559,
+      "height": 1136,
+      "words": 122,
+      "media": 0,
+      "middle": 20,
+      "heading": {
+       "text": "Make room for",
+       "size": 64,
+       "tag": "p"
+      },
+      "left": 96,
+      "right": 96,
+      "textLeft": 96,
+      "textRight": 96,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "A Professional Address for Your Business.",
+      "size": 69,
+      "top": 302,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 188,
+      "n": 4
+     },
+     {
+      "x": 121,
+      "n": 3
+     },
+     {
+      "x": 96,
+      "n": 2
+     },
+     {
+      "x": 767,
+      "n": 2
+     },
+     {
+      "x": 860,
+      "n": 2
+     },
+     {
+      "x": 160,
+      "n": 1
+     },
+     {
+      "x": 217,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 15,
+    "bodySize": 16,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.36,
+    "voidBox": {
+     "x": 840,
+     "y": 120,
+     "w": 600,
+     "h": 780
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "eyebrow",
+   "width": 1440,
+   "message": "6 eyebrow/kicker label(s) above headings: \"Establish it. Business address\" above \"A Professional Address for Your Business\"; \"WORKSPACE JUNCTION / BUSINESS ADDRESS\" above \"Keep Your Home Address Private\"; \"WHAT’S INCLUDED\" above \"A Simple, Professional Setup\"; \"PLANS & PRICING\" above \"Business Address Options\"; \"BUSINESS ADDRESS\" above \"On request\"",
+   "fix": "Delete them. If the label carried real information, fold it into the headline or the supporting sentence."
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #f7f4ed, section #f7f4ed, section #f4f4ee).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream."
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "13 different font sizes (13, 14, 15, 16, 18, 19, 24, 25, 26, 50, 64, 69, 76).",
+   "fix": "A page needs about five: display, heading, lead, body, small."
+  },
+  {
+   "level": "WARN",
+   "id": "grey-body",
+   "width": 1440,
+   "message": "The running text is a soft grey on its ground (6.8:1).",
+   "fix": "Set body copy in the full ink (7:1 or more). Keep the muted ink for secondary notes; pages read thin and unfinished when everything is grey."
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 2 picture(s) on the page (2 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "hero-void",
+   "width": 1440,
+   "message": "36% of the first screen is one empty block (600×780px at 840,120).",
+   "fix": "Place the void on purpose or fill it: move the picture, the film or one fact into it, grow the headline to meet it, or shrink the screen to its content. A void reads as placed only when something closes it on the far side and it is the screen's one rest."
+  },
+  {
+   "level": "FAIL",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Only 4 element(s) moved while the page loaded and scrolled.",
+   "fix": "Build the motion layer (SKILL.md step 9, references/motion.md): the signature move, an entrance for the parts of every section, feedback on every control, and one moving picture. Transform and opacity only, with a reduced-motion fallback."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\after-business-address\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\after-business-address\\desktop-page-01.jpg",
+    "C:\\Users\\Abdul Moid\\Desktop\\wsjNext\\wsj\\.taste-skill\\after-business-address\\desktop-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}
